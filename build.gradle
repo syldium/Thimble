@@ -1,0 +1,19 @@
+defaultTasks 'build'
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'checkstyle'
+
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'sonatype-oss'
+            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+    }
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    project.ext.fullVersion = '1.0-SNAPSHOT'
+}
