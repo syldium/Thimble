@@ -8,15 +8,15 @@ public enum JumpVerdict {
     /**
      * Missed the water.
      */
-    FAIL,
+    MISSED,
 
     /**
      * Landed in the water.
      */
-    SUCCESS,
+    LANDED,
 
     /**
      * Landed in the water and did a combo.
      */
-    SUCCESS_DAC
+    COMBO
 }

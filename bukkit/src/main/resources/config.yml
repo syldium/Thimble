@@ -1,0 +1,10 @@
+# Available (case-insensitive): sqlite, mysql or postgre
+storage-method: "sqlite"
+
+sql:
+  # When SQLite is used, the following parameters are not necessary.
+  # JDBC uri format: jdbc:driver://host:port/database
+  # MySQL/MariaDB driver: mysql, PostgreSQL driver: postgresql
+  jdbcUri: jdbc:mysql://localhost:3306/decoudre
+  username: decoudre
+  password: password

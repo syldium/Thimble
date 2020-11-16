@@ -1,4 +1,4 @@
 rootProject.name = 'DeCoudre'
 include 'api'
-//include 'common'
-//include 'spigot'
+include 'common'
+include 'bukkit'

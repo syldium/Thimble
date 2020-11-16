@@ -1,0 +1,40 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+repositories {
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url 'https://libraries.minecraft.net' }
+}
+
+dependencies {
+    implementation project(':api')
+    implementation project(':common')
+
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
+    compileOnly 'com.destroystokyo.paper:paper-mojangapi:1.16.4-R0.1-SNAPSHOT'
+    compileOnly 'com.mojang:brigadier:1.0.17'
+    compileOnly 'org.jetbrains:annotations:19.0.0'
+    implementation ('net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT') {
+        exclude(module: 'checker-qual')
+        exclude(module: 'guava')
+    }
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        expand 'pluginVersion': project.ext.fullVersion
+        include 'plugin.yml'
+    }
+}
+
+shadowJar {
+    archiveBaseName = "DeCoudre-Bukkit-${project.ext.fullVersion}.jar"
+
+    relocate 'net.kyori.adventure', 'me.syldium.decoudre.lib.adventure'
+    minimize()
+}
+
+artifacts {
+    archives shadowJar
+}

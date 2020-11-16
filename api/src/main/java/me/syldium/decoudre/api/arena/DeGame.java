@@ -47,14 +47,14 @@ public interface DeGame {
      *
      * @return An immutable set.
      */
-    @NotNull @UnmodifiableView Set<DePlayer> getAlivePlayers();
+    @NotNull @UnmodifiableView Set<@NotNull DePlayer> getAlivePlayers();
 
     /**
      * Gets a set of players.
      *
      * @return An immutable set.
      */
-    @NotNull @UnmodifiableView Set<DePlayer> getPlayers();
+    @NotNull @UnmodifiableView Set<@NotNull DePlayer> getPlayers();
 
     /**
      * Adds a player to the game. {@link DeArena#addPlayer(UUID)}

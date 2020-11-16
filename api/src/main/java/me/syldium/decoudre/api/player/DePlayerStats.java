@@ -12,7 +12,7 @@ public interface DePlayerStats {
      *
      * @return The UUID.
      */
-    @NotNull UUID getUuid();
+    @NotNull UUID uuid();
 
     /**
      * If the player has already won or lost a game.

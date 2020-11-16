@@ -1,0 +1,14 @@
+name: DeCoudre
+version: ${pluginVersion}
+main: me.syldium.decoudre.bukkit.DeCoudreBootstrap
+api-version: 1.15
+
+commands:
+  dac:
+    usage: /dac <join|leave> [args]
+
+permissions:
+  decoudre.admin:
+    default: op
+  decoudre.player:
+    default: true
