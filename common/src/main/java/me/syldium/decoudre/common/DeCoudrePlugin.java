@@ -23,16 +23,19 @@ public abstract class DeCoudrePlugin {
 
     public static final Component PREFIX = MiniMessage.get().parse("<gray>[<yellow>DAC</yellow>]</gray> ");
 
+    private DataService dataService;
     private GameServiceImpl gamesService;
     private StatsServiceImpl statsService;
 
     public void enable(@NotNull MainConfig config) {
+        this.dataService = DataService.fromConfig(this, config);
         this.gamesService = new GameServiceImpl(this, this.getArenaConfig());
-        this.statsService = new StatsServiceImpl(DataService.fromConfig(this, config), Executors.newSingleThreadExecutor());
+        this.statsService = new StatsServiceImpl(this.dataService, Executors.newSingleThreadExecutor());
     }
 
     public void disable() {
         this.gamesService.save();
+        this.dataService.close();
     }
 
     public @NotNull File getFile(@NotNull String filename) {

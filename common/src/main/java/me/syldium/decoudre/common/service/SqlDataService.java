@@ -105,4 +105,15 @@ public class SqlDataService implements DataService {
         }
         return this.connection;
     }
+
+    @Override
+    public void close() {
+        if (this.connection != null) {
+            try {
+                this.connection.close();
+            } catch (SQLException ex) {
+                this.logger.log(Level.SEVERE, "Error when closing the database connection.", ex);
+            }
+        }
+    }
 }

@@ -14,6 +14,8 @@ public interface DataService {
 
     void savePlayerStatistics(@NotNull DePlayerStats statistics);
 
+    void close();
+
     static @NotNull DataService fromConfig(@NotNull DeCoudrePlugin plugin, @NotNull MainConfig config) {
         return SqlDataService.fromConfig(plugin, config);
     }
