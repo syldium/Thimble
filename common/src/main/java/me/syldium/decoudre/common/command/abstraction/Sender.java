@@ -15,14 +15,14 @@ public interface Sender extends Audience {
      *
      * @return The UUID of the sender.
      */
-    @NotNull UUID getUuid();
+    @NotNull UUID uuid();
 
     /**
      * The name of this sender. {@link #CONSOLE_NAME}'s name if it is the console.
      *
      * @return The name of the sender.
      */
-    @NotNull String getName();
+    @NotNull String name();
 
     /**
      * Checks whether this sender has the permission.

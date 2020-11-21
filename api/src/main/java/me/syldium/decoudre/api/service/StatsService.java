@@ -19,6 +19,14 @@ public interface StatsService {
     @NotNull CompletableFuture<@NotNull Optional<@NotNull DePlayerStats>> getPlayerStatistics(@NotNull UUID uuid);
 
     /**
+     * Fetch the player's stats from a username.
+     *
+     * @param name The player's name.
+     * @return Statistics, if the player has already played.
+     */
+    @NotNull CompletableFuture<@NotNull Optional<@NotNull DePlayerStats>> getPlayerStatistics(@NotNull String name);
+
+    /**
      * Save the statistics.
      *
      * @param statistics Statistics.

@@ -26,6 +26,11 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
+    public @NotNull CompletableFuture<@NotNull Optional<@NotNull DePlayerStats>> getPlayerStatistics(@NotNull String name) {
+        return CompletableFuture.supplyAsync(() -> this.dataService.getPlayerStatistics(name), this.executor);
+    }
+
+    @Override
     public @NotNull CompletableFuture<@Nullable Void> savePlayerStatistics(@NotNull DePlayerStats statistics) {
         return CompletableFuture.supplyAsync(() -> {
             this.dataService.savePlayerStatistics(statistics);

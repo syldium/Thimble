@@ -42,4 +42,11 @@ public interface GameService {
      * @return The arenas
      */
     @NotNull @UnmodifiableView Set<@NotNull DeArena> getArenas();
+
+    /**
+     * Removes any reference to an already created arena.
+     *
+     * @param arena An arena
+     */
+    void removeArena(@NotNull DeArena arena);
 }

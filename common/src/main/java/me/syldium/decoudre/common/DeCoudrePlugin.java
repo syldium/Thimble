@@ -24,17 +24,17 @@ public abstract class DeCoudrePlugin {
     public static final Component PREFIX = MiniMessage.get().parse("<gray>[<yellow>DAC</yellow>]</gray> ");
 
     private DataService dataService;
-    private GameServiceImpl gamesService;
+    private GameServiceImpl gameService;
     private StatsServiceImpl statsService;
 
     public void enable(@NotNull MainConfig config) {
         this.dataService = DataService.fromConfig(this, config);
-        this.gamesService = new GameServiceImpl(this, this.getArenaConfig());
+        this.gameService = new GameServiceImpl(this, this.getArenaConfig());
         this.statsService = new StatsServiceImpl(this.dataService, Executors.newSingleThreadExecutor());
     }
 
     public void disable() {
-        this.gamesService.save();
+        this.gameService.save();
         this.dataService.close();
     }
 
@@ -61,8 +61,8 @@ public abstract class DeCoudrePlugin {
 
     public abstract @NotNull Task startGameTask(@NotNull Runnable runnable);
 
-    public @NotNull GameServiceImpl getGamesService() {
-        return this.gamesService;
+    public @NotNull GameServiceImpl getGameService() {
+        return this.gameService;
     }
 
     public @NotNull StatsServiceImpl getStatsService() {

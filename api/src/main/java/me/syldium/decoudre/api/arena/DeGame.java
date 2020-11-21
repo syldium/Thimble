@@ -59,7 +59,7 @@ public interface DeGame {
     /**
      * Adds a player to the game. {@link DeArena#addPlayer(UUID)}
      *
-     * @param player The player who want to play.
+     * @param player The online player who want to play.
      * @return If the player has successfully joined the arena.
      */
     @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID player);
@@ -78,6 +78,13 @@ public interface DeGame {
      * @return If empty.
      */
     boolean isEmpty();
+
+    /**
+     * Returns the number of players in the game.
+     *
+     * @return The number of players.
+     */
+    int size();
 
     /**
      * Gets the player to whom it is the turn to jump.

@@ -65,35 +65,62 @@ public class SqlDataService implements DataService {
             } else {
                 statement.setString(1, uuid.toString());
             }
-            ResultSet result = statement.executeQuery();
-            if (result.next()) {
-                return Optional.of(new PlayerStats(
-                    uuid, result.getInt("wins"), result.getInt("losses"), result.getInt("jumps"), result.getInt("dacs")
-                ));
-            }
-            return Optional.empty();
+            return this.fromResultSet(statement.executeQuery());
         } catch (SQLException ex) {
-            this.logger.log(Level.SEVERE, "Error when saving statistics in the database.", ex);
+            this.logger.log(Level.SEVERE, "Error when fetching statistics from the database.", ex);
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public @NotNull Optional<@NotNull DePlayerStats> getPlayerStatistics(@NotNull String name) {
+        try (PreparedStatement statement = this.getConnection().prepareStatement("SELECT * FROM dac WHERE name = ?")) {
+            statement.setString(1, name);
+            return this.fromResultSet(statement.executeQuery());
+        } catch (SQLException ex) {
+            this.logger.log(Level.SEVERE, "Error when fetching statistics from the database.", ex);
             return Optional.empty();
         }
     }
 
     @Override
     public void savePlayerStatistics(@NotNull DePlayerStats statistics) {
-        try (PreparedStatement statement = this.getConnection().prepareStatement("REPLACE INTO dac (uuid, wins, losses, jumps, dacs) VALUES (?, ?, ?, ?, ?)")) {
+        try (PreparedStatement statement = this.getConnection().prepareStatement("REPLACE INTO dac (uuid, name, wins, losses, jumps, dacs) VALUES (?, ?, ?, ?, ?, ?)")) {
             if (this.type == Type.POSTGRE) {
                 statement.setObject(1, statistics.uuid());
             } else {
                 statement.setString(1, statistics.uuid().toString());
             }
-            statement.setInt(2, statistics.getWins());
-            statement.setInt(3, statistics.getLosses());
-            statement.setInt(4, statistics.getJumps());
-            statement.setInt(5, statistics.getDacs());
+            statement.setString(2, statistics.name());
+            statement.setInt(3, statistics.getWins());
+            statement.setInt(4, statistics.getLosses());
+            statement.setInt(5, statistics.getJumps());
+            statement.setInt(6, statistics.getDacs());
             statement.execute();
         } catch (SQLException ex) {
             this.logger.log(Level.SEVERE, "Error when saving statistics in the database.", ex);
         }
+    }
+
+    private @NotNull Optional<@NotNull DePlayerStats> fromResultSet(@NotNull ResultSet result) throws SQLException {
+        if (result.next()) {
+            UUID uuid;
+            if (this.type == Type.POSTGRE) {
+                uuid = result.getObject("uuid", UUID.class);
+            } else {
+                uuid = UUID.fromString(result.getString("uuid"));
+            }
+
+            return Optional.of(new PlayerStats(
+                    uuid,
+                    result.getString("name"),
+                    result.getInt("wins"),
+                    result.getInt("losses"),
+                    result.getInt("jumps"),
+                    result.getInt("dacs")
+            ));
+        }
+        return Optional.empty();
     }
 
     private @NotNull Connection getConnection() throws SQLException {

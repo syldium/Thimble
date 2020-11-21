@@ -57,6 +57,12 @@ public class GameServiceImpl implements GameService {
         return Collections.unmodifiableSet(this.arenas);
     }
 
+    @Override
+    public void removeArena(@NotNull DeArena arena) {
+        // noinspection SuspiciousMethodCalls
+        this.arenas.remove(arena);
+    }
+
     public void setPlayerGame(@NotNull UUID player, @Nullable Game game) {
         if (game == null) {
             this.games.remove(player);

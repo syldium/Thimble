@@ -12,6 +12,8 @@ public interface DataService {
 
     @NotNull Optional<@NotNull DePlayerStats> getPlayerStatistics(@NotNull UUID uuid);
 
+    @NotNull Optional<@NotNull DePlayerStats> getPlayerStatistics(@NotNull String name);
+
     void savePlayerStatistics(@NotNull DePlayerStats statistics);
 
     void close();

@@ -10,17 +10,19 @@ import java.util.UUID;
 public class PlayerStats implements DePlayerStats, Identity {
 
     private final UUID uuid;
+    private final String name;
     private int wins;
     private int losses;
     private int jumps;
     private int dacs;
 
-    public PlayerStats(@NotNull UUID uuid) {
-        this(uuid, 0, 0, 0, 0);
+    public PlayerStats(@NotNull UUID uuid, @NotNull String name) {
+        this(uuid, name, 0, 0, 0, 0);
     }
 
-    public PlayerStats(@NotNull UUID uuid, int wins, int losses, int jumps, int dacs) {
+    public PlayerStats(@NotNull UUID uuid, @NotNull String name, int wins, int losses, int jumps, int dacs) {
         this.uuid = uuid;
+        this.name = name;
         this.wins = wins;
         this.losses = losses;
         this.jumps = jumps;
@@ -30,6 +32,11 @@ public class PlayerStats implements DePlayerStats, Identity {
     @Override
     public @NotNull UUID uuid() {
         return this.uuid;
+    }
+
+    @Override
+    public @NotNull String name() {
+        return this.name;
     }
 
     @Override

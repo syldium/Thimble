@@ -4,6 +4,8 @@ import me.syldium.decoudre.api.Location;
 import me.syldium.decoudre.api.arena.DeArena;
 import me.syldium.decoudre.api.arena.DeGame;
 import me.syldium.decoudre.common.DeCoudrePlugin;
+import me.syldium.decoudre.common.player.Player;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -85,7 +87,14 @@ public class Arena implements DeArena {
     }
 
     @Override
-    public @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID player) {
+    public @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID uuid) {
+        if (this.game == null) {
+            this.game = new Game(this.plugin, this);
+        }
+        return this.game.addPlayer(uuid);
+    }
+
+    public @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull Player player) {
         if (this.game == null) {
             this.game = new Game(this.plugin, this);
         }
@@ -95,6 +104,11 @@ public class Arena implements DeArena {
     @Override
     public boolean removePlayer(@NotNull UUID player) {
         return this.game.removePlayer(player);
+    }
+
+    @Override
+    public @NotNull Component asComponent() {
+        return Component.text(this.name);
     }
 
     void checkGame() {

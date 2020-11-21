@@ -13,12 +13,12 @@ public class InGamePlayer extends PlayerStats implements DePlayer {
     protected int lifes = 1;
 
     public InGamePlayer(@NotNull DePlayerStats stats, @NotNull BlockData block) {
-        super(stats.uuid(), stats.getWins(), stats.getLosses(), stats.getJumps(), stats.getDacs());
+        super(stats.uuid(), stats.name(), stats.getWins(), stats.getLosses(), stats.getJumps(), stats.getDacs());
         this.block = block;
     }
 
-    public InGamePlayer(@NotNull UUID uuid, @NotNull BlockData block) {
-        super(uuid);
+    public InGamePlayer(@NotNull UUID uuid, @NotNull String name, @NotNull BlockData block) {
+        super(uuid, name);
         this.block = block;
     }
 

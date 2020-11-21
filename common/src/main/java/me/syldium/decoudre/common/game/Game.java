@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
@@ -88,7 +89,7 @@ public class Game implements DeGame, Runnable {
                     Player player = this.plugin.getPlayer(this.queue.poll());
                     if (player != null) {
                         player.teleport(this.arena.getJumpLocation());
-                        this.jumper = player.getUuid();
+                        this.jumper = player.uuid();
                     }
                     return;
                 }
@@ -133,7 +134,7 @@ public class Game implements DeGame, Runnable {
 
         this.jumper = null;
         if (inGamePlayer.getLifes() > 0) {
-            this.queue.offer(player.getUuid());
+            this.queue.offer(player.uuid());
             player.teleport(this.arena.getSpawnLocation());
         } else if (this.queue.size() < 2) {
             this.end(inGamePlayer);
@@ -148,7 +149,7 @@ public class Game implements DeGame, Runnable {
                 player.incrementLosses();
             }
             this.plugin.getStatsService().savePlayerStatistics(player);
-            this.plugin.getGamesService().setPlayerGame(player.uuid(), null);
+            this.plugin.getGameService().setPlayerGame(player.uuid(), null);
         }
         this.players.sendActionBar(Message.END_GAME);
         this.players.clear();
@@ -195,17 +196,21 @@ public class Game implements DeGame, Runnable {
     }
 
     @Override
-    public @NotNull CompletableFuture<Boolean> addPlayer(@NotNull UUID player) {
-        if (this.players.contains(player)) {
+    public @NotNull CompletableFuture<Boolean> addPlayer(@NotNull UUID uuid) {
+        return this.addPlayer(Objects.requireNonNull(this.plugin.getPlayer(uuid), "Player is offline."));
+    }
+
+    public @NotNull CompletableFuture<Boolean> addPlayer(@NotNull Player player) {
+        if (this.players.contains(player.uuid())) {
             return CompletableFuture.completedFuture(false);
         }
 
-        return this.plugin.getStatsService().getPlayerStatistics(player)
+        return this.plugin.getStatsService().getPlayerStatistics(player.uuid())
                 .thenApply(optional -> {
                     BlockData block = this.plugin.getPlayerAdapter().getRandomWool();
-                    InGamePlayer inGamePlayer = optional.map(stats -> new InGamePlayer(stats, block)).orElseGet(() -> new InGamePlayer(player, block));
+                    InGamePlayer inGamePlayer = optional.map(stats -> new InGamePlayer(stats, block)).orElseGet(() -> new InGamePlayer(player.uuid(), player.name(), block));
                     if (this.players.add(inGamePlayer)) {
-                        this.plugin.getGamesService().setPlayerGame(player, this);
+                        this.plugin.getGameService().setPlayerGame(player.uuid(), this);
                         return true;
                     }
                     return false;
@@ -218,13 +223,18 @@ public class Game implements DeGame, Runnable {
             return false;
         }
 
-        this.plugin.getGamesService().setPlayerGame(player, null);
+        this.plugin.getGameService().setPlayerGame(player, null);
         return true;
     }
 
     @Override
     public boolean isEmpty() {
         return this.players.isEmpty();
+    }
+
+    @Override
+    public int size() {
+        return this.players.size();
     }
 
     @Override

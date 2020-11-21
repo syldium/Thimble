@@ -4,9 +4,10 @@ import me.syldium.decoudre.api.Location;
 import me.syldium.decoudre.common.command.abstraction.Sender;
 import me.syldium.decoudre.common.world.PoolBlock;
 import net.kyori.adventure.identity.Identified;
+import net.kyori.adventure.identity.Identity;
 import org.jetbrains.annotations.NotNull;
 
-public interface Player extends Identified, Sender {
+public interface Player extends Identified, Identity, Sender {
 
     /**
      * Gets the player's current position.

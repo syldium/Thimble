@@ -1,6 +1,7 @@
 package me.syldium.decoudre.api.arena;
 
 import me.syldium.decoudre.api.Location;
+import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -11,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Represents an arena that players can join to play Dé À Coudre.
  */
-public interface DeArena {
+public interface DeArena extends ComponentLike {
 
     /**
      * Gets the arena name.
@@ -88,7 +89,7 @@ public interface DeArena {
     /**
      * Adds the player in the pool by creating a game if needed.
      *
-     * @param player The player who want to play.
+     * @param player The online player who want to play.
      * @return If the player has successfully joined the arena.
      */
     @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID player);
