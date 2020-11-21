@@ -3,7 +3,7 @@ package me.syldium.decoudre.common.command.abstraction.spec;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.abstraction.CommandException;
 import me.syldium.decoudre.common.command.abstraction.Sender;
-import me.syldium.decoudre.common.player.Message;
+import me.syldium.decoudre.common.player.MessageKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiPredicate;
@@ -29,13 +29,13 @@ public interface CommandGuard {
      * Tests if a predicate is {@code true} to execute the command.
      *
      * @param predicate A predicate.
-     * @param orElseExceptionMessage Or else message.
+     * @param orElseExceptionMessageKey Or else message key.
      * @return A new command guard.
      */
-    static @NotNull CommandGuard except(@NotNull BiPredicate<DeCoudrePlugin, Sender> predicate, Message orElseExceptionMessage) {
+    static @NotNull CommandGuard except(@NotNull BiPredicate<DeCoudrePlugin, Sender> predicate, MessageKey orElseExceptionMessageKey) {
         return (plugin, sender) -> {
             if (!predicate.test(plugin, sender)) {
-                throw new CommandException(orElseExceptionMessage);
+                throw new CommandException(orElseExceptionMessageKey);
             }
         };
     }
@@ -45,15 +45,15 @@ public interface CommandGuard {
      * Ensures that the player is not in a game.
      */
     CommandGuard EXCEPT_NOT_IN_GAME = CommandGuard.except(
-        (plugin, sender) -> !(plugin.getGamesService().getGame(sender.getUuid()).isPresent()),
-        Message.IN_GAME
+        (plugin, sender) -> !(plugin.getGameService().getGame(sender.uuid()).isPresent()),
+        MessageKey.FEEDBACK_GAME_ALREADY_IN_GAME
     );
 
     /**
      * Verifies that the player is in a game.
      */
     CommandGuard EXCEPT_IN_GAME = CommandGuard.except(
-        (plugin, sender) -> plugin.getGamesService().getGame(sender.getUuid()).isPresent(),
-        Message.NOT_IN_GAME
+        (plugin, sender) -> plugin.getGameService().getGame(sender.uuid()).isPresent(),
+        MessageKey.FEEDBACK_GAME_NOT_IN_GAME
     );
 }

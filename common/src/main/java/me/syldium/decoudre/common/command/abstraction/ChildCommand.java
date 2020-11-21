@@ -5,10 +5,11 @@ import me.syldium.decoudre.common.command.CommandResult;
 import me.syldium.decoudre.common.command.abstraction.spec.Argument;
 import me.syldium.decoudre.common.command.abstraction.spec.CommandGuard;
 import me.syldium.decoudre.common.game.Game;
-import me.syldium.decoudre.common.player.Message;
-import me.syldium.decoudre.common.player.Player;
+import me.syldium.decoudre.common.player.MessageKey;
+import me.syldium.decoudre.common.service.MessageService;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,17 +21,16 @@ public abstract class ChildCommand extends AbstractCommand {
 
     private final List<Argument<?>> arguments;
     private final int minArgumentCount;
-    private final Component help;
-    private final Component usage;
+    private final Component component;
+    private final @Nullable MessageKey description;
     protected @Nullable CommandGuard commandGuard;
 
-    public ChildCommand(@NotNull String name, @Nullable Message description, @NotNull Permission permission, Argument<?> ...arguments) {
+    public ChildCommand(@NotNull String name, @Nullable MessageKey description, @NotNull Permission permission, Argument<?> ...arguments) {
         super(name, description, permission);
         this.arguments = Arrays.asList(arguments);
         this.minArgumentCount = (int) Arrays.stream(arguments).filter(Argument::isRequired).count();
-        Component args = Component.join(Component.text(name + " "), this.arguments);
-        this.help = description == null ? args : args.append(Component.text(" ").append(description.asComponent()));
-        this.usage = description == null ? args : args.hoverEvent(HoverEvent.showText(description.asComponent()));
+        this.component = this.buildComponent(name, arguments);
+        this.description = description;
     }
 
     @Override
@@ -53,13 +53,19 @@ public abstract class ChildCommand extends AbstractCommand {
     }
 
     @Override
-    public @NotNull Component getHelp() {
-        return this.help;
+    public @NotNull Component getHelp(@NotNull MessageService service) {
+        if (this.description == null) {
+            return this.component;
+        }
+        return this.component.append(Component.space()).append(service.formatMessage(this.description, NamedTextColor.GRAY));
     }
 
     @Override
-    public @NotNull Component getUsage() {
-        return this.usage;
+    public @NotNull Component getUsage(@NotNull MessageService service) {
+        if (this.description == null) {
+            return this.component;
+        }
+        return this.component.hoverEvent(HoverEvent.showText(service.formatMessage(this.description)));
     }
 
     @Override
@@ -72,8 +78,15 @@ public abstract class ChildCommand extends AbstractCommand {
         return this;
     }
 
-    protected @NotNull Game getGame(@NotNull DeCoudrePlugin plugin, @NotNull Player player) throws CommandException {
-        return (Game) plugin.getGamesService().getGame(player.getUuid()).orElseThrow(() -> new CommandException(Message.NOT_IN_GAME));
+    protected @NotNull Game getGame(@NotNull DeCoudrePlugin plugin, @NotNull Sender player) throws CommandException {
+        return (Game) plugin.getGameService().getGame(player.uuid()).orElseThrow(() -> new CommandException(MessageKey.FEEDBACK_GAME_NOT_IN_GAME));
+    }
+
+    private @NotNull Component buildComponent(@NotNull String name, @NotNull Argument<?>[] arguments) {
+        if (arguments.length < 1) {
+            return Component.text(name);
+        }
+        return Component.text(name).append(Component.space().append(Component.join(Component.text(" "), this.arguments)));
     }
 
     public List<Argument<?>> getArguments() {
@@ -84,7 +97,7 @@ public abstract class ChildCommand extends AbstractCommand {
 
         private final Argument<T> one;
 
-        public One(@NotNull String name, @NotNull Argument<T> argument, @Nullable Message description, @NotNull Permission permission) {
+        public One(@NotNull String name, @NotNull Argument<T> argument, @Nullable MessageKey description, @NotNull Permission permission) {
             super(name, description, permission, argument);
             this.one = argument;
         }
@@ -93,7 +106,7 @@ public abstract class ChildCommand extends AbstractCommand {
 
         @Override
         public final @NotNull CommandResult execute(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull List<String> args) throws CommandException {
-            return this.execute(plugin, sender, this.one.parse(plugin, args.get(0)));
+            return this.execute(plugin, sender, args.size() > 0 ? this.one.parse(plugin, args.get(0)) : null);
         }
     }
 
@@ -102,7 +115,7 @@ public abstract class ChildCommand extends AbstractCommand {
         private final Argument<T> one;
         private final Argument<U> two;
 
-        public Two(@NotNull String name, @NotNull Argument<T> argument, @NotNull Argument<U> argument2, @Nullable Message description, @NotNull Permission permission) {
+        public Two(@NotNull String name, @NotNull Argument<T> argument, @NotNull Argument<U> argument2, @Nullable MessageKey description, @NotNull Permission permission) {
             super(name, description, permission, argument, argument2);
             this.one = argument;
             this.two = argument2;
@@ -112,7 +125,9 @@ public abstract class ChildCommand extends AbstractCommand {
 
         @Override
         public final @NotNull CommandResult execute(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull List<String> args) throws CommandException {
-            return this.execute(plugin, sender, this.one.parse(plugin, args.get(0)), this.two.parse(plugin, args.get(1)));
+            T one = args.size() > 0 ? this.one.parse(plugin, args.get(0)) : null;
+            U two = args.size() > 1 ? this.two.parse(plugin, args.get(1)) : null;
+            return this.execute(plugin, sender, one, two);
         }
     }
 }

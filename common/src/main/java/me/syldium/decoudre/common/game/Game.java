@@ -7,7 +7,7 @@ import me.syldium.decoudre.api.player.JumpVerdict;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.config.GameConfig;
 import me.syldium.decoudre.common.player.InGamePlayer;
-import me.syldium.decoudre.common.player.Message;
+import me.syldium.decoudre.common.player.MessageKey;
 import me.syldium.decoudre.common.player.Player;
 import me.syldium.decoudre.common.util.PlayerMap;
 import me.syldium.decoudre.common.util.Task;
@@ -16,6 +16,7 @@ import me.syldium.decoudre.common.world.Blocks;
 import me.syldium.decoudre.common.world.PoolBlock;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,7 +61,7 @@ public class Game implements DeGame, Runnable {
                 if (this.canStart()) {
                     this.state = DeState.STARTING;
                 } else {
-                    this.players.sendActionBar(Message.WAITING);
+                    this.players.sendActionBar(MessageKey.ACTIONBAR_WAITING);
                 }
                 return;
             }
@@ -68,7 +69,7 @@ public class Game implements DeGame, Runnable {
                 if (!this.canStart()) {
                     this.state = DeState.STARTING;
                     this.timer = 100;
-                    this.players.sendActionBar(Message.NOT_ENOUGH_PLAYERS.format());
+                    this.players.sendActionBar(MessageKey.ACTIONBAR_NOT_ENOUGH_PLAYERS);
                     return;
                 }
                 int countdown = this.timer / 20;
@@ -118,17 +119,22 @@ public class Game implements DeGame, Runnable {
     private void handleJump(@NotNull Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
             inGamePlayer.decrementLifes();
-            player.sendActionBar(Message.LIFES_LEFT.format(inGamePlayer.getLifes()));
+            Template lifesTemplate = Template.of("lifes", String.valueOf(inGamePlayer.getLifes()));
+            if (inGamePlayer.getLifes() > 1) {
+                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_PLURAL, lifesTemplate);
+            } else {
+                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_SINGULAR, lifesTemplate);
+            }
             player.playSound(GameConfig.getJumpFailedSound());
         } else {
             inGamePlayer.incrementJumps();
             if (verdict == JumpVerdict.COMBO) {
                 inGamePlayer.incrementLifes();
                 inGamePlayer.incrementDacs();
-                player.sendActionBar(Message.COMBO);
+                player.sendActionBar(MessageKey.ACTIONBAR_COMBO);
                 player.playSound(GameConfig.getJumpSucceedSound());
             } else {
-                player.sendActionBar(Message.SUCCESSFUL_JUMP);
+                player.sendActionBar(MessageKey.ACTIONBAR_SUCCESSFUL_JUMP);
             }
         }
 
@@ -151,7 +157,7 @@ public class Game implements DeGame, Runnable {
             this.plugin.getStatsService().savePlayerStatistics(player);
             this.plugin.getGameService().setPlayerGame(player.uuid(), null);
         }
-        this.players.sendActionBar(Message.END_GAME);
+        this.players.sendActionBar(MessageKey.ACTIONBAR_ENDED);
         this.players.clear();
         for (PoolBlock block : this.blocks) {
             block.setBlockData(Blocks.WATER);

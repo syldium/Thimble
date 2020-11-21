@@ -1,7 +1,6 @@
 package me.syldium.decoudre.bukkit.command;
 
 import me.syldium.decoudre.common.command.CommandManager;
-import me.syldium.decoudre.common.command.CommandResult;
 import me.syldium.decoudre.bukkit.DeBukkitPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,8 +28,8 @@ public class BukkitCommandExecutor extends CommandManager implements TabExecutor
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> arguments = new ArrayList<>(Arrays.asList(args));
-        CommandResult result = this.executeCommand(this.plugin, this.plugin.getPlayerAdapter().asAbstractSender(sender), label, arguments);
-        return result != CommandResult.FAILURE;
+        this.runCommand(this.plugin, this.plugin.getPlayerAdapter().asAbstractSender(sender), label, arguments);
+        return true;
     }
 
     @Override

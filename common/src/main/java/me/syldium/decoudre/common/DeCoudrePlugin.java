@@ -6,6 +6,8 @@ import me.syldium.decoudre.common.config.MainConfig;
 import me.syldium.decoudre.common.player.Player;
 import me.syldium.decoudre.common.service.DataService;
 import me.syldium.decoudre.common.service.GameServiceImpl;
+import me.syldium.decoudre.common.service.MessageService;
+import me.syldium.decoudre.common.service.MessageServiceImpl;
 import me.syldium.decoudre.common.service.StatsServiceImpl;
 import me.syldium.decoudre.common.util.Task;
 import net.kyori.adventure.text.Component;
@@ -25,11 +27,13 @@ public abstract class DeCoudrePlugin {
 
     private DataService dataService;
     private GameServiceImpl gameService;
+    private MessageService messageService;
     private StatsServiceImpl statsService;
 
     public void enable(@NotNull MainConfig config) {
         this.dataService = DataService.fromConfig(this, config);
         this.gameService = new GameServiceImpl(this, this.getArenaConfig());
+        this.messageService = new MessageServiceImpl(config, this.getLogger());
         this.statsService = new StatsServiceImpl(this.dataService, Executors.newSingleThreadExecutor());
     }
 
@@ -63,6 +67,10 @@ public abstract class DeCoudrePlugin {
 
     public @NotNull GameServiceImpl getGameService() {
         return this.gameService;
+    }
+
+    public @NotNull MessageService getMessageService() {
+        return this.messageService;
     }
 
     public @NotNull StatsServiceImpl getStatsService() {

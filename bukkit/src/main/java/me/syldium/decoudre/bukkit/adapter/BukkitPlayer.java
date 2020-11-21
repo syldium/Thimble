@@ -1,6 +1,7 @@
 package me.syldium.decoudre.bukkit.adapter;
 
 import me.syldium.decoudre.api.Location;
+import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.player.AbstractPlayer;
 import me.syldium.decoudre.common.world.PoolBlock;
 import me.syldium.decoudre.bukkit.world.BukkitPoolBlock;
@@ -30,8 +31,8 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
 
     private final BukkitPlayerAdapter platform;
 
-    public BukkitPlayer(@NotNull Player handle, @NotNull Audience audience, @NotNull BukkitPlayerAdapter platform) {
-        super(handle, audience);
+    public BukkitPlayer(@NotNull DeCoudrePlugin plugin, @NotNull Player handle, @NotNull Audience audience, @NotNull BukkitPlayerAdapter platform) {
+        super(plugin, handle, audience);
         this.platform = platform;
     }
 
@@ -71,7 +72,7 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
         };
     }
 
-    private PoolBlock getBlockAt(@NotNull World world, double x, int y, double z) {
+    private @NotNull PoolBlock getBlockAt(@NotNull World world, double x, int y, double z) {
         return new BukkitPoolBlock(world.getBlockAt(org.bukkit.Location.locToBlock(x), y, org.bukkit.Location.locToBlock(z)));
     }
 
@@ -89,12 +90,12 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     }
 
     @Override
-    public @NotNull String getName() {
+    public @NotNull String name() {
         return this.getHandle().getName();
     }
 
     @Override
-    public @NotNull UUID getUuid() {
+    public @NotNull UUID uuid() {
         return this.getHandle().getUniqueId();
     }
 

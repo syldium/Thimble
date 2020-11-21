@@ -9,7 +9,7 @@ import me.syldium.decoudre.common.command.arena.SetJumpCommand;
 import me.syldium.decoudre.common.command.arena.SetSpawnCommand;
 import me.syldium.decoudre.common.command.game.JoinCommand;
 import me.syldium.decoudre.common.command.game.LeaveCommand;
-import me.syldium.decoudre.common.player.Message;
+import me.syldium.decoudre.common.player.MessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
@@ -34,61 +34,57 @@ public class CommandManager {
         );
     }
 
-    public @NotNull CommandResult executeCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull String label, @NotNull List<@NotNull String> arguments) {
-        if (arguments.size() > 0 && arguments.get(0).equalsIgnoreCase("help")) {
+    private @NotNull CommandResult executeCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull String label, @NotNull List<@NotNull String> arguments) {
+        if (arguments.size() < 1 || arguments.get(0).equalsIgnoreCase("help")) {
             this.sendMainHelp(sender, label);
-            return CommandResult.SUCCESS;
+            return CommandResult.success();
         }
 
-        String token = arguments.size() > 0 ? arguments.get(0) : "";
+        String token = arguments.get(0);
         AbstractCommand main = this.mainCommands.stream()
                 .filter(cmd -> cmd.getName().equals(token))
                 .findFirst()
                 .orElse(null);
 
         if (main == null) {
-            sender.sendMessage(Message.UNKNOWN_COMMAND.format());
-            return CommandResult.INVALID_ARGS;
+            return CommandResult.error(MessageKey.FEEDBACK_UNKNOWN_COMMAND);
         }
 
         arguments.remove(0);
         main = main.get(arguments);
 
         if (!main.hasPermission(sender)) {
-            return CommandResult.NO_PERMISSION;
+            return CommandResult.error(MessageKey.FEEDBACK_UNKNOWN_COMMAND);
         }
 
         if (!main.isValidExecutor(sender)) {
-            return CommandResult.NOT_VALID_EXECUTOR;
+            return CommandResult.error(MessageKey.FEEDBACK_NOT_VALID_EXECUTOR);
         }
 
         if (main.getMinArgumentCount() > arguments.size()) {
-            sender.sendMessage(Component.text("Usage: /" + label + " " + main.getName() + " ", NamedTextColor.RED).append(main.getUsage()));
-            return CommandResult.INVALID_ARGS;
+            sender.sendMessage(Component.text("Usage: /" + label + " ", NamedTextColor.RED).append(main.getUsage(plugin.getMessageService())));
+            return CommandResult.error();
         }
 
         try {
             main.preExecute(plugin, sender);
-        } catch (CommandException e) {
-            e.send(sender);
-            return CommandResult.STATE_ERROR;
+        } catch (CommandException ex) {
+            return CommandResult.error(ex.getMessageKey());
         }
 
         CommandResult result;
         try {
             result = main.execute(plugin, sender, arguments);
-        } catch (CommandException.ArgumentParseException e) {
-            e.send(sender);
-            result = CommandResult.INVALID_ARGS;
-        } catch (CommandException e) {
-            e.send(sender);
-            result = CommandResult.STATE_ERROR;
-        } catch (Throwable e) {
-            e.printStackTrace();
-            sender.sendMessage(Message.COMMAND_FAILED.format());
-            result = CommandResult.FAILURE;
+        } catch (CommandException ex) {
+            result = CommandResult.error(ex.getMessageKey());
         }
 
+        return result;
+    }
+
+    public @NotNull CommandResult runCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull String label, @NotNull List<@NotNull String> arguments) {
+        CommandResult result = this.executeCommand(plugin, sender, label, arguments);
+        sender.sendFeedback(result);
         return result;
     }
 
@@ -120,7 +116,7 @@ public class CommandManager {
             if (!cmd.hasPermission(sender) || !cmd.shouldDisplay()) {
                 continue;
             }
-            sender.sendMessage(Component.text("/" + label + " " + cmd.getName() + " ", NamedTextColor.GREEN).append(cmd.getHelp()));
+            sender.sendMessage(Component.text("/" + label + " ", NamedTextColor.GREEN).append(cmd.getHelp(sender.getPlugin().getMessageService())));
         }
     }
 

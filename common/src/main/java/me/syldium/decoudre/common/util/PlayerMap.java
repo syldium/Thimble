@@ -1,8 +1,8 @@
 package me.syldium.decoudre.common.util;
 
 import me.syldium.decoudre.common.DeCoudrePlugin;
+import me.syldium.decoudre.common.player.MessageKey;
 import me.syldium.decoudre.common.player.Player;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.identity.Identity;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements F
     }
 
     public E get(@NotNull Player player) {
-        return this.get(player.getUuid());
+        return this.get(player.uuid());
     }
 
     public boolean remove(UUID uuid) {
@@ -51,8 +51,16 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements F
         return this.containsValue(identity);
     }
 
+    public void sendMessage(@NotNull MessageKey messageKey) {
+        for (Player player : this.audiences()) player.sendMessage(messageKey);
+    }
+
+    public void sendActionBar(@NotNull MessageKey messageKey) {
+        for (Player player : this.audiences()) player.sendActionBar(messageKey);
+    }
+
     @Override
-    public @NotNull Iterable<? extends Audience> audiences() {
+    public @NotNull Iterable<Player> audiences() {
         List<Player> players = new LinkedList<>();
         for (E identity : this) {
             Player player = this.plugin.getPlayer(identity.uuid());

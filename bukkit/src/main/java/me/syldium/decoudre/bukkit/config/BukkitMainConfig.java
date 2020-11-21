@@ -16,6 +16,11 @@ public class BukkitMainConfig extends FileConfig implements MainConfig {
     }
 
     @Override
+    public @NotNull Locale getLocale() {
+        return new Locale(this.getString("locale", "en"));
+    }
+
+    @Override
     public @NotNull DataService.Type getDataStorageMethod() {
         String method = this.getString("storage-method", "sqlite");
         try {

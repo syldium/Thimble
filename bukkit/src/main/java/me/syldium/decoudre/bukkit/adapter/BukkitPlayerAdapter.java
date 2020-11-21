@@ -62,12 +62,12 @@ public class BukkitPlayerAdapter extends PlayerAdapter<org.bukkit.entity.Player,
 
     @Override
     public @NotNull org.bukkit.entity.Player asPlatform(@NotNull Player player) {
-        return Objects.requireNonNull(this.bootstrap.getServer().getPlayer(player.getUuid()));
+        return Objects.requireNonNull(this.bootstrap.getServer().getPlayer(player.uuid()));
     }
 
     @Override
     public @NotNull Player asAbstractPlayer(org.bukkit.entity.@NotNull Player player) {
-        return this.players.computeIfAbsent(player, s -> new BukkitPlayer(player, this.audiences.player(player), this));
+        return this.players.computeIfAbsent(player, s -> new BukkitPlayer(this.bootstrap.getPlugin(), player, this.audiences.player(player), this));
     }
 
     @Override
@@ -98,6 +98,6 @@ public class BukkitPlayerAdapter extends PlayerAdapter<org.bukkit.entity.Player,
         if (sender instanceof org.bukkit.entity.Player) {
             return this.asAbstractPlayer((org.bukkit.entity.Player) sender);
         }
-        return new BukkitSender(sender, this.audiences.sender(sender));
+        return new BukkitSender(this.bootstrap.getPlugin(), sender, this.audiences.sender(sender));
     }
 }

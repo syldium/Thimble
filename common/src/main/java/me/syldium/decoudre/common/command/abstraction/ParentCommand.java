@@ -2,7 +2,8 @@ package me.syldium.decoudre.common.command.abstraction;
 
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.CommandResult;
-import me.syldium.decoudre.common.player.Message;
+import me.syldium.decoudre.common.player.MessageKey;
+import me.syldium.decoudre.common.service.MessageService;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +16,7 @@ public class ParentCommand extends AbstractCommand {
     private final List<? extends AbstractCommand> children;
     private final Component usage;
 
-    public ParentCommand(String name, List<? extends AbstractCommand> children, Message description, Permission permission) {
+    public ParentCommand(String name, List<? extends AbstractCommand> children, MessageKey description, Permission permission) {
         super(name, description, permission);
         this.children = children;
         this.usage = Component.text(name);
@@ -25,13 +26,13 @@ public class ParentCommand extends AbstractCommand {
     @Override
     public @NotNull CommandResult execute(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull List<String> args) throws CommandException {
         if (args.size() > 0 && !args.get(0).equalsIgnoreCase("help")) {
-            throw new CommandException(Message.UNKNOWN_COMMAND);
+            throw new CommandException(MessageKey.FEEDBACK_UNKNOWN_COMMAND);
         }
 
         this.children.stream()
                 .filter(s -> s.hasPermission(sender))
-                .forEach(s -> sender.sendMessage(s.getHelp()));
-        return CommandResult.SUCCESS;
+                .forEach(s -> sender.sendMessage(s.getHelp(plugin.getMessageService())));
+        return CommandResult.success();
     }
 
     @Override
@@ -52,11 +53,11 @@ public class ParentCommand extends AbstractCommand {
     }
 
     @Override
-    public @NotNull Component getHelp() {
+    public @NotNull Component getHelp(@NotNull MessageService service) {
         return this.usage;
     }
 
-    public @NotNull Component getUsage() {
+    public @NotNull Component getUsage(@NotNull MessageService service) {
         return this.usage;
     }
 

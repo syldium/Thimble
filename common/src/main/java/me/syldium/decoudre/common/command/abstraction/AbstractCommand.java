@@ -2,7 +2,8 @@ package me.syldium.decoudre.common.command.abstraction;
 
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.CommandResult;
-import me.syldium.decoudre.common.player.Message;
+import me.syldium.decoudre.common.player.MessageKey;
+import me.syldium.decoudre.common.service.MessageService;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +17,7 @@ public abstract class AbstractCommand {
 
     protected @Nullable ParentCommand parent;
 
-    AbstractCommand(@NotNull String name, @Nullable Message description, @NotNull Permission permission) {
+    AbstractCommand(@NotNull String name, @Nullable MessageKey description, @NotNull Permission permission) {
         this.name = name;
         this.permission = permission;
     }
@@ -33,9 +34,9 @@ public abstract class AbstractCommand {
         return this.name;
     }
 
-    public abstract @NotNull Component getHelp();
+    public abstract @NotNull Component getHelp(@NotNull MessageService service);
 
-    public abstract @NotNull Component getUsage();
+    public abstract @NotNull Component getUsage(@NotNull MessageService service);
 
     public boolean hasPermission(@NotNull Sender sender) {
         return sender.hasPermission(this.permission.getPermission());

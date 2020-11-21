@@ -1,5 +1,8 @@
 package me.syldium.decoudre.common.command.abstraction;
 
+import me.syldium.decoudre.common.DeCoudrePlugin;
+import me.syldium.decoudre.common.command.CommandResult;
+import me.syldium.decoudre.common.player.MessageKey;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.MessageType;
 import net.kyori.adventure.bossbar.BossBar;
@@ -9,6 +12,7 @@ import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.sound.SoundStop;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.title.Title;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,26 +20,52 @@ import java.util.UUID;
 
 public abstract class AbstractSender<S> implements Sender {
 
+    private final DeCoudrePlugin plugin;
     private final Audience audience;
     protected final S handle;
 
-    public AbstractSender(@NotNull S handle, @NotNull Audience audience) {
+    public AbstractSender(@NotNull DeCoudrePlugin plugin, @NotNull S handle, @NotNull Audience audience) {
+        this.plugin = plugin;
         this.handle = handle;
         this.audience = audience;
     }
 
     @Override
-    public @NotNull UUID getUuid() {
+    public @NotNull UUID uuid() {
         return CONSOLE_UUID;
     }
 
     @Override
-    public @NotNull String getName() {
+    public @NotNull String name() {
         return CONSOLE_NAME;
     }
 
     public @NotNull S getHandle() {
         return this.handle;
+    }
+
+    @Override
+    public void sendFeedback(@NotNull CommandResult feedback) {
+        if (feedback.getMessageKey() == null) {
+            return;
+        }
+        Component component = this.plugin.getMessageService().formatMessage(feedback.getMessageKey(), feedback.getTextColor());
+        this.audience.sendMessage(DeCoudrePlugin.PREFIX.append(component));
+    }
+
+    @Override
+    public void sendMessage(@NotNull MessageKey key, Template... templates) {
+        this.audience.sendMessage(this.plugin.getMessageService().formatMessage(key, templates));
+    }
+
+    @Override
+    public void sendActionBar(@NotNull MessageKey key, Template... templates) {
+        this.audience.sendActionBar(this.plugin.getMessageService().formatMessage(key, templates));
+    }
+
+    @Override
+    public @NotNull DeCoudrePlugin getPlugin() {
+        return this.plugin;
     }
 
     @Override

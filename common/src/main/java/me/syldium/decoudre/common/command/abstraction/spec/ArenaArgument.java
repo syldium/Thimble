@@ -6,7 +6,7 @@ import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.abstraction.CommandException;
 import me.syldium.decoudre.common.command.abstraction.Sender;
 import me.syldium.decoudre.common.game.Arena;
-import me.syldium.decoudre.common.player.Message;
+import me.syldium.decoudre.common.player.MessageKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -20,12 +20,12 @@ class ArenaArgument extends Argument<Arena> {
 
     @Override
     public @NotNull Arena parse(@NotNull DeCoudrePlugin plugin, @NotNull String given) throws CommandException {
-        return (Arena) plugin.getGamesService().getArena(given).orElseThrow(() -> new CommandException(Message.UNKNOWN_ARENA));
+        return (Arena) plugin.getGameService().getArena(given).orElseThrow(() -> new CommandException(MessageKey.FEEDBACK_GAME_UNKNOWN));
     }
 
     @Override
     public List<String> tabComplete(@NotNull DeCoudrePlugin plugin, @NotNull String given, @NotNull Sender sender) {
-        return plugin.getGamesService().getArenas().stream()
+        return plugin.getGameService().getArenas().stream()
                 .filter(arena -> arena.getName().startsWith(given))
                 .map(DeArena::getName)
                 .collect(Collectors.toList());

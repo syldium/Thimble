@@ -1,5 +1,7 @@
+locale: en
+
 # Available (case-insensitive): sqlite, mysql or postgre
-storage-method: "sqlite"
+storage-method: sqlite
 
 sql:
   # When SQLite is used, the following parameters are not necessary.

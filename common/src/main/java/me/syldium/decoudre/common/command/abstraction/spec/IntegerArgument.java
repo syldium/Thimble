@@ -3,7 +3,7 @@ package me.syldium.decoudre.common.command.abstraction.spec;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.abstraction.CommandException.ArgumentParseException;
-import me.syldium.decoudre.common.player.Message;
+import me.syldium.decoudre.common.player.MessageKey;
 import org.jetbrains.annotations.NotNull;
 
 class IntegerArgument extends Argument<Integer> {
@@ -22,11 +22,11 @@ class IntegerArgument extends Argument<Integer> {
         try {
             int n = Integer.parseInt(given);
             if (n < this.min || n > this.max) {
-                throw new ArgumentParseException(Message.NAN);
+                throw new ArgumentParseException(MessageKey.FEEDBACK_NAN);
             }
             return n;
         } catch (NumberFormatException e){
-            throw new ArgumentParseException(Message.NAN);
+            throw new ArgumentParseException(MessageKey.FEEDBACK_NAN);
         }
     }
 

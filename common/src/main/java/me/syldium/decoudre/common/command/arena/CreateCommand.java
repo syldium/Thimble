@@ -8,25 +8,25 @@ import me.syldium.decoudre.common.command.CommandResult;
 import me.syldium.decoudre.common.command.abstraction.Permission;
 import me.syldium.decoudre.common.command.abstraction.Sender;
 import me.syldium.decoudre.common.command.abstraction.spec.Arguments;
-import me.syldium.decoudre.common.player.Message;
+import me.syldium.decoudre.common.player.MessageKey;
 import me.syldium.decoudre.common.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateCommand extends ChildCommand.One<String> {
 
     public CreateCommand() {
-        super("create", Arguments.string("name"), Message.CREATE_NEW_ARENA, Permission.ADMIN);
+        super("create", Arguments.string("name"), MessageKey.HELP_CREATE, Permission.ADMIN);
     }
 
     @Override
     public @NotNull CommandResult execute(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull String name) throws CommandException {
-        DeArena arena = plugin.getGamesService().createArena(name);
+        DeArena arena = plugin.getGameService().createArena(name);
         if (arena != null) {
-            sender.sendMessage(Message.ARENA_CREATED.format());
             if (sender instanceof Player) {
                 arena.setSpawnLocation(((Player) sender).getLocation());
             }
+            return CommandResult.success(MessageKey.FEEDBACK_ARENA_CREATED);
         }
-        return CommandResult.SUCCESS;
+        return CommandResult.error(MessageKey.FEEDBACK_ARENA_ALREADY_EXISTS);
     }
 }
