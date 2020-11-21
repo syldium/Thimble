@@ -37,15 +37,9 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public @NotNull Component formatMessage(@NotNull MessageKey key, @NotNull Template ...templates) {
+    public @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Template ...templates) {
         String input = this.translate(key.getAccessor());
-        return MiniMessage.get().parse(input, templates);
-    }
-
-    @Override
-    public @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull String[] placeholders) {
-        String input = this.translate(key.getAccessor());
-        return MiniMessage.get().parse(input, placeholders).colorIfAbsent(color);
+        return MiniMessage.get().parse(input, templates).colorIfAbsent(color);
     }
 
     private @NotNull String translate(@NotNull String string) {

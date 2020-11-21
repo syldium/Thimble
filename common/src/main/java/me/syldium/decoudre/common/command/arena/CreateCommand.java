@@ -10,6 +10,7 @@ import me.syldium.decoudre.common.command.abstraction.Sender;
 import me.syldium.decoudre.common.command.abstraction.spec.Arguments;
 import me.syldium.decoudre.common.player.MessageKey;
 import me.syldium.decoudre.common.player.Player;
+import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateCommand extends ChildCommand.One<String> {
@@ -27,6 +28,6 @@ public class CreateCommand extends ChildCommand.One<String> {
             }
             return CommandResult.success(MessageKey.FEEDBACK_ARENA_CREATED);
         }
-        return CommandResult.error(MessageKey.FEEDBACK_ARENA_ALREADY_EXISTS);
+        return CommandResult.error(MessageKey.FEEDBACK_ARENA_ALREADY_EXISTS, Template.of("arena", name));
     }
 }

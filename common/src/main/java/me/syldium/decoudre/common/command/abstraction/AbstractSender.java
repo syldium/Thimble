@@ -49,7 +49,7 @@ public abstract class AbstractSender<S> implements Sender {
         if (feedback.getMessageKey() == null) {
             return;
         }
-        Component component = this.plugin.getMessageService().formatMessage(feedback.getMessageKey(), feedback.getTextColor());
+        Component component = this.plugin.getMessageService().formatMessage(feedback);
         this.audience.sendMessage(DeCoudrePlugin.PREFIX.append(component));
     }
 
