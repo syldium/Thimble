@@ -1,5 +1,7 @@
 package me.syldium.decoudre.bukkit;
 
+import me.syldium.decoudre.api.service.GameService;
+import me.syldium.decoudre.api.service.StatsService;
 import me.syldium.decoudre.bukkit.adapter.BukkitPlayerAdapter;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.config.ArenaConfig;
@@ -10,6 +12,8 @@ import me.syldium.decoudre.bukkit.config.BukkitMainConfig;
 import me.syldium.decoudre.bukkit.util.BukkitTask;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.ServicePriority;
+import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +34,10 @@ public class DeBukkitPlugin extends DeCoudrePlugin {
         this.arenaConfig = new BukkitArenaConfig(this, this.getFile("arenas.yml"));
         this.platform = new BukkitPlayerAdapter(bootstrap, this.audiences);
         this.enable(new BukkitMainConfig(this, this.getFile("config.yml")));
+
+        ServicesManager servicesManager = bootstrap.getServer().getServicesManager();
+        servicesManager.register(GameService.class, this.getGameService(), bootstrap, ServicePriority.High);
+        servicesManager.register(StatsService.class, this.getStatsService(), bootstrap, ServicePriority.High);
     }
 
     @Override
