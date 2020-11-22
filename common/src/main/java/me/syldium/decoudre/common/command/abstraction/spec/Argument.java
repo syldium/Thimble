@@ -1,6 +1,5 @@
 package me.syldium.decoudre.common.command.abstraction.spec;
 
-import com.mojang.brigadier.arguments.ArgumentType;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.abstraction.CommandException;
 import me.syldium.decoudre.common.command.abstraction.Sender;
@@ -36,7 +35,7 @@ public abstract class Argument<T> implements ComponentLike {
         return Component.text("[" + this.name + "]");
     }
 
-    public Argument<T> optional() {
+    public @NotNull Argument<T> optional() {
         this.required = false;
         return this;
     }
@@ -46,8 +45,6 @@ public abstract class Argument<T> implements ComponentLike {
     public List<String> tabComplete(@NotNull DeCoudrePlugin plugin, @NotNull String given, @NotNull Sender sender) {
         return Collections.emptyList();
     }
-
-    public abstract @NotNull ArgumentType<?> asBrigadierType();
 
     @Override
     public String toString() {

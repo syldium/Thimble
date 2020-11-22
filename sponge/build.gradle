@@ -1,0 +1,43 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'org.spongepowered.plugin' version '0.9.0'
+}
+
+repositories {
+    maven { url 'https://repo.spongepowered.org/maven' }
+}
+
+dependencies {
+    implementation project(':api')
+    implementation project(':common')
+
+    compileOnly 'org.spongepowered:spongeapi:7.3.0'
+    annotationProcessor 'org.spongepowered:spongeapi:7.3.0'
+    implementation ('net.kyori:adventure-platform-spongeapi:4.0.0-SNAPSHOT') {
+        exclude(module: 'checker-qual')
+        exclude(module: 'guava')
+    }
+}
+
+sponge.plugin.id = 'decoudre'
+sponge.plugin.meta.setDescription(project.description)
+sponge.plugin.meta.version = project.ext.fullVersion
+sponge.plugin.meta.url = 'https://github.com/syldium/DeCoudre'
+
+shadowJar {
+    archiveBaseName = "DeCoudre-Sponge-${project.ext.fullVersion}.jar"
+
+    dependencies {
+        exclude(dependency('org.checkerframework:checker-qual'))
+        exclude(dependency('org.jetbrains:annotations'))
+        exclude(dependency('net.kyori:examination-string'))
+    }
+
+    relocate 'net.kyori.adventure', 'me.syldium.decoudre.lib.adventure'
+    relocate 'net.kyori.examination', 'me.syldium.decoudre.lib.examination'
+    minimize()
+}
+
+artifacts {
+    archives shadowJar
+}

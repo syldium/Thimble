@@ -1,6 +1,5 @@
 package me.syldium.decoudre.common.command.abstraction.spec;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
 import me.syldium.decoudre.api.arena.DeArena;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.abstraction.CommandException;
@@ -29,10 +28,5 @@ class ArenaArgument extends Argument<Arena> {
                 .filter(arena -> arena.getName().startsWith(given))
                 .map(DeArena::getName)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public @NotNull StringArgumentType asBrigadierType() {
-        return StringArgumentType.string();
     }
 }

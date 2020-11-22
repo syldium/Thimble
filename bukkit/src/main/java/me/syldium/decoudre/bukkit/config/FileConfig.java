@@ -17,7 +17,7 @@ public abstract class FileConfig {
     private final File file;
     protected final FileConfiguration configuration;
 
-    public FileConfig(@NotNull DeBukkitPlugin plugin, @NotNull File file) {
+    FileConfig(@NotNull DeBukkitPlugin plugin, @NotNull File file) {
         this.plugin = plugin;
         this.file = file;
         this.configuration = new YamlConfiguration();

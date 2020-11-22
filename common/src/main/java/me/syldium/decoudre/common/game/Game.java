@@ -105,6 +105,7 @@ public class Game implements DeGame, Runnable {
                     for (PoolBlock block : jumper.getBlocksBelow()) {
                         if (!block.isPassable()) {
                             this.handleJump(jumper, this.players.get(jumper), JumpVerdict.MISSED);
+                            return;
                         }
                     }
                 }

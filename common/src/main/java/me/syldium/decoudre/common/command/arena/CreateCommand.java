@@ -26,7 +26,7 @@ public class CreateCommand extends ChildCommand.One<String> {
             if (sender instanceof Player) {
                 arena.setSpawnLocation(((Player) sender).getLocation());
             }
-            return CommandResult.success(MessageKey.FEEDBACK_ARENA_CREATED);
+            return CommandResult.success(MessageKey.FEEDBACK_ARENA_CREATED, Template.of("arena", name));
         }
         return CommandResult.error(MessageKey.FEEDBACK_ARENA_ALREADY_EXISTS, Template.of("arena", name));
     }

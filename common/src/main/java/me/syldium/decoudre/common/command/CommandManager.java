@@ -14,13 +14,17 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CommandManager {
+
+    private static final Pattern DELIMITER = Pattern.compile(" ");
 
     private final List<? extends AbstractCommand> mainCommands;
 
@@ -34,7 +38,16 @@ public class CommandManager {
         );
     }
 
-    private @NotNull CommandResult executeCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull String label, @NotNull List<@NotNull String> arguments) {
+    /**
+     * Executes the command without showing any {@link CommandResult}.
+     *
+     * @param plugin The plugin instance.
+     * @param sender The command sender.
+     * @param label The command label.
+     * @param arguments The command arguments.
+     * @return Not handled command result.
+     */
+    protected @NotNull CommandResult executeCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull String label, @NotNull List<@NotNull String> arguments) {
         if (arguments.size() < 1 || arguments.get(0).equalsIgnoreCase("help")) {
             this.sendMainHelp(sender, label);
             return CommandResult.success();
@@ -82,17 +95,53 @@ public class CommandManager {
         return result;
     }
 
-    public @NotNull CommandResult runCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull String label, @NotNull List<@NotNull String> arguments) {
+    /**
+     * Executes the command without showing any {@link CommandResult}.
+     *
+     * @param plugin The plugin instance.
+     * @param sender The command sender.
+     * @param label The command label.
+     * @param arguments The command arguments.
+     * @return Not handled command result.
+     */
+    protected @NotNull CommandResult executeCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull String label, @NotNull String arguments) {
+        return this.executeCommand(plugin, sender, label, this.getArgumentsList(arguments, 0));
+    }
+
+    /**
+     * Executes the command and displays the feedback.
+     *
+     * @param plugin The plugin instance.
+     * @param sender The command sender.
+     * @param label The command label.
+     * @param arguments The command arguments.
+     * @return Result of the command execution.
+     */
+    protected @NotNull CommandResult runCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull String label, @NotNull List<@NotNull String> arguments) {
         CommandResult result = this.executeCommand(plugin, sender, label, arguments);
         sender.sendFeedback(result);
         return result;
     }
 
-    public @NotNull List<@NotNull String> tabCompleteCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull List<@NotNull String> arguments) {
-        if (arguments.size() == 1) {
+    /**
+     * Executes the command and displays the feedback.
+     *
+     * @param plugin The plugin instance.
+     * @param sender The command sender.
+     * @param label The command label.
+     * @param arguments The command arguments.
+     * @return Result of the command execution.
+     */
+    protected @NotNull CommandResult runCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull String label, @NotNull String arguments) {
+        return this.runCommand(plugin, sender, label, this.getArgumentsList(arguments, 0));
+    }
+
+    protected @NotNull List<@NotNull String> tabCompleteCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull List<@NotNull String> arguments) {
+        if (arguments.size() < 2) {
+            String arg = arguments.isEmpty() ? "" : arguments.get(0);
             return this.mainCommands.stream()
                     .filter(AbstractCommand::shouldDisplay)
-                    .filter(c -> c.getName().startsWith(arguments.get(0)))
+                    .filter(c -> c.getName().startsWith(arg))
                     .filter(c -> c.hasPermission(sender))
                     .map(AbstractCommand::getName)
                     .collect(Collectors.toList());
@@ -111,6 +160,10 @@ public class CommandManager {
         return Collections.emptyList();
     }
 
+    protected @NotNull List<@NotNull String> tabCompleteCommand(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull String arguments) {
+        return this.tabCompleteCommand(plugin, sender, this.getArgumentsList(arguments, -1));
+    }
+
     private void sendMainHelp(@NotNull Sender sender, @NotNull String label) {
         for (AbstractCommand cmd : this.mainCommands) {
             if (!cmd.hasPermission(sender) || !cmd.shouldDisplay()) {
@@ -122,5 +175,16 @@ public class CommandManager {
 
     protected @NotNull List<@NotNull ? extends AbstractCommand> getMainCommands() {
         return this.mainCommands;
+    }
+
+    public @NotNull String[] getArgumentsArray(@NotNull String arguments, int limit) {
+        return arguments.isEmpty() ? new String[0] : DELIMITER.split(arguments, limit);
+    }
+
+    public @NotNull List<@NotNull String> getArgumentsList(@NotNull String arguments, int limit) {
+        if (arguments.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(Arrays.asList(DELIMITER.split(arguments, limit)));
     }
 }

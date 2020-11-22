@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface ArenaConfig {
 
-    @NotNull Collection<Arena> load();
+    @NotNull Collection<@NotNull Arena> load();
 
-    void save(@NotNull Set<Arena> arenas);
+    void save(@NotNull Set<@NotNull Arena> arenas);
 }

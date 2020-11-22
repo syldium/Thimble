@@ -15,5 +15,6 @@ subprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
+    project.description = 'Plugin for the mini game "Dé à coudre"'
     project.ext.fullVersion = '1.0-SNAPSHOT'
 }

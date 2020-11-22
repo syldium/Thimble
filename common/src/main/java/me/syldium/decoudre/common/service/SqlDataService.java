@@ -41,7 +41,7 @@ public class SqlDataService implements DataService {
             String queryPath = String.format(TABLES, type == Type.POSTGRE ? "postgre" : "mysql");
             this.getConnection().createStatement().execute(ResourceReader.readResource(queryPath));
         } catch (SQLException ex) {
-            this.logger.log(Level.SEVERE, "Error during database setup.", ex);
+            this.logger.log(Level.SEVERE, "Error during database setup. See the message below.", ex);
         }
     }
 
