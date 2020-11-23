@@ -1,9 +1,10 @@
 package me.syldium.decoudre.sponge;
 
-import com.flowpowered.math.vector.Vector3d;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import me.syldium.decoudre.api.Location;
+import me.syldium.decoudre.api.service.GameService;
+import me.syldium.decoudre.api.service.StatsService;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.config.ArenaConfig;
 import me.syldium.decoudre.common.game.Arena;
@@ -91,6 +92,9 @@ public class DeSpongePlugin extends DeCoudrePlugin {
         this.arenaConfig = new SpongeArenaConfig(getFile("arenas.conf"), this.getSlf4jLogger());
 
         this.enable(new SpongeMainConfig(this.configManager, this.getSlf4jLogger()));
+
+        this.getServiceManager().setProvider(this.container, StatsService.class, this.getStatsService());
+        this.getServiceManager().setProvider(this.container, GameService.class, this.getGameService());
     }
 
     @Listener

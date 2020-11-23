@@ -12,7 +12,7 @@ import org.spongepowered.api.event.impl.AbstractEvent;
 /**
  * When a player is about to join an arena.
  *
- * <p>This event is specific to a Bukkit environment.</p>
+ * <p>This event is specific to a Sponge environment.</p>
  */
 public class SpongePlayerJoinArenaEvent extends AbstractEvent implements TargetPlayerEvent, Cancellable {
 
