@@ -25,7 +25,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-public class BukkitPlayerAdapter extends PlayerAdapter<org.bukkit.entity.Player, Location> {
+public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Player, Location> {
 
     private static final BlockFace[] DIRECTIONS = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 

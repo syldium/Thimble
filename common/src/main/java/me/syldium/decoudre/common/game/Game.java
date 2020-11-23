@@ -149,6 +149,7 @@ public class Game implements DeGame, Runnable {
     }
 
     private void end(@Nullable InGamePlayer latest) {
+        this.plugin.getEventAdapter().callGameEndEvent(this, latest);
         for (InGamePlayer player : this.players) {
             if (player.equals(latest)) {
                 player.incrementWins();
@@ -212,6 +213,7 @@ public class Game implements DeGame, Runnable {
         if (this.players.contains(player.uuid())) {
             return CompletableFuture.completedFuture(false);
         }
+        this.plugin.getEventAdapter().callPlayerJoinArenaEvent(this, player);
 
         return this.plugin.getStatsService().getPlayerStatistics(player.uuid())
                 .thenApply(optional -> {

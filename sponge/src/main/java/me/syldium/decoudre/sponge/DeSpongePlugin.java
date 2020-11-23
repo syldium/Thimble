@@ -8,6 +8,7 @@ import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.config.ArenaConfig;
 import me.syldium.decoudre.common.game.Arena;
 import me.syldium.decoudre.common.util.Task;
+import me.syldium.decoudre.sponge.adapter.SpongeEventAdapter;
 import me.syldium.decoudre.sponge.adapter.SpongePlayerAdapter;
 import me.syldium.decoudre.sponge.command.SpongeCommandExecutor;
 import me.syldium.decoudre.sponge.config.serializer.ArenaSerializer;
@@ -26,18 +27,17 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.GameRegistry;
 import org.spongepowered.api.Server;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.event.filter.cause.Root;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.text.LiteralText;
+import org.spongepowered.api.service.ServiceManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +62,9 @@ public class DeSpongePlugin extends DeCoudrePlugin {
 
     private SpongeAudiences audiences;
 
-    private SpongePlayerAdapter platform;
+    private SpongeEventAdapter eventAdapter;
+
+    private SpongePlayerAdapter playerAdapter;
 
     private ArenaConfig arenaConfig;
 
@@ -80,7 +82,8 @@ public class DeSpongePlugin extends DeCoudrePlugin {
         this.saveDefaultConfig();
         this.logger = new LoggerWrapper(this.container.getLogger());
         this.audiences = SpongeAudiences.create(this.container, this.game);
-        this.platform = new SpongePlayerAdapter(this, this.audiences);
+        this.eventAdapter = new SpongeEventAdapter(this.container);
+        this.playerAdapter = new SpongePlayerAdapter(this, this.audiences);
 
         this.game.getCommandManager().register(this, new SpongeCommandExecutor(this), "dac");
         TypeSerializerCollection.defaults().register(TypeToken.of(Arena.class), new ArenaSerializer(this));
@@ -88,15 +91,6 @@ public class DeSpongePlugin extends DeCoudrePlugin {
         this.arenaConfig = new SpongeArenaConfig(getFile("arenas.conf"), this.getSlf4jLogger());
 
         this.enable(new SpongeMainConfig(this.configManager, this.getSlf4jLogger()));
-    }
-
-    @Listener
-    public void onRightClickEntity(InteractBlockEvent event, @Root Player player){
-        if (event.getInteractionPoint().isPresent()) {
-            Vector3d v = event.getInteractionPoint().get();
-            BlockState state = player.getWorld().getBlock((int) Math.floor(v.getX()), (int) v.getY(), (int) Math.floor(v.getZ()));
-            player.sendMessage(LiteralText.of(state.getApplicableProperties()));
-        }
     }
 
     @Listener
@@ -130,12 +124,17 @@ public class DeSpongePlugin extends DeCoudrePlugin {
 
     @Override
     public @Nullable me.syldium.decoudre.common.player.Player getPlayer(@NotNull UUID uuid) {
-        return this.getServer().getPlayer(uuid).map(this.platform::asAbstractPlayer).orElse(null);
+        return this.getServer().getPlayer(uuid).map(this.playerAdapter::asAbstractPlayer).orElse(null);
+    }
+
+    @Override
+    public @NotNull SpongeEventAdapter getEventAdapter() {
+        return this.eventAdapter;
     }
 
     @Override
     public @NotNull SpongePlayerAdapter getPlayerAdapter() {
-        return this.platform;
+        return this.playerAdapter;
     }
 
     public @NotNull Server getServer() {
@@ -144,6 +143,19 @@ public class DeSpongePlugin extends DeCoudrePlugin {
 
     public @NotNull GameRegistry getRegistry() {
         return this.game.getRegistry();
+    }
+
+    public @NotNull ServiceManager getServiceManager() {
+        return this.game.getServiceManager();
+    }
+
+    public void registerListeners(@NotNull Object listener) {
+        this.game.getEventManager().registerListeners(this, listener);
+    }
+
+    public @NotNull Cause getCause() {
+        EventContext eventContext = EventContext.builder().add(EventContextKeys.PLUGIN, this.container).build();
+        return Cause.of(eventContext, this.container);
     }
 
     private void saveDefaultConfig() throws IOException {

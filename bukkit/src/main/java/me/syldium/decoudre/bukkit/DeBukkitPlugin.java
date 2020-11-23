@@ -2,6 +2,7 @@ package me.syldium.decoudre.bukkit;
 
 import me.syldium.decoudre.api.service.GameService;
 import me.syldium.decoudre.api.service.StatsService;
+import me.syldium.decoudre.bukkit.adapter.BukkitEventAdapter;
 import me.syldium.decoudre.bukkit.adapter.BukkitPlayerAdapter;
 import me.syldium.decoudre.bukkit.hook.PluginHook;
 import me.syldium.decoudre.common.DeCoudrePlugin;
@@ -26,14 +27,16 @@ public class DeBukkitPlugin extends DeCoudrePlugin {
 
     private final DeCoudreBootstrap bootstrap;
     private final BukkitAudiences audiences;
-    private final BukkitPlayerAdapter platform;
+    private final BukkitEventAdapter eventAdapter;
+    private final BukkitPlayerAdapter playerAdapter;
     private final BukkitArenaConfig arenaConfig;
 
     public DeBukkitPlugin(@NotNull DeCoudreBootstrap bootstrap) {
         this.bootstrap = bootstrap;
         this.audiences = BukkitAudiences.create(bootstrap);
         this.arenaConfig = new BukkitArenaConfig(this, this.getFile("arenas.yml"));
-        this.platform = new BukkitPlayerAdapter(bootstrap, this.audiences);
+        this.eventAdapter = new BukkitEventAdapter(bootstrap.getServer().getPluginManager());
+        this.playerAdapter = new BukkitPlayerAdapter(bootstrap, this.audiences);
         this.enable(new BukkitMainConfig(this, this.getFile("config.yml")));
 
         ServicesManager servicesManager = bootstrap.getServer().getServicesManager();
@@ -69,12 +72,17 @@ public class DeBukkitPlugin extends DeCoudrePlugin {
         if (player == null) {
             return null;
         }
-        return this.platform.asAbstractPlayer(player);
+        return this.playerAdapter.asAbstractPlayer(player);
+    }
+
+    @Override
+    public @NotNull BukkitEventAdapter getEventAdapter() {
+        return this.eventAdapter;
     }
 
     @Override
     public @NotNull BukkitPlayerAdapter getPlayerAdapter() {
-        return this.platform;
+        return this.playerAdapter;
     }
 
     public void registerEvents(@NotNull Listener listener) {

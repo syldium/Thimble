@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.WeakHashMap;
 
-public class SpongePlayerAdapter extends PlayerAdapter<Player, Location<World>> {
+public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World>> {
 
     private static final Direction[] DIRECTIONS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 

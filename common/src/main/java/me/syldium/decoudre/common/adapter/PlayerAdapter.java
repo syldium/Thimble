@@ -12,17 +12,17 @@ import org.jetbrains.annotations.NotNull;
  * @param <P> Player type
  * @param <L> Location type
  */
-public abstract class PlayerAdapter<P, L> {
+public interface PlayerAdapter<P, L> {
 
-    public abstract boolean isDeCoudre(@NotNull PoolBlock abstracted);
+    boolean isDeCoudre(@NotNull PoolBlock abstracted);
 
-    public abstract @NotNull BlockData getRandomWool();
+    @NotNull BlockData getRandomWool();
 
-    public abstract @NotNull P asPlatform(@NotNull Player player);
+    @NotNull P asPlatform(@NotNull Player player);
 
-    public abstract @NotNull Player asAbstractPlayer(@NotNull P player);
+    @NotNull Player asAbstractPlayer(@NotNull P player);
 
-    public abstract @NotNull L asPlatform(@NotNull Location location);
+    @NotNull L asPlatform(@NotNull Location location);
 
-    public abstract @NotNull Location asAbstractLocation(@NotNull L location);
+    @NotNull Location asAbstractLocation(@NotNull L location);
 }

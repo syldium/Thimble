@@ -2,7 +2,6 @@ package me.syldium.decoudre.service;
 
 import me.syldium.decoudre.api.Ranking;
 import me.syldium.decoudre.api.player.DePlayerStats;
-import me.syldium.decoudre.common.player.InGamePlayer;
 import me.syldium.decoudre.common.player.PlayerStats;
 import me.syldium.decoudre.api.util.Leaderboard;
 import org.jetbrains.annotations.NotNull;
