@@ -6,4 +6,11 @@ dependencies {
     implementation project(':api')
     compileOnly 'com.mojang:brigadier:1.0.17'
     implementation 'net.kyori:adventure-text-minimessage:4.0.0-SNAPSHOT'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
 }

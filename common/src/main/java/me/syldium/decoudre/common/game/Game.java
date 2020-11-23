@@ -156,6 +156,7 @@ public class Game implements DeGame, Runnable {
                 player.incrementLosses();
             }
             this.plugin.getStatsService().savePlayerStatistics(player);
+            this.plugin.getStatsService().updateLeaderboard(player);
             this.plugin.getGameService().setPlayerGame(player.uuid(), null);
         }
         this.players.sendActionBar(MessageKey.ACTIONBAR_ENDED);

@@ -1,9 +1,11 @@
 package me.syldium.decoudre.common.service;
 
+import me.syldium.decoudre.api.Ranking;
 import me.syldium.decoudre.api.player.DePlayerStats;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.config.MainConfig;
 import me.syldium.decoudre.common.player.PlayerStats;
+import me.syldium.decoudre.api.util.Leaderboard;
 import me.syldium.decoudre.common.util.ResourceReader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +16,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -65,7 +68,7 @@ public class SqlDataService implements DataService {
             } else {
                 statement.setString(1, uuid.toString());
             }
-            return this.fromResultSet(statement.executeQuery());
+            return this.optionalFromResultSet(statement.executeQuery());
         } catch (SQLException ex) {
             this.logger.log(Level.SEVERE, "Error when fetching statistics from the database.", ex);
             return Optional.empty();
@@ -76,10 +79,27 @@ public class SqlDataService implements DataService {
     public @NotNull Optional<@NotNull DePlayerStats> getPlayerStatistics(@NotNull String name) {
         try (PreparedStatement statement = this.getConnection().prepareStatement("SELECT * FROM dac WHERE name = ?")) {
             statement.setString(1, name);
-            return this.fromResultSet(statement.executeQuery());
+            return this.optionalFromResultSet(statement.executeQuery());
         } catch (SQLException ex) {
             this.logger.log(Level.SEVERE, "Error when fetching statistics from the database.", ex);
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public @NotNull Leaderboard<@NotNull DePlayerStats> getLeaderboard(@NotNull Ranking ranking) {
+        try (PreparedStatement statement = this.getConnection().prepareStatement("SELECT * FROM dac ORDER BY ? DESC LIMIT 10")) {
+            statement.setString(1, ranking.name().toLowerCase(Locale.ROOT));
+            ResultSet result = statement.executeQuery();
+
+            Leaderboard<DePlayerStats> leaderboard = Leaderboard.of(ranking);
+            while (result.next()) {
+                leaderboard.add(this.fromResultSet(result));
+            }
+            return leaderboard;
+        } catch (SQLException ex) {
+            this.logger.log(Level.SEVERE, "Error when fetching leaderboard from the database.", ex);
+            return Leaderboard.of(ranking);
         }
     }
 
@@ -102,25 +122,29 @@ public class SqlDataService implements DataService {
         }
     }
 
-    private @NotNull Optional<@NotNull DePlayerStats> fromResultSet(@NotNull ResultSet result) throws SQLException {
+    private @NotNull Optional<@NotNull DePlayerStats> optionalFromResultSet(@NotNull ResultSet result) throws SQLException {
         if (result.next()) {
-            UUID uuid;
-            if (this.type == Type.POSTGRE) {
-                uuid = result.getObject("uuid", UUID.class);
-            } else {
-                uuid = UUID.fromString(result.getString("uuid"));
-            }
-
-            return Optional.of(new PlayerStats(
-                    uuid,
-                    result.getString("name"),
-                    result.getInt("wins"),
-                    result.getInt("losses"),
-                    result.getInt("jumps"),
-                    result.getInt("dacs")
-            ));
+            return Optional.of(this.fromResultSet(result));
         }
         return Optional.empty();
+    }
+
+    private @NotNull DePlayerStats fromResultSet(@NotNull ResultSet result) throws SQLException {
+        UUID uuid;
+        if (this.type == Type.POSTGRE) {
+            uuid = result.getObject("uuid", UUID.class);
+        } else {
+            uuid = UUID.fromString(result.getString("uuid"));
+        }
+
+        return new PlayerStats(
+                uuid,
+                result.getString("name"),
+                result.getInt("wins"),
+                result.getInt("losses"),
+                result.getInt("jumps"),
+                result.getInt("dacs")
+        );
     }
 
     private @NotNull Connection getConnection() throws SQLException {
