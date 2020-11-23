@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
 
 public class BukkitMainConfig extends FileConfig implements MainConfig {
@@ -43,5 +44,10 @@ public class BukkitMainConfig extends FileConfig implements MainConfig {
     @Override
     public @Nullable String getJdbcPassword() {
         return this.getString("sql.password");
+    }
+
+    @Override
+    public @NotNull List<String> getEnabledIntegrations() {
+        return this.configuration.getStringList("integrations");
     }
 }

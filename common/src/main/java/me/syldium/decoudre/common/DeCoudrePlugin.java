@@ -1,5 +1,6 @@
 package me.syldium.decoudre.common;
 
+import me.syldium.decoudre.common.adapter.EventAdapter;
 import me.syldium.decoudre.common.adapter.PlayerAdapter;
 import me.syldium.decoudre.common.config.ArenaConfig;
 import me.syldium.decoudre.common.config.MainConfig;
@@ -29,12 +30,14 @@ public abstract class DeCoudrePlugin {
     private GameServiceImpl gameService;
     private MessageService messageService;
     private StatsServiceImpl statsService;
+    private MainConfig config;
 
     public void enable(@NotNull MainConfig config) {
         this.dataService = DataService.fromConfig(this, config);
         this.gameService = new GameServiceImpl(this, this.getArenaConfig());
         this.messageService = new MessageServiceImpl(config, this.getLogger());
         this.statsService = new StatsServiceImpl(this.dataService, Executors.newSingleThreadExecutor());
+        this.config = config;
     }
 
     public void disable() {
@@ -61,6 +64,10 @@ public abstract class DeCoudrePlugin {
 
     public abstract @NotNull ArenaConfig getArenaConfig();
 
+    public @NotNull MainConfig getMainConfig() {
+        return this.config;
+    }
+
     public abstract @NotNull File getDataFolder();
 
     public abstract @NotNull Task startGameTask(@NotNull Runnable runnable);
@@ -78,6 +85,8 @@ public abstract class DeCoudrePlugin {
     }
 
     public abstract @Nullable Player getPlayer(@NotNull UUID uuid);
+
+    public abstract @NotNull EventAdapter<?> getEventAdapter();
 
     public abstract @NotNull PlayerAdapter<?, ?> getPlayerAdapter();
 }

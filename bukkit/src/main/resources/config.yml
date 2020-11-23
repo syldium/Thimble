@@ -10,3 +10,6 @@ sql:
   jdbcUri: jdbc:mysql://localhost:3306/decoudre
   username: decoudre
   password: password
+
+integrations:
+ - PlaceholderAPI

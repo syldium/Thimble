@@ -10,6 +10,7 @@ repositories {
 dependencies {
     implementation project(':api')
     implementation project(':common')
+    implementation project(':bukkit:integration')
 
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
     compileOnly 'com.destroystokyo.paper:paper-mojangapi:1.16.4-R0.1-SNAPSHOT'
@@ -22,6 +23,7 @@ dependencies {
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         expand 'pluginVersion': project.ext.fullVersion
+        expand(project.properties)
         include 'plugin.yml'
     }
 }

@@ -1,5 +1,7 @@
 rootProject.name = 'DeCoudre'
-include 'api'
-include 'common'
-include 'bukkit'
-include 'sponge'
+include (
+        'api',
+        'common',
+        'bukkit', 'bukkit:integration',
+        'sponge'
+)

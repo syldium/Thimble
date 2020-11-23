@@ -3,6 +3,7 @@ package me.syldium.decoudre.bukkit;
 import me.syldium.decoudre.api.service.GameService;
 import me.syldium.decoudre.api.service.StatsService;
 import me.syldium.decoudre.bukkit.adapter.BukkitPlayerAdapter;
+import me.syldium.decoudre.bukkit.hook.PluginHook;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.config.ArenaConfig;
 import me.syldium.decoudre.common.player.Player;
@@ -38,6 +39,8 @@ public class DeBukkitPlugin extends DeCoudrePlugin {
         ServicesManager servicesManager = bootstrap.getServer().getServicesManager();
         servicesManager.register(GameService.class, this.getGameService(), bootstrap, ServicePriority.High);
         servicesManager.register(StatsService.class, this.getStatsService(), bootstrap, ServicePriority.High);
+
+        new PluginHook(this, bootstrap);
     }
 
     @Override

@@ -1,7 +1,11 @@
 name: DeCoudre
 version: ${pluginVersion}
+description: ${properties.description}
+author: syldium
+
 main: me.syldium.decoudre.bukkit.DeCoudreBootstrap
 api-version: 1.15
+softdepend: [PlaceholderAPI]
 
 commands:
   dac:
