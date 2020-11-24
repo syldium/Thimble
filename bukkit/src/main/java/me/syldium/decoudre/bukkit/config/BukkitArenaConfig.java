@@ -10,8 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.UUID;
 
 public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
 
@@ -26,8 +27,14 @@ public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
             Arena arena = new Arena(this.plugin, name);
             arenas.add(arena);
             ConfigurationSection section = this.configuration.getConfigurationSection(name);
-            this.set(section, "spawn-location", arena::setSpawnLocation);
-            this.set(section, "jump-location", arena::setJumpLocation);
+            ConfigurationSection jumpSection = section.getConfigurationSection("jump-location");
+            if (jumpSection != null) {
+                arena.setJumpLocation(this.getLocation(jumpSection));
+            }
+            ConfigurationSection spawnSection = section.getConfigurationSection("spawn-location");
+            if (spawnSection != null) {
+                arena.setSpawnLocation(this.getLocation(spawnSection));
+            }
             arena.setMinPlayers(section.getInt("min-players", 2));
             arena.setMaxPlayers(section.getInt("max-players", 8));
         }
@@ -38,18 +45,31 @@ public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
     public void save(@NotNull Set<Arena> arenas) {
         for (Arena arena : arenas) {
             ConfigurationSection section = this.configuration.createSection(arena.getName());
-            section.set("spawn-location", this.plugin.getPlayerAdapter().asPlatform(arena.getSpawnLocation()));
-            section.set("jump-location", this.plugin.getPlayerAdapter().asPlatform(arena.getJumpLocation()));
+            this.setLocation(section.createSection("jump-location"), arena.getJumpLocation());
+            this.setLocation(section.createSection("spawn-location"), arena.getSpawnLocation());
             section.set("min-players", arena.getMinPlayers());
             section.set("max-players", arena.getMaxPlayers());
         }
         this.save();
     }
 
-    private void set(@NotNull ConfigurationSection section, @NotNull String path, @NotNull Consumer<Location> setter) {
-        org.bukkit.Location location = section.getLocation(path);
-        if (location != null) {
-            setter.accept(this.plugin.getPlayerAdapter().asAbstractLocation(location));
-        }
+    private @NotNull Location getLocation(@NotNull ConfigurationSection section) {
+        return new Location(
+                UUID.fromString(Objects.requireNonNull(section.getString("world"), "Serialized location doesn't have a world property.")),
+                section.getDouble("x"),
+                section.getDouble("y"),
+                section.getDouble("z"),
+                (float) section.getDouble("pitch"),
+                (float) section.getDouble("yaw")
+        );
+    }
+
+    private void setLocation(@NotNull ConfigurationSection section, @NotNull Location location) {
+        section.set("world", location.getWorldUUID().toString());
+        section.set("x", location.getX());
+        section.set("y", location.getY());
+        section.set("z", location.getZ());
+        section.set("pitch", location.getPitch());
+        section.set("yaw", location.getYaw());
     }
 }

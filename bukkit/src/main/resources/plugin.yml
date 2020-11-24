@@ -4,7 +4,7 @@ description: ${properties.description}
 author: syldium
 
 main: me.syldium.decoudre.bukkit.DeCoudreBootstrap
-api-version: 1.15
+api-version: 1.13
 softdepend: [PlaceholderAPI]
 
 commands:

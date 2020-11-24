@@ -30,6 +30,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 
 public class Game implements DeGame, Runnable {
 
@@ -213,7 +214,9 @@ public class Game implements DeGame, Runnable {
         if (this.players.contains(player.uuid())) {
             return CompletableFuture.completedFuture(false);
         }
-        this.plugin.getEventAdapter().callPlayerJoinArenaEvent(this, player);
+        if (this.plugin.getEventAdapter().callPlayerJoinArenaEvent(this, player)) {
+            return CompletableFuture.completedFuture(false);
+        }
 
         return this.plugin.getStatsService().getPlayerStatistics(player.uuid())
                 .thenApply(optional -> {
@@ -224,6 +227,9 @@ public class Game implements DeGame, Runnable {
                         return true;
                     }
                     return false;
+                }).exceptionally(throwable -> {
+                    this.plugin.getLogger().log(Level.SEVERE, "Exception when adding the player to the arena.", throwable);
+                    return null;
                 });
     }
 

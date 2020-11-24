@@ -1,18 +1,18 @@
 package me.syldium.decoudre.bukkit.adapter;
 
 import me.syldium.decoudre.bukkit.DeCoudreBootstrap;
+import me.syldium.decoudre.bukkit.command.BukkitSender;
+import me.syldium.decoudre.bukkit.world.BukkitBlockData;
 import me.syldium.decoudre.common.adapter.PlayerAdapter;
 import me.syldium.decoudre.common.command.abstraction.Sender;
 import me.syldium.decoudre.common.player.Player;
+import me.syldium.decoudre.common.util.EnumUtil;
 import me.syldium.decoudre.common.world.BlockData;
 import me.syldium.decoudre.common.world.PoolBlock;
-import me.syldium.decoudre.bukkit.command.BukkitSender;
-import me.syldium.decoudre.bukkit.world.BukkitBlockData;
 import me.syldium.decoudre.bukkit.world.BukkitPoolBlock;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -28,6 +28,7 @@ import java.util.WeakHashMap;
 public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Player, Location> {
 
     private static final BlockFace[] DIRECTIONS = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+    private static final Set<Material> WOOLS_TYPES = EnumUtil.getAllMatching(Material.class, material -> material.name().endsWith("WOOL"));
 
     private final DeCoudreBootstrap bootstrap;
     private final BukkitAudiences audiences;
@@ -51,9 +52,8 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
 
     @Override
     public @NotNull BlockData getRandomWool() {
-        Set<Material> wools = Tag.WOOL.getValues();
-        int index = new Random().nextInt(wools.size());
-        Iterator<Material> iter = wools.iterator();
+        int index = new Random().nextInt(WOOLS_TYPES.size());
+        Iterator<Material> iter = WOOLS_TYPES.iterator();
         for (int i = 0; i < index; i++) {
             iter.next();
         }
