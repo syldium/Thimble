@@ -27,6 +27,11 @@ public class InGamePlayer extends PlayerStats implements DePlayer {
         return this.lifes;
     }
 
+    @Override
+    public boolean isSpectator() {
+        return false;
+    }
+
     public void incrementLifes() {
         this.lifes++;
     }

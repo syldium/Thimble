@@ -14,6 +14,7 @@ import me.syldium.decoudre.common.util.Task;
 import me.syldium.decoudre.common.world.BlockData;
 import me.syldium.decoudre.common.world.Blocks;
 import me.syldium.decoudre.common.world.PoolBlock;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.Template;
@@ -77,7 +78,11 @@ public class Game implements DeGame, Runnable {
                 this.players.sendActionBar(Component.text(countdown, NamedTextColor.BLUE));
                 this.timer--;
                 if (this.timer < 1) {
-                    this.queue.addAll(this.players.uuidSet());
+                    for (InGamePlayer player : this.players) {
+                        if (!player.isSpectator()) {
+                            this.queue.add(player.uuid());
+                        }
+                    }
                     this.state = DeState.PLAYING;
                 }
                 return;
@@ -193,7 +198,7 @@ public class Game implements DeGame, Runnable {
     public @NotNull Set<DePlayer> getAlivePlayers() {
         Set<DePlayer> players = new HashSet<>(Math.min(10, this.players.size()));
         for (DePlayer player : this.players) {
-            if (player.getLifes() > 0) {
+            if (player.getLifes() > 0 && !player.isSpectator()) {
                 players.add(player);
             }
         }
@@ -261,6 +266,11 @@ public class Game implements DeGame, Runnable {
     @Override
     public @Nullable UUID peekNextJumper() {
         return this.queue.peek();
+    }
+
+    @Override
+    public @NotNull Audience audience() {
+        return this.players;
     }
 
     void cancel() {

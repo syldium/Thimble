@@ -1,6 +1,7 @@
 package me.syldium.decoudre.api.arena;
 
 import me.syldium.decoudre.api.player.DePlayer;
+import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -43,7 +44,7 @@ public interface DeGame {
     boolean canStart();
 
     /**
-     * Gets a {@link Set} of players still alive.
+     * Gets a {@link Set} of players still alive and not spectators.
      *
      * @return An immutable set.
      */
@@ -99,4 +100,11 @@ public interface DeGame {
      * @return The jumper, if any.
      */
     @Nullable UUID peekNextJumper();
+
+    /**
+     * Gets the player audience.
+     *
+     * @return The audience.
+     */
+    @NotNull Audience audience();
 }

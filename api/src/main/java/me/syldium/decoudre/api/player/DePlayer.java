@@ -5,9 +5,18 @@ import org.jetbrains.annotations.Range;
 public interface DePlayer extends DePlayerStats {
 
     /**
-     * Get the number of remaining lives.
+     * Gets the number of remaining lives.
      *
-     * @return A number
+     * @return A number.
      */
     @Range(from=0, to=Integer.MAX_VALUE) int getLifes();
+
+    /**
+     * Returns {@code true} if the player is a game spectator.
+     *
+     * <p>The spectator status is defined at the beginning of the game and does not change during the game.</p>
+     *
+     * @return If so.
+     */
+    boolean isSpectator();
 }
