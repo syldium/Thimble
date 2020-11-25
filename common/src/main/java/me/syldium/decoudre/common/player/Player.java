@@ -7,7 +7,7 @@ import net.kyori.adventure.identity.Identified;
 import net.kyori.adventure.identity.Identity;
 import org.jetbrains.annotations.NotNull;
 
-public interface Player extends Identified, Identity, Sender {
+public interface Player extends PlayerAudience, Identified, Identity, Sender {
 
     /**
      * Gets the player's current position.

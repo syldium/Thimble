@@ -90,6 +90,16 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     }
 
     @Override
+    public void sendExperienceChange(float percent, int level) {
+        this.getHandle().sendExperienceChange(percent, level);
+    }
+
+    @Override
+    public void sendRealExperience() {
+        this.getHandle().setExp(this.getHandle().getExp());
+    }
+
+    @Override
     public @NotNull String name() {
         return this.getHandle().getName();
     }

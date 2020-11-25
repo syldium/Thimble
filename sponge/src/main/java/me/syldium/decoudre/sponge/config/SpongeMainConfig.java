@@ -1,13 +1,17 @@
 package me.syldium.decoudre.sponge.config;
 
+import com.google.common.reflect.TypeToken;
 import me.syldium.decoudre.common.config.MainConfig;
 import me.syldium.decoudre.common.service.DataService;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 public class SpongeMainConfig extends FileConfig<CommentedConfigurationNode> implements MainConfig {
@@ -39,5 +43,34 @@ public class SpongeMainConfig extends FileConfig<CommentedConfigurationNode> imp
     @Override
     public @Nullable String getJdbcPassword() {
         return this.root.getNode("sql", "password").getString();
+    }
+
+    @Override @SuppressWarnings("UnstableApiUsage")
+    public @NotNull List<String> getEnabledIntegrations() {
+        try {
+            return this.root.getNode("integrations").getList(TypeToken.of(String.class));
+        } catch (ObjectMappingException ex) {
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public boolean doesTeleportAtEnd() {
+        return this.root.getNode("game", "teleport-at-end").getBoolean(true);
+    }
+
+    @Override
+    public int getCountdownTime() {
+        return this.root.getNode("game", "countdown-time").getInt(30);
+    }
+
+    @Override
+    public int getJumpTime() {
+        return this.root.getNode("game", "jump-time").getInt(15);
+    }
+
+    @Override
+    public @Nullable String getRawDisplayProperty(@NotNull String audienceName, @NotNull String propertyKey) {
+        return this.root.getNode("display", audienceName, propertyKey).getString();
     }
 }

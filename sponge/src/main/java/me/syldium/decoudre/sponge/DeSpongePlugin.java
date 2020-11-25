@@ -19,6 +19,7 @@ import me.syldium.decoudre.sponge.config.serializer.LocationSerializer;
 import me.syldium.decoudre.sponge.util.LoggerWrapper;
 import me.syldium.decoudre.sponge.util.SpongeTask;
 import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
+import net.kyori.adventure.util.Ticks;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializerCollection;
@@ -123,7 +124,7 @@ public class DeSpongePlugin extends DeCoudrePlugin {
 
     @Override
     public @NotNull Task startGameTask(@NotNull Runnable runnable) {
-        return new SpongeTask(this.game.getScheduler().createTaskBuilder().execute(runnable).interval(1000 / 20, TimeUnit.MILLISECONDS).submit(this));
+        return new SpongeTask(this.game.getScheduler().createTaskBuilder().execute(runnable).interval(Ticks.SINGLE_TICK_DURATION_MS, TimeUnit.MILLISECONDS).submit(this));
     }
 
     @Override

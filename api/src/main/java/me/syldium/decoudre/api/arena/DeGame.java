@@ -1,6 +1,7 @@
 package me.syldium.decoudre.api.arena;
 
 import me.syldium.decoudre.api.player.DePlayer;
+import me.syldium.decoudre.api.player.JumpVerdict;
 import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,6 +73,15 @@ public interface DeGame {
      * @return If the player has left the game.
      */
     boolean removePlayer(@NotNull UUID player);
+
+    /**
+     * Defines the jump result of the current jumper.
+     *
+     * @param verdict The jump result.
+     * @return If all went well.
+     * @throws IllegalStateException If no players are currently jumping.
+     */
+    boolean verdict(@NotNull JumpVerdict verdict);
 
     /**
      * Returns {@code true} if no player is in the game.

@@ -1,8 +1,11 @@
 package me.syldium.decoudre.common.util;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -28,5 +31,28 @@ public final class EnumUtil {
             }
         }
         return set;
+    }
+
+    /**
+     * Returns the field matching the provided enum name that exists within the given
+     * enum class. If no field is found, this method returns null.
+     *
+     * @param enumClass The class to search through.
+     * @param value The name of a field present or not.
+     * @param def The default field.
+     * @param <E> The enum to search through.
+     * @return The matching enum field.
+     */
+    @Contract("_, _, !null -> !null")
+    public static <E extends Enum<E>> @Nullable E valueOf(@NotNull Class<E> enumClass, @Nullable String value, @Nullable E def) {
+        if (value == null) {
+            return def;
+        }
+
+        try {
+            return Enum.valueOf(enumClass, value.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ex) {
+            return def;
+        }
     }
 }

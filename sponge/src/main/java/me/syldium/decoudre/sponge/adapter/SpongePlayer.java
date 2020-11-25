@@ -8,6 +8,8 @@ import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.mutable.entity.ExperienceHolderData;
 import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.util.AABB;
@@ -21,6 +23,7 @@ import java.util.UUID;
 public class SpongePlayer extends AbstractPlayer<Player> {
 
     private final SpongePlayerAdapter platform;
+    private ExperienceHolderData lastExpHolderData;
 
     public SpongePlayer(@NotNull DeCoudrePlugin plugin, @NotNull Player handle, @NotNull Audience audience, @NotNull SpongePlayerAdapter platform) {
         super(plugin, handle, audience);
@@ -77,6 +80,24 @@ public class SpongePlayer extends AbstractPlayer<Player> {
     @Override
     public boolean isInWater() {
         return this.getHandle().getLocation().getBlock().getType().equals(BlockTypes.WATER);
+    }
+
+    @Override
+    public void sendExperienceChange(float percent, int level) {
+        Optional<ExperienceHolderData> optional = this.getHandle().get(ExperienceHolderData.class);
+        if (optional.isPresent()) {
+            ExperienceHolderData expHolder = optional.get();
+            this.lastExpHolderData = expHolder.copy();
+            expHolder.set(Keys.EXPERIENCE_LEVEL, level);
+            this.getHandle().offer(expHolder);
+        }
+    }
+
+    @Override
+    public void sendRealExperience() {
+        if (this.lastExpHolderData != null) {
+            this.getHandle().offer(this.lastExpHolderData);
+        }
     }
 
     @Override

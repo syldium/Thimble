@@ -13,3 +13,18 @@ sql:
 
 integrations:
  - PlaceholderAPI
+
+game:
+  teleport-at-end: true
+  countdown-time: 30
+  jump-time: 15
+
+display:
+  global:
+    type: bossbar
+    bossbar-color: yellow
+    bossbar-overlay: progress
+  jump:
+    type: bossbar
+    bossbar-color: red
+    bossbar-overlay: progress

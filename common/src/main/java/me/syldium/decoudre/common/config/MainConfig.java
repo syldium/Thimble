@@ -1,6 +1,9 @@
 package me.syldium.decoudre.common.config;
 
+import me.syldium.decoudre.common.player.media.TimedMedia;
 import me.syldium.decoudre.common.service.DataService;
+import me.syldium.decoudre.common.util.EnumUtil;
+import net.kyori.adventure.bossbar.BossBar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,6 +21,12 @@ public interface MainConfig {
     default @NotNull Locale getLocale() {
         return Locale.getDefault();
     }
+
+    default @NotNull List<@NotNull String> getEnabledIntegrations() {
+        return Collections.emptyList();
+    }
+
+    // === Database ===
 
     /**
      * Gets the save method chosen for the statistics.
@@ -37,7 +46,62 @@ public interface MainConfig {
 
     @Nullable String getJdbcPassword();
 
-    default @NotNull List<@NotNull String> getEnabledIntegrations() {
-        return Collections.emptyList();
+    /**
+     * Returns if players should be teleported to the arena spawn at the end of a game.
+     *
+     * @return If they should be teleported.
+     */
+    boolean doesTeleportAtEnd();
+
+    /**
+     * Returns the duration in seconds of the countdown before the game starts.
+     *
+     * @return Duration in seconds.
+     */
+    int getCountdownTime();
+
+    /**
+     * Returns the time in seconds that the player has to prepare his jump.
+     *
+     * @return Duration in seconds.
+     */
+    int getJumpTime();
+
+    // === Display ===
+
+    @Nullable String getRawDisplayProperty(@NotNull String audienceName, @NotNull String propertyKey);
+
+    /**
+     * Returns the display type of the time counters. {@link #getRawDisplayProperty(String, String)}
+     *
+     * @param audienceName The audience name (global/jump).
+     * @return The display type.
+     */
+    default @NotNull TimedMedia.Type getDisplayType(@NotNull String audienceName) {
+        return EnumUtil.valueOf(TimedMedia.Type.class, this.getRawDisplayProperty(audienceName, "type"), TimedMedia.Type.BOSSBAR);
+    }
+
+    /**
+     * Returns the overlay of a {@link BossBar}. {@link #getRawDisplayProperty(String, String)}
+     *
+     * @param audienceName The audience name (global/jump).
+     * @return The boss bar overlay.
+     */
+    default @NotNull BossBar.Overlay getBossBarOverlay(@NotNull String audienceName) {
+        return EnumUtil.valueOf(BossBar.Overlay.class, this.getRawDisplayProperty(audienceName, "bossbar-overlay"), BossBar.Overlay.PROGRESS);
+    }
+
+    /**
+     * Returns the color of a {@link BossBar}. {@link #getRawDisplayProperty(String, String)}
+     *
+     * @param audienceName The audience name (global/jump).
+     * @return The boss bar color.
+     */
+    default @NotNull BossBar.Color getBossBarColor(@NotNull String audienceName) {
+        return EnumUtil.valueOf(BossBar.Color.class, this.getRawDisplayProperty(audienceName, "bossbar-color"), "global".equals(audienceName) ? BossBar.Color.YELLOW : BossBar.Color.RED);
+    }
+
+    default double getWinnerDeposit() {
+        return 5.0D;
     }
 }
