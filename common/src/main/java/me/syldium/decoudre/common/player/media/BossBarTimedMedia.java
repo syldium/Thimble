@@ -26,7 +26,7 @@ final class BossBarTimedMedia implements TimedMedia {
     public void progress(float percent, int time) {
         if (this.audience == null) return;
         this.audience.showBossBar(this.bossBar);
-        this.bossBar.percent(percent);
+        this.bossBar.progress(percent);
         this.bossBar.name(Component.text(time));
     }
 
