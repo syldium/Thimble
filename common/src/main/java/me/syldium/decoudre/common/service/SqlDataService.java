@@ -4,6 +4,8 @@ import me.syldium.decoudre.api.Ranking;
 import me.syldium.decoudre.api.player.DePlayerStats;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.config.MainConfig;
+import me.syldium.decoudre.common.util.DriverShim;
+import me.syldium.decoudre.common.dependency.DependencyResolver;
 import me.syldium.decoudre.common.player.PlayerStats;
 import me.syldium.decoudre.api.util.Leaderboard;
 import me.syldium.decoudre.common.util.ResourceReader;
@@ -11,7 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,11 +40,29 @@ public class SqlDataService implements DataService {
     private final Type type;
     private final Logger logger;
 
-    public SqlDataService(@NotNull String url, @Nullable String username, @Nullable String password, @NotNull Logger logger, @NotNull Type type) {
+    public SqlDataService(
+            @NotNull String url,
+            @Nullable String username,
+            @Nullable String password,
+            @NotNull DependencyResolver dependencyResolver,
+            @NotNull Logger logger,
+            @NotNull Type type
+    ) {
         this.url = url;
         this.username = username;
         this.password = password;
         this.logger = logger;
+
+        if (!type.isDriverAvailable()) {
+            Path path = dependencyResolver.downloadDependency(type.getDriver());
+            try {
+                URLClassLoader classLoader = new URLClassLoader(new URL[]{path.toUri().toURL()});
+                Driver driver = (Driver) Class.forName(type.getDriverClassName(), true, classLoader).getConstructor().newInstance();
+                DriverManager.registerDriver(new DriverShim(driver));
+            } catch (MalformedURLException | ReflectiveOperationException | SQLException ex) {
+                this.logger.log(Level.SEVERE, "Unable to dynamically register the driver for the database.", ex);
+            }
+        }
 
         this.type = type;
         try {
@@ -48,16 +73,17 @@ public class SqlDataService implements DataService {
         }
     }
 
-    public SqlDataService(@NotNull File file, @NotNull Logger logger) {
-        this(String.format("jdbc:sqlite:%s", file.getAbsolutePath()), null, null, logger, Type.SQLITE);
+    public SqlDataService(@NotNull File file, @NotNull DependencyResolver dependencyResolver, @NotNull Logger logger) {
+        this(String.format("jdbc:sqlite:%s", file.getAbsolutePath()), null, null, dependencyResolver, logger, Type.SQLITE);
     }
 
     public static @NotNull SqlDataService fromConfig(@NotNull DeCoudrePlugin plugin, @NotNull MainConfig config) {
         Type type = config.getDataStorageMethod();
+        DependencyResolver manager = new DependencyResolver(plugin);
         if (type == Type.SQLITE) {
-            return new SqlDataService(plugin.getFile("database.db"), plugin.getLogger());
+            return new SqlDataService(plugin.getFile("database.db"), manager, plugin.getLogger());
         }
-        return new SqlDataService(config.getJdbcUrl(), config.getJdbcUsername(), config.getJdbcPassword(), plugin.getLogger(), type);
+        return new SqlDataService(config.getJdbcUrl(), config.getJdbcUsername(), config.getJdbcPassword(), manager, plugin.getLogger(), type);
     }
 
     @Override
@@ -105,20 +131,39 @@ public class SqlDataService implements DataService {
 
     @Override
     public void savePlayerStatistics(@NotNull DePlayerStats statistics) {
-        try (PreparedStatement statement = this.getConnection().prepareStatement("REPLACE INTO dac (uuid, name, wins, losses, jumps, dacs) VALUES (?, ?, ?, ?, ?, ?)")) {
+        boolean exists = this.exists(statistics);
+        String query = exists ?
+                "UPDATE dac SET name = ?, wins = ?, losses = ?, jumps = ?, dacs = ? WHERE uuid = ?"
+                : "INSERT INTO dac (uuid, name, wins, losses, jumps, dacs) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement statement = this.getConnection().prepareStatement(query)) {
+            if (this.type == Type.POSTGRE) {
+                statement.setObject(exists ? 6 : 1, statistics.uuid());
+            } else {
+                statement.setString(exists ? 6 : 1, statistics.uuid().toString());
+            }
+            int i = exists ? 1 : 2;
+            statement.setString(i++, statistics.name());
+            statement.setInt(i++, statistics.getWins());
+            statement.setInt(i++, statistics.getLosses());
+            statement.setInt(i++, statistics.getJumps());
+            statement.setInt(i, statistics.getDacs());
+            statement.execute();
+        } catch (SQLException ex) {
+            this.logger.log(Level.SEVERE, "Error when saving statistics in the database.", ex);
+        }
+    }
+
+    private boolean exists(@NotNull DePlayerStats statistics) {
+        try (PreparedStatement statement = this.getConnection().prepareStatement("SELECT name FROM dac WHERE uuid = ?")) {
             if (this.type == Type.POSTGRE) {
                 statement.setObject(1, statistics.uuid());
             } else {
                 statement.setString(1, statistics.uuid().toString());
             }
-            statement.setString(2, statistics.name());
-            statement.setInt(3, statistics.getWins());
-            statement.setInt(4, statistics.getLosses());
-            statement.setInt(5, statistics.getJumps());
-            statement.setInt(6, statistics.getDacs());
-            statement.execute();
+            return statement.executeQuery().next();
         } catch (SQLException ex) {
-            this.logger.log(Level.SEVERE, "Error when saving statistics in the database.", ex);
+            return false;
         }
     }
 
