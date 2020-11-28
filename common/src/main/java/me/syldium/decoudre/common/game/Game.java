@@ -77,7 +77,7 @@ public class Game implements DeGame, Runnable {
                     this.players.sendActionBar(MessageKey.ACTIONBAR_NOT_ENOUGH_PLAYERS);
                     return;
                 }
-                this.players.progress((float) this.timer / (this.plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND), this.timer / Ticks.TICKS_PER_SECOND);
+                this.players.progress((float) this.timer / (this.plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND), (int) Math.ceil((float) this.timer / Ticks.TICKS_PER_SECOND));
                 this.timer--;
                 if (this.timer < 1) {
                     for (InGamePlayer player : this.players) {
@@ -108,7 +108,7 @@ public class Game implements DeGame, Runnable {
                 this.timer--;
 
                 Player jumper = this.plugin.getPlayer(this.jumper);
-                this.jumperMedia.progress((float) this.timer / (this.plugin.getMainConfig().getJumpTime() * Ticks.TICKS_PER_SECOND), this.timer / Ticks.TICKS_PER_SECOND);
+                this.jumperMedia.progress((float) this.timer / (this.plugin.getMainConfig().getJumpTime() * Ticks.TICKS_PER_SECOND), (int) Math.ceil((float) this.timer / Ticks.TICKS_PER_SECOND));
                 if (jumper.isInWater()) {
                     PoolBlock block = jumper.getFirstLiquidBlock();
                     block.setBlockData(this.players.get(jumper).getChosenBlock());
