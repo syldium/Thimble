@@ -2,11 +2,11 @@ package me.syldium.decoudre.bukkit.adapter;
 
 import me.syldium.decoudre.bukkit.DeCoudreBootstrap;
 import me.syldium.decoudre.bukkit.command.BukkitSender;
+import me.syldium.decoudre.bukkit.util.BukkitUtil;
 import me.syldium.decoudre.bukkit.world.BukkitBlockData;
 import me.syldium.decoudre.common.adapter.PlayerAdapter;
 import me.syldium.decoudre.common.command.abstraction.Sender;
 import me.syldium.decoudre.common.player.Player;
-import me.syldium.decoudre.common.util.EnumUtil;
 import me.syldium.decoudre.common.world.BlockData;
 import me.syldium.decoudre.common.world.PoolBlock;
 import me.syldium.decoudre.bukkit.world.BukkitPoolBlock;
@@ -28,7 +28,7 @@ import java.util.WeakHashMap;
 public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Player, Location> {
 
     private static final BlockFace[] DIRECTIONS = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
-    private static final Set<Material> WOOLS_TYPES = EnumUtil.getAllMatching(Material.class, material -> material.name().endsWith("WOOL"));
+    private static final Set<Material> WOOLS_TYPES = BukkitUtil.getAllMaterialsMatching(material -> material.name().endsWith("WOOL"));
 
     private final DeCoudreBootstrap bootstrap;
     private final BukkitAudiences audiences;
