@@ -4,6 +4,8 @@ import me.syldium.decoudre.api.service.GameService;
 import me.syldium.decoudre.api.service.StatsService;
 import me.syldium.decoudre.bukkit.adapter.BukkitEventAdapter;
 import me.syldium.decoudre.bukkit.adapter.BukkitPlayerAdapter;
+import me.syldium.decoudre.bukkit.command.BukkitCommandExecutor;
+import me.syldium.decoudre.bukkit.command.PaperCommandExecutor;
 import me.syldium.decoudre.bukkit.hook.PluginHook;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.config.ArenaConfig;
@@ -13,6 +15,7 @@ import me.syldium.decoudre.bukkit.config.BukkitArenaConfig;
 import me.syldium.decoudre.bukkit.config.BukkitMainConfig;
 import me.syldium.decoudre.bukkit.util.BukkitTask;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
@@ -20,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -43,6 +47,13 @@ public class DeBukkitPlugin extends DeCoudrePlugin {
         ServicesManager servicesManager = bootstrap.getServer().getServicesManager();
         servicesManager.register(GameService.class, this.getGameService(), bootstrap, ServicePriority.High);
         servicesManager.register(StatsService.class, this.getStatsService(), bootstrap, ServicePriority.High);
+
+        PluginCommand command = Objects.requireNonNull(bootstrap.getCommand("dac"), "Command not registered");
+        if (classExists("com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent")) {
+            new PaperCommandExecutor<>(this, command);
+        } else {
+            new BukkitCommandExecutor(this, command);
+        }
 
         new PluginHook(this, bootstrap);
     }

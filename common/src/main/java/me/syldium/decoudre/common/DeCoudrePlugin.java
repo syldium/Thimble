@@ -60,6 +60,15 @@ public abstract class DeCoudrePlugin {
         return file;
     }
 
+    public static boolean classExists(@NotNull String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException ex) {
+            return false;
+        }
+    }
+
     public abstract @NotNull Logger getLogger();
 
     public abstract @NotNull ArenaConfig getArenaConfig();
