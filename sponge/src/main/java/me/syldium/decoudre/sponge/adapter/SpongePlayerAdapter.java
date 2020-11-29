@@ -3,6 +3,8 @@ package me.syldium.decoudre.sponge.adapter;
 import com.flowpowered.math.vector.Vector3d;
 import me.syldium.decoudre.common.adapter.PlayerAdapter;
 import me.syldium.decoudre.common.command.abstraction.Sender;
+import me.syldium.decoudre.common.player.InGamePlayer;
+import me.syldium.decoudre.common.player.Player;
 import me.syldium.decoudre.common.world.BlockData;
 import me.syldium.decoudre.common.world.PoolBlock;
 import me.syldium.decoudre.sponge.DeSpongePlugin;
@@ -88,6 +90,11 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     @Override
     public me.syldium.decoudre.api.@NotNull Location asAbstractLocation(@NotNull Location<World> location) {
         return this.asAbstractLocation(location, Vector3d.ZERO);
+    }
+
+    @Override
+    public void openBlockSelectionInventory(@NotNull Player player, @NotNull InGamePlayer inGamePlayer) {
+         // TODO
     }
 
     public me.syldium.decoudre.api.@NotNull Location asAbstractLocation(@NotNull Location<World> location, @NotNull Vector3d headRotation) {

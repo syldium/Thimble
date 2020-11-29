@@ -10,4 +10,8 @@ public class BukkitBlockData implements me.syldium.decoudre.common.world.BlockDa
     public BukkitBlockData(@NotNull BlockData handle) {
         this.handle = handle;
     }
+
+    public @NotNull BlockData getHandle() {
+        return this.handle;
+    }
 }

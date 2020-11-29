@@ -35,9 +35,10 @@ public class DeBukkitPlugin extends DeCoudrePlugin {
         this.bootstrap = bootstrap;
         this.audiences = BukkitAudiences.create(bootstrap);
         this.arenaConfig = new BukkitArenaConfig(this, this.getFile("arenas.yml"));
-        this.eventAdapter = new BukkitEventAdapter(bootstrap.getServer().getPluginManager());
-        this.playerAdapter = new BukkitPlayerAdapter(bootstrap, this.audiences);
         this.enable(new BukkitMainConfig(this, this.getFile("config.yml")));
+
+        this.eventAdapter = new BukkitEventAdapter(bootstrap.getServer().getPluginManager());
+        this.playerAdapter = new BukkitPlayerAdapter(this, bootstrap, this.audiences);
 
         ServicesManager servicesManager = bootstrap.getServer().getServicesManager();
         servicesManager.register(GameService.class, this.getGameService(), bootstrap, ServicePriority.High);

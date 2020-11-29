@@ -7,6 +7,7 @@ import me.syldium.decoudre.common.command.abstraction.Sender;
 import me.syldium.decoudre.common.command.arena.CreateCommand;
 import me.syldium.decoudre.common.command.arena.SetJumpCommand;
 import me.syldium.decoudre.common.command.arena.SetSpawnCommand;
+import me.syldium.decoudre.common.command.game.BlockCommand;
 import me.syldium.decoudre.common.command.game.JoinCommand;
 import me.syldium.decoudre.common.command.game.LeaveCommand;
 import me.syldium.decoudre.common.player.MessageKey;
@@ -32,6 +33,7 @@ public class CommandManager {
         this.mainCommands = Arrays.asList(
                 new JoinCommand(),
                 new LeaveCommand(),
+                new BlockCommand(),
                 new CreateCommand(),
                 new SetSpawnCommand(),
                 new SetJumpCommand()

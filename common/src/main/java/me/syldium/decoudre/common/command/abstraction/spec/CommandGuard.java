@@ -1,11 +1,13 @@
 package me.syldium.decoudre.common.command.abstraction.spec;
 
+import me.syldium.decoudre.api.arena.DeGame;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.abstraction.CommandException;
 import me.syldium.decoudre.common.command.abstraction.Sender;
 import me.syldium.decoudre.common.player.MessageKey;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.BiPredicate;
 
 /**
@@ -56,4 +58,18 @@ public interface CommandGuard {
         (plugin, sender) -> plugin.getGameService().getGame(sender.uuid()).isPresent(),
         MessageKey.FEEDBACK_GAME_NOT_IN_GAME
     );
+
+    /**
+     * Verifies that the player is in an unstarted game.
+     */
+    CommandGuard EXCEPT_IN_UNSTARTED_GAME = (plugin, sender) -> {
+        Optional<DeGame> optional = plugin.getGameService().getGame(sender.uuid());
+        if (optional.isPresent()) {
+            if (!optional.get().getState().acceptPlayers()) {
+                throw new CommandException(MessageKey.FEEDBACK_GAME_STARTED_GAME);
+            }
+        } else {
+            throw new CommandException(MessageKey.FEEDBACK_GAME_NOT_IN_GAME);
+        }
+    };
 }

@@ -1,11 +1,14 @@
 package me.syldium.decoudre.bukkit.adapter;
 
+import me.syldium.decoudre.bukkit.DeBukkitPlugin;
 import me.syldium.decoudre.bukkit.DeCoudreBootstrap;
 import me.syldium.decoudre.bukkit.command.BukkitSender;
+import me.syldium.decoudre.bukkit.util.BlockSelectionInventory;
 import me.syldium.decoudre.bukkit.util.BukkitUtil;
 import me.syldium.decoudre.bukkit.world.BukkitBlockData;
 import me.syldium.decoudre.common.adapter.PlayerAdapter;
 import me.syldium.decoudre.common.command.abstraction.Sender;
+import me.syldium.decoudre.common.player.InGamePlayer;
 import me.syldium.decoudre.common.player.Player;
 import me.syldium.decoudre.common.world.BlockData;
 import me.syldium.decoudre.common.world.PoolBlock;
@@ -20,23 +23,24 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Player, Location> {
 
-    private static final BlockFace[] DIRECTIONS = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
-    private static final Set<Material> WOOLS_TYPES = BukkitUtil.getAllMaterialsMatching(material -> material.name().endsWith("WOOL"));
+    public static final BlockFace[] DIRECTIONS = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+    public static final Set<Material> WOOLS_TYPES = BukkitUtil.getAllMaterialsMatching(material -> material.name().endsWith("WOOL"));
 
     private final DeCoudreBootstrap bootstrap;
     private final BukkitAudiences audiences;
     private final Map<org.bukkit.entity.Player, Player> players = new WeakHashMap<>();
+    private final BlockSelectionInventory inventory;
 
-    public BukkitPlayerAdapter(@NotNull DeCoudreBootstrap bootstrap, @NotNull BukkitAudiences audiences) {
+    public BukkitPlayerAdapter(@NotNull DeBukkitPlugin plugin, @NotNull DeCoudreBootstrap bootstrap, @NotNull BukkitAudiences audiences) {
         this.bootstrap = bootstrap;
         this.audiences = audiences;
+        this.inventory = new BlockSelectionInventory(plugin);
     }
 
     @Override
@@ -58,11 +62,6 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
             iter.next();
         }
         return new BukkitBlockData(iter.next().createBlockData());
-    }
-
-    @Override
-    public @NotNull org.bukkit.entity.Player asPlatform(@NotNull Player player) {
-        return Objects.requireNonNull(this.bootstrap.getServer().getPlayer(player.uuid()));
     }
 
     @Override
@@ -92,6 +91,11 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
                 location.getPitch(),
                 location.getYaw()
         );
+    }
+
+    @Override
+    public void openBlockSelectionInventory(@NotNull Player player, @NotNull InGamePlayer inGamePlayer) {
+        this.inventory.open(this.asPlatform(player), inGamePlayer);
     }
 
     public @NotNull Sender asAbstractSender(@NotNull CommandSender sender) {

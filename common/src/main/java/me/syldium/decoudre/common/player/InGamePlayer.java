@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class InGamePlayer extends PlayerStats implements DePlayer {
 
-    private final BlockData block;
+    private BlockData block;
     protected int lifes = 1;
 
     public InGamePlayer(@NotNull DePlayerStats stats, @NotNull BlockData block) {
@@ -42,5 +42,9 @@ public class InGamePlayer extends PlayerStats implements DePlayer {
 
     public @NotNull BlockData getChosenBlock() {
         return this.block;
+    }
+
+    public void setChosenBlock(@NotNull BlockData block) {
+        this.block = block;
     }
 }

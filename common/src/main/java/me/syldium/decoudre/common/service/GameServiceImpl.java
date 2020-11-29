@@ -2,6 +2,7 @@ package me.syldium.decoudre.common.service;
 
 import me.syldium.decoudre.api.arena.DeArena;
 import me.syldium.decoudre.api.arena.DeGame;
+import me.syldium.decoudre.api.player.DePlayer;
 import me.syldium.decoudre.api.service.GameService;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.config.ArenaConfig;
@@ -34,6 +35,12 @@ public class GameServiceImpl implements GameService {
     @Override
     public @NotNull Optional<@NotNull DeGame> getGame(@NotNull UUID uuid) {
         return Optional.ofNullable(this.games.get(uuid));
+    }
+
+    @Override
+    public @NotNull Optional<@NotNull DePlayer> getInGamePlayer(@NotNull UUID uuid) {
+        Game game = this.games.get(uuid);
+        return game == null ? Optional.empty() : Optional.ofNullable(game.getPlayer(uuid));
     }
 
     @Override

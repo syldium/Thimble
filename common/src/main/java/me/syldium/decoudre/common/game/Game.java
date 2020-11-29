@@ -240,6 +240,10 @@ public class Game implements DeGame, Runnable {
         return Collections.unmodifiableSet(this.players.playerSet());
     }
 
+    public @Nullable DePlayer getPlayer(@NotNull UUID uuid) {
+        return this.players.get(uuid);
+    }
+
     @Override
     public @NotNull CompletableFuture<Boolean> addPlayer(@NotNull UUID uuid) {
         return this.addPlayer(Objects.requireNonNull(this.plugin.getPlayer(uuid), "Player is offline."));
