@@ -28,6 +28,9 @@ public final class PluginHook {
         if (this.isEnabled("PlaceholderAPI")) {
             new DeCoudreExpansion(plugin.getStatsService());
         }
+        if (this.isEnabled("Parties")) {
+            new PartiesArenaListener(plugin.getBootstrap());
+        }
     }
 
     private boolean isEnabled(@NotNull String pluginName) {

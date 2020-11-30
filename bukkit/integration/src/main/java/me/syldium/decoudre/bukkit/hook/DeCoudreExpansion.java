@@ -12,6 +12,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+/**
+ * <p><a href="https://github.com/PlaceholderAPI/PlaceholderAPI">PlaceholderAPI</a></p>
+ *
+ * <p>Registers placeholders for the leaderboard, see the README.</p>
+ */
 class DeCoudreExpansion extends PlaceholderExpansion {
 
     private static final Pattern DELIMITER = Pattern.compile("_");

@@ -12,6 +12,7 @@ sql:
   password: password
 
 integrations:
+ - Parties
  - PlaceholderAPI
 
 game:

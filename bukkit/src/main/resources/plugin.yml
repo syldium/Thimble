@@ -5,7 +5,7 @@ author: syldium
 
 main: me.syldium.decoudre.bukkit.DeCoudreBootstrap
 api-version: 1.13
-softdepend: [PlaceholderAPI]
+softdepend: [Parties, PlaceholderAPI]
 
 commands:
   dac:
