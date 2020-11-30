@@ -12,7 +12,6 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.entity.ExperienceHolderData;
 import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.util.AABB;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -38,29 +37,6 @@ public class SpongePlayer extends AbstractPlayer<Player> {
     @Override
     public boolean teleport(@NotNull me.syldium.decoudre.api.Location location) {
         return this.getHandle().setLocationAndRotation(this.platform.asPlatform(location), this.platform.asHeadRotation(location));
-    }
-
-    @SuppressWarnings("checkstyle:NoWhitespaceAfter")
-    @Override
-    public @NotNull PoolBlock[] getBlocksBelow() {
-        Player player = this.getHandle();
-        Location<World> loc = player.getLocation().sub(0, 0.2D, 0);
-        AABB bb = player.getBoundingBox().orElseThrow(RuntimeException::new);
-        World world = player.getWorld();
-
-        int y = (int) loc.getY();
-        return new PoolBlock[] {
-                this.getBlockAt(world, bb.getMin().getX(), y, bb.getMin().getZ()),
-                this.getBlockAt(world, bb.getMax().getX(), y, bb.getMin().getZ()),
-                this.getBlockAt(world, bb.getMax().getX(), y, bb.getMax().getZ()),
-                this.getBlockAt(world, bb.getMin().getX(), y, bb.getMax().getZ())
-        };
-    }
-
-    private @NotNull PoolBlock getBlockAt(@NotNull World world, double x, int y, double z) {
-        int blockX = (int) Math.floor(x);
-        int blockZ = (int) Math.floor(z);
-        return new SpongePoolBlock(world.getBlock(blockX, y, blockZ), new Location<>(world, blockX, y, blockZ));
     }
 
     @Override

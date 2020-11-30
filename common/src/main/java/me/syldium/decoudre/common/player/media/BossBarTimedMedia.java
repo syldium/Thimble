@@ -4,35 +4,24 @@ import me.syldium.decoudre.common.player.PlayerAudience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 final class BossBarTimedMedia implements TimedMedia {
 
-    private @Nullable PlayerAudience audience;
     private final BossBar bossBar;
 
-    BossBarTimedMedia(@Nullable PlayerAudience audience, @NotNull BossBar baseBossBar) {
-        this.audience = audience;
+    BossBarTimedMedia(@NotNull BossBar baseBossBar) {
         this.bossBar = baseBossBar;
     }
 
     @Override
-    public void audience(@NotNull PlayerAudience audience) {
-        this.hide();
-        this.audience = audience;
-    }
-
-    @Override
-    public void progress(float percent, int time) {
-        if (this.audience == null) return;
-        this.audience.showBossBar(this.bossBar);
+    public void progress(@NotNull PlayerAudience audience, float percent, int time) {
         this.bossBar.progress(percent);
         this.bossBar.name(Component.text(time));
+        audience.showBossBar(this.bossBar);
     }
 
     @Override
-    public void hide() {
-        if (this.audience == null) return;
-        this.audience.hideBossBar(this.bossBar);
+    public void hide(@NotNull PlayerAudience audience) {
+        audience.hideBossBar(this.bossBar);
     }
 }

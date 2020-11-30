@@ -25,13 +25,6 @@ public interface Player extends PlayerAudience, Identified, Identity, Sender {
     boolean teleport(@NotNull Location location);
 
     /**
-     * Gets on which blocks does the player standing on.
-     *
-     * @return The blocks below the bounding box.
-     */
-    @NotNull PoolBlock[] getBlocksBelow();
-
-    /**
      * Gets the surface block of a water/lava column.
      *
      * <p>If the player is not {@link #isInWater()}, the returned block will not be a liquid.</p>

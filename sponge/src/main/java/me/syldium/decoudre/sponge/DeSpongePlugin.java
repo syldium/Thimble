@@ -16,6 +16,8 @@ import me.syldium.decoudre.sponge.config.serializer.ArenaSerializer;
 import me.syldium.decoudre.sponge.config.SpongeArenaConfig;
 import me.syldium.decoudre.sponge.config.SpongeMainConfig;
 import me.syldium.decoudre.sponge.config.serializer.LocationSerializer;
+import me.syldium.decoudre.sponge.listener.DamageListener;
+import me.syldium.decoudre.sponge.listener.RestrictionListener;
 import me.syldium.decoudre.sponge.util.LoggerWrapper;
 import me.syldium.decoudre.sponge.util.SpongeTask;
 import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
@@ -84,8 +86,6 @@ public class DeSpongePlugin extends DeCoudrePlugin {
         this.saveDefaultConfig();
         this.logger = new LoggerWrapper(this.container.getLogger());
         this.audiences = SpongeAudiences.create(this.container, this.game);
-        this.eventAdapter = new SpongeEventAdapter(this.container);
-        this.playerAdapter = new SpongePlayerAdapter(this, this.audiences);
 
         this.game.getCommandManager().register(this, new SpongeCommandExecutor(this), "dac");
         TypeSerializerCollection.defaults().register(TypeToken.of(Arena.class), new ArenaSerializer(this));
@@ -96,6 +96,11 @@ public class DeSpongePlugin extends DeCoudrePlugin {
 
         this.getServiceManager().setProvider(this.container, StatsService.class, this.getStatsService());
         this.getServiceManager().setProvider(this.container, GameService.class, this.getGameService());
+        this.eventAdapter = new SpongeEventAdapter(this.container);
+        this.playerAdapter = new SpongePlayerAdapter(this, this.audiences);
+
+        new DamageListener(this);
+        new RestrictionListener(this);
     }
 
     @Listener

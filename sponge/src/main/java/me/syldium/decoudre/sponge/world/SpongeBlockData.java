@@ -11,4 +11,8 @@ public class SpongeBlockData implements BlockData {
     public SpongeBlockData(@NotNull BlockState blockState) {
         this.handle = blockState;
     }
+
+    public @NotNull BlockState getHandle() {
+        return this.handle;
+    }
 }

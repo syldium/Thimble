@@ -42,21 +42,24 @@ public class Game implements DeGame, Runnable {
     private final List<PoolBlock> blocks = new ArrayList<>();
     private final Task task;
     private UUID jumper;
-    private TimedMedia jumperMedia;
+    private final TimedMedia jumperMedia;
 
     private DeState state = DeState.WAITING;
     private int timer;
 
-    private final int yThreshold;
+    private final int countdownTicks;
+    private final int jumpTicks;
 
     public Game(@NotNull DeCoudrePlugin plugin, @NotNull Arena arena) {
         this.plugin = plugin;
         this.arena = arena;
         this.players = new PlayerMap<>(plugin);
-        this.yThreshold = arena.getJumpLocation().getBlockY() - 10;
         this.timer = plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND;
         this.task = plugin.startGameTask(this);
-        this.jumperMedia = TimedMedia.from(null, plugin.getMainConfig(), "jump");
+        this.jumperMedia = TimedMedia.from(plugin.getMainConfig(), "jump");
+
+        this.countdownTicks = this.plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND;
+        this.jumpTicks = this.plugin.getMainConfig().getJumpTime() * Ticks.TICKS_PER_SECOND;
     }
 
     @Override
@@ -77,7 +80,7 @@ public class Game implements DeGame, Runnable {
                     this.players.sendActionBar(MessageKey.ACTIONBAR_NOT_ENOUGH_PLAYERS);
                     return;
                 }
-                this.players.progress((float) this.timer / (this.plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND), (int) Math.ceil((float) this.timer / Ticks.TICKS_PER_SECOND));
+                this.players.progress((float) this.timer / this.countdownTicks, (int) Math.ceil((float) this.timer / Ticks.TICKS_PER_SECOND));
                 this.timer--;
                 if (this.timer < 1) {
                     for (InGamePlayer player : this.players) {
@@ -101,28 +104,27 @@ public class Game implements DeGame, Runnable {
                     if (player != null) {
                         player.teleport(this.arena.getJumpLocation());
                         this.jumper = player.uuid();
-                        this.jumperMedia.audience(player);
                     }
                     return;
                 }
                 this.timer--;
 
                 Player jumper = this.plugin.getPlayer(this.jumper);
-                this.jumperMedia.progress((float) this.timer / (this.plugin.getMainConfig().getJumpTime() * Ticks.TICKS_PER_SECOND), (int) Math.ceil((float) this.timer / Ticks.TICKS_PER_SECOND));
+                this.jumperMedia.progress(jumper, (float) this.timer / this.jumpTicks, (int) Math.ceil((float) this.timer / Ticks.TICKS_PER_SECOND));
                 if (jumper.isInWater()) {
                     PoolBlock block = jumper.getFirstLiquidBlock();
                     block.setBlockData(this.players.get(jumper).getChosenBlock());
                     this.blocks.add(block);
                     JumpVerdict verdict = this.plugin.getPlayerAdapter().isDeCoudre(block) ? JumpVerdict.COMBO : JumpVerdict.LANDED;
                     this.handleJump(jumper, this.players.get(jumper), verdict);
-                } else if (jumper.getLocation().getBlockY() < this.yThreshold) {
+                }/* else if (jumper.getLocation().getBlockY() < this.yThreshold) {
                     for (PoolBlock block : jumper.getBlocksBelow()) {
                         if (!block.isPassable()) {
                             this.handleJump(jumper, this.players.get(jumper), JumpVerdict.MISSED);
                             return;
                         }
                     }
-                }
+                }*/
 
                 if (this.timer < 1) {
                     this.handleJump(jumper, this.players.get(jumper), JumpVerdict.MISSED);
@@ -147,7 +149,7 @@ public class Game implements DeGame, Runnable {
         }
 
         if (player != null) {
-            this.jumperMedia.hide();
+            this.jumperMedia.hide(player);
             this.handleJumpWithPlayer(player, inGamePlayer, verdict);
         }
 
@@ -280,6 +282,10 @@ public class Game implements DeGame, Runnable {
 
         if (Objects.equals(this.jumper, player)) {
             this.jumper = null;
+            Player p = this.plugin.getPlayer(player);
+            if (p != null) {
+                this.jumperMedia.hide(p);
+            }
         }
         this.plugin.getGameService().setPlayerGame(player, null);
         return true;

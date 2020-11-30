@@ -24,7 +24,7 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements P
 
     public PlayerMap(@NotNull DeCoudrePlugin plugin) {
         this.plugin = plugin;
-        this.media = TimedMedia.from(this, plugin.getMainConfig(), "global");
+        this.media = TimedMedia.from(plugin.getMainConfig(), "global");
     }
 
     public boolean add(@NotNull E player) {
@@ -35,8 +35,13 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements P
         return this.get(player.uuid());
     }
 
-    public boolean remove(UUID uuid) {
-        return this.remove((Object) uuid) != null;
+    public boolean remove(@NotNull UUID uuid) {
+        boolean removed = this.remove((Object) uuid) != null;
+        Player player = this.plugin.getPlayer(uuid);
+        if (player != null) {
+            this.media.hide(player);
+        }
+        return removed;
     }
 
     public @NotNull Set<UUID> uuidSet() {
@@ -81,11 +86,11 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements P
     }
 
     public void progress(float percent, int time) {
-        this.media.progress(percent, time);
+        this.media.progress(this, percent, time);
     }
 
     public void hide() {
-        this.media.hide();
+        this.media.hide(this);
     }
 
     @Override
