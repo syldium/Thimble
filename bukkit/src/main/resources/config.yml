@@ -29,3 +29,9 @@ display:
     type: bossbar
     bossbar-color: red
     bossbar-overlay: progress
+
+# List of blocks that the player can choose. This accepts regex.
+# https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+blocks:
+  - ".*_WOOL"
+  - ".*_TERRACOTTA"

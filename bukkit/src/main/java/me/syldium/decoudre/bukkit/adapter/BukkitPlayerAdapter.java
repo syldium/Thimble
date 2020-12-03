@@ -21,26 +21,38 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.regex.Pattern;
 
 public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Player, Location> {
 
     public static final BlockFace[] DIRECTIONS = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
-    public static final Set<Material> WOOLS_TYPES = BukkitUtil.getAllMaterialsMatching(material -> material.name().endsWith("WOOL"));
 
     private final DeCoudreBootstrap bootstrap;
     private final BukkitAudiences audiences;
     private final Map<org.bukkit.entity.Player, Player> players = new WeakHashMap<>();
     private final BlockSelectionInventory inventory;
 
+    private final List<Material> materials;
+
     public BukkitPlayerAdapter(@NotNull DeBukkitPlugin plugin, @NotNull DeCoudreBootstrap bootstrap, @NotNull BukkitAudiences audiences) {
         this.bootstrap = bootstrap;
         this.audiences = audiences;
-        this.inventory = new BlockSelectionInventory(plugin);
+
+        Pattern[] patterns = plugin.getConfig().getStringList("blocks").stream()
+                .map(Pattern::compile)
+                .toArray(Pattern[]::new);
+        this.materials = new ArrayList<>(BukkitUtil.getAllBlocksMatching(plugin.getLogger(), patterns));
+        if (this.materials.isEmpty()) {
+            plugin.getLogger().severe("The list of blocks in the configuration file is empty/invalid!"
+                    + " This will cause an error every time a player tries to join an arena.");
+        }
+
+        this.inventory = new BlockSelectionInventory(plugin, this);
     }
 
     @Override
@@ -56,12 +68,8 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
 
     @Override
     public @NotNull BlockData getRandomWool() {
-        int index = new Random().nextInt(WOOLS_TYPES.size());
-        Iterator<Material> iter = WOOLS_TYPES.iterator();
-        for (int i = 0; i < index; i++) {
-            iter.next();
-        }
-        return new BukkitBlockData(iter.next().createBlockData());
+        int index = new Random().nextInt(this.materials.size());
+        return new BukkitBlockData(this.materials.get(index).createBlockData());
     }
 
     @Override
@@ -103,5 +111,9 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
             return this.asAbstractPlayer((org.bukkit.entity.Player) sender);
         }
         return new BukkitSender(this.bootstrap.getPlugin(), sender, this.audiences.sender(sender));
+    }
+
+    public @NotNull List<@NotNull Material> getMaterials() {
+        return this.materials;
     }
 }

@@ -18,6 +18,7 @@ import me.syldium.decoudre.bukkit.config.BukkitMainConfig;
 import me.syldium.decoudre.bukkit.util.BukkitTask;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
@@ -107,5 +108,9 @@ public class DeBukkitPlugin extends DeCoudrePlugin {
 
     public @NotNull DeCoudreBootstrap getBootstrap() {
         return this.bootstrap;
+    }
+
+    public @NotNull FileConfiguration getConfig() {
+        return this.bootstrap.getConfig();
     }
 }
