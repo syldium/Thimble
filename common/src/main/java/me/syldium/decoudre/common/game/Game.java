@@ -269,7 +269,7 @@ public class Game implements DeGame, Runnable {
                     }
                     return false;
                 }).exceptionally(throwable -> {
-                    this.plugin.getLogger().log(Level.SEVERE, "Exception when adding the player to the arena.", throwable);
+                    this.plugin.getLogger().log(Level.SEVERE, "Exception when adding the player to the arena.", throwable.getCause());
                     return null;
                 });
     }
