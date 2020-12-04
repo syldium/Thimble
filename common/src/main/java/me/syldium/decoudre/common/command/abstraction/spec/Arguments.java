@@ -18,7 +18,7 @@ public interface Arguments {
     }
 
     static @NotNull Argument<Integer> integer(@NotNull String name) {
-        return new IntegerArgument(name, 0, Integer.MAX_VALUE);
+        return new IntegerArgument(name, 1, Integer.MAX_VALUE);
     }
 
     static @NotNull Argument<Integer> integer(@NotNull String name, int min) {

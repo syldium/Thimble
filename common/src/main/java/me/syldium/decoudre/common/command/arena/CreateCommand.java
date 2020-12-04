@@ -13,10 +13,10 @@ import me.syldium.decoudre.common.player.Player;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 
-public class CreateCommand extends ChildCommand.One<String> {
+class CreateCommand extends ChildCommand.One<String> {
 
-    public CreateCommand() {
-        super("create", Arguments.string("name"), MessageKey.HELP_CREATE, Permission.ADMIN);
+    CreateCommand() {
+        super("create", Arguments.string("name"), MessageKey.HELP_CREATE, Permission.arenaSetup("create"));
     }
 
     @Override

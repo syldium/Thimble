@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static me.syldium.decoudre.common.command.CommandManager.sendHelp;
+
 public class ParentCommand extends AbstractCommand {
 
     private final List<? extends AbstractCommand> children;
@@ -29,9 +31,7 @@ public class ParentCommand extends AbstractCommand {
             throw new CommandException(MessageKey.FEEDBACK_UNKNOWN_COMMAND);
         }
 
-        this.children.stream()
-                .filter(s -> s.hasPermission(sender))
-                .forEach(s -> sender.sendMessage(s.getHelp(plugin.getMessageService())));
+        sendHelp(sender, "dac", this.children);
         return CommandResult.success();
     }
 
@@ -82,7 +82,7 @@ public class ParentCommand extends AbstractCommand {
         return this;
     }
 
-    public List<? extends AbstractCommand> getChildren() {
+    public @NotNull List<@NotNull ? extends AbstractCommand> getChildren() {
         return this.children;
     }
 }

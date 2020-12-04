@@ -99,6 +99,7 @@
             <property name="validateComments" value="true"/>
         </module>
         <module name="SummaryJavadoc"/>
+        <module name="SuppressionCommentFilter"/>
         <module name="SuppressWarningsHolder"/>
         <module name="TypecastParenPad"/>
         <module name="UnnecessaryParentheses"/>

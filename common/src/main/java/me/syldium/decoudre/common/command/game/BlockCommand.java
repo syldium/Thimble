@@ -17,7 +17,7 @@ import java.util.List;
 public class BlockCommand extends ChildCommand {
 
     public BlockCommand() {
-        super("block", MessageKey.HELP_BLOCK, Permission.PLAYER);
+        super("block", MessageKey.HELP_BLOCK, Permission.player("block"));
         this.commandGuard = CommandGuard.EXCEPT_IN_UNSTARTED_GAME;
     }
 

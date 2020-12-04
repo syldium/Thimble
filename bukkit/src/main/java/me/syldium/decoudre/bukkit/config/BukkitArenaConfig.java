@@ -6,6 +6,7 @@ import me.syldium.decoudre.common.game.Arena;
 import me.syldium.decoudre.bukkit.DeBukkitPlugin;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -64,7 +65,8 @@ public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
         );
     }
 
-    private void setLocation(@NotNull ConfigurationSection section, @NotNull Location location) {
+    private void setLocation(@NotNull ConfigurationSection section, @Nullable Location location) {
+        if (location == null) return;
         section.set("world", location.getWorldUUID().toString());
         section.set("x", location.getX());
         section.set("y", location.getY());

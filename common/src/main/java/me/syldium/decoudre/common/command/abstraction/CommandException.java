@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class CommandException extends RuntimeException {
 
-    private MessageKey messageKey;
+    private final MessageKey messageKey;
 
     public CommandException(@NotNull MessageKey messageKey) {
         this.messageKey = messageKey;

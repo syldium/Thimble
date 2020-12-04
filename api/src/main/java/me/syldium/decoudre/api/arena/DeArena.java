@@ -3,6 +3,7 @@ package me.syldium.decoudre.api.arena;
 import me.syldium.decoudre.api.Location;
 import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.Optional;
@@ -17,16 +18,16 @@ public interface DeArena extends ComponentLike {
     /**
      * Gets the arena name.
      *
-     * @return The arena name
+     * @return The arena name.
      */
     @NotNull String getName();
 
     /**
      * Gets the location where players are teleported when they arrive in the pool and after a jump.
      *
-     * @return The spawn location
+     * @return The spawn location.
      */
-    @NotNull Location getSpawnLocation();
+    @Nullable Location getSpawnLocation();
 
     /**
      * Sets the spawn location. {@link #getSpawnLocation()}
@@ -40,7 +41,7 @@ public interface DeArena extends ComponentLike {
      *
      * @return The jump location.
      */
-    @NotNull Location getJumpLocation();
+    @Nullable Location getJumpLocation();
 
     /**
      * Sets the jump location. {@link #getJumpLocation()}
@@ -91,6 +92,7 @@ public interface DeArena extends ComponentLike {
      *
      * @param player The online player who want to play.
      * @return If the player has successfully joined the arena.
+     * @throws IllegalStateException If the arena is not properly configured. {@link #isSetup()}
      */
     @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID player);
 
@@ -101,4 +103,13 @@ public interface DeArena extends ComponentLike {
      * @return If the player has left the arena.
      */
     boolean removePlayer(@NotNull UUID player);
+
+    /**
+     * Returns whether the arena is properly configured.
+     *
+     * @return If no {@link Location} is {@code null}.
+     */
+    default boolean isSetup() {
+        return this.getJumpLocation() != null && this.getSpawnLocation() != null;
+    }
 }

@@ -12,7 +12,19 @@ commands:
     usage: /dac <join|leave> [args]
 
 permissions:
-  decoudre.admin:
+  decoudre.arena.*:
     default: op
-  decoudre.player:
+    description: Grant access to commands to edit arenas.
+    children:
+      decoudre.arena.create: true
+      decoudre.arena.set.jump: true
+      decoudre.arena.set.max.players: true
+      decoudre.arena.set.min.players: true
+      decoudre.arena.set.spawn: true
+  decoudre.player.*:
     default: true
+    description: Allows players to play in arenas.
+    children:
+      decoudre.player.block: true
+      decoudre.player.join: true
+      decoudre.player.leave: true

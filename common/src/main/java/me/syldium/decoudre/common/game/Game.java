@@ -117,14 +117,7 @@ public class Game implements DeGame, Runnable {
                     this.blocks.add(block);
                     JumpVerdict verdict = this.plugin.getPlayerAdapter().isDeCoudre(block) ? JumpVerdict.COMBO : JumpVerdict.LANDED;
                     this.handleJump(jumper, this.players.get(jumper), verdict);
-                }/* else if (jumper.getLocation().getBlockY() < this.yThreshold) {
-                    for (PoolBlock block : jumper.getBlocksBelow()) {
-                        if (!block.isPassable()) {
-                            this.handleJump(jumper, this.players.get(jumper), JumpVerdict.MISSED);
-                            return;
-                        }
-                    }
-                }*/
+                }
 
                 if (this.timer < 1) {
                     this.handleJump(jumper, this.players.get(jumper), JumpVerdict.MISSED);

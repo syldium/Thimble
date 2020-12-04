@@ -1,5 +1,6 @@
 package me.syldium.decoudre.common.command.arena;
 
+import me.syldium.decoudre.api.Location;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.abstraction.ChildCommand;
 import me.syldium.decoudre.common.command.abstraction.CommandException;
@@ -12,16 +13,20 @@ import me.syldium.decoudre.common.player.MessageKey;
 import me.syldium.decoudre.common.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class SetJumpCommand extends ChildCommand.One<Arena> {
+class SetJumpCommand extends ChildCommand.One<Arena> {
 
-    public SetJumpCommand() {
-        super("setJump", Arguments.arena(), MessageKey.HELP_SET_JUMP, Permission.ADMIN);
+    SetJumpCommand() {
+        super("setJump", Arguments.arena(), MessageKey.HELP_SET_JUMP, Permission.arenaSetup("set.jump"));
     }
 
     @Override
     public @NotNull CommandResult execute(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull Arena arena) throws CommandException {
-        arena.setJumpLocation(((Player) sender).getLocation());
-        return CommandResult.success();
+        Location loc = ((Player) sender).getLocation();
+        arena.setJumpLocation(loc);
+        return CommandResult.success(
+                MessageKey.FEEDBACK_ARENA_SET_JUMP,
+                loc.asTemplates()
+        );
     }
 
     @Override

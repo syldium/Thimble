@@ -7,9 +7,9 @@ A kind of Minecraft plugin for the "dé à coudre" mini game.
 
 After installing the plugin, you just need to create an arena where players can compete against each other.
 Connect to your server and execute the following commands (`<arena>` is to be replaced by the name of your choice):
-- `/dac create <arena>` to create an arena
-- `/dac setSpawn <arena>` to define the location where players appear when they join the arena
-- `/dac setJump <arena>` to define where players will jump from
+- `/dac arena create <arena>` to create an arena
+- `/dac arena setSpawn <arena>` to define the location where players appear when they join the arena
+- `/dac arena setJump <arena>` to define where players will jump from
 
 ### Playing
 
@@ -27,10 +27,10 @@ Examples:
 
 ### Permissions
 
-- *decoudre.player*: access to commands `/dac join` and `/dac leave`
-- *decoudre.list*: `/dac list`
-- *decoudre.stats*: `/dac stats`
-- *decoudre.admin*: `/dac create`, `/dac setSpawn`...
+- *decoudre.player.**: access to commands for players (`/dac block`, `/dac join`, `/dac leave`)
+- *decoudre.arena.**: `/dac arena create`, `/dac arena setSpawn`...
+
+Full list in the [plugin.yml](bukkit/src/main/resources/plugin.yml) file
 
 ## Building
 

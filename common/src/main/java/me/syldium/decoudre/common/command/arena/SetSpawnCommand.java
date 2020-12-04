@@ -1,5 +1,6 @@
 package me.syldium.decoudre.common.command.arena;
 
+import me.syldium.decoudre.api.Location;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.abstraction.ChildCommand;
 import me.syldium.decoudre.common.command.abstraction.CommandException;
@@ -12,16 +13,20 @@ import me.syldium.decoudre.common.player.MessageKey;
 import me.syldium.decoudre.common.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class SetSpawnCommand extends ChildCommand.One<Arena> {
+class SetSpawnCommand extends ChildCommand.One<Arena> {
 
-    public SetSpawnCommand() {
-        super("setSpawn", Arguments.arena(), MessageKey.HELP_SET_SPAWN, Permission.ADMIN);
+    SetSpawnCommand() {
+        super("setSpawn", Arguments.arena(), MessageKey.HELP_SET_SPAWN, Permission.arenaSetup("set.spawn"));
     }
 
     @Override
     public @NotNull CommandResult execute(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull Arena arena) throws CommandException {
-        arena.setSpawnLocation(((Player) sender).getLocation());
-        return CommandResult.success();
+        Location loc = ((Player) sender).getLocation();
+        arena.setSpawnLocation(loc);
+        return CommandResult.success(
+                MessageKey.FEEDBACK_ARENA_SET_SPAWN,
+                loc.asTemplates()
+        );
     }
 
     @Override

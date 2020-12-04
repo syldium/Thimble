@@ -4,9 +4,7 @@ import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.abstraction.AbstractCommand;
 import me.syldium.decoudre.common.command.abstraction.CommandException;
 import me.syldium.decoudre.common.command.abstraction.Sender;
-import me.syldium.decoudre.common.command.arena.CreateCommand;
-import me.syldium.decoudre.common.command.arena.SetJumpCommand;
-import me.syldium.decoudre.common.command.arena.SetSpawnCommand;
+import me.syldium.decoudre.common.command.arena.ArenaCommand;
 import me.syldium.decoudre.common.command.game.BlockCommand;
 import me.syldium.decoudre.common.command.game.JoinCommand;
 import me.syldium.decoudre.common.command.game.LeaveCommand;
@@ -34,9 +32,7 @@ public class CommandManager {
                 new JoinCommand(),
                 new LeaveCommand(),
                 new BlockCommand(),
-                new CreateCommand(),
-                new SetSpawnCommand(),
-                new SetJumpCommand()
+                new ArenaCommand()
         );
     }
 
@@ -167,7 +163,11 @@ public class CommandManager {
     }
 
     private void sendMainHelp(@NotNull Sender sender, @NotNull String label) {
-        for (AbstractCommand cmd : this.mainCommands) {
+        sendHelp(sender, label, this.mainCommands);
+    }
+
+    public static void sendHelp(@NotNull Sender sender, @NotNull String label, @NotNull List<@NotNull ? extends AbstractCommand> commands) {
+        for (AbstractCommand cmd : commands) {
             if (!cmd.hasPermission(sender) || !cmd.shouldDisplay()) {
                 continue;
             }

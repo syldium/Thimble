@@ -14,6 +14,14 @@ public enum MessageKey {
 
     FEEDBACK_ARENA_ALREADY_EXISTS("feedback.arena.already-exists"),
     FEEDBACK_ARENA_CREATED("feedback.arena.created"),
+    FEEDBACK_ARENA_NOT_CONFIGURED("feedback.arena.not-configured"),
+    FEEDBACK_ARENA_SET_JUMP("feedback.arena.set-jump"),
+    FEEDBACK_ARENA_SET_MAX("feedback.arena.set-max"),
+    FEEDBACK_ARENA_SET_MAX_LESS_THAN_MIN("feedback.arena.set-max.less-than-min"),
+    FEEDBACK_ARENA_SET_MIN("feedback.arena.set-min"),
+    FEEDBACK_ARENA_SET_MIN_GREATER_THAN_MAX("feedback.arena.set-min.greater-than-max"),
+    FEEDBACK_ARENA_SET_SPAWN("feedback.arena.set-spawn"),
+
     FEEDBACK_GAME_ALREADY_IN_GAME("feedback.game.already-in-game"),
     FEEDBACK_GAME_JOINED("feedback.game.joined"),
     FEEDBACK_GAME_LEFT("feedback.game.left"),

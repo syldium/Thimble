@@ -16,7 +16,7 @@ import java.util.List;
 public class LeaveCommand extends ChildCommand {
 
     public LeaveCommand() {
-        super("leave", MessageKey.HELP_LEAVE, Permission.PLAYER);
+        super("leave", MessageKey.HELP_LEAVE, Permission.player("leave"));
         this.commandGuard = CommandGuard.EXCEPT_IN_GAME;
     }
 

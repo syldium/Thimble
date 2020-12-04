@@ -39,7 +39,7 @@ public enum Dependency {
         this.path = groupId.replace('.', '/') + '/' + artifactId + '/' + version + '/' + artifactId + '-' + version + ".jar";
     }
 
-    public @NotNull byte[] getChecksum() {
+    public byte[] getChecksum() {
         return this.checksum;
     }
 

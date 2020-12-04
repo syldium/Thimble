@@ -1,5 +1,7 @@
 package me.syldium.decoudre.api;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -46,11 +48,17 @@ public class Location {
         return this.yaw;
     }
 
-    public int getBlockY() {
-        return (int) this.y;
-    }
-
     public @NotNull UUID getWorldUUID() {
         return this.world;
+    }
+
+    public @NotNull Template[] asTemplates() {
+        //CHECKSTYLE:OFF
+        return new Template[]{
+                Template.of("x", Component.text((int) Math.floor(this.x))),
+                Template.of("y", Component.text((int) Math.floor(this.y))),
+                Template.of("z", Component.text((int) Math.floor(this.z)))
+        };
+        //CHECKSTYLE:ON
     }
 }

@@ -7,6 +7,7 @@ import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.player.Player;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.Objects;
@@ -36,7 +37,7 @@ public class Arena implements DeArena {
     }
 
     @Override
-    public @NotNull Location getSpawnLocation() {
+    public @Nullable Location getSpawnLocation() {
         return this.spawnLocation;
     }
 
@@ -46,7 +47,7 @@ public class Arena implements DeArena {
     }
 
     @Override
-    public @NotNull Location getJumpLocation() {
+    public @Nullable Location getJumpLocation() {
         return this.jumpLocation;
     }
 
@@ -88,6 +89,10 @@ public class Arena implements DeArena {
 
     @Override
     public @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID uuid) {
+        if (!this.isSetup()) {
+            throw new IllegalStateException(String.format("The %s arena is not correctly configured.", this.name));
+        }
+
         if (this.game == null) {
             this.game = new Game(this.plugin, this);
         }

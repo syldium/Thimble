@@ -2,10 +2,21 @@ package me.syldium.decoudre.common.command.abstraction;
 
 import org.jetbrains.annotations.NotNull;
 
-public enum Permission {
+public final class Permission {
 
-    PLAYER("decoudre.player"),
-    ADMIN("decoudre.admin");
+    private static final Permission ARENA_SETUP = new Permission("decoudre.arena");
+
+    public static @NotNull Permission arenaSetup(@NotNull String property) {
+        return new Permission("decoudre.arena." + property);
+    }
+
+    public static @NotNull Permission arenaSetup() {
+        return ARENA_SETUP;
+    }
+
+    public static @NotNull Permission player(@NotNull String property) {
+        return new Permission("decoudre.player." + property);
+    }
 
     private final String permission;
 

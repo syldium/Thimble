@@ -16,12 +16,15 @@ import org.jetbrains.annotations.NotNull;
 public class JoinCommand extends ChildCommand.One<Arena> {
 
     public JoinCommand() {
-        super("join", Arguments.arena(), MessageKey.HELP_JOIN, Permission.PLAYER);
+        super("join", Arguments.arena(), MessageKey.HELP_JOIN, Permission.player("join"));
         this.commandGuard = CommandGuard.EXCEPT_NOT_IN_GAME;
     }
 
     @Override
     public @NotNull CommandResult execute(@NotNull DeCoudrePlugin plugin, @NotNull Sender sender, @NotNull Arena arena) throws CommandException {
+        if (!arena.isSetup()) {
+            throw new CommandException(MessageKey.FEEDBACK_ARENA_NOT_CONFIGURED);
+        }
         arena.addPlayer((Player) sender);
         return CommandResult.success(MessageKey.FEEDBACK_GAME_JOINED);
     }

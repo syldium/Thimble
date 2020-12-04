@@ -25,8 +25,8 @@ class ArenaArgument extends Argument<Arena> {
     @Override
     public List<String> tabComplete(@NotNull DeCoudrePlugin plugin, @NotNull String given, @NotNull Sender sender) {
         return plugin.getGameService().getArenas().stream()
-                .filter(arena -> arena.getName().startsWith(given))
                 .map(DeArena::getName)
+                .filter(s -> s.startsWith(given))
                 .collect(Collectors.toList());
     }
 }
