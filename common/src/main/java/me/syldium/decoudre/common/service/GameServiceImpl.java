@@ -12,18 +12,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class GameServiceImpl implements GameService {
 
     private final DeCoudrePlugin plugin;
     private final Map<UUID, Game> games = new ConcurrentHashMap<>();
-    private final Set<Arena> arenas = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Arena> arenas = new CopyOnWriteArraySet<>();
     private final ArenaConfig arenaConfig;
 
     public GameServiceImpl(@NotNull DeCoudrePlugin plugin, @NotNull ArenaConfig arenaConfig) {
