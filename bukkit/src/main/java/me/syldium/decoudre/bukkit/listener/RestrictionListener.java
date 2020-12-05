@@ -1,6 +1,8 @@
 package me.syldium.decoudre.bukkit.listener;
 
 import me.syldium.decoudre.bukkit.DeBukkitPlugin;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -19,22 +21,27 @@ public class RestrictionListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (this.plugin.getGameService().getGame(event.getPlayer().getUniqueId()).isPresent()) {
+        if (this.isRestricted(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (this.plugin.getGameService().getGame(event.getPlayer().getUniqueId()).isPresent()) {
+        if (this.isRestricted(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onItemDrop(PlayerDropItemEvent event) {
-        if (this.plugin.getGameService().getGame(event.getPlayer().getUniqueId()).isPresent()) {
+        if (this.isRestricted(event.getPlayer())) {
             event.setCancelled(true);
         }
+    }
+
+    private boolean isRestricted(@NotNull Player player) {
+        return this.plugin.getGameService().getGame(player.getUniqueId()).isPresent()
+                && player.getGameMode() != GameMode.CREATIVE;
     }
 }

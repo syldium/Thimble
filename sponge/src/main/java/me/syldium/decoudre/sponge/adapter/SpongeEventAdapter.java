@@ -32,7 +32,11 @@ public class SpongeEventAdapter implements EventAdapter<Player> {
 
     @Override
     public boolean callPlayerJoinArenaEvent(@NotNull DeGame game, @NotNull Player player) {
-        SpongePlayerJoinArenaEvent event = new SpongePlayerJoinArenaEvent(game, player, Cause.of(this.eventContext, this.container));
+        EventContext context = EventContext.builder()
+                .add(EventContextKeys.PLUGIN, this.container)
+                .add(EventContextKeys.PLAYER, player)
+                .build();
+        SpongePlayerJoinArenaEvent event = new SpongePlayerJoinArenaEvent(game, player, Cause.of(context, this.container));
         Sponge.getEventManager().post(event);
         return event.isCancelled();
     }
