@@ -1,5 +1,6 @@
 package me.syldium.decoudre.bukkit.config;
 
+import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.api.Location;
 import me.syldium.decoudre.common.config.ArenaConfig;
 import me.syldium.decoudre.common.game.Arena;
@@ -29,13 +30,13 @@ public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
             arenas.add(arena);
             ConfigurationSection section = this.configuration.getConfigurationSection(name);
             ConfigurationSection jumpSection = section.getConfigurationSection("jump-location");
-            if (jumpSection != null) {
-                arena.setJumpLocation(this.getLocation(jumpSection));
-            }
+            if (jumpSection != null) arena.setJumpLocation(this.getLocation(jumpSection));
             ConfigurationSection spawnSection = section.getConfigurationSection("spawn-location");
-            if (spawnSection != null) {
-                arena.setSpawnLocation(this.getLocation(spawnSection));
-            }
+            if (spawnSection != null) arena.setSpawnLocation(this.getLocation(spawnSection));
+            ConfigurationSection minPointSection = section.getConfigurationSection("min-point");
+            if (minPointSection != null) arena.setPoolMinPoint(this.getBlockVector(minPointSection));
+            ConfigurationSection maxPointSection = section.getConfigurationSection("max-point");
+            if (maxPointSection != null) arena.setPoolMaxPoint(this.getBlockVector(maxPointSection));
             arena.setMinPlayers(section.getInt("min-players", 2));
             arena.setMaxPlayers(section.getInt("max-players", 8));
         }
@@ -50,6 +51,8 @@ public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
             this.setLocation(section.createSection("spawn-location"), arena.getSpawnLocation());
             section.set("min-players", arena.getMinPlayers());
             section.set("max-players", arena.getMaxPlayers());
+            this.setBlockVector(section.createSection("min-point"), arena.getPoolMinPoint());
+            this.setBlockVector(section.createSection("max-point"), arena.getPoolMaxPoint());
         }
         this.save();
     }
@@ -65,6 +68,10 @@ public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
         );
     }
 
+    private @NotNull BlockVector getBlockVector(@NotNull ConfigurationSection section) {
+        return new BlockVector(section.getInt("x"), section.getInt("y"), section.getInt("z"));
+    }
+
     private void setLocation(@NotNull ConfigurationSection section, @Nullable Location location) {
         if (location == null) return;
         section.set("world", location.getWorldUUID().toString());
@@ -73,5 +80,12 @@ public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
         section.set("z", location.getZ());
         section.set("pitch", location.getPitch());
         section.set("yaw", location.getYaw());
+    }
+
+    private void setBlockVector(@NotNull ConfigurationSection section, @Nullable BlockVector vector) {
+        if (vector == null) return;
+        section.set("x", vector.getX());
+        section.set("y", vector.getY());
+        section.set("z", vector.getZ());
     }
 }

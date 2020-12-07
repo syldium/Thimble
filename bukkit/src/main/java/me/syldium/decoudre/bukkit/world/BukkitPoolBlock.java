@@ -1,5 +1,6 @@
 package me.syldium.decoudre.bukkit.world;
 
+import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.common.world.BlockData;
 import me.syldium.decoudre.common.world.Blocks;
 import me.syldium.decoudre.common.world.PoolBlock;
@@ -30,8 +31,8 @@ public class BukkitPoolBlock implements PoolBlock {
     }
 
     @Override
-    public boolean isPassable() {
-        return this.handle.isPassable();
+    public @NotNull BlockVector getPosition() {
+        return new BlockVector(this.handle.getX(), this.handle.getY(), this.handle.getZ());
     }
 
     public @NotNull Block getHandle() {

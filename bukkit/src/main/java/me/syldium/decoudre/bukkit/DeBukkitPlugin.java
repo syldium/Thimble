@@ -34,6 +34,7 @@ public class DeBukkitPlugin extends DeCoudrePlugin {
 
     private final DeCoudreBootstrap bootstrap;
     private final BukkitAudiences audiences;
+    private final BukkitCommandExecutor commandExecutor;
     private final BukkitEventAdapter eventAdapter;
     private final BukkitPlayerAdapter playerAdapter;
     private final BukkitArenaConfig arenaConfig;
@@ -53,9 +54,9 @@ public class DeBukkitPlugin extends DeCoudrePlugin {
 
         PluginCommand command = Objects.requireNonNull(bootstrap.getCommand("dac"), "Command not registered");
         if (classExists("com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent")) {
-            new PaperCommandExecutor<>(this, command);
+            this.commandExecutor = new PaperCommandExecutor<>(this, command);
         } else {
-            new BukkitCommandExecutor(this, command);
+            this.commandExecutor = new BukkitCommandExecutor(this, command);
         }
 
         new DamageListener(this);
@@ -81,6 +82,11 @@ public class DeBukkitPlugin extends DeCoudrePlugin {
     @Override
     public @NotNull Task startGameTask(@NotNull Runnable runnable) {
         return new BukkitTask(this.bootstrap.getServer().getScheduler().scheduleSyncRepeatingTask(this.bootstrap, runnable, 0L, 1L));
+    }
+
+    @Override
+    public @NotNull BukkitCommandExecutor getCommandManager() {
+        return this.commandExecutor;
     }
 
     @Override

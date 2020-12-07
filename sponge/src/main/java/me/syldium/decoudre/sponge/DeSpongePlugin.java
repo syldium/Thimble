@@ -2,10 +2,12 @@ package me.syldium.decoudre.sponge;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
+import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.api.Location;
 import me.syldium.decoudre.api.service.GameService;
 import me.syldium.decoudre.api.service.StatsService;
 import me.syldium.decoudre.common.DeCoudrePlugin;
+import me.syldium.decoudre.common.command.CommandManager;
 import me.syldium.decoudre.common.config.ArenaConfig;
 import me.syldium.decoudre.common.game.Arena;
 import me.syldium.decoudre.common.util.Task;
@@ -15,6 +17,7 @@ import me.syldium.decoudre.sponge.command.SpongeCommandExecutor;
 import me.syldium.decoudre.sponge.config.serializer.ArenaSerializer;
 import me.syldium.decoudre.sponge.config.SpongeArenaConfig;
 import me.syldium.decoudre.sponge.config.SpongeMainConfig;
+import me.syldium.decoudre.sponge.config.serializer.BlockVectorSerializer;
 import me.syldium.decoudre.sponge.config.serializer.LocationSerializer;
 import me.syldium.decoudre.sponge.listener.DamageListener;
 import me.syldium.decoudre.sponge.listener.RestrictionListener;
@@ -33,9 +36,6 @@ import org.spongepowered.api.GameRegistry;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.EventContext;
-import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
@@ -81,14 +81,18 @@ public class DeSpongePlugin extends DeCoudrePlugin {
     @Inject @ConfigDir(sharedRoot = false)
     private File dataFolder;
 
+    private SpongeCommandExecutor commandManager;
+
     @Listener @SuppressWarnings("UnstableApiUsage")
     public void onEnable(GameInitializationEvent event) throws IOException {
         this.saveDefaultConfig();
         this.logger = new LoggerWrapper(this.container.getLogger());
         this.audiences = SpongeAudiences.create(this.container, this.game);
 
-        this.game.getCommandManager().register(this, new SpongeCommandExecutor(this), "dac");
+        this.commandManager = new SpongeCommandExecutor(this);
+        this.game.getCommandManager().register(this, this.commandManager, "dac");
         TypeSerializerCollection.defaults().register(TypeToken.of(Arena.class), new ArenaSerializer(this));
+        TypeSerializerCollection.defaults().register(TypeToken.of(BlockVector.class), new BlockVectorSerializer());
         TypeSerializerCollection.defaults().register(TypeToken.of(Location.class), new LocationSerializer());
         this.arenaConfig = new SpongeArenaConfig(getFile("arenas.conf"), this.getSlf4jLogger());
 
@@ -133,6 +137,11 @@ public class DeSpongePlugin extends DeCoudrePlugin {
     }
 
     @Override
+    public @NotNull CommandManager getCommandManager() {
+        return this.commandManager;
+    }
+
+    @Override
     public @Nullable me.syldium.decoudre.common.player.Player getPlayer(@NotNull UUID uuid) {
         return this.getServer().getPlayer(uuid).map(this.playerAdapter::asAbstractPlayer).orElse(null);
     }
@@ -161,11 +170,6 @@ public class DeSpongePlugin extends DeCoudrePlugin {
 
     public void registerListeners(@NotNull Object listener) {
         this.game.getEventManager().registerListeners(this, listener);
-    }
-
-    public @NotNull Cause getCause() {
-        EventContext eventContext = EventContext.builder().add(EventContextKeys.PLUGIN, this.container).build();
-        return Cause.of(eventContext, this.container);
     }
 
     private void saveDefaultConfig() throws IOException {

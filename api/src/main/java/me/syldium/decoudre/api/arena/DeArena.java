@@ -1,6 +1,7 @@
 package me.syldium.decoudre.api.arena;
 
 import me.syldium.decoudre.api.Location;
+import me.syldium.decoudre.api.BlockVector;
 import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -112,4 +113,32 @@ public interface DeArena extends ComponentLike {
     default boolean isSetup() {
         return this.getJumpLocation() != null && this.getSpawnLocation() != null;
     }
+
+    /**
+     * Gets the lower point of the pool.
+     *
+     * @return The minimum point.
+     */
+    @Nullable BlockVector getPoolMinPoint();
+
+    /**
+     * Sets the lower point of the pool.
+     *
+     * @param point The minimum point.
+     */
+    void setPoolMinPoint(@NotNull BlockVector point);
+
+    /**
+     * Gets the upper point of the pool.
+     *
+     * @return The maximum point.
+     */
+    @Nullable BlockVector getPoolMaxPoint();
+
+    /**
+     * Sets the upper point of the pool.
+     *
+     * @param point The maximum point.
+     */
+    void setPoolMaxPoint(@NotNull BlockVector point);
 }

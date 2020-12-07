@@ -2,6 +2,7 @@ package me.syldium.decoudre.common;
 
 import me.syldium.decoudre.common.adapter.EventAdapter;
 import me.syldium.decoudre.common.adapter.PlayerAdapter;
+import me.syldium.decoudre.common.command.CommandManager;
 import me.syldium.decoudre.common.config.ArenaConfig;
 import me.syldium.decoudre.common.config.MainConfig;
 import me.syldium.decoudre.common.player.Player;
@@ -80,6 +81,8 @@ public abstract class DeCoudrePlugin {
     public abstract @NotNull File getDataFolder();
 
     public abstract @NotNull Task startGameTask(@NotNull Runnable runnable);
+
+    public abstract @NotNull CommandManager getCommandManager();
 
     public @NotNull GameServiceImpl getGameService() {
         return this.gameService;

@@ -1,6 +1,7 @@
 package me.syldium.decoudre.sponge.adapter;
 
 import com.flowpowered.math.vector.Vector3d;
+import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.common.adapter.PlayerAdapter;
 import me.syldium.decoudre.common.command.abstraction.Sender;
 import me.syldium.decoudre.common.player.InGamePlayer;
@@ -72,6 +73,23 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     @Override
     public me.syldium.decoudre.common.player.@NotNull Player asAbstractPlayer(@NotNull Player player) {
         return this.players.computeIfAbsent(player, s -> new SpongePlayer(this.plugin, player, this.audiences.player(player), this));
+    }
+
+    @Override
+    public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull UUID worldUUID, @NotNull BlockVector minPoint, @NotNull BlockVector maxPoint) {
+        World world = this.plugin.getServer().getWorld(worldUUID).orElseThrow(() -> new RuntimeException("A world was expected here."));
+        Set<BlockVector> set = new HashSet<>();
+        for (int x = minPoint.getX(); x <= maxPoint.getX(); x++) {
+            for (int y = minPoint.getY(); y <= maxPoint.getY(); y++) {
+                for (int z = minPoint.getZ(); z <= maxPoint.getZ(); z++) {
+                    BlockType type = world.getBlock(x, y, z).getType();
+                    if (type.equals(BlockTypes.WATER) || type.equals(BlockTypes.FLOWING_WATER)) {
+                        set.add(new BlockVector(x, y, z));
+                    }
+                }
+            }
+        }
+        return set;
     }
 
     @Override

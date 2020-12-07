@@ -78,6 +78,14 @@ public abstract class ChildCommand extends AbstractCommand {
         return this;
     }
 
+    @Override @SuppressWarnings("unchecked")
+    public <T extends AbstractCommand> @Nullable T lookup(@NotNull Class<T> clazz) {
+        if (this.getClass().equals(clazz)) {
+            return (T) this;
+        }
+        return null;
+    }
+
     protected @NotNull Game getGame(@NotNull DeCoudrePlugin plugin, @NotNull Sender player) throws CommandException {
         return (Game) plugin.getGameService().getGame(player.uuid()).orElseThrow(() -> new CommandException(MessageKey.FEEDBACK_GAME_NOT_IN_GAME));
     }

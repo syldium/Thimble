@@ -1,6 +1,7 @@
 package me.syldium.decoudre.common.adapter;
 
 import me.syldium.decoudre.api.Location;
+import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.common.player.AbstractPlayer;
 import me.syldium.decoudre.common.player.InGamePlayer;
 import me.syldium.decoudre.common.player.Player;
@@ -23,7 +24,11 @@ public interface PlayerAdapter<P, L> {
 
     boolean isDeCoudre(@NotNull PoolBlock abstracted);
 
-    @NotNull BlockData getRandomWool();
+    @NotNull List<@NotNull ? extends BlockData> getAvailableBlocks();
+
+    default @NotNull BlockData getRandomBlock() {
+        return this.getAvailableBlocks().get(new Random().nextInt(this.getAvailableBlocks().size()));
+    }
 
     @SuppressWarnings("unchecked")
     default @NotNull P asPlatform(@NotNull Player player) {

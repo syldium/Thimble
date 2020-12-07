@@ -189,4 +189,14 @@ public class CommandManager {
         }
         return new ArrayList<>(Arrays.asList(DELIMITER.split(arguments, limit)));
     }
+
+    public <T extends AbstractCommand> @NotNull T lookup(@NotNull Class<T> clazz) {
+        for (AbstractCommand cmd : this.mainCommands) {
+            T command = cmd.lookup(clazz);
+            if (command != null) {
+                return command;
+            }
+        }
+        throw new IllegalArgumentException("This command is not registered!");
+    }
 }

@@ -1,21 +1,16 @@
 package me.syldium.decoudre.sponge.world;
 
+import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.common.world.BlockData;
 import me.syldium.decoudre.common.world.Blocks;
 import me.syldium.decoudre.common.world.PoolBlock;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.Property;
-import org.spongepowered.api.data.property.block.PassableProperty;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.Optional;
-
 public class SpongePoolBlock implements PoolBlock {
-
-    private final PassableProperty PASSABLE_PROPERTY = new PassableProperty(true, Property.Operator.EQUAL);
 
     private final BlockState handle;
     private final Location<World> location;
@@ -40,9 +35,8 @@ public class SpongePoolBlock implements PoolBlock {
     }
 
     @Override
-    public boolean isPassable() {
-        Optional<PassableProperty> passable = this.handle.getProperty(PassableProperty.class);
-        return passable.isPresent() && this.PASSABLE_PROPERTY.matches(passable.get());
+    public @NotNull BlockVector getPosition() {
+        return new BlockVector(this.location.getBlockX(), this.location.getBlockY(), this.location.getBlockZ());
     }
 
     public @NotNull Location<@NotNull World> getLocation() {

@@ -1,5 +1,6 @@
 package me.syldium.decoudre.common.world;
 
+import me.syldium.decoudre.api.BlockVector;
 import org.jetbrains.annotations.NotNull;
 
 public interface PoolBlock {
@@ -8,5 +9,5 @@ public interface PoolBlock {
 
     @NotNull BlockData getBlockData();
 
-    boolean isPassable();
+    @NotNull BlockVector getPosition();
 }

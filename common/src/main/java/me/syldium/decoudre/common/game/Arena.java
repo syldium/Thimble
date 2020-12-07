@@ -1,6 +1,7 @@
 package me.syldium.decoudre.common.game;
 
 import me.syldium.decoudre.api.Location;
+import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.api.arena.DeArena;
 import me.syldium.decoudre.api.arena.DeGame;
 import me.syldium.decoudre.common.DeCoudrePlugin;
@@ -20,6 +21,8 @@ public class Arena implements DeArena {
     private final String name;
     private Location spawnLocation;
     private Location jumpLocation;
+    private BlockVector minimumPoint;
+    private BlockVector maximumPoint;
     private int minPlayers = 1;
     private int maxPlayers = 8;
 
@@ -109,6 +112,26 @@ public class Arena implements DeArena {
     @Override
     public boolean removePlayer(@NotNull UUID player) {
         return this.game.removePlayer(player);
+    }
+
+    @Override
+    public @Nullable BlockVector getPoolMinPoint() {
+        return this.minimumPoint;
+    }
+
+    @Override
+    public void setPoolMinPoint(@NotNull BlockVector point) {
+        this.minimumPoint = point;
+    }
+
+    @Override
+    public @Nullable BlockVector getPoolMaxPoint() {
+        return this.maximumPoint;
+    }
+
+    @Override
+    public void setPoolMaxPoint(@NotNull BlockVector point) {
+        this.maximumPoint = point;
     }
 
     @Override

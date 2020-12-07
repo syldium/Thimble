@@ -1,5 +1,6 @@
 package me.syldium.decoudre.bukkit.adapter;
 
+import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.bukkit.DeBukkitPlugin;
 import me.syldium.decoudre.bukkit.DeCoudreBootstrap;
 import me.syldium.decoudre.bukkit.command.BukkitSender;
@@ -15,6 +16,7 @@ import me.syldium.decoudre.bukkit.world.BukkitPoolBlock;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -76,6 +78,22 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     @Override
     public @NotNull Player asAbstractPlayer(org.bukkit.entity.@NotNull Player player) {
         return this.players.computeIfAbsent(player, s -> new BukkitPlayer(this.bootstrap.getPlugin(), player, this.audiences.player(player), this));
+    }
+
+    @Override
+    public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull UUID worldUUID, @NotNull BlockVector minPoint, @NotNull BlockVector maxPoint) {
+        World world = requireNonNull(this.bootstrap.getServer().getWorld(worldUUID), "world");
+        Set<BlockVector> set = new HashSet<>();
+        for (int x = minPoint.getX(); x <= maxPoint.getX(); x++) {
+            for (int y = minPoint.getY(); y <= maxPoint.getY(); y++) {
+                for (int z = minPoint.getZ(); z <= maxPoint.getZ(); z++) {
+                    if (world.getBlockAt(x, y, z).isLiquid()) {
+                        set.add(new BlockVector(x, y, z));
+                    }
+                }
+            }
+        }
+        return set;
     }
 
     @Override

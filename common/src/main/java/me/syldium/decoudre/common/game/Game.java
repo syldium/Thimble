@@ -1,5 +1,6 @@
 package me.syldium.decoudre.common.game;
 
+import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.api.arena.DeGame;
 import me.syldium.decoudre.api.arena.DeState;
 import me.syldium.decoudre.api.player.DePlayer;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -38,16 +40,18 @@ public class Game implements DeGame, Runnable {
 
     private final DeCoudrePlugin plugin;
     private final Arena arena;
-    private final PlayerMap<InGamePlayer> players;
-    private final Queue<UUID> queue = new ArrayDeque<>();
-    private final List<PoolBlock> blocks = new ArrayList<>();
     private final Task task;
-    private UUID jumper;
-    private final TimedMedia jumperMedia;
 
     private DeState state = DeState.WAITING;
-    private int timer;
+    private final PlayerMap<InGamePlayer> players;
+    private final Queue<UUID> queue = new ArrayDeque<>();
+    private final TimedMedia jumperMedia;
+    private UUID jumper;
 
+    private final Set<BlockVector> remainingWaterBlocks;
+    private final List<PoolBlock> blocks = new ArrayList<>();
+
+    private int timer;
     private final int countdownTicks;
     private final int jumpTicks;
 
@@ -61,6 +65,14 @@ public class Game implements DeGame, Runnable {
 
         this.countdownTicks = this.plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND;
         this.jumpTicks = this.plugin.getMainConfig().getJumpTime() * Ticks.TICKS_PER_SECOND;
+
+        this.remainingWaterBlocks = this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null ?
+                Collections.emptySet()
+                : this.plugin.getPlayerAdapter().getRemainingWaterBlocks(
+                        arena.getJumpLocation().getWorldUUID(),
+                        this.arena.getPoolMinPoint(),
+                        this.arena.getPoolMaxPoint()
+        );
     }
 
     @Override
@@ -124,6 +136,15 @@ public class Game implements DeGame, Runnable {
                     this.blocks.add(block);
                     JumpVerdict verdict = this.plugin.getPlayerAdapter().isDeCoudre(block) ? JumpVerdict.COMBO : JumpVerdict.LANDED;
                     this.handleJump(jumper, this.players.get(jumper), verdict);
+
+                    if (this.remainingWaterBlocks.remove(block.getPosition()) && this.remainingWaterBlocks.isEmpty()) {
+                        Comparator<InGamePlayer> comparator = Comparator.comparingInt(InGamePlayer::getLifes);
+                        this.end(this.players.stream()
+                                .filter(player -> !player.isSpectator())
+                                .max(comparator)
+                                .orElse(null)
+                        );
+                    }
                 }
 
                 if (this.timer < 1) {

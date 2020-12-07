@@ -54,6 +54,8 @@ public abstract class AbstractCommand {
 
     public abstract @NotNull AbstractCommand get(@NotNull List<@NotNull String> args);
 
+    public abstract <T extends AbstractCommand> @Nullable T lookup(@NotNull Class<T> clazz);
+
     public @Nullable ParentCommand getParent() {
         return this.parent;
     }

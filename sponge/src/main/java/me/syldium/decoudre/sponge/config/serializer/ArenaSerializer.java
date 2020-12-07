@@ -1,6 +1,7 @@
 package me.syldium.decoudre.sponge.config.serializer;
 
 import com.google.common.reflect.TypeToken;
+import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.api.Location;
 import me.syldium.decoudre.common.game.Arena;
 import me.syldium.decoudre.sponge.DeSpongePlugin;
@@ -33,15 +34,24 @@ public class ArenaSerializer implements TypeSerializer<Arena> {
         Arena arena = new Arena(this.plugin, name);
         arena.setMinPlayers(value.getNode("min-players").getInt(1));
         arena.setMaxPlayers(value.getNode("max-players").getInt(8));
-        this.set(value, arena::setSpawnLocation, "spawn-location");
-        this.set(value, arena::setJumpLocation, "jump-location");
+        this.setLocation(value, arena::setSpawnLocation, "spawn-location");
+        this.setLocation(value, arena::setJumpLocation, "jump-location");
+        this.setBlockVector(value, arena::setPoolMinPoint, "min-point");
+        this.setBlockVector(value, arena::setPoolMaxPoint, "max-point");
         return arena;
     }
 
-    private void set(@NotNull ConfigurationNode node, @NotNull Consumer<@NotNull Location> setter, @NotNull Object ...path) throws ObjectMappingException {
+    private void setLocation(@NotNull ConfigurationNode node, @NotNull Consumer<@NotNull Location> setter, @NotNull Object ...path) throws ObjectMappingException {
         Location location = node.getNode(path).getValue(TypeToken.of(Location.class));
         if (location != null) {
             setter.accept(location);
+        }
+    }
+
+    private void setBlockVector(@NotNull ConfigurationNode node, @NotNull Consumer<@NotNull BlockVector> setter, @NotNull Object ...path) throws ObjectMappingException {
+        BlockVector vector = node.getNode(path).getValue(TypeToken.of(BlockVector.class));
+        if (vector != null) {
+            setter.accept(vector);
         }
     }
 
@@ -56,5 +66,7 @@ public class ArenaSerializer implements TypeSerializer<Arena> {
         value.getNode("max-players").setValue(arena.getMaxPlayers());
         value.getNode("spawn-location").setValue(TypeToken.of(Location.class), arena.getSpawnLocation());
         value.getNode("jump-location").setValue(TypeToken.of(Location.class), arena.getJumpLocation());
+        value.getNode("min-point").setValue(TypeToken.of(BlockVector.class), arena.getPoolMinPoint());
+        value.getNode("max-point").setValue(TypeToken.of(BlockVector.class), arena.getPoolMaxPoint());
     }
 }

@@ -6,6 +6,7 @@ import me.syldium.decoudre.common.player.MessageKey;
 import me.syldium.decoudre.common.service.MessageService;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,10 +16,10 @@ import static me.syldium.decoudre.common.command.CommandManager.sendHelp;
 
 public class ParentCommand extends AbstractCommand {
 
-    private final List<? extends AbstractCommand> children;
+    private final List<AbstractCommand> children;
     private final Component usage;
 
-    public ParentCommand(String name, List<? extends AbstractCommand> children, MessageKey description, Permission permission) {
+    public ParentCommand(String name, List<AbstractCommand> children, MessageKey description, Permission permission) {
         super(name, description, permission);
         this.children = children;
         this.usage = Component.text(name);
@@ -82,7 +83,21 @@ public class ParentCommand extends AbstractCommand {
         return this;
     }
 
-    public @NotNull List<@NotNull ? extends AbstractCommand> getChildren() {
+    @Override @SuppressWarnings("unchecked")
+    public <T extends AbstractCommand> @Nullable T lookup(@NotNull Class<T> clazz) {
+        if (this.getClass().equals(clazz)) {
+            return (T) this;
+        }
+        for (AbstractCommand command : this.children) {
+            T c = command.lookup(clazz);
+            if (c != null) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public @NotNull List<@NotNull AbstractCommand> getChildren() {
         return this.children;
     }
 }
