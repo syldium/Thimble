@@ -110,6 +110,11 @@ public class Game implements DeGame, Runnable {
                 this.timer--;
 
                 Player jumper = this.plugin.getPlayer(this.jumper);
+                if (jumper == null) {
+                    this.handleJump(null, this.players.get(this.jumper), JumpVerdict.MISSED);
+                    return;
+                }
+
                 this.jumperMedia.progress(jumper, (float) this.timer / this.jumpTicks, (int) Math.ceil((float) this.timer / Ticks.TICKS_PER_SECOND));
                 if (jumper.isInWater()) {
                     PoolBlock block = jumper.getFirstLiquidBlock();
