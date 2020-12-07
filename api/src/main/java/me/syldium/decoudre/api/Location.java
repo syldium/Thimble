@@ -55,6 +55,10 @@ public class Location {
         return this.asBlockPosition().asTemplates();
     }
 
+    public @NotNull BlockVector asBlockPosition() {
+        return new BlockVector((int) Math.floor(this.x), (int) Math.floor(this.y), (int) Math.floor(this.z));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
