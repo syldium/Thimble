@@ -15,6 +15,11 @@ subprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
+    compileTestJava {
+        sourceCompatibility = 11
+        targetCompatibility = 11
+    }
+
     project.description = 'Plugin for the mini game "Dé à coudre"'
     project.ext.fullVersion = '1.0-SNAPSHOT'
 }

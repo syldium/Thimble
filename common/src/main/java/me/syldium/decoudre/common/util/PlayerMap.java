@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements PlayerAudience, ForwardingAudience, Iterable<E> {
 
@@ -101,5 +102,9 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements P
     @Override
     public void sendRealExperience() {
         for (PlayerAudience expHolder : this.audiences()) expHolder.sendRealExperience();
+    }
+
+    public @NotNull Stream<E> stream() {
+        return this.values().stream();
     }
 }

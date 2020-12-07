@@ -4,7 +4,6 @@ import com.flowpowered.math.vector.Vector3d;
 import me.syldium.decoudre.common.adapter.PlayerAdapter;
 import me.syldium.decoudre.common.command.abstraction.Sender;
 import me.syldium.decoudre.common.player.InGamePlayer;
-import me.syldium.decoudre.common.world.BlockData;
 import me.syldium.decoudre.common.world.PoolBlock;
 import me.syldium.decoudre.sponge.DeSpongePlugin;
 import me.syldium.decoudre.sponge.command.SpongeSender;
@@ -23,10 +22,12 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World>> {
@@ -36,7 +37,7 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     private final SpongeAudiences audiences;
     private final Map<Player, me.syldium.decoudre.common.player.Player> players = new WeakHashMap<>();
     private final DeSpongePlugin plugin;
-    private final List<BlockState> wools = new ArrayList<>();
+    private final List<SpongeBlockData> blockDatas = new ArrayList<>();
     private final BlockSelectionInventory inventory;
 
     public SpongePlayerAdapter(@NotNull DeSpongePlugin plugin, @NotNull SpongeAudiences audiences) {
@@ -45,7 +46,7 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
 
         for (BlockState state : this.plugin.getRegistry().getAllOf(BlockState.class)) {
             if (state.getType().equals(BlockTypes.WOOL)) {
-                this.wools.add(state);
+                this.blockDatas.add(new SpongeBlockData(state));
             }
         }
         this.inventory = new BlockSelectionInventory(plugin);
@@ -64,8 +65,8 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     }
 
     @Override
-    public @NotNull BlockData getRandomWool() {
-        return new SpongeBlockData(this.wools.get(new Random().nextInt(this.wools.size())));
+    public @NotNull List<SpongeBlockData> getAvailableBlocks() {
+        return this.blockDatas;
     }
 
     @Override
@@ -90,8 +91,8 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     }
 
     @Override
-    public void openBlockSelectionInventory(@NotNull me.syldium.decoudre.common.player.Player player, @NotNull InGamePlayer inGamePlayer) {
-        this.inventory.open(this.asPlatform(player), inGamePlayer);
+    public void openBlockSelectionInventory(@NotNull Player player, @NotNull InGamePlayer inGamePlayer) {
+        this.inventory.open(player, inGamePlayer);
     }
 
     public me.syldium.decoudre.api.@NotNull Location asAbstractLocation(@NotNull Location<World> location, @NotNull Vector3d headRotation) {

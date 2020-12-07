@@ -10,7 +10,6 @@ import me.syldium.decoudre.common.adapter.PlayerAdapter;
 import me.syldium.decoudre.common.command.abstraction.Sender;
 import me.syldium.decoudre.common.player.InGamePlayer;
 import me.syldium.decoudre.common.player.Player;
-import me.syldium.decoudre.common.world.BlockData;
 import me.syldium.decoudre.common.world.PoolBlock;
 import me.syldium.decoudre.bukkit.world.BukkitPoolBlock;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -21,12 +20,16 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.requireNonNull;
 
 public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Player, Location> {
 
@@ -35,9 +38,8 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     private final DeCoudreBootstrap bootstrap;
     private final BukkitAudiences audiences;
     private final Map<org.bukkit.entity.Player, Player> players = new WeakHashMap<>();
+    private final List<BukkitBlockData> blockDatas;
     private final BlockSelectionInventory inventory;
-
-    private final List<Material> materials;
 
     public BukkitPlayerAdapter(@NotNull DeBukkitPlugin plugin, @NotNull DeCoudreBootstrap bootstrap, @NotNull BukkitAudiences audiences) {
         this.bootstrap = bootstrap;
@@ -46,12 +48,12 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
         Pattern[] patterns = plugin.getConfig().getStringList("blocks").stream()
                 .map(Pattern::compile)
                 .toArray(Pattern[]::new);
-        this.materials = new ArrayList<>(BukkitUtil.getAllBlocksMatching(plugin.getLogger(), patterns));
-        if (this.materials.isEmpty()) {
+        Set<Material> materials = BukkitUtil.getAllBlocksMatching(plugin.getLogger(), patterns);
+        if (materials.isEmpty()) {
             plugin.getLogger().severe("The list of blocks in the configuration file is empty/invalid!"
                     + " This will cause an error every time a player tries to join an arena.");
         }
-
+        this.blockDatas = materials.stream().map(BukkitBlockData::new).collect(Collectors.toList());
         this.inventory = new BlockSelectionInventory(plugin, this);
     }
 
@@ -67,9 +69,8 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     }
 
     @Override
-    public @NotNull BlockData getRandomWool() {
-        int index = new Random().nextInt(this.materials.size());
-        return new BukkitBlockData(this.materials.get(index).createBlockData());
+    public @NotNull List<BukkitBlockData> getAvailableBlocks() {
+        return this.blockDatas;
     }
 
     @Override
@@ -102,8 +103,8 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     }
 
     @Override
-    public void openBlockSelectionInventory(@NotNull Player player, @NotNull InGamePlayer inGamePlayer) {
-        this.inventory.open(this.asPlatform(player), inGamePlayer);
+    public void openBlockSelectionInventory(@NotNull org.bukkit.entity.Player player, @NotNull InGamePlayer inGamePlayer) {
+        this.inventory.open(player, inGamePlayer);
     }
 
     public @NotNull Sender asAbstractSender(@NotNull CommandSender sender) {
@@ -111,9 +112,5 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
             return this.asAbstractPlayer((org.bukkit.entity.Player) sender);
         }
         return new BukkitSender(this.bootstrap.getPlugin(), sender, this.audiences.sender(sender));
-    }
-
-    public @NotNull List<@NotNull Material> getMaterials() {
-        return this.materials;
     }
 }

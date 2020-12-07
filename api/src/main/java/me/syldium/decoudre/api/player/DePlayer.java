@@ -1,5 +1,7 @@
 package me.syldium.decoudre.api.player;
 
+import me.syldium.decoudre.api.arena.DeGame;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 public interface DePlayer extends DePlayerStats {
@@ -19,4 +21,11 @@ public interface DePlayer extends DePlayerStats {
      * @return If so.
      */
     boolean isSpectator();
+
+    /**
+     * Gets the game the player is in.
+     *
+     * @return The game.
+     */
+    @NotNull DeGame getGame();
 }

@@ -5,6 +5,7 @@ import me.syldium.decoudre.api.arena.DeState;
 import me.syldium.decoudre.api.player.DePlayer;
 import me.syldium.decoudre.api.player.JumpVerdict;
 import me.syldium.decoudre.common.DeCoudrePlugin;
+import me.syldium.decoudre.common.adapter.BlockBalancer;
 import me.syldium.decoudre.common.config.GameConfig;
 import me.syldium.decoudre.common.player.InGamePlayer;
 import me.syldium.decoudre.common.player.MessageKey;
@@ -89,6 +90,7 @@ public class Game implements DeGame, Runnable {
                         }
                     }
                     this.players.hide();
+                    new BlockBalancer(this.players).balance(this.plugin.getPlayerAdapter().getAvailableBlocks());
                     this.state = DeState.PLAYING;
                 }
                 return;
@@ -240,6 +242,16 @@ public class Game implements DeGame, Runnable {
         return Collections.unmodifiableSet(this.players.playerSet());
     }
 
+    public @NotNull Set<InGamePlayer> getPlayers(@NotNull BlockData blockData) {
+        Set<InGamePlayer> set = new HashSet<>();
+        for (InGamePlayer player : this.players) {
+            if (player.getChosenBlock().equals(blockData)) {
+                set.add(player);
+            }
+        }
+        return set;
+    }
+
     public @Nullable DePlayer getPlayer(@NotNull UUID uuid) {
         return this.players.get(uuid);
     }
@@ -259,8 +271,10 @@ public class Game implements DeGame, Runnable {
 
         return this.plugin.getStatsService().getPlayerStatistics(player.uuid())
                 .thenApply(optional -> {
-                    BlockData block = this.plugin.getPlayerAdapter().getRandomWool();
-                    InGamePlayer inGamePlayer = optional.map(stats -> new InGamePlayer(stats, block)).orElseGet(() -> new InGamePlayer(player.uuid(), player.name(), block));
+                    BlockData block = this.plugin.getPlayerAdapter().getRandomBlock();
+                    InGamePlayer inGamePlayer = optional
+                            .map(stats -> new InGamePlayer(stats, block, this))
+                            .orElseGet(() -> new InGamePlayer(player.uuid(), player.name(), block, this));
                     if (this.players.add(inGamePlayer)) {
                         this.plugin.getGameService().setPlayerGame(player.uuid(), this);
                         return true;

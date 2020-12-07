@@ -8,8 +8,10 @@ import me.syldium.decoudre.bukkit.adapter.BukkitPlayerAdapter;
 import me.syldium.decoudre.bukkit.world.BukkitBlockData;
 import me.syldium.decoudre.common.player.InGamePlayer;
 import me.syldium.decoudre.common.player.MessageKey;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
@@ -26,7 +28,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public final class BlockSelectionInventory implements Listener {
 
@@ -37,13 +41,19 @@ public final class BlockSelectionInventory implements Listener {
 
     private final DeBukkitPlugin plugin;
     private final String inventoryTitle;
+    private final String gameStarted;
     private final Map<UUID, Integer> inventories = new Object2IntOpenHashMap<>();
     private final int pages;
 
     public BlockSelectionInventory(@NotNull DeBukkitPlugin plugin, @NotNull BukkitPlayerAdapter adapter) {
         this.plugin = plugin;
-        this.inventoryTitle = LegacyComponentSerializer.legacySection().serialize(plugin.getMessageService().formatMessage(MessageKey.INVENTORY_BLOCK_SELECTION));
-        this.pages = (int) Math.ceil((float) adapter.getMaterials().size() / PER_PAGE);
+        this.inventoryTitle = LegacyComponentSerializer.legacySection().serialize(
+                plugin.getMessageService().formatMessage(MessageKey.INVENTORY_BLOCK_SELECTION)
+        );
+        this.gameStarted = LegacyComponentSerializer.legacySection().serialize(
+                plugin.getMessageService().formatMessage(MessageKey.FEEDBACK_GAME_STARTED_GAME, NamedTextColor.RED)
+        );
+        this.pages = (int) Math.ceil((float) adapter.getAvailableBlocks().size() / PER_PAGE);
         plugin.registerEvents(this);
     }
 
@@ -75,6 +85,10 @@ public final class BlockSelectionInventory implements Listener {
         }
 
         // Changes the player's block
+        if (!player.getGame().acceptPlayers()) {
+            event.getWhoClicked().sendMessage(this.gameStarted);
+            return;
+        }
         Material previous = ((BukkitBlockData) player.getChosenBlock()).getHandle().getMaterial();
         player.setChosenBlock(new BukkitBlockData(event.getCurrentItem().getType().createBlockData()));
         for (ItemStack itemStack : event.getInventory().getContents()) {
@@ -85,6 +99,7 @@ public final class BlockSelectionInventory implements Listener {
             if (itemStack.getType() == previous || itemStack.equals(event.getCurrentItem())) {
                 ItemMeta meta = itemStack.getItemMeta();
                 if (itemStack.getType() == previous) {
+                    meta.setDisplayName(null);
                     meta.removeEnchant(Enchantment.LUCK);
                 } else {
                     meta.addEnchant(Enchantment.LUCK, 1, true);
@@ -96,7 +111,7 @@ public final class BlockSelectionInventory implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryCloseEvent event) {
+    public void onInventoryClose(InventoryCloseEvent event) {
         this.inventories.remove(event.getPlayer().getUniqueId());
     }
 
@@ -108,17 +123,30 @@ public final class BlockSelectionInventory implements Listener {
         Preconditions.checkArgument(page > 0 && page <= this.pages, "The page number is out of bounds.");
 
         Inventory inventory = Bukkit.createInventory(null, INVENTORY_SIZE, this.inventoryTitle);
-        List<Material> wools = this.plugin.getPlayerAdapter().getMaterials();
+        List<BukkitBlockData> wools = this.plugin.getPlayerAdapter().getAvailableBlocks();
         int start = (page - 1) * PER_PAGE;
         int end = Math.min(page * PER_PAGE, wools.size());
 
         int index = 0;
-        for (Material material : wools.subList(start, end)) {
-            ItemStack itemStack = new ItemStack(material);
+        for (BukkitBlockData blockData : wools.subList(start, end)) {
+            ItemStack itemStack = new ItemStack(blockData.getHandle().getMaterial());
+
+            Set<InGamePlayer> players = inGamePlayer.getGame().getPlayers(blockData);
+            String displayName = players.isEmpty() ?
+                    null
+                    : ChatColor.AQUA + players.stream().map(InGamePlayer::name).collect(Collectors.joining(", "));
+
             if (itemStack.getType() == ((BukkitBlockData) inGamePlayer.getChosenBlock()).getHandle().getMaterial()) {
+                // Adds an enchantment glint
                 ItemMeta meta = itemStack.getItemMeta();
+                meta.setDisplayName(displayName);
                 meta.addEnchant(Enchantment.LUCK, 1, true);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                itemStack.setItemMeta(meta);
+            } else if (!players.isEmpty()) {
+                // Adds player names
+                ItemMeta meta = itemStack.getItemMeta();
+                meta.setDisplayName(displayName);
                 itemStack.setItemMeta(meta);
             }
 

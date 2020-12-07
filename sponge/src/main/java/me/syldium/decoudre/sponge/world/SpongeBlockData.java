@@ -15,4 +15,17 @@ public class SpongeBlockData implements BlockData {
     public @NotNull BlockState getHandle() {
         return this.handle;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SpongeBlockData blockData = (SpongeBlockData) o;
+        return this.handle.equals(blockData.handle);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.handle.hashCode();
+    }
 }

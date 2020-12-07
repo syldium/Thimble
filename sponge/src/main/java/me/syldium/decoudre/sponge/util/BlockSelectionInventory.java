@@ -5,6 +5,7 @@ import me.syldium.decoudre.common.player.InGamePlayer;
 import me.syldium.decoudre.common.player.MessageKey;
 import me.syldium.decoudre.sponge.DeSpongePlugin;
 import me.syldium.decoudre.sponge.world.SpongeBlockData;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.spongeapi.SpongeComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.block.BlockState;
@@ -24,6 +25,8 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.property.AcceptsItems;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,12 +34,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class BlockSelectionInventory {
 
     private final DeSpongePlugin plugin;
     private final Set<UUID> inventories = new HashSet<>();
     private final InventoryTitle inventoryTitle;
+    private final Text gameStarted;
     private final List<Enchantment> enchantements;
 
     public BlockSelectionInventory(@NotNull DeSpongePlugin plugin) {
@@ -45,6 +50,9 @@ public class BlockSelectionInventory {
                 SpongeComponentSerializer.get().serialize(
                         plugin.getMessageService().formatMessage(MessageKey.INVENTORY_BLOCK_SELECTION)
                 )
+        );
+        this.gameStarted = SpongeComponentSerializer.get().serialize(
+                plugin.getMessageService().formatMessage(MessageKey.FEEDBACK_GAME_STARTED_GAME, NamedTextColor.RED)
         );
         this.enchantements = Collections.singletonList(
                 Enchantment.builder()
@@ -65,18 +73,23 @@ public class BlockSelectionInventory {
 
         BlockState blockState = ((SpongeBlockData) inGamePlayer.getChosenBlock()).getHandle();
 
-        for (BlockState state : this.plugin.getRegistry().getAllOf(BlockState.class)) {
-            if (state.getType().equals(BlockTypes.WOOL)) {
-                ItemStack itemStack = ItemStack.builder().fromBlockState(state).build();
-                state.get(Keys.DYE_COLOR).ifPresent(dyeColor -> itemStack.offer(Keys.DYE_COLOR, dyeColor));
+        for (SpongeBlockData blockData : this.plugin.getPlayerAdapter().getAvailableBlocks()) {
+            ItemStack itemStack = ItemStack.builder().fromBlockState(blockData.getHandle()).build();
+            blockData.getHandle().get(Keys.DYE_COLOR).ifPresent(dyeColor -> itemStack.offer(Keys.DYE_COLOR, dyeColor));
 
-                if (state.equals(blockState)) {
-                    itemStack.offer(Keys.ITEM_ENCHANTMENTS, this.enchantements);
-                    itemStack.offer(Keys.HIDE_ENCHANTMENTS, true);
-                }
-
-                inventory.offer(itemStack);
+            Set<InGamePlayer> players = inGamePlayer.getGame().getPlayers(blockData);
+            Text component = players.isEmpty() ?
+                    Text.EMPTY
+                    : Text.of(TextColors.RESET, TextColors.AQUA, players.stream().map(InGamePlayer::name).collect(Collectors.joining(", ")));
+            if (blockData.getHandle().equals(blockState)) {
+                itemStack.offer(Keys.DISPLAY_NAME, component);
+                itemStack.offer(Keys.ITEM_ENCHANTMENTS, this.enchantements);
+                itemStack.offer(Keys.HIDE_ENCHANTMENTS, true);
+            } else if (!component.isEmpty()) {
+                itemStack.offer(Keys.DISPLAY_NAME, component);
             }
+
+            inventory.offer(itemStack);
         }
         player.openInventory(inventory);
         this.inventories.add(player.getUniqueId());
@@ -92,9 +105,15 @@ public class BlockSelectionInventory {
         Optional<DePlayer> optional = this.plugin.getGameService().getInGamePlayer(playerUUID);
         if (!optional.isPresent()) return;
 
+        InGamePlayer inGamePlayer = (InGamePlayer) optional.get();
+        if (!inGamePlayer.getGame().acceptPlayers()) {
+            event.setCancelled(true);
+            player.sendMessage(this.gameStarted);
+            return;
+        }
+
         event.getCursorTransaction().setValid(false);
 
-        InGamePlayer inGamePlayer = (InGamePlayer) optional.get();
         ItemStackSnapshot clickedItem = event.getCursorTransaction().getFinal();
         BlockState.Builder builder = BlockState.builder().blockType(BlockTypes.WOOL);
         clickedItem.get(Keys.DYE_COLOR).ifPresent(dyeColor -> builder.add(Keys.DYE_COLOR, dyeColor));
@@ -105,6 +124,7 @@ public class BlockSelectionInventory {
         stack.offer(Keys.HIDE_ENCHANTMENTS, true);
         for (Inventory slot : inventory.slots()) {
             slot.peek().ifPresent(itemStack -> {
+                itemStack.remove(Keys.DISPLAY_NAME);
                 itemStack.remove(Keys.ITEM_ENCHANTMENTS);
                 slot.set(itemStack);
             });
