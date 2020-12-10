@@ -38,6 +38,8 @@ import java.util.logging.Level;
 
 public class Game implements DeGame, Runnable {
 
+    private static final int TIMER_SOUND_THRESHOLD = Ticks.TICKS_PER_SECOND * 5;
+
     private final DeCoudrePlugin plugin;
     private final Arena arena;
     private final Task task;
@@ -95,7 +97,10 @@ public class Game implements DeGame, Runnable {
                 }
                 this.players.progress((float) this.timer / this.countdownTicks, (int) Math.ceil((float) this.timer / Ticks.TICKS_PER_SECOND));
                 this.timer--;
-                if (this.timer < 1) {
+                if (this.timer <= TIMER_SOUND_THRESHOLD && this.timer % Ticks.TICKS_PER_SECOND == 0) {
+                    this.players.playSound(GameConfig.getTimerSound(this.timer / Ticks.TICKS_PER_SECOND));
+                }
+                if (this.timer < 0) {
                     for (InGamePlayer player : this.players) {
                         if (!player.isSpectator()) {
                             this.queue.add(player.uuid());
