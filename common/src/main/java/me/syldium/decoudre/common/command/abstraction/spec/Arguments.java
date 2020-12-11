@@ -1,5 +1,6 @@
 package me.syldium.decoudre.common.command.abstraction.spec;
 
+import me.syldium.decoudre.api.arena.DeGameMode;
 import me.syldium.decoudre.common.game.Arena;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +16,10 @@ public interface Arguments {
      */
     static @NotNull Argument<Arena> arena() {
         return new ArenaArgument("arena");
+    }
+
+    static @NotNull Argument<DeGameMode> gameMode() {
+        return new GameModeArgument("gamemode");
     }
 
     static @NotNull Argument<Integer> integer(@NotNull String name) {

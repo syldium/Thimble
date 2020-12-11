@@ -14,8 +14,8 @@ final class BossBarTimedMedia implements TimedMedia {
     }
 
     @Override
-    public void progress(@NotNull PlayerAudience audience, float percent, int time) {
-        this.bossBar.progress(percent);
+    public void progress(@NotNull PlayerAudience audience, float progress, int time) {
+        this.bossBar.progress(progress);
         this.bossBar.name(Component.text(time));
         audience.showBossBar(this.bossBar);
     }

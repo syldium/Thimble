@@ -12,6 +12,7 @@ public class ArenaCommand extends ParentCommand {
                 new CreateCommand(),
                 new SetMaxCommand(),
                 new SetMinCommand(),
+                new SetGameModeCommand(),
                 new SetSpawnCommand(),
                 new SetJumpCommand()
         ), null, Permission.arenaSetup());

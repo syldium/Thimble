@@ -89,6 +89,20 @@ public interface DeArena extends ComponentLike {
     @NotNull Optional<@NotNull DeGame> getGame();
 
     /**
+     * Returns the game mode that will be used for new games.
+     *
+     * @return The game mode.
+     */
+    @NotNull DeGameMode getGameMode();
+
+    /**
+     * Sets the game mode for new games.
+     *
+     * @param gameMode A game mode.
+     */
+    void setGameMode(@NotNull DeGameMode gameMode);
+
+    /**
      * Adds the player in the pool by creating a game if needed.
      *
      * @param player The online player who want to play.

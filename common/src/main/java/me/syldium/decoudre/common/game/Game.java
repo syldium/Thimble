@@ -23,39 +23,40 @@ import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
-public class Game implements DeGame, Runnable {
+/**
+ * Common implementation for both game modes.
+ *
+ * @see ConcurrentGame
+ * @see SingleGame
+ */
+public abstract class Game implements DeGame, Runnable {
 
     private static final int TIMER_SOUND_THRESHOLD = Ticks.TICKS_PER_SECOND * 5;
 
-    private final DeCoudrePlugin plugin;
-    private final Arena arena;
-    private final Task task;
+    protected final DeCoudrePlugin plugin;
+    protected final Arena arena;
+    protected final Task task;
 
-    private DeState state = DeState.WAITING;
-    private final PlayerMap<InGamePlayer> players;
-    private final Queue<UUID> queue = new ArrayDeque<>();
-    private final TimedMedia jumperMedia;
-    private UUID jumper;
+    protected DeState state = DeState.WAITING;
+    protected final PlayerMap<InGamePlayer> players;
+    protected final TimedMedia jumperMedia;
 
-    private final Set<BlockVector> remainingWaterBlocks;
-    private final List<PoolBlock> blocks = new ArrayList<>();
+    protected final Set<BlockVector> remainingWaterBlocks;
+    protected final List<PoolBlock> blocks = new ArrayList<>();
 
-    private int timer;
-    private final int countdownTicks;
-    private final int jumpTicks;
+    protected int timer;
+    protected final int countdownTicks;
 
     public Game(@NotNull DeCoudrePlugin plugin, @NotNull Arena arena) {
         this.plugin = plugin;
@@ -66,7 +67,6 @@ public class Game implements DeGame, Runnable {
         this.jumperMedia = TimedMedia.from(plugin.getMainConfig(), "jump");
 
         this.countdownTicks = this.plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND;
-        this.jumpTicks = this.plugin.getMainConfig().getJumpTime() * Ticks.TICKS_PER_SECOND;
 
         this.remainingWaterBlocks = this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null ?
                 Collections.emptySet()
@@ -80,133 +80,101 @@ public class Game implements DeGame, Runnable {
     @Override
     public void run() {
         switch (this.state) {
-            case WAITING: {
+            case WAITING:
                 if (this.canStart()) {
                     this.state = DeState.STARTING;
                 } else {
                     this.players.sendActionBar(MessageKey.ACTIONBAR_WAITING);
                 }
                 return;
-            }
-            case STARTING: {
-                if (!this.canStart()) {
-                    this.state = DeState.STARTING;
-                    this.timer = this.plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND;
-                    this.players.sendActionBar(MessageKey.ACTIONBAR_NOT_ENOUGH_PLAYERS);
-                    return;
-                }
-                this.players.progress((float) this.timer / this.countdownTicks, (int) Math.ceil((float) this.timer / Ticks.TICKS_PER_SECOND));
-                this.timer--;
-                if (this.timer <= TIMER_SOUND_THRESHOLD && this.timer % Ticks.TICKS_PER_SECOND == 0) {
-                    this.players.playSound(GameConfig.getTimerSound(this.timer / Ticks.TICKS_PER_SECOND));
-                }
+            case STARTING:
+                this.tickCountdown();
                 if (this.timer < 0) {
-                    for (InGamePlayer player : this.players) {
-                        if (!player.isSpectator()) {
-                            this.queue.add(player.uuid());
-                        }
-                    }
                     this.players.hide();
+                    this.onCountdownEnd();
                     new BlockBalancer(this.players).balance(this.plugin.getPlayerAdapter().getAvailableBlocks());
                     this.state = DeState.PLAYING;
                 }
                 return;
-            }
-            case PLAYING: {
-                if (this.jumper == null) {
-                    this.timer = this.plugin.getMainConfig().getJumpTime() * Ticks.TICKS_PER_SECOND;
-                    if (this.queue.isEmpty()) {
-                        this.state = DeState.END;
-                        return;
-                    }
-                    Player player = this.plugin.getPlayer(this.queue.poll());
-                    if (player != null) {
-                        player.teleport(this.arena.getJumpLocation());
-                        this.jumper = player.uuid();
-                    }
-                    return;
-                }
+            case PLAYING:
+                this.tickGame();
                 this.timer--;
-
-                Player jumper = this.plugin.getPlayer(this.jumper);
-                if (jumper == null) {
-                    this.handleJump(null, this.players.get(this.jumper), JumpVerdict.MISSED);
-                    return;
-                }
-
-                this.jumperMedia.progress(jumper, (float) this.timer / this.jumpTicks, (int) Math.ceil((float) this.timer / Ticks.TICKS_PER_SECOND));
-                if (jumper.isInWater()) {
-                    PoolBlock block = jumper.getFirstLiquidBlock();
-                    block.setBlockData(this.players.get(jumper).getChosenBlock());
-                    this.blocks.add(block);
-                    JumpVerdict verdict = this.plugin.getPlayerAdapter().isDeCoudre(block) ? JumpVerdict.COMBO : JumpVerdict.LANDED;
-                    this.handleJump(jumper, this.players.get(jumper), verdict);
-
-                    if (this.remainingWaterBlocks.remove(block.getPosition()) && this.remainingWaterBlocks.isEmpty()) {
-                        Comparator<InGamePlayer> comparator = Comparator.comparingInt(InGamePlayer::getLifes);
-                        this.end(this.players.stream()
-                                .filter(player -> !player.isSpectator())
-                                .max(comparator)
-                                .orElse(null)
-                        );
-                    }
-                }
-
-                if (this.timer < 1) {
-                    this.handleJump(jumper, this.players.get(jumper), JumpVerdict.MISSED);
+                if (this.timer < 0) {
+                    this.onTimerEnd();
                 }
                 return;
-            }
             default:
                 this.end(null);
                 return;
         }
     }
 
-    private void handleJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
-        if (verdict == JumpVerdict.MISSED) {
-            inGamePlayer.decrementLifes();
-        } else {
-            inGamePlayer.incrementJumps();
-            if (verdict == JumpVerdict.COMBO) {
-                inGamePlayer.incrementLifes();
-                inGamePlayer.incrementDacs();
-            }
+    protected void tickCountdown() {
+        if (!this.canStart()) {
+            this.state = DeState.STARTING;
+            this.timer = this.plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND;
+            this.players.sendActionBar(MessageKey.ACTIONBAR_NOT_ENOUGH_PLAYERS);
+            return;
         }
-
-        if (player != null) {
-            this.jumperMedia.hide(player);
-            this.handleJumpWithPlayer(player, inGamePlayer, verdict);
-        }
-
-        this.jumper = null;
-        if (inGamePlayer.getLifes() > 0) {
-            this.queue.offer(inGamePlayer.uuid());
-        } else if (this.queue.size() < 2) {
-            this.end(inGamePlayer);
+        this.players.progress(this.timer, this.countdownTicks);
+        this.timer--;
+        if (this.timer <= TIMER_SOUND_THRESHOLD && this.timer % Ticks.TICKS_PER_SECOND == 0) {
+            this.players.playSound(GameConfig.getTimerSound(this.timer));
         }
     }
 
-    private void handleJumpWithPlayer(@NotNull Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
+    protected abstract void onCountdownEnd();
+
+    protected abstract void onTimerEnd();
+
+    protected abstract void tickGame();
+
+    protected abstract void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict);
+
+    protected @Nullable InGamePlayer getFirstPlayer() {
+        Comparator<InGamePlayer> comparator = Comparator.comparingInt(InGamePlayer::getPoints);
+        return this.players.stream()
+                .filter(player -> !player.isSpectator())
+                .max(comparator)
+                .orElse(null);
+    }
+
+    @Override
+    public boolean verdict(@NotNull UUID playerUUID, @NotNull JumpVerdict verdict) {
+        InGamePlayer player = this.players.get(playerUUID);
+        if (player == null) {
+            throw new IllegalArgumentException("The player with the " + playerUUID + " uuid is not in the game.");
+        }
+
+        this.onJump(this.plugin.getPlayer(playerUUID), player, verdict);
+        return true;
+    }
+
+    protected void sendJumpMessage(@NotNull Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
-            Template lifesTemplate = Template.of("lifes", String.valueOf(inGamePlayer.getLifes()));
-            if (inGamePlayer.getLifes() > 1) {
-                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_PLURAL, lifesTemplate);
+            Template lifesTemplate = Template.of("lifes", String.valueOf(inGamePlayer.getPoints()));
+            if (inGamePlayer.getPoints() > 1) {
+                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFES, lifesTemplate);
             } else {
-                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_SINGULAR, lifesTemplate);
+                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFE, lifesTemplate);
             }
             player.playSound(GameConfig.getJumpFailedSound());
         } else if (verdict == JumpVerdict.COMBO) {
             player.sendActionBar(MessageKey.ACTIONBAR_COMBO);
             player.playSound(GameConfig.getJumpSucceedSound());
+            this.plugin.spawnFireworks(player.getLocation());
         } else {
             player.sendActionBar(MessageKey.ACTIONBAR_SUCCESSFUL_JUMP);
         }
-        player.teleport(this.arena.getSpawnLocation());
     }
 
-    private void end(@Nullable InGamePlayer latest) {
+    protected void end(@Nullable InGamePlayer latest) {
         this.plugin.getEventAdapter().callGameEndEvent(this, latest);
+        this.jumperMedia.hide(this.players);
+        Player latestPlayer = latest == null ? null : this.plugin.getPlayer(latest.uuid());
+        if (latestPlayer != null) {
+            this.plugin.spawnFireworks(latestPlayer.getLocation()).spawn(4);
+        }
         for (InGamePlayer player : this.players) {
             if (player.equals(latest)) {
                 player.incrementWins();
@@ -256,7 +224,7 @@ public class Game implements DeGame, Runnable {
     public @NotNull Set<DePlayer> getAlivePlayers() {
         Set<DePlayer> players = new HashSet<>(Math.min(10, this.players.size()));
         for (DePlayer player : this.players) {
-            if (player.getLifes() > 0 && !player.isSpectator()) {
+            if (player.getPoints() > 0 && !player.isSpectator()) {
                 players.add(player);
             }
         }
@@ -317,25 +285,7 @@ public class Game implements DeGame, Runnable {
         if (!this.players.remove(player)) {
             return false;
         }
-
-        if (Objects.equals(this.jumper, player)) {
-            this.jumper = null;
-            Player p = this.plugin.getPlayer(player);
-            if (p != null) {
-                this.jumperMedia.hide(p);
-            }
-        }
         this.plugin.getGameService().setPlayerGame(player, null);
-        return true;
-    }
-
-    @Override
-    public boolean verdict(@NotNull JumpVerdict verdict) {
-        if (this.jumper == null) {
-            throw new IllegalStateException("No players are currently jumping.");
-        }
-
-        this.handleJump(this.plugin.getPlayer(this.jumper), this.players.get(this.jumper), verdict);
         return true;
     }
 
@@ -350,18 +300,16 @@ public class Game implements DeGame, Runnable {
     }
 
     @Override
-    public @Nullable UUID getCurrentJumper() {
-        return this.jumper;
-    }
-
-    @Override
-    public @Nullable UUID peekNextJumper() {
-        return this.queue.peek();
-    }
-
-    @Override
     public @NotNull Audience audience() {
         return this.players;
+    }
+
+    @Override
+    public int getRemainingWaterBlocks() {
+        if (this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null) {
+            throw new IllegalStateException("The pool dimensions have not been defined.");
+        }
+        return this.remainingWaterBlocks.size();
     }
 
     void cancel() {

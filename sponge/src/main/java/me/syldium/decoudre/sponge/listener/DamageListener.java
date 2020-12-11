@@ -31,7 +31,7 @@ public class DamageListener {
         event.setCancelled(true);
         DeGame game = optional.get();
 
-        if (player.getUniqueId().equals(game.getCurrentJumper()) && game.verdict(JumpVerdict.MISSED)) {
+        if (game.isJumping(player.getUniqueId()) && game.verdict(player.getUniqueId(), JumpVerdict.MISSED)) {
             event.setCancelled(true);
             player.setVelocity(Vector3d.ZERO);
         }

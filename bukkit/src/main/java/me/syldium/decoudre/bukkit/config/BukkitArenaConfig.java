@@ -2,9 +2,11 @@ package me.syldium.decoudre.bukkit.config;
 
 import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.api.Location;
+import me.syldium.decoudre.api.arena.DeGameMode;
 import me.syldium.decoudre.common.config.ArenaConfig;
 import me.syldium.decoudre.common.game.Arena;
 import me.syldium.decoudre.bukkit.DeBukkitPlugin;
+import me.syldium.decoudre.common.util.EnumUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,6 +39,9 @@ public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
             if (minPointSection != null) arena.setPoolMinPoint(this.getBlockVector(minPointSection));
             ConfigurationSection maxPointSection = section.getConfigurationSection("max-point");
             if (maxPointSection != null) arena.setPoolMaxPoint(this.getBlockVector(maxPointSection));
+
+            arena.setGameMode(EnumUtil.valueOf(DeGameMode.class, section.getString("gamemode"), DeGameMode.SINGLE));
+
             arena.setMinPlayers(section.getInt("min-players", 2));
             arena.setMaxPlayers(section.getInt("max-players", 8));
         }
@@ -51,6 +56,7 @@ public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
             this.setLocation(section.createSection("spawn-location"), arena.getSpawnLocation());
             section.set("min-players", arena.getMinPlayers());
             section.set("max-players", arena.getMaxPlayers());
+            section.set("gamemode", arena.getGameMode().name());
             this.setBlockVector(section.createSection("min-point"), arena.getPoolMinPoint());
             this.setBlockVector(section.createSection("max-point"), arena.getPoolMaxPoint());
         }

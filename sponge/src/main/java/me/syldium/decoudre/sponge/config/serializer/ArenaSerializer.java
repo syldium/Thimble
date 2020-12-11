@@ -3,7 +3,9 @@ package me.syldium.decoudre.sponge.config.serializer;
 import com.google.common.reflect.TypeToken;
 import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.api.Location;
+import me.syldium.decoudre.api.arena.DeGameMode;
 import me.syldium.decoudre.common.game.Arena;
+import me.syldium.decoudre.common.util.EnumUtil;
 import me.syldium.decoudre.sponge.DeSpongePlugin;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -34,6 +36,7 @@ public class ArenaSerializer implements TypeSerializer<Arena> {
         Arena arena = new Arena(this.plugin, name);
         arena.setMinPlayers(value.getNode("min-players").getInt(1));
         arena.setMaxPlayers(value.getNode("max-players").getInt(8));
+        arena.setGameMode(EnumUtil.valueOf(DeGameMode.class, value.getString("gamemode"), DeGameMode.SINGLE));
         this.setLocation(value, arena::setSpawnLocation, "spawn-location");
         this.setLocation(value, arena::setJumpLocation, "jump-location");
         this.setBlockVector(value, arena::setPoolMinPoint, "min-point");
@@ -64,6 +67,7 @@ public class ArenaSerializer implements TypeSerializer<Arena> {
         value.getNode("name").setValue(arena.getName());
         value.getNode("min-players").setValue(arena.getMinPlayers());
         value.getNode("max-players").setValue(arena.getMaxPlayers());
+        value.getNode("gamemode").setValue(arena.getGameMode().name());
         value.getNode("spawn-location").setValue(TypeToken.of(Location.class), arena.getSpawnLocation());
         value.getNode("jump-location").setValue(TypeToken.of(Location.class), arena.getJumpLocation());
         value.getNode("min-point").setValue(TypeToken.of(BlockVector.class), arena.getPoolMinPoint());

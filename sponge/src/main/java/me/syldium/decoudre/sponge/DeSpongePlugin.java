@@ -10,6 +10,7 @@ import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.command.CommandManager;
 import me.syldium.decoudre.common.config.ArenaConfig;
 import me.syldium.decoudre.common.game.Arena;
+import me.syldium.decoudre.common.util.Fireworks;
 import me.syldium.decoudre.common.util.Task;
 import me.syldium.decoudre.sponge.adapter.SpongeEventAdapter;
 import me.syldium.decoudre.sponge.adapter.SpongePlayerAdapter;
@@ -22,6 +23,7 @@ import me.syldium.decoudre.sponge.config.serializer.LocationSerializer;
 import me.syldium.decoudre.sponge.listener.DamageListener;
 import me.syldium.decoudre.sponge.listener.RestrictionListener;
 import me.syldium.decoudre.sponge.util.LoggerWrapper;
+import me.syldium.decoudre.sponge.util.SpongeFireworks;
 import me.syldium.decoudre.sponge.util.SpongeTask;
 import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
 import net.kyori.adventure.util.Ticks;
@@ -134,6 +136,11 @@ public class DeSpongePlugin extends DeCoudrePlugin {
     @Override
     public @NotNull Task startGameTask(@NotNull Runnable runnable) {
         return new SpongeTask(this.game.getScheduler().createTaskBuilder().execute(runnable).interval(Ticks.SINGLE_TICK_DURATION_MS, TimeUnit.MILLISECONDS).submit(this));
+    }
+
+    @Override
+    public @NotNull Fireworks spawnFireworks(@NotNull Location from) {
+        return new SpongeFireworks(this.playerAdapter.asPlatform(from));
     }
 
     @Override

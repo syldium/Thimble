@@ -4,6 +4,7 @@ import me.syldium.decoudre.api.Location;
 import me.syldium.decoudre.api.BlockVector;
 import me.syldium.decoudre.api.arena.DeArena;
 import me.syldium.decoudre.api.arena.DeGame;
+import me.syldium.decoudre.api.arena.DeGameMode;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.player.Player;
 import net.kyori.adventure.text.Component;
@@ -28,6 +29,7 @@ public class Arena implements DeArena {
 
     private Game game;
     private final DeCoudrePlugin plugin;
+    private DeGameMode gameMode = DeGameMode.SINGLE;
 
     public Arena(@NotNull DeCoudrePlugin plugin, @NotNull String name) {
         this.plugin = plugin;
@@ -46,6 +48,9 @@ public class Arena implements DeArena {
 
     @Override
     public void setSpawnLocation(@NotNull Location location) {
+        if (this.game != null) {
+            Objects.requireNonNull(location, "Cannot unset the spawn location on a game that has already been started.");
+        }
         this.spawnLocation = location;
     }
 
@@ -56,6 +61,9 @@ public class Arena implements DeArena {
 
     @Override
     public void setJumpLocation(@NotNull Location location) {
+        if (this.game != null) {
+            Objects.requireNonNull(location, "Cannot unset the jump location on a game that has already been started.");
+        }
         this.jumpLocation = location;
     }
 
@@ -91,22 +99,38 @@ public class Arena implements DeArena {
     }
 
     @Override
-    public @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID uuid) {
-        if (!this.isSetup()) {
-            throw new IllegalStateException(String.format("The %s arena is not correctly configured.", this.name));
-        }
+    public @NotNull DeGameMode getGameMode() {
+        return this.gameMode;
+    }
 
-        if (this.game == null) {
-            this.game = new Game(this.plugin, this);
-        }
+    @Override
+    public void setGameMode(@NotNull DeGameMode gameMode) {
+        this.gameMode = Objects.requireNonNull(gameMode, "The game mode cannot be null.");
+    }
+
+    @Override
+    public @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID uuid) {
+        this.initGame();
         return this.game.addPlayer(uuid);
     }
 
     public @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull Player player) {
-        if (this.game == null) {
-            this.game = new Game(this.plugin, this);
-        }
+        this.initGame();
         return this.game.addPlayer(player);
+    }
+
+    private void initGame() {
+        if (this.game == null) {
+            if (!this.isSetup()) {
+                throw new IllegalStateException(String.format("The %s arena is not correctly configured.", this.name));
+            }
+
+            if (this.gameMode == DeGameMode.CONCURRENT) {
+                this.game = new ConcurrentGame(this.plugin, this);
+            } else {
+                this.game = new SingleGame(this.plugin, this);
+            }
+        }
     }
 
     @Override

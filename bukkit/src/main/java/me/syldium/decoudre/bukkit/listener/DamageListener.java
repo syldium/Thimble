@@ -32,7 +32,7 @@ public class DamageListener implements Listener {
         event.setCancelled(true);
         DeGame game = optional.get();
 
-        if (player.getUniqueId().equals(game.getCurrentJumper()) && game.verdict(JumpVerdict.MISSED)) {
+        if (game.isJumping(player.getUniqueId()) && game.verdict(player.getUniqueId(), JumpVerdict.MISSED)) {
             event.setCancelled(true);
             player.setVelocity(new Vector(0, 0, 0));
         }

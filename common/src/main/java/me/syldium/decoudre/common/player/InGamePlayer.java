@@ -27,7 +27,7 @@ public class InGamePlayer extends PlayerStats implements DePlayer {
     }
 
     @Override
-    public int getLifes() {
+    public int getPoints() {
         return this.lifes;
     }
 

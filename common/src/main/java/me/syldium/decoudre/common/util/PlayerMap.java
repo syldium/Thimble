@@ -86,8 +86,12 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements P
         return this.values().iterator();
     }
 
-    public void progress(float percent, int time) {
-        this.media.progress(this, percent, time);
+    public void progress(float progress, int time) {
+        this.media.progress(this, progress, time);
+    }
+
+    public void progress(int ticks, int total) {
+        this.media.progress(this, ticks, total);
     }
 
     public void hide() {

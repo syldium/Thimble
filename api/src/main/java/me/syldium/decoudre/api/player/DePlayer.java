@@ -7,11 +7,11 @@ import org.jetbrains.annotations.Range;
 public interface DePlayer extends DePlayerStats {
 
     /**
-     * Gets the number of remaining lives.
+     * Gets the number of points - lifes in single mode.
      *
      * @return A number.
      */
-    @Range(from=0, to=Integer.MAX_VALUE) int getLifes();
+    @Range(from=0, to=Integer.MAX_VALUE) int getPoints();
 
     /**
      * Returns {@code true} if the player is a game spectator.

@@ -4,7 +4,6 @@ import me.syldium.decoudre.api.player.DePlayer;
 import me.syldium.decoudre.api.player.JumpVerdict;
 import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Set;
@@ -13,6 +12,9 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * A Dé à coudre game.
+ *
+ * @see DeSingleGame One by one gamemode
+ * @see DeConcurrentGame Chaotic gamemode
  */
 public interface DeGame {
 
@@ -77,11 +79,13 @@ public interface DeGame {
     /**
      * Defines the jump result of the current jumper.
      *
+     * @param playerUUID The player's unique identifier.
      * @param verdict The jump result.
      * @return If all went well.
-     * @throws IllegalStateException If no players are currently jumping.
+     * @throws IllegalArgumentException If the player is not in the arena.
+     * @throws IllegalStateException If no players is currently jumping.
      */
-    boolean verdict(@NotNull JumpVerdict verdict);
+    boolean verdict(@NotNull UUID playerUUID, @NotNull JumpVerdict verdict);
 
     /**
      * Returns {@code true} if no player is in the game.
@@ -98,23 +102,45 @@ public interface DeGame {
     int size();
 
     /**
-     * Gets the player to whom it is the turn to jump.
-     *
-     * @return The jumper, if any.
-     */
-    @Nullable UUID getCurrentJumper();
-
-    /**
-     * Returns the player who will jump right after.
-     *
-     * @return The jumper, if any.
-     */
-    @Nullable UUID peekNextJumper();
-
-    /**
      * Gets the player audience.
      *
      * @return The audience.
      */
     @NotNull Audience audience();
+
+    /**
+     * Returns {@code true} if the player is jumping.
+     *
+     * @param playerUUID The player's unique identifier.
+     * @return If so.
+     */
+    boolean isJumping(@NotNull UUID playerUUID);
+
+    /**
+     * Returns {@code true} if the player is jumping.
+     *
+     * @param player The player.
+     * @return If so.
+     */
+    default boolean isJumping(@NotNull DePlayer player) {
+        return this.isJumping(player.uuid());
+    }
+
+    /**
+     * Returns the number of known remaining water blocks.
+     *
+     * @return The remaining number.
+     * @throws IllegalStateException If the pool dimensions have not been defined.
+     */
+    int getRemainingWaterBlocks();
+
+    /**
+     * Returns {@code true} if the pool is full.
+     *
+     * @return {@code true} if the pool is full.
+     * @throws IllegalStateException If the pool dimensions have not been defined.
+     */
+    default boolean isPoolFull() {
+        return this.getRemainingWaterBlocks() < 1;
+    }
 }

@@ -1,5 +1,6 @@
 package me.syldium.decoudre.bukkit;
 
+import me.syldium.decoudre.api.Location;
 import me.syldium.decoudre.api.service.GameService;
 import me.syldium.decoudre.api.service.StatsService;
 import me.syldium.decoudre.bukkit.adapter.BukkitEventAdapter;
@@ -9,9 +10,11 @@ import me.syldium.decoudre.bukkit.command.PaperCommandExecutor;
 import me.syldium.decoudre.bukkit.hook.PluginHook;
 import me.syldium.decoudre.bukkit.listener.DamageListener;
 import me.syldium.decoudre.bukkit.listener.RestrictionListener;
+import me.syldium.decoudre.bukkit.util.BukkitFireworks;
 import me.syldium.decoudre.common.DeCoudrePlugin;
 import me.syldium.decoudre.common.config.ArenaConfig;
 import me.syldium.decoudre.common.player.Player;
+import me.syldium.decoudre.common.util.Fireworks;
 import me.syldium.decoudre.common.util.Task;
 import me.syldium.decoudre.bukkit.config.BukkitArenaConfig;
 import me.syldium.decoudre.bukkit.config.BukkitMainConfig;
@@ -82,6 +85,11 @@ public class DeBukkitPlugin extends DeCoudrePlugin {
     @Override
     public @NotNull Task startGameTask(@NotNull Runnable runnable) {
         return new BukkitTask(this.bootstrap.getServer().getScheduler().scheduleSyncRepeatingTask(this.bootstrap, runnable, 0L, 1L));
+    }
+
+    @Override
+    public @NotNull Fireworks spawnFireworks(@NotNull Location from) {
+        return new BukkitFireworks(this.playerAdapter.asPlatform(from));
     }
 
     @Override

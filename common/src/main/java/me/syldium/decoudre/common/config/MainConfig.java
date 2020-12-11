@@ -54,6 +54,13 @@ public interface MainConfig {
     boolean doesTeleportAtEnd();
 
     /**
+     * Returns if failed jumps cost points in a {@link me.syldium.decoudre.common.game.ConcurrentGame}.
+     *
+     * @return If any points should be removed.
+     */
+    boolean doesCountFailsInConcurrent();
+
+    /**
      * Returns the duration in seconds of the countdown before the game starts.
      *
      * @return Duration in seconds.
@@ -61,11 +68,18 @@ public interface MainConfig {
     int getCountdownTime();
 
     /**
-     * Returns the time in seconds that the player has to prepare his jump.
+     * Returns the time in seconds that the player has to prepare his jump in single mode.
      *
      * @return Duration in seconds.
      */
-    int getJumpTime();
+    int getJumpTimeSingleMode();
+
+    /**
+     * Returns the time in seconds that the player has to prepare his jump in concurrent mode.
+     *
+     * @return Duration in seconds.
+     */
+    int getJumpTimeConcurrentMode();
 
     // === Display ===
 

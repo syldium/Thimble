@@ -1,5 +1,6 @@
 package me.syldium.decoudre.common;
 
+import me.syldium.decoudre.api.Location;
 import me.syldium.decoudre.common.adapter.EventAdapter;
 import me.syldium.decoudre.common.adapter.PlayerAdapter;
 import me.syldium.decoudre.common.command.CommandManager;
@@ -11,6 +12,7 @@ import me.syldium.decoudre.common.service.GameServiceImpl;
 import me.syldium.decoudre.common.service.MessageService;
 import me.syldium.decoudre.common.service.MessageServiceImpl;
 import me.syldium.decoudre.common.service.StatsServiceImpl;
+import me.syldium.decoudre.common.util.Fireworks;
 import me.syldium.decoudre.common.util.Task;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -81,6 +83,8 @@ public abstract class DeCoudrePlugin {
     public abstract @NotNull File getDataFolder();
 
     public abstract @NotNull Task startGameTask(@NotNull Runnable runnable);
+
+    public abstract @NotNull Fireworks spawnFireworks(@NotNull Location from);
 
     public abstract @NotNull CommandManager getCommandManager();
 

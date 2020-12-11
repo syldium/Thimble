@@ -53,13 +53,23 @@ public class BukkitMainConfig extends FileConfig implements MainConfig {
     }
 
     @Override
+    public boolean doesCountFailsInConcurrent() {
+        return this.configuration.getBoolean("game.count-fails-concurrent");
+    }
+
+    @Override
     public int getCountdownTime() {
         return this.configuration.getInt("game.countdown-time", 30);
     }
 
     @Override
-    public int getJumpTime() {
-        return this.configuration.getInt("game.jump-time", 15);
+    public int getJumpTimeSingleMode() {
+        return this.configuration.getInt("game.jump-time-single", 15);
+    }
+
+    @Override
+    public int getJumpTimeConcurrentMode() {
+        return this.configuration.getInt("game.jump-time-concurrent", 40);
     }
 
     @Override

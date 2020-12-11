@@ -17,6 +17,7 @@ permissions:
     description: Grant access to commands to edit arenas.
     children:
       decoudre.arena.create: true
+      decoudre.arena.set.gamemode: true
       decoudre.arena.set.jump: true
       decoudre.arena.set.max.players: true
       decoudre.arena.set.min.players: true

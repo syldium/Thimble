@@ -60,13 +60,23 @@ public class SpongeMainConfig extends FileConfig<CommentedConfigurationNode> imp
     }
 
     @Override
+    public boolean doesCountFailsInConcurrent() {
+        return this.root.getNode("game", "count-fails-concurrent").getBoolean(false);
+    }
+
+    @Override
     public int getCountdownTime() {
         return this.root.getNode("game", "countdown-time").getInt(30);
     }
 
     @Override
-    public int getJumpTime() {
-        return this.root.getNode("game", "jump-time").getInt(15);
+    public int getJumpTimeSingleMode() {
+        return this.root.getNode("game", "jump-time-single").getInt(15);
+    }
+
+    @Override
+    public int getJumpTimeConcurrentMode() {
+        return this.root.getNode("game", "jump-time-concurrent").getInt(40);
     }
 
     @Override
