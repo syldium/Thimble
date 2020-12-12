@@ -1,0 +1,33 @@
+package me.syldium.thimble.bukkit.adapter;
+
+import me.syldium.thimble.api.arena.ThimbleGame;
+import me.syldium.thimble.api.bukkit.BukkitGameEndEvent;
+import me.syldium.thimble.api.bukkit.BukkitPlayerJoinArenaEvent;
+import me.syldium.thimble.api.player.ThimblePlayer;
+import me.syldium.thimble.common.adapter.EventAdapter;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class BukkitEventAdapter implements EventAdapter<Player> {
+
+    private final PluginManager pluginManager;
+
+    public BukkitEventAdapter(@NotNull PluginManager pluginManager) {
+        this.pluginManager = pluginManager;
+    }
+
+    @Override
+    public boolean callPlayerJoinArenaEvent(@NotNull ThimbleGame game, @NotNull Player player) {
+        BukkitPlayerJoinArenaEvent event = new BukkitPlayerJoinArenaEvent(game, player);
+        this.pluginManager.callEvent(event);
+        return event.isCancelled();
+    }
+
+    @Override
+    public void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player) {
+        BukkitGameEndEvent event = new BukkitGameEndEvent(game, player);
+        this.pluginManager.callEvent(event);
+    }
+}

@@ -1,6 +1,6 @@
 package me.syldium.decoudre.util;
 
-import me.syldium.decoudre.common.world.BlockData;
+import me.syldium.thimble.common.world.BlockData;
 
 public enum TestableBlockData implements BlockData {
     ONE,

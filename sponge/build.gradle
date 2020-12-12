@@ -19,13 +19,13 @@ dependencies {
     }
 }
 
-sponge.plugin.id = 'decoudre'
+sponge.plugin.id = 'thimble'
 sponge.plugin.meta.setDescription(project.description)
 sponge.plugin.meta.version = project.ext.fullVersion
-sponge.plugin.meta.url = 'https://github.com/syldium/DeCoudre'
+sponge.plugin.meta.url = 'https://github.com/syldium/Thimble'
 
 shadowJar {
-    archiveBaseName = "DeCoudre-Sponge-${project.ext.fullVersion}.jar"
+    archiveBaseName = "Thimble-Sponge-${project.ext.fullVersion}.jar"
 
     dependencies {
         exclude(dependency('org.checkerframework:checker-qual'))

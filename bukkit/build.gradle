@@ -30,7 +30,7 @@ processResources {
 }
 
 shadowJar {
-    archiveBaseName = "DeCoudre-Bukkit-${project.ext.fullVersion}.jar"
+    archiveBaseName = "Thimble-Bukkit-${project.ext.fullVersion}.jar"
 
     dependencies {
         exclude(dependency('org.checkerframework:checker-qual'))

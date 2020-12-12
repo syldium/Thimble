@@ -1,9 +1,9 @@
 package me.syldium.decoudre.service;
 
-import me.syldium.decoudre.api.Ranking;
-import me.syldium.decoudre.api.player.DePlayerStats;
-import me.syldium.decoudre.common.player.PlayerStats;
-import me.syldium.decoudre.api.util.Leaderboard;
+import me.syldium.thimble.api.Ranking;
+import me.syldium.thimble.api.player.ThimblePlayerStats;
+import me.syldium.thimble.common.player.PlayerStats;
+import me.syldium.thimble.api.util.Leaderboard;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class LeaderboardTest {
 
-    private final Leaderboard<DePlayerStats> leaderboard;
+    private final Leaderboard<ThimblePlayerStats> leaderboard;
     private long uuids = 0;
 
     public LeaderboardTest() {
@@ -28,7 +28,7 @@ public class LeaderboardTest {
 
     @Test
     public void newEntryInEmptyLeaderboard() {
-        Leaderboard<DePlayerStats> leaderboard = Leaderboard.of(Ranking.WINS);
+        Leaderboard<ThimblePlayerStats> leaderboard = Leaderboard.of(Ranking.WINS);
         PlayerStats stats = this.newPlayerStats(4);
         leaderboard.add(stats);
         assertEquals(stats, leaderboard.get(0));
@@ -37,13 +37,13 @@ public class LeaderboardTest {
 
     @Test
     public void limitLeaderboard() {
-        Leaderboard<DePlayerStats> leaderboard = Leaderboard.of(Ranking.WINS);
+        Leaderboard<ThimblePlayerStats> leaderboard = Leaderboard.of(Ranking.WINS);
         for (int wins = 20; wins > 0; wins--) {
             leaderboard.add(this.newPlayerStats(wins));
         }
 
         int wins = 20;
-        for (DePlayerStats stats : leaderboard) {
+        for (ThimblePlayerStats stats : leaderboard) {
             assertEquals(wins--, stats.getWins());
         }
         assertEquals(10, leaderboard.size());
@@ -51,11 +51,11 @@ public class LeaderboardTest {
 
     @Test
     public void addInLeaderboard() {
-        Leaderboard<DePlayerStats> leaderboard = new Leaderboard<>(this.leaderboard);
+        Leaderboard<ThimblePlayerStats> leaderboard = new Leaderboard<>(this.leaderboard);
         leaderboard.add(this.newPlayerStats(2));
         assertEquals(this.leaderboard, leaderboard);
 
-        DePlayerStats stats = this.newPlayerStats(29);
+        ThimblePlayerStats stats = this.newPlayerStats(29);
         leaderboard.add(stats);
         assertNotEquals(this.leaderboard, leaderboard);
         assertEquals(stats, leaderboard.get(3));
@@ -67,7 +67,7 @@ public class LeaderboardTest {
     @Test
     public void sortLeaderboard() {
         // Should be inserted at index = 5
-        Leaderboard<DePlayerStats> leaderboard = new Leaderboard<>(this.leaderboard);
+        Leaderboard<ThimblePlayerStats> leaderboard = new Leaderboard<>(this.leaderboard);
         PlayerStats stats = this.newPlayerStats(16);
         leaderboard.add(stats);
         assertNotEquals(this.leaderboard, leaderboard);
@@ -100,7 +100,7 @@ public class LeaderboardTest {
         return new PlayerStats(new UUID(this.uuids++, 0), "test" + this.uuids, wins, 0, 0, 0);
     }
 
-    public @NotNull PlayerStats newPlayerStats(@NotNull DePlayerStats stats) {
-        return new PlayerStats(stats.uuid(), stats.name(), stats.getWins(), stats.getLosses(), stats.getJumps(), stats.getDacs());
+    public @NotNull PlayerStats newPlayerStats(@NotNull ThimblePlayerStats stats) {
+        return new PlayerStats(stats.uuid(), stats.name(), stats.getWins(), stats.getLosses(), stats.getJumps(), stats.getThimbles());
     }
 }

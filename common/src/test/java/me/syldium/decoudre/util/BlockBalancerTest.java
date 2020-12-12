@@ -1,8 +1,8 @@
 package me.syldium.decoudre.util;
 
-import me.syldium.decoudre.common.adapter.BlockBalancer;
-import me.syldium.decoudre.common.player.InGamePlayer;
-import me.syldium.decoudre.common.world.BlockData;
+import me.syldium.thimble.common.adapter.BlockBalancer;
+import me.syldium.thimble.common.player.InGamePlayer;
+import me.syldium.thimble.common.world.BlockData;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 

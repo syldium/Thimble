@@ -20,6 +20,6 @@ subprojects {
         targetCompatibility = 11
     }
 
-    project.description = 'Plugin for the mini game "Dé à coudre"'
+    project.description = 'Plugin for the thimble mini game (dé à coudre)'
     project.ext.fullVersion = '1.0-SNAPSHOT'
 }

@@ -7,13 +7,14 @@ sql:
   # When SQLite is used, the following parameters are not necessary.
   # JDBC uri format: jdbc:driver://host:port/database
   # MySQL/MariaDB driver: mysql, PostgreSQL driver: postgresql
-  jdbcUri: jdbc:mysql://localhost:3306/decoudre
-  username: decoudre
+  jdbcUri: jdbc:mysql://localhost:3306/thimble
+  username: thimble
   password: password
 
 integrations:
  - Parties
  - PlaceholderAPI
+ - WorldEdit
 
 game:
   count-fails-concurrent: false
