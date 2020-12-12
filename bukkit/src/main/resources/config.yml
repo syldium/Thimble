@@ -16,6 +16,7 @@ integrations:
  - PlaceholderAPI
 
 game:
+  count-fails-concurrent: false
   teleport-at-end: true
   countdown-time: 30
   jump-time-single: 15

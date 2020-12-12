@@ -54,7 +54,8 @@ public class ConcurrentGame extends Game implements DeConcurrentGame {
                 PoolBlock block = player.getFirstLiquidBlock();
                 block.setBlockData(inGamePlayer.getChosenBlock());
                 this.blocks.add(block);
-                this.onJump(player, inGamePlayer, JumpVerdict.LANDED);
+                JumpVerdict verdict = this.plugin.getPlayerAdapter().isDeCoudre(block) ? JumpVerdict.COMBO : JumpVerdict.LANDED;
+                this.onJump(player, inGamePlayer, verdict);
             }
         }
     }
