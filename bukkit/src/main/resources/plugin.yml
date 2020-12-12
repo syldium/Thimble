@@ -14,7 +14,7 @@ commands:
 permissions:
   decoudre.arena.*:
     default: op
-    description: Grant access to commands to edit arenas.
+    description: Grants access to commands to edit arenas.
     children:
       decoudre.arena.create: true
       decoudre.arena.set.gamemode: true
@@ -29,3 +29,9 @@ permissions:
       decoudre.player.block: true
       decoudre.player.join: true
       decoudre.player.leave: true
+  decoudre.stats.*:
+    default: true
+    description: Allows players to view statistics.
+    children:
+      decoudre.stats: true
+      decoudre.stats.others: true

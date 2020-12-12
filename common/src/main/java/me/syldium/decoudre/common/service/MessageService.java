@@ -37,4 +37,6 @@ public interface MessageService {
      * @return The formatted message component.
      */
     @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Template... templates);
+
+    @NotNull String get(@NotNull MessageKey key);
 }

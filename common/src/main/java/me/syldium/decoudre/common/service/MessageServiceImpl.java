@@ -42,6 +42,11 @@ public class MessageServiceImpl implements MessageService {
         return MiniMessage.get().parse(input, templates).colorIfAbsent(color);
     }
 
+    @Override
+    public @NotNull String get(@NotNull MessageKey key) {
+        return this.translate(key.getAccessor());
+    }
+
     private @NotNull String translate(@NotNull String string) {
         try {
             return this.localeBundle.getString(string);

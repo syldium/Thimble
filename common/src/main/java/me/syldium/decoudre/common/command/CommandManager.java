@@ -8,6 +8,7 @@ import me.syldium.decoudre.common.command.arena.ArenaCommand;
 import me.syldium.decoudre.common.command.game.BlockCommand;
 import me.syldium.decoudre.common.command.game.JoinCommand;
 import me.syldium.decoudre.common.command.game.LeaveCommand;
+import me.syldium.decoudre.common.command.game.StatsCommand;
 import me.syldium.decoudre.common.player.MessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -32,7 +33,8 @@ public class CommandManager {
                 new JoinCommand(),
                 new LeaveCommand(),
                 new BlockCommand(),
-                new ArenaCommand()
+                new ArenaCommand(),
+                new StatsCommand()
         );
     }
 

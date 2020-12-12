@@ -1,6 +1,12 @@
 package me.syldium.decoudre.common.player;
 
+import me.syldium.decoudre.common.service.MessageService;
+import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 public enum MessageKey {
 
@@ -30,6 +36,8 @@ public enum MessageKey {
     FEEDBACK_GAME_LEFT("feedback.game.left"),
     FEEDBACK_GAME_NOT_IN_GAME("feedback.game.not-in-game"),
     FEEDBACK_GAME_STARTED_GAME("feedback.game.started-game"),
+    FEEDBACK_GAME_STATS("feedback.game.stats"),
+    FEEDBACK_GAME_STATS_UNKNOWN("feedback.game.stats.unknown"),
     FEEDBACK_GAME_UNKNOWN("feedback.game.unknown"),
     FEEDBACK_NAN("feedback.nan"),
     FEEDBACK_NOT_VALID_EXECUTOR("feedback.not-valid-executor"),
@@ -46,7 +54,16 @@ public enum MessageKey {
     HELP_SET_SPAWN("help.set-spawn"),
     HELP_STATS("help.stats"),
 
-    INVENTORY_BLOCK_SELECTION("inventory.block-selection");
+    INVENTORY_BLOCK_SELECTION("inventory.block-selection"),
+
+    UNIT_WIN("unit.win"),
+    UNIT_WINS("unit.wins"),
+    UNIT_LOSS("unit.loss"),
+    UNIT_LOSSES("unit.losses"),
+    UNIT_JUMP("unit.jump"),
+    UNIT_JUMPS("unit.jumps"),
+    UNIT_DAC("unit.dac"),
+    UNIT_DACS("unit.dacs");
 
     private final String accessor;
 
@@ -56,5 +73,29 @@ public enum MessageKey {
 
     public @NotNull String getAccessor() {
         return this.accessor;
+    }
+
+    public enum Unit {
+        DACS(UNIT_DAC, UNIT_DACS),
+        JUMPS(UNIT_JUMP, UNIT_JUMPS),
+        LOSSES(UNIT_LOSS, UNIT_LOSSES),
+        WINS(UNIT_WIN, UNIT_WINS);
+
+        private final String key;
+        private final MessageKey singular;
+        private final MessageKey plural;
+
+        Unit(@NotNull MessageKey singular, @NotNull MessageKey plural) {
+            this.key = name().toLowerCase(Locale.ROOT);
+            this.singular = singular;
+            this.plural = plural;
+        }
+
+        public @NotNull List<Template> tl(int nb, @NotNull MessageService messageService) {
+            return Arrays.asList(
+                    Template.of(this.key, String.valueOf(nb)),
+                    Template.of('u' + this.key, nb > 1 ? messageService.get(this.plural) : messageService.get(this.singular))
+            );
+        }
     }
 }
