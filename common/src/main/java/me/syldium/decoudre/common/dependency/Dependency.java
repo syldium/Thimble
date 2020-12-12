@@ -12,6 +12,12 @@ import java.util.logging.Logger;
 
 public enum Dependency {
 
+    MARIADB_DRIVER(
+            "org.mariadb.jdbc",
+            "mariadb-java-client",
+            "2.7.1",
+            "DvDuhOH6qjrZdvipBGKnNh9ygFeiKDzFECo8VQ9TkM0="
+    ),
     MYSQL_DRIVER(
             "mysql",
             "mysql-connector-java",

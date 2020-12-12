@@ -31,6 +31,7 @@ public interface DataService {
 
     enum Type {
         SQLITE("sqlite", Dependency.SQLITE_DRIVER, "org.sqlite.JDBC"),
+        MARIADB("mariadb", Dependency.MARIADB_DRIVER, "org.mariadb.jdbc.Driver"),
         MYSQL("mysql", Dependency.MYSQL_DRIVER, "com.mysql.jdbc.Driver"),
         POSTGRE("postgresql", Dependency.POSTGRESQL_DRIVER, "org.postgresql.Driver");
 
