@@ -69,4 +69,24 @@ public class BrigadierMapper<S> {
     protected @NotNull RequiredArgumentBuilder<S, ?> getFromArg(@NotNull Argument<?> arg) {
         return RequiredArgumentBuilder.argument(arg.getName(), BrigadierArgumentMapper.getArgumentType(arg));
     }
+
+    /**
+     * Returns a literal node that redirects its execution to the given destination node.
+     *
+     * <p><a href="https://github.com/Mojang/brigadier/issues/46#issuecomment-661849914">Issue</a></p>
+     *
+     * @param alias The command alias.
+     * @param destination The destination node.
+     * @return The built node.
+     */
+    public @NotNull LiteralCommandNode<S> buildRedirect(@NotNull String alias, @NotNull LiteralCommandNode<S> destination) {
+        LiteralArgumentBuilder<S> builder = LiteralArgumentBuilder.<S>literal(alias)
+                .requires(destination.getRequirement())
+                .forward(destination.getRedirect(), destination.getRedirectModifier(), destination.isFork())
+                .executes(destination.getCommand());
+        for (CommandNode<S> child : destination.getChildren()) {
+            builder.then(child);
+        }
+        return builder.build();
+    }
 }

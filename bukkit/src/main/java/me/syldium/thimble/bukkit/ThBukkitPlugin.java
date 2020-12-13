@@ -9,9 +9,7 @@ import me.syldium.thimble.bukkit.command.BukkitCommandExecutor;
 import me.syldium.thimble.bukkit.command.PaperCommandExecutor;
 import me.syldium.thimble.bukkit.hook.PluginHook;
 import me.syldium.thimble.bukkit.listener.DamageListener;
-import me.syldium.thimble.bukkit.listener.InteractListener;
 import me.syldium.thimble.bukkit.listener.RestrictionListener;
-import me.syldium.thimble.bukkit.listener.SignChangeListener;
 import me.syldium.thimble.bukkit.util.BukkitFireworks;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.Player;
@@ -64,8 +62,6 @@ public class ThBukkitPlugin extends ThimblePlugin {
         }
 
         new DamageListener(this);
-        new InteractListener(this);
-        new SignChangeListener(this);
         new RestrictionListener(this);
         new PluginHook(this, bootstrap);
     }

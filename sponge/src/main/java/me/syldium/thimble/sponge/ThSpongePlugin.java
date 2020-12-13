@@ -54,8 +54,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Plugin(
-        id = "decoudre",
-        name = "DeCoudre"
+        id = "thimble",
+        name = "Thimble"
 )
 public class ThSpongePlugin extends ThimblePlugin {
 
