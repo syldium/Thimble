@@ -6,23 +6,23 @@ import org.jetbrains.annotations.NotNull;
 public final class Permission {
 
     public static @NotNull Permission arenaSetup(@NotNull String property) {
-        return new Permission("decoudre.arena." + property);
+        return new Permission("thimble.arena." + property);
     }
 
     public static @NotNull Permission arenaSetup() {
-        return new Permission("decoudre.arena");
+        return new Permission("thimble.arena");
     }
 
     public static @NotNull Permission player(@NotNull String property) {
-        return new Permission("decoudre.player." + property);
+        return new Permission("thimble.player." + property);
     }
 
     public static @NotNull Permission stats(@NotNull String property) {
-        return new Permission("decoudre.stats." + property);
+        return new Permission("thimble.stats." + property);
     }
 
     public static @NotNull Permission stats() {
-        return new Permission("decoudre.stats");
+        return new Permission("thimble.stats");
     }
 
     private final String permission;
