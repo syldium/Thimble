@@ -1,7 +1,8 @@
 package me.syldium.thimble.common.game;
 
 import me.syldium.thimble.api.Location;
-import me.syldium.thimble.api.BlockVector;
+import me.syldium.thimble.api.util.BlockPos;
+import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.arena.ThimbleArena;
 import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.arena.ThimbleGameMode;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.Range;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -156,6 +158,11 @@ public class Arena implements ThimbleArena {
     @Override
     public void setPoolMaxPoint(@NotNull BlockVector point) {
         this.maximumPoint = point;
+    }
+
+    @Override
+    public @NotNull Set<@NotNull BlockPos> getSigns() {
+        return this.plugin.getGameService().getArenaSigns(this);
     }
 
     @Override

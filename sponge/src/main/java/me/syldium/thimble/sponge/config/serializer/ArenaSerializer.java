@@ -1,7 +1,7 @@
 package me.syldium.thimble.sponge.config.serializer;
 
 import com.google.common.reflect.TypeToken;
-import me.syldium.thimble.api.BlockVector;
+import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.arena.ThimbleGameMode;
 import me.syldium.thimble.common.game.Arena;

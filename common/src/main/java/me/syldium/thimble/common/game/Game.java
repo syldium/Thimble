@@ -1,6 +1,6 @@
 package me.syldium.thimble.common.game;
 
-import me.syldium.thimble.api.BlockVector;
+import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.arena.ThimbleGameState;
 import me.syldium.thimble.api.player.ThimblePlayer;

@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -50,6 +51,7 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
 
     @Override
     public boolean teleport(@NotNull Location location) {
+        this.getHandle().setVelocity(new Vector(0, 0, 0));
         return this.getHandle().teleport(this.platform.asPlatform(location));
     }
 

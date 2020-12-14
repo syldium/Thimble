@@ -3,6 +3,7 @@ package me.syldium.thimble.api.arena;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.JumpVerdict;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.identity.Identified;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -69,12 +70,32 @@ public interface ThimbleGame {
     @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID player);
 
     /**
+     * Adds an {@link Identified} player to the game.
+     *
+     * @param identified A player.
+     * @return If the player has successfully joined the arena.
+     */
+    default @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull Identified identified) {
+        return this.addPlayer(identified.identity().uuid());
+    }
+
+    /**
      * Removes a player from the game.
      *
      * @param player A player uuid.
      * @return If the player has left the game.
      */
     boolean removePlayer(@NotNull UUID player);
+
+    /**
+     * Removes an {@link Identified} player from the game.
+     *
+     * @param identified A player.
+     * @return If the player has left the game.
+     */
+    default boolean removePlayer(@NotNull Identified identified) {
+        return this.removePlayer(identified.identity().uuid());
+    }
 
     /**
      * Defines the jump result of the current jumper.

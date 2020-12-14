@@ -1,4 +1,4 @@
-package me.syldium.thimble.api;
+package me.syldium.thimble.api.util;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.Template;
@@ -8,9 +8,9 @@ import java.io.Serializable;
 
 public class BlockVector implements Serializable, Cloneable {
 
-    private final int x;
-    private final int y;
-    private final int z;
+    protected final int x;
+    protected final int y;
+    protected final int z;
 
     public BlockVector(int x, int y, int z) {
         this.x = x;
@@ -69,6 +69,11 @@ public class BlockVector implements Serializable, Cloneable {
         result = 31 * result + this.y;
         result = 31 * result + this.z;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockVector{" + this.x + "," + this.y + "," + this.z + "}";
     }
 
     @Override

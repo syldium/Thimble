@@ -1,7 +1,7 @@
 package me.syldium.thimble.sponge.config.serializer;
 
 import com.google.common.reflect.TypeToken;
-import me.syldium.thimble.api.BlockVector;
+import me.syldium.thimble.api.util.BlockVector;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;

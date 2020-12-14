@@ -1,7 +1,7 @@
 package me.syldium.thimble.common.adapter;
 
 import me.syldium.thimble.api.Location;
-import me.syldium.thimble.api.BlockVector;
+import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.common.player.AbstractPlayer;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.Player;

@@ -1,6 +1,6 @@
 package me.syldium.thimble.bukkit.adapter;
 
-import me.syldium.thimble.api.BlockVector;
+import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.bukkit.ThBootstrap;
 import me.syldium.thimble.bukkit.command.BukkitSender;
@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -47,10 +46,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
         this.bootstrap = bootstrap;
         this.audiences = audiences;
 
-        Pattern[] patterns = plugin.getConfig().getStringList("blocks").stream()
-                .map(Pattern::compile)
-                .toArray(Pattern[]::new);
-        Set<Material> materials = BukkitUtil.getAllBlocksMatching(plugin.getLogger(), patterns);
+        Set<Material> materials = BukkitUtil.getAllBlocksMatching(plugin.getLogger(), plugin.getConfig().getStringList("blocks"));
         if (materials.isEmpty()) {
             plugin.getLogger().severe("The list of blocks in the configuration file is empty/invalid!"
                     + " This will cause an error every time a player tries to join an arena.");

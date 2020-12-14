@@ -9,9 +9,13 @@ import me.syldium.thimble.bukkit.command.BukkitCommandExecutor;
 import me.syldium.thimble.bukkit.command.PaperCommandExecutor;
 import me.syldium.thimble.bukkit.hook.PluginHook;
 import me.syldium.thimble.bukkit.listener.DamageListener;
+import me.syldium.thimble.bukkit.listener.SignInteractListener;
 import me.syldium.thimble.bukkit.listener.RestrictionListener;
+import me.syldium.thimble.bukkit.listener.SignChangeListener;
 import me.syldium.thimble.bukkit.util.BukkitFireworks;
+import me.syldium.thimble.bukkit.util.BukkitUtil;
 import me.syldium.thimble.common.ThimblePlugin;
+import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.util.Fireworks;
 import me.syldium.thimble.common.util.Task;
@@ -19,6 +23,7 @@ import me.syldium.thimble.bukkit.config.BukkitArenaConfig;
 import me.syldium.thimble.bukkit.config.BukkitMainConfig;
 import me.syldium.thimble.bukkit.util.BukkitTask;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import org.bukkit.Material;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
@@ -29,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -61,8 +67,11 @@ public class ThBukkitPlugin extends ThimblePlugin {
             this.commandExecutor = new BukkitCommandExecutor(this, command);
         }
 
+        Set<Material> clickable = BukkitUtil.getAllBlocksMatching(this.getLogger(), this.getConfig().getStringList("clickable"));
         new DamageListener(this);
-        new RestrictionListener(this);
+        new SignInteractListener(this, clickable);
+        new SignChangeListener(this, clickable);
+        new RestrictionListener(this, clickable);
         new PluginHook(this, bootstrap);
     }
 
@@ -103,6 +112,10 @@ public class ThBukkitPlugin extends ThimblePlugin {
             return null;
         }
         return this.playerAdapter.asAbstractPlayer(player);
+    }
+
+    public void sendFeedback(@NotNull org.bukkit.entity.Player bukkitPlayer, @NotNull CommandResult result) {
+        this.playerAdapter.asAbstractPlayer(bukkitPlayer).sendFeedback(result);
     }
 
     @Override

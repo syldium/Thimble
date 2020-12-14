@@ -30,6 +30,15 @@ permissions:
       thimble.player.block: true
       thimble.player.join: true
       thimble.player.leave: true
+  thimble.restrictions.bypass:
+    description: Allows the in-game player to bypass commands restrictions.
+    default: op
+  thimble.sign.*:
+    default: true
+    description: Allows players to view statistics.
+    children:
+      thimble.sign.place: true
+      thimble.sign.use: true
   thimble.stats.*:
     default: true
     description: Allows players to view statistics.

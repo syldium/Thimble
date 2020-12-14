@@ -41,6 +41,7 @@ public abstract class ThimblePlugin {
         this.messageService = new MessageServiceImpl(config, this.getLogger());
         this.statsService = new StatsServiceImpl(this.dataService, Executors.newSingleThreadExecutor());
         this.config = config;
+        this.gameService.load();
     }
 
     public void disable() {

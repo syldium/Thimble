@@ -1,13 +1,17 @@
 package me.syldium.thimble.api.arena;
 
 import me.syldium.thimble.api.Location;
-import me.syldium.thimble.api.BlockVector;
+import me.syldium.thimble.api.util.BlockPos;
+import me.syldium.thimble.api.util.BlockVector;
+import net.kyori.adventure.identity.Identified;
 import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -112,12 +116,33 @@ public interface ThimbleArena extends ComponentLike {
     @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID player);
 
     /**
+     * Adds the {@link Identified} player in the pool by creating a game if needed.
+     *
+     * @param identified The {@link Identified} player.
+     * @return If the player has successfully joined the arena.
+     * @throws IllegalStateException If the arena is not properly configured. {@link #isSetup()}
+     */
+    default @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull Identified identified) {
+        return this.addPlayer(identified.identity().uuid());
+    }
+
+    /**
      * Removes a player from the arena.
      *
      * @param player A player uuid.
      * @return If the player has left the arena.
      */
     boolean removePlayer(@NotNull UUID player);
+
+    /**
+     * Removes an {@link Identified} player from the game.
+     *
+     * @param identified A player.
+     * @return If the player has left the game.
+     */
+    default boolean removePlayer(@NotNull Identified identified) {
+        return this.removePlayer(identified.identity().uuid());
+    }
 
     /**
      * Returns whether the arena is properly configured.
@@ -155,4 +180,11 @@ public interface ThimbleArena extends ComponentLike {
      * @param point The maximum point.
      */
     void setPoolMaxPoint(@NotNull BlockVector point);
+
+    /**
+     * Gets the signs leading to this arena.
+     *
+     * @return The sign positions.
+     */
+    @NotNull @UnmodifiableView Set<@NotNull BlockPos> getSigns();
 }

@@ -40,3 +40,17 @@ display:
 blocks:
   - ".*_WOOL"
   - ".*_TERRACOTTA"
+
+# List of clickable elements. As the text of a clickable sign is no longer used once created,
+# it can be replaced by any other clickable block with `/setblock` and keep its behavior.
+clickable:
+  - ".*_BUTTON"
+  - ".*_SIGN"
+
+# Lists the commands allowed when the player is in the game.
+# Users with the thimble.restrictions.bypass permission are exempt.
+allowed-commands-in-game:
+  - thimble
+  - th
+  - msg
+  - tell

@@ -1,7 +1,7 @@
 package me.syldium.thimble.sponge.adapter;
 
 import com.flowpowered.math.vector.Vector3d;
-import me.syldium.thimble.api.BlockVector;
+import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.player.InGamePlayer;

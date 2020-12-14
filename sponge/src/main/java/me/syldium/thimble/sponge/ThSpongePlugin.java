@@ -2,12 +2,13 @@ package me.syldium.thimble.sponge;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
-import me.syldium.thimble.api.BlockVector;
+import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.CommandManager;
+import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.config.ArenaConfig;
 import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.common.util.Fireworks;
@@ -162,6 +163,10 @@ public class ThSpongePlugin extends ThimblePlugin {
     @Override
     public @NotNull SpongePlayerAdapter getPlayerAdapter() {
         return this.playerAdapter;
+    }
+
+    public void sendFeedback(@NotNull org.spongepowered.api.entity.living.player.Player spongePlayer, @NotNull CommandResult result) {
+        this.playerAdapter.asAbstractPlayer(spongePlayer).sendFeedback(result);
     }
 
     public @NotNull Server getServer() {

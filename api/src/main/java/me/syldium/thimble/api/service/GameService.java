@@ -1,5 +1,6 @@
 package me.syldium.thimble.api.service;
 
+import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.arena.ThimbleArena;
 import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.player.ThimblePlayer;
@@ -80,4 +81,27 @@ public interface GameService {
      * @param arena An arena.
      */
     void removeArena(@NotNull ThimbleArena arena);
+
+    /**
+     * Gets a {@link ThimbleArena} from a sign.
+     *
+     * @param position The sign position.
+     * @return The arena, if any.
+     */
+    @NotNull Optional<@NotNull ThimbleArena> getArenaFromSign(@NotNull BlockPos position);
+
+    /**
+     * Returns an unmodifiable set of all the signs leading to an arena.
+     *
+     * @param arena The arena.
+     * @return All the signs.
+     */
+    @NotNull @UnmodifiableView Set<@NotNull BlockPos> getArenaSigns(@NotNull ThimbleArena arena);
+
+    /**
+     * Returns an unmodifiable set of all signs with an action, e.g. choosing a block.
+     *
+     * @return All the signs.
+     */
+    @NotNull @UnmodifiableView Set<@NotNull BlockPos> getActionSigns();
 }

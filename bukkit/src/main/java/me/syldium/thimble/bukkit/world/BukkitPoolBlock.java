@@ -1,6 +1,6 @@
 package me.syldium.thimble.bukkit.world;
 
-import me.syldium.thimble.api.BlockVector;
+import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.Blocks;
 import me.syldium.thimble.common.world.PoolBlock;

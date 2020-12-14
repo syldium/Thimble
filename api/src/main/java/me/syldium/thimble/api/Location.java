@@ -1,5 +1,6 @@
 package me.syldium.thimble.api;
 
+import me.syldium.thimble.api.util.BlockVector;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 
