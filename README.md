@@ -15,6 +15,17 @@ Connect to your server and execute the following commands (`<arena>` is to be re
 
 Type `/th join <arena>` to join an arena. The game will start automatically when there are enough players.
 
+### Signs
+
+Every player who has the relevant permissions can create clickable signs as an alternative to player commands.
+Place a sign and write on the first line *[Thimble]* or *[DéÀCoudre]* (case-insensitive). On the next line:
+
+- the name of an arena to join
+- *block* to op the block selection inventory
+- *leave* to leave any arena
+
+Note: once the sign is created, its content is no longer used, you can replace it with commands such as `/setblock` and keep the original behavior!
+
 ### PlaceholderAPI
 
 This plugin automatically registers placeholders if PlaceholderAPI is installed.
@@ -27,8 +38,10 @@ Examples:
 
 ### Permissions
 
-- `thimble.player.*`: access to commands for players (`/th block`, `/th join`, `/th leave`)
 - `thimble.arena.*`: `/th arena create`, `/th arena setSpawn`...
+- `thimble.player.*`: access to commands for players (`/th block`, `/th join` and `/th leave`)
+- `thimble.sign.place`: to place clickable signs
+- `thimble.stats.*`: access to statistics
 
 Full list in the [plugin.yml](bukkit/src/main/resources/plugin.yml) file
 

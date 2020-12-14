@@ -2,6 +2,7 @@ package me.syldium.thimble.bukkit.hook;
 
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.bukkit.ThBootstrap;
+import me.syldium.thimble.common.command.arena.ArenaCommand;
 import me.syldium.thimble.common.config.MainConfig;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +30,11 @@ public final class PluginHook {
             new ThimbleExpansion(plugin.getStatsService());
         }
         if (this.isEnabled("Parties")) {
-            new PartiesArenaListener(plugin.getBootstrap());
+            new PartiesArenaListener(bootstrap);
+        }
+        if (this.isEnabled("WorldEdit")) {
+            plugin.getCommandManager().lookup(ArenaCommand.class).getChildren()
+                    .add(new RegionCommand(bootstrap.getServer()));
         }
     }
 
