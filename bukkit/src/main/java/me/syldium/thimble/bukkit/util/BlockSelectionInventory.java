@@ -1,7 +1,6 @@
 package me.syldium.thimble.bukkit.util;
 
 import com.google.common.base.Preconditions;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.bukkit.adapter.BukkitPlayerAdapter;
@@ -42,7 +41,7 @@ public final class BlockSelectionInventory implements Listener {
     private final ThBukkitPlugin plugin;
     private final String inventoryTitle;
     private final String gameStarted;
-    private final Map<UUID, Integer> inventories = new Object2IntOpenHashMap<>();
+    private final Map<UUID, Integer> inventories;
     private final int pages;
 
     public BlockSelectionInventory(@NotNull ThBukkitPlugin plugin, @NotNull BukkitPlayerAdapter adapter) {
@@ -53,6 +52,7 @@ public final class BlockSelectionInventory implements Listener {
         this.gameStarted = LegacyComponentSerializer.legacySection().serialize(
                 plugin.getMessageService().formatMessage(MessageKey.FEEDBACK_GAME_STARTED_GAME, NamedTextColor.RED)
         );
+        this.inventories = BukkitUtil.newObject2IntMap();
         this.pages = (int) Math.ceil((float) adapter.getAvailableBlocks().size() / PER_PAGE);
         plugin.registerEvents(this);
     }
