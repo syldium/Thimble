@@ -102,4 +102,16 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
         InGamePlayer player = this.players.get(playerUUID);
         return player != null && !player.isSpectator();
     }
+
+    @Override
+    public boolean removePlayer(@NotNull UUID player) {
+        boolean removed = super.removePlayer(player);
+        if (removed) {
+            Player p = this.plugin.getPlayer(player);
+            if (p != null) {
+                this.jumperMedia.hide(p);
+            }
+        }
+        return removed;
+    }
 }

@@ -81,7 +81,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     public void run() {
         switch (this.state) {
             case WAITING:
-                if (this.canStart()) {
+                if (this.canStart() && !this.plugin.getEventAdapter().callGameChangeState(this, ThimbleGameState.STARTING)) {
                     this.state = ThimbleGameState.STARTING;
                 } else {
                     this.players.sendActionBar(MessageKey.ACTIONBAR_WAITING);
@@ -90,13 +90,22 @@ public abstract class Game implements ThimbleGame, Runnable {
             case STARTING:
                 this.tickCountdown();
                 if (this.timer < 0) {
-                    this.players.hide();
-                    this.onCountdownEnd();
-                    new BlockBalancer(this.players).balance(this.plugin.getPlayerAdapter().getAvailableBlocks());
-                    this.state = ThimbleGameState.PLAYING;
+                    if (this.plugin.getEventAdapter().callGameChangeState(this, ThimbleGameState.PLAYING)) {
+                        this.timer = 0;
+                    } else {
+                        this.players.hide();
+                        this.onCountdownEnd();
+                        new BlockBalancer(this.players).balance(this.plugin.getPlayerAdapter().getAvailableBlocks());
+                        this.state = ThimbleGameState.PLAYING;
+                    }
                 }
                 return;
             case PLAYING:
+                if (this.players.isEmpty()) {
+                    this.plugin.getEventAdapter().callGameEndEvent(this, null);
+                    this.state = ThimbleGameState.END;
+                    return;
+                }
                 this.tickGame();
                 this.timer--;
                 if (this.timer < 0) {
@@ -110,8 +119,12 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     protected void tickCountdown() {
-        if (!this.canStart()) {
-            this.state = ThimbleGameState.STARTING;
+        if (!this.canStart() && !this.plugin.getEventAdapter().callGameChangeState(this, ThimbleGameState.WAITING)) {
+            if (this.players.isEmpty()) {
+                this.arena.checkGame();
+                return;
+            }
+            this.state = ThimbleGameState.WAITING;
             this.timer = this.plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND;
             this.players.sendActionBar(MessageKey.ACTIONBAR_NOT_ENOUGH_PLAYERS);
             return;
@@ -286,6 +299,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             return false;
         }
         this.plugin.getGameService().setPlayerGame(player, null);
+        this.arena.checkGame();
         return true;
     }
 

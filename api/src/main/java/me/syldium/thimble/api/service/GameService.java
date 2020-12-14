@@ -3,6 +3,8 @@ package me.syldium.thimble.api.service;
 import me.syldium.thimble.api.arena.ThimbleArena;
 import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.player.ThimblePlayer;
+import net.kyori.adventure.identity.Identified;
+import net.kyori.adventure.identity.Identity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -22,12 +24,32 @@ public interface GameService {
     @NotNull Optional<@NotNull ThimbleGame> getGame(@NotNull UUID uuid);
 
     /**
+     * Gets a player's game from an {@link Identity}.
+     *
+     * @param identity The identified player.
+     * @return The game, if any.
+     */
+    default @NotNull Optional<@NotNull ThimbleGame> getGame(@NotNull Identity identity) {
+        return this.getGame(identity.uuid());
+    }
+
+    /**
      * Gets a player in game.
      *
      * @param uuid The player's unique identifier.
      * @return The player in game, if any.
      */
     @NotNull Optional<@NotNull ThimblePlayer> getInGamePlayer(@NotNull UUID uuid);
+
+    /**
+     * Gets a player in game from an {@link Identified} player.
+     *
+     * @param identified The identified player.
+     * @return The player in game, if any.
+     */
+    default @NotNull Optional<@NotNull ThimblePlayer> getInGamePlayer(@NotNull Identified identified) {
+        return this.getInGamePlayer(identified.identity().uuid());
+    }
 
     /**
      * Creates a new place to dive and make dés à coudre.

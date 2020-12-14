@@ -1,6 +1,7 @@
 package me.syldium.thimble.common.adapter;
 
 import me.syldium.thimble.api.arena.ThimbleGame;
+import me.syldium.thimble.api.arena.ThimbleGameState;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.player.AbstractPlayer;
 import me.syldium.thimble.common.player.Player;
@@ -10,6 +11,8 @@ import org.jetbrains.annotations.Nullable;
 public interface EventAdapter<P> {
 
     boolean callPlayerJoinArenaEvent(@NotNull ThimbleGame game, @NotNull P player);
+
+    boolean callGameChangeState(@NotNull ThimbleGame game, @NotNull ThimbleGameState newState);
 
     void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player);
 
