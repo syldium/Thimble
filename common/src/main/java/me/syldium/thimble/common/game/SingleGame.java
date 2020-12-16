@@ -34,6 +34,12 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             if (!player.isSpectator()) {
                 this.queue.add(player.uuid());
             }
+            if (this.queue.size() != 1) {
+                Player p = this.plugin.getPlayer(player.uuid());
+                if (p != null) {
+                    p.teleport(arena.getWaitLocation());
+                }
+            }
         }
     }
 
@@ -97,6 +103,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
         if (player != null) {
             this.jumperMedia.hide(player);
             this.sendJumpMessage(player, inGamePlayer, verdict);
+            player.teleport(this.arena.getWaitLocation());
         }
 
         this.jumper = null;

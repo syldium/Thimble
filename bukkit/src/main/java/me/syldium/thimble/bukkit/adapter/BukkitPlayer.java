@@ -9,15 +9,19 @@ import net.kyori.adventure.audience.Audience;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 public class BukkitPlayer extends AbstractPlayer<Player> {
 
     private static final boolean IN_WATER_METHOD;
+    private static final boolean TELEPORT_ASYNC;
 
     static {
         boolean hasInWater = false;
@@ -26,6 +30,12 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
             hasInWater = true;
         } catch (NoSuchMethodException ignored) { }
         IN_WATER_METHOD = hasInWater;
+        boolean teleportAsync = false;
+        try {
+            Entity.class.getMethod("teleportAsync", org.bukkit.Location.class);
+            teleportAsync = true;
+        } catch (NoSuchMethodException ignored) { }
+        TELEPORT_ASYNC = teleportAsync;
     }
 
     private final BukkitPlayerAdapter platform;
@@ -50,9 +60,13 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     }
 
     @Override
-    public boolean teleport(@NotNull Location location) {
+    public @NotNull Future<Boolean> teleport(@NotNull Location location) {
         this.getHandle().setVelocity(new Vector(0, 0, 0));
-        return this.getHandle().teleport(this.platform.asPlatform(location));
+        org.bukkit.Location bukkitLoc = this.platform.asPlatform(location);
+        if (TELEPORT_ASYNC) {
+            return this.getHandle().teleportAsync(bukkitLoc);
+        }
+        return CompletableFuture.completedFuture(this.getHandle().teleport(bukkitLoc));
     }
 
     @Override

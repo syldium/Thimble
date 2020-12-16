@@ -40,7 +40,6 @@ public class SignInteractListener implements Listener {
 
         Optional<ThimbleArena> arena = this.plugin.getGameService().getArenaFromSign(position);
         if (arena.isPresent()) {
-            System.out.println("ici cancelled");
             event.setCancelled(true);
 
             if (this.plugin.getGameService().getGame(event.getPlayer().getUniqueId()).isPresent()) {

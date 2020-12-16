@@ -284,6 +284,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                             .orElseGet(() -> new InGamePlayer(player.uuid(), player.name(), block, this));
                     if (this.players.add(inGamePlayer)) {
                         this.plugin.getGameService().setPlayerGame(player.uuid(), this);
+                        this.plugin.runSync(() -> player.teleport(this.arena.getSpawnLocation()));
                         return true;
                     }
                     return false;

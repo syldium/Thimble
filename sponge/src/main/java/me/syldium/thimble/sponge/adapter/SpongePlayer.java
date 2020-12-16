@@ -18,6 +18,8 @@ import org.spongepowered.api.world.World;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 public class SpongePlayer extends AbstractPlayer<Player> {
 
@@ -35,8 +37,8 @@ public class SpongePlayer extends AbstractPlayer<Player> {
     }
 
     @Override
-    public boolean teleport(@NotNull me.syldium.thimble.api.Location location) {
-        return this.getHandle().setLocationAndRotation(this.platform.asPlatform(location), this.platform.asHeadRotation(location));
+    public @NotNull Future<Boolean> teleport(@NotNull me.syldium.thimble.api.Location location) {
+        return CompletableFuture.completedFuture(this.getHandle().setLocationAndRotation(this.platform.asPlatform(location), this.platform.asHeadRotation(location)));
     }
 
     @Override

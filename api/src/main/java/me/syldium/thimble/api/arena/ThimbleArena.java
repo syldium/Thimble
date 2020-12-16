@@ -38,8 +38,9 @@ public interface ThimbleArena extends ComponentLike {
      * Sets the spawn location. {@link #getSpawnLocation()}
      *
      * @param location The new spawn location.
+     * @throws IllegalStateException If the argument is {@code null} and a game exists
      */
-    void setSpawnLocation(@NotNull Location location);
+    void setSpawnLocation(@Nullable Location location);
 
     /**
      * Gets the location where players are teleported to jump.
@@ -52,8 +53,26 @@ public interface ThimbleArena extends ComponentLike {
      * Sets the jump location. {@link #getJumpLocation()}
      *
      * @param location The new jump location.
+     * @throws IllegalStateException If the argument is {@code null} and a game exists
      */
-    void setJumpLocation(@NotNull Location location);
+    void setJumpLocation(@Nullable Location location);
+
+    /**
+     * Gets the location where the players wait their turn when the game has started.
+     *
+     * <p>When creating the arena using the commands, the wait location will first be identical to the spawn's position.</p>
+     *
+     * @return The wait location.
+     */
+    @Nullable Location getWaitLocation();
+
+    /**
+     * Sets the wait location. {@link #getWaitLocation()}
+     *
+     * @param location The new wait location.
+     * @throws IllegalStateException If the argument is {@code null} and a game exists
+     */
+    void setWaitLocation(@Nullable Location location);
 
     /**
      * Gets the minimum number of players to start a game.
@@ -150,7 +169,7 @@ public interface ThimbleArena extends ComponentLike {
      * @return If no {@link Location} is {@code null}.
      */
     default boolean isSetup() {
-        return this.getJumpLocation() != null && this.getSpawnLocation() != null;
+        return this.getJumpLocation() != null && this.getSpawnLocation() != null && this.getWaitLocation() != null;
     }
 
     /**

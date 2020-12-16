@@ -21,11 +21,11 @@ import java.util.concurrent.CompletableFuture;
 
 public class Arena implements ThimbleArena {
 
+    private static final String UNSET_LOCATION_IN_GAME = "Cannot unset the %s location on a game that has already been started.";
+
     private final String name;
-    private Location spawnLocation;
-    private Location jumpLocation;
-    private BlockVector minimumPoint;
-    private BlockVector maximumPoint;
+    private Location spawnLocation, jumpLocation, waitLocation;
+    private BlockVector minimumPoint, maximumPoint;
     private int minPlayers = 1;
     private int maxPlayers = 8;
 
@@ -49,9 +49,9 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public void setSpawnLocation(@NotNull Location location) {
-        if (this.game != null) {
-            Objects.requireNonNull(location, "Cannot unset the spawn location on a game that has already been started.");
+    public void setSpawnLocation(@Nullable Location location) {
+        if (this.game != null && location == null) {
+            throw new IllegalStateException(String.format(UNSET_LOCATION_IN_GAME, "spawn"));
         }
         this.spawnLocation = location;
     }
@@ -62,11 +62,24 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public void setJumpLocation(@NotNull Location location) {
-        if (this.game != null) {
-            Objects.requireNonNull(location, "Cannot unset the jump location on a game that has already been started.");
+    public void setJumpLocation(@Nullable Location location) {
+        if (this.game != null && location == null) {
+            throw new IllegalStateException(String.format(UNSET_LOCATION_IN_GAME, "jump"));
         }
         this.jumpLocation = location;
+    }
+
+    @Override
+    public @Nullable Location getWaitLocation() {
+        return this.waitLocation;
+    }
+
+    @Override
+    public void setWaitLocation(@Nullable Location location) {
+        if (this.game != null && location == null) {
+            throw new IllegalStateException(String.format(UNSET_LOCATION_IN_GAME, "wait"));
+        }
+        this.waitLocation = location;
     }
 
     @Override

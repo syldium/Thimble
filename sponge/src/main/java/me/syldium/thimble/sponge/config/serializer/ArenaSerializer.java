@@ -39,6 +39,7 @@ public class ArenaSerializer implements TypeSerializer<Arena> {
         arena.setGameMode(EnumUtil.valueOf(ThimbleGameMode.class, value.getString("gamemode"), ThimbleGameMode.SINGLE));
         this.setLocation(value, arena::setSpawnLocation, "spawn-location");
         this.setLocation(value, arena::setJumpLocation, "jump-location");
+        this.setLocation(value, arena::setWaitLocation, "wait-location");
         this.setBlockVector(value, arena::setPoolMinPoint, "min-point");
         this.setBlockVector(value, arena::setPoolMaxPoint, "max-point");
         return arena;
@@ -70,6 +71,7 @@ public class ArenaSerializer implements TypeSerializer<Arena> {
         value.getNode("gamemode").setValue(arena.getGameMode().name());
         value.getNode("spawn-location").setValue(TypeToken.of(Location.class), arena.getSpawnLocation());
         value.getNode("jump-location").setValue(TypeToken.of(Location.class), arena.getJumpLocation());
+        value.getNode("wait-location").setValue(TypeToken.of(Location.class), arena.getWaitLocation());
         value.getNode("min-point").setValue(TypeToken.of(BlockVector.class), arena.getPoolMinPoint());
         value.getNode("max-point").setValue(TypeToken.of(BlockVector.class), arena.getPoolMaxPoint());
     }

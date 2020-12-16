@@ -128,6 +128,11 @@ public class ThBukkitPlugin extends ThimblePlugin {
         return this.playerAdapter;
     }
 
+    @Override
+    public void runSync(@NotNull Runnable runnable) {
+        this.bootstrap.getServer().getScheduler().runTask(this.bootstrap, runnable);
+    }
+
     public void registerEvents(@NotNull Listener listener) {
         this.bootstrap.getServer().getPluginManager().registerEvents(listener, this.bootstrap);
     }

@@ -165,6 +165,11 @@ public class ThSpongePlugin extends ThimblePlugin {
         return this.playerAdapter;
     }
 
+    @Override
+    public void runSync(@NotNull Runnable runnable) {
+        this.game.getScheduler().createTaskBuilder().execute(runnable).submit(this);
+    }
+
     public void sendFeedback(@NotNull org.spongepowered.api.entity.living.player.Player spongePlayer, @NotNull CommandResult result) {
         this.playerAdapter.asAbstractPlayer(spongePlayer).sendFeedback(result);
     }

@@ -106,4 +106,6 @@ public abstract class ThimblePlugin {
     public abstract @NotNull EventAdapter<?> getEventAdapter();
 
     public abstract @NotNull PlayerAdapter<?, ?> getPlayerAdapter();
+
+    public abstract void runSync(@NotNull Runnable runnable);
 }

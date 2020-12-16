@@ -45,6 +45,8 @@ public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
             if (jumpSection != null) arena.setJumpLocation(this.getLocation(jumpSection));
             ConfigurationSection spawnSection = section.getConfigurationSection("spawn-location");
             if (spawnSection != null) arena.setSpawnLocation(this.getLocation(spawnSection));
+            ConfigurationSection waitSection = section.getConfigurationSection("wait-location");
+            if (waitSection != null) arena.setWaitLocation(this.getLocation(waitSection));
 
             BlockVector minPoint = this.unserializeBlockVector(section.getString("min-point"));
             if (minPoint != null) arena.setPoolMinPoint(minPoint);
@@ -94,6 +96,7 @@ public class BukkitArenaConfig extends FileConfig implements ArenaConfig {
             ConfigurationSection section = this.configuration.createSection("arenas." + arena.getName());
             this.setLocation(section.createSection("jump-location"), arena.getJumpLocation());
             this.setLocation(section.createSection("spawn-location"), arena.getSpawnLocation());
+            this.setLocation(section.createSection("wait-location"), arena.getWaitLocation());
             section.set("min-players", arena.getMinPlayers());
             section.set("max-players", arena.getMaxPlayers());
             section.set("gamemode", arena.getGameMode().name());

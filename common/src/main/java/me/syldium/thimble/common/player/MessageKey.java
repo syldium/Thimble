@@ -32,6 +32,7 @@ public enum MessageKey {
     FEEDBACK_ARENA_SET_REGION("feedback.arena.set-region"),
     FEEDBACK_ARENA_SET_REGION_NO_SELECTION("feedback.arena.set-region.no-selection"),
     FEEDBACK_ARENA_SET_SPAWN("feedback.arena.set-spawn"),
+    FEEDBACK_ARENA_SET_WAIT("feedback.arena.set-wait"),
 
     FEEDBACK_GAME_COMMAND("feedback.command-in-game"),
     FEEDBACK_GAME_ALREADY_IN_GAME("feedback.game.already-in-game"),
@@ -55,6 +56,7 @@ public enum MessageKey {
     HELP_SET_GAME_MODE("help.set-game-mode"),
     HELP_SET_JUMP("help.set-jump"),
     HELP_SET_SPAWN("help.set-spawn"),
+    HELP_SET_WAIT("help.set-wait"),
     HELP_STATS("help.stats"),
 
     INVENTORY_BLOCK_SELECTION("inventory.block-selection"),
