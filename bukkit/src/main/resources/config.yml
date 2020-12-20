@@ -1,13 +1,16 @@
 locale: en
 
-# Available (case-insensitive): sqlite, mysql or postgre
-storage-method: sqlite
+storage:
+  # Available (case-insensitive): sqlite, mysql, mariadb or postgresql
+  storage-method: sqlite
 
-sql:
-  # When SQLite is used, the following parameters are not necessary.
-  # JDBC uri format: jdbc:driver://host:port/database
-  # MySQL/MariaDB driver: mysql, PostgreSQL driver: postgresql
-  jdbcUri: jdbc:mysql://localhost:3306/thimble
+  # SQLite section
+  file: database.db
+
+  # MySQL, MariaDB, PostgreSQL section
+  host: localhost
+  port: 3306
+  database: thimble
   username: thimble
   password: password
 
@@ -54,3 +57,5 @@ allowed-commands-in-game:
   - th
   - msg
   - tell
+
+leave-arena-when-tp: true

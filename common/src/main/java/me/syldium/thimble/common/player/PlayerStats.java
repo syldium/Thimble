@@ -14,18 +14,20 @@ public class PlayerStats implements ThimblePlayerStats, Identity {
     private int wins;
     private int losses;
     private int jumps;
+    private int fails;
     private int thimbles;
 
     public PlayerStats(@NotNull UUID uuid, @NotNull String name) {
-        this(uuid, name, 0, 0, 0, 0);
+        this(uuid, name, 0, 0, 0, 0, 0);
     }
 
-    public PlayerStats(@NotNull UUID uuid, @NotNull String name, int wins, int losses, int jumps, int thimbles) {
+    public PlayerStats(@NotNull UUID uuid, @NotNull String name, int wins, int losses, int jumps, int fails, int thimbles) {
         this.uuid = uuid;
         this.name = name;
         this.wins = wins;
         this.losses = losses;
         this.jumps = jumps;
+        this.fails = fails;
         this.thimbles = thimbles;
     }
 
@@ -55,6 +57,11 @@ public class PlayerStats implements ThimblePlayerStats, Identity {
     }
 
     @Override
+    public int getFailedJumps() {
+        return this.fails;
+    }
+
+    @Override
     public int getThimbles() {
         return this.thimbles;
     }
@@ -69,6 +76,10 @@ public class PlayerStats implements ThimblePlayerStats, Identity {
 
     public void incrementJumps() {
         this.jumps++;
+    }
+
+    public void incrementFailedJumps() {
+        this.fails++;
     }
 
     public void incrementThimbles() {
@@ -95,6 +106,7 @@ public class PlayerStats implements ThimblePlayerStats, Identity {
                 ", wins=" + this.wins +
                 ", losses=" + this.losses +
                 ", jumps=" + this.jumps +
+                ", fails=" + this.fails +
                 ", thimbles=" + this.thimbles +
                 '}';
     }

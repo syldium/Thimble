@@ -15,7 +15,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
     protected int lifes = 1;
 
     public InGamePlayer(@NotNull ThimblePlayerStats stats, @NotNull BlockData block, @NotNull Game game) {
-        super(stats.uuid(), stats.name(), stats.getWins(), stats.getLosses(), stats.getJumps(), stats.getThimbles());
+        super(stats.uuid(), stats.name(), stats.getWins(), stats.getLosses(), stats.getJumps(), stats.getFailedJumps(), stats.getThimbles());
         this.block = block;
         this.game = game;
     }

@@ -7,6 +7,7 @@ import me.syldium.thimble.bukkit.adapter.BukkitEventAdapter;
 import me.syldium.thimble.bukkit.adapter.BukkitPlayerAdapter;
 import me.syldium.thimble.bukkit.command.BukkitCommandExecutor;
 import me.syldium.thimble.bukkit.command.PaperCommandExecutor;
+import me.syldium.thimble.bukkit.config.BukkitConfigManager;
 import me.syldium.thimble.bukkit.hook.PluginHook;
 import me.syldium.thimble.bukkit.listener.DamageListener;
 import me.syldium.thimble.bukkit.listener.SignInteractListener;
@@ -19,8 +20,6 @@ import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.util.Fireworks;
 import me.syldium.thimble.common.util.Task;
-import me.syldium.thimble.bukkit.config.BukkitArenaConfig;
-import me.syldium.thimble.bukkit.config.BukkitMainConfig;
 import me.syldium.thimble.bukkit.util.BukkitTask;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Material;
@@ -45,13 +44,13 @@ public class ThBukkitPlugin extends ThimblePlugin {
     private final BukkitCommandExecutor commandExecutor;
     private final BukkitEventAdapter eventAdapter;
     private final BukkitPlayerAdapter playerAdapter;
-    private final BukkitArenaConfig arenaConfig;
+    private final BukkitConfigManager configManager;
 
     public ThBukkitPlugin(@NotNull ThBootstrap bootstrap) {
         this.bootstrap = bootstrap;
         this.audiences = BukkitAudiences.create(bootstrap);
-        this.arenaConfig = new BukkitArenaConfig(this, this.getFile("arenas.yml"));
-        this.enable(new BukkitMainConfig(this, this.getFile("config.yml")));
+        this.configManager = new BukkitConfigManager(this);
+        this.enable();
 
         this.eventAdapter = new BukkitEventAdapter(bootstrap.getServer().getPluginManager());
         this.playerAdapter = new BukkitPlayerAdapter(this, bootstrap, this.audiences);
@@ -78,11 +77,6 @@ public class ThBukkitPlugin extends ThimblePlugin {
     @Override
     public @NotNull Logger getLogger() {
         return this.bootstrap.getLogger();
-    }
-
-    @Override
-    public @NotNull BukkitArenaConfig getArenaConfig() {
-        return this.arenaConfig;
     }
 
     @Override
@@ -126,6 +120,11 @@ public class ThBukkitPlugin extends ThimblePlugin {
     @Override
     public @NotNull BukkitPlayerAdapter getPlayerAdapter() {
         return this.playerAdapter;
+    }
+
+    @Override
+    public @NotNull BukkitConfigManager getConfigManager() {
+        return this.configManager;
     }
 
     @Override

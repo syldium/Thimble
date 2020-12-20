@@ -4,6 +4,7 @@ import me.syldium.thimble.common.config.MainConfig;
 import me.syldium.thimble.common.player.PlayerAudience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.util.Index;
 import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +48,14 @@ public interface TimedMedia {
     }
 
     enum Type {
-        BOSSBAR,
-        EXPERIENCE_BAR
+        BOSSBAR("bossbar"),
+        EXPERIENCE_BAR("experience-bar");
+
+        public static final Index<String, Type> NAMES = Index.create(Type.class, mode -> mode.name);
+        private final String name;
+
+        Type(@NotNull String name) {
+            this.name = name;
+        }
     }
 }

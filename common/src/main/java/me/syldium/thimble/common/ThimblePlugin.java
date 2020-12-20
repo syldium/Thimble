@@ -4,7 +4,7 @@ import me.syldium.thimble.api.Location;
 import me.syldium.thimble.common.adapter.EventAdapter;
 import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.command.CommandManager;
-import me.syldium.thimble.common.config.ArenaConfig;
+import me.syldium.thimble.common.config.ConfigManager;
 import me.syldium.thimble.common.config.MainConfig;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.service.DataService;
@@ -33,14 +33,12 @@ public abstract class ThimblePlugin {
     private GameServiceImpl gameService;
     private MessageService messageService;
     private StatsServiceImpl statsService;
-    private MainConfig config;
 
-    public void enable(@NotNull MainConfig config) {
-        this.dataService = DataService.fromConfig(this, config);
-        this.gameService = new GameServiceImpl(this, this.getArenaConfig());
-        this.messageService = new MessageServiceImpl(config, this.getLogger());
+    public void enable() {
+        this.dataService = DataService.fromConfig(this, this.getMainConfig());
+        this.gameService = new GameServiceImpl(this);
+        this.messageService = new MessageServiceImpl(this.getMainConfig(), this.getLogger());
         this.statsService = new StatsServiceImpl(this.dataService, Executors.newSingleThreadExecutor());
-        this.config = config;
         this.gameService.load();
     }
 
@@ -75,12 +73,6 @@ public abstract class ThimblePlugin {
 
     public abstract @NotNull Logger getLogger();
 
-    public abstract @NotNull ArenaConfig getArenaConfig();
-
-    public @NotNull MainConfig getMainConfig() {
-        return this.config;
-    }
-
     public abstract @NotNull File getDataFolder();
 
     public abstract @NotNull Task startGameTask(@NotNull Runnable runnable);
@@ -107,5 +99,11 @@ public abstract class ThimblePlugin {
 
     public abstract @NotNull PlayerAdapter<?, ?> getPlayerAdapter();
 
+    public abstract @NotNull ConfigManager<? extends ThimblePlugin> getConfigManager();
+
     public abstract void runSync(@NotNull Runnable runnable);
+
+    public MainConfig getMainConfig() {
+        return this.getConfigManager().getMainConfig();
+    }
 }

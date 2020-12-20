@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,18 +31,18 @@ public interface DataService {
     }
 
     enum Type {
-        SQLITE("sqlite", Dependency.SQLITE_DRIVER, "org.sqlite.JDBC"),
-        MARIADB("mariadb", Dependency.MARIADB_DRIVER, "org.mariadb.jdbc.Driver"),
-        MYSQL("mysql", Dependency.MYSQL_DRIVER, "com.mysql.jdbc.Driver"),
-        POSTGRE("postgresql", Dependency.POSTGRESQL_DRIVER, "org.postgresql.Driver");
+        SQLITE(Dependency.SQLITE_DRIVER, "org.sqlite.JDBC"),
+        MARIADB(Dependency.MARIADB_DRIVER, "org.mariadb.jdbc.Driver"),
+        MYSQL(Dependency.MYSQL_DRIVER, "com.mysql.jdbc.Driver"),
+        POSTGRESQL(Dependency.POSTGRESQL_DRIVER, "org.postgresql.Driver");
 
         private final String driverName;
         private final String driverClassName;
         private final Dependency driver;
 
-        Type(@NotNull String driverName, @NotNull Dependency driver, @NotNull String driverClassName) {
+        Type(@NotNull Dependency driver, @NotNull String driverClassName) {
             this.driverClassName = driverClassName;
-            this.driverName = driverName;
+            this.driverName = this.name().toLowerCase(Locale.ROOT);
             this.driver = driver;
         }
 
@@ -56,6 +57,10 @@ public interface DataService {
 
         public @NotNull String getDriverClassName() {
             return this.driverClassName;
+        }
+
+        public @NotNull String getDriverName() {
+            return this.driverName;
         }
 
         public @NotNull Dependency getDriver() {

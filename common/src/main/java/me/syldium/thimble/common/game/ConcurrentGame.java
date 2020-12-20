@@ -66,6 +66,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             if (this.countFails) {
                 inGamePlayer.decrementLifes();
             }
+            inGamePlayer.incrementFailedJumps();
         } else {
             inGamePlayer.incrementJumps();
             if (verdict == JumpVerdict.THIMBLE) {

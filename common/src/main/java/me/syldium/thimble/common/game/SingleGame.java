@@ -92,6 +92,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     protected void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
             inGamePlayer.decrementLifes();
+            inGamePlayer.incrementFailedJumps();
         } else {
             inGamePlayer.incrementJumps();
             if (verdict == JumpVerdict.THIMBLE) {

@@ -28,20 +28,19 @@ public class GameServiceImpl implements GameService {
     private final ThimblePlugin plugin;
     private final Map<UUID, Game> games = new ConcurrentHashMap<>();
     private final Set<Arena> arenas = new CopyOnWriteArraySet<>();
-    private final ArenaConfig arenaConfig;
 
     private Map<BlockPos, SignAction> signsToAction;
     private final Map<BlockPos, ThimbleArena> signsToArena = new HashMap<>();
     private final Map<ThimbleArena, Set<BlockPos>> arenaToSigns = new HashMap<>();
 
-    public GameServiceImpl(@NotNull ThimblePlugin plugin, @NotNull ArenaConfig arenaConfig) {
+    public GameServiceImpl(@NotNull ThimblePlugin plugin) {
         this.plugin = plugin;
-        this.arenaConfig = arenaConfig;
     }
 
     public void load() {
-        this.arenas.addAll(this.arenaConfig.load());
-        this.signsToAction = this.arenaConfig.loadActionSigns();
+        ArenaConfig config = this.plugin.getConfigManager().getArenaConfig();
+        this.arenas.addAll(config.load());
+        this.signsToAction = config.loadActionSigns();
     }
 
     @Override
@@ -142,11 +141,13 @@ public class GameServiceImpl implements GameService {
     }
 
     public void save() {
-        this.arenaConfig.save(this.arenas);
+        ArenaConfig config = this.plugin.getConfigManager().getArenaConfig();
+        config.save(this.arenas);
         Map<SignAction, Set<BlockPos>> reversed = new HashMap<>();
         for (Map.Entry<BlockPos, SignAction> entry : this.signsToAction.entrySet()) {
             reversed.computeIfAbsent(entry.getValue(), s -> new HashSet<>()).add(entry.getKey());
         }
-        this.arenaConfig.save(reversed);
+        config.save(reversed);
+        config.save();
     }
 }

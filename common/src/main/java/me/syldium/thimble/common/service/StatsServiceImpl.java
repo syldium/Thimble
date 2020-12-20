@@ -72,6 +72,7 @@ public class StatsServiceImpl implements StatsService {
                 player.getWins(),
                 player.getLosses(),
                 player.getJumps(),
+                player.getFailedJumps(),
                 player.getThimbles()
         ));
     }

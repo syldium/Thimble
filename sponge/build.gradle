@@ -33,8 +33,8 @@ shadowJar {
         exclude(dependency('net.kyori:examination-string'))
     }
 
-    relocate 'net.kyori.adventure', 'me.syldium.decoudre.lib.adventure'
-    relocate 'net.kyori.examination', 'me.syldium.decoudre.lib.examination'
+    relocate 'net.kyori.adventure', 'me.syldium.thimble.lib.adventure'
+    relocate 'net.kyori.examination', 'me.syldium.thimble.lib.examination'
     minimize()
 }
 

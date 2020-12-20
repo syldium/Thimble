@@ -1,27 +1,19 @@
 package me.syldium.thimble.sponge;
 
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
-import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.CommandManager;
 import me.syldium.thimble.common.command.CommandResult;
-import me.syldium.thimble.common.config.ArenaConfig;
-import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.common.util.Fireworks;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.sponge.adapter.SpongeEventAdapter;
 import me.syldium.thimble.sponge.adapter.SpongePlayerAdapter;
 import me.syldium.thimble.sponge.command.SpongeCommandExecutor;
-import me.syldium.thimble.sponge.config.serializer.ArenaSerializer;
-import me.syldium.thimble.sponge.config.SpongeArenaConfig;
-import me.syldium.thimble.sponge.config.SpongeMainConfig;
-import me.syldium.thimble.sponge.config.serializer.BlockVectorSerializer;
-import me.syldium.thimble.sponge.config.serializer.LocationSerializer;
+import me.syldium.thimble.sponge.config.SpongeConfigManager;
 import me.syldium.thimble.sponge.listener.DamageListener;
 import me.syldium.thimble.sponge.listener.RestrictionListener;
 import me.syldium.thimble.sponge.util.LoggerWrapper;
@@ -31,7 +23,6 @@ import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
 import net.kyori.adventure.util.Ticks;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializerCollection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -74,20 +65,20 @@ public class ThSpongePlugin extends ThimblePlugin {
 
     private SpongePlayerAdapter playerAdapter;
 
-    private ArenaConfig arenaConfig;
+    private SpongeConfigManager configManager;
 
     @Inject @DefaultConfig(sharedRoot = true)
     private Path configDir;
 
     @Inject @DefaultConfig(sharedRoot = true)
-    private ConfigurationLoader<CommentedConfigurationNode> configManager;
+    private ConfigurationLoader<CommentedConfigurationNode> configLoader;
 
     @Inject @ConfigDir(sharedRoot = false)
     private File dataFolder;
 
     private SpongeCommandExecutor commandManager;
 
-    @Listener @SuppressWarnings("UnstableApiUsage")
+    @Listener
     public void onEnable(GameInitializationEvent event) throws IOException {
         this.saveDefaultConfig();
         this.logger = new LoggerWrapper(this.container.getLogger());
@@ -95,12 +86,9 @@ public class ThSpongePlugin extends ThimblePlugin {
 
         this.commandManager = new SpongeCommandExecutor(this);
         this.game.getCommandManager().register(this, this.commandManager, "thimble", "th");
-        TypeSerializerCollection.defaults().register(TypeToken.of(Arena.class), new ArenaSerializer(this));
-        TypeSerializerCollection.defaults().register(TypeToken.of(BlockVector.class), new BlockVectorSerializer());
-        TypeSerializerCollection.defaults().register(TypeToken.of(Location.class), new LocationSerializer());
-        this.arenaConfig = new SpongeArenaConfig(getFile("arenas.conf"), this.getSlf4jLogger());
+        this.configManager = new SpongeConfigManager(this);
 
-        this.enable(new SpongeMainConfig(this.configManager, this.getSlf4jLogger()));
+        this.enable();
 
         this.getServiceManager().setProvider(this.container, StatsService.class, this.getStatsService());
         this.getServiceManager().setProvider(this.container, GameService.class, this.getGameService());
@@ -125,9 +113,8 @@ public class ThSpongePlugin extends ThimblePlugin {
         return this.container.getLogger();
     }
 
-    @Override
-    public @NotNull ArenaConfig getArenaConfig() {
-        return this.arenaConfig;
+    public @NotNull ConfigurationLoader<CommentedConfigurationNode> getConfigLoader() {
+        return this.configLoader;
     }
 
     @Override
@@ -163,6 +150,10 @@ public class ThSpongePlugin extends ThimblePlugin {
     @Override
     public @NotNull SpongePlayerAdapter getPlayerAdapter() {
         return this.playerAdapter;
+    }
+
+    public @NotNull SpongeConfigManager getConfigManager() {
+        return this.configManager;
     }
 
     @Override

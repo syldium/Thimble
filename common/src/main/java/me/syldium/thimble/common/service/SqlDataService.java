@@ -66,7 +66,7 @@ public class SqlDataService implements DataService {
 
         this.type = type;
         try {
-            String queryPath = String.format(TABLES, type == Type.POSTGRE ? "postgre" : "mysql");
+            String queryPath = String.format(TABLES, type == Type.POSTGRESQL ? "postgre" : "mysql");
             this.getConnection().createStatement().execute(ResourceReader.readResource(queryPath));
         } catch (SQLException ex) {
             this.logger.log(Level.SEVERE, "Error during database setup. See the message below.", ex);
@@ -81,7 +81,7 @@ public class SqlDataService implements DataService {
         Type type = config.getDataStorageMethod();
         DependencyResolver manager = new DependencyResolver(plugin);
         if (type == Type.SQLITE) {
-            return new SqlDataService(plugin.getFile("database.db"), manager, plugin.getLogger());
+            return new SqlDataService(plugin.getFile(config.getSqliteFilename()), manager, plugin.getLogger());
         }
         return new SqlDataService(config.getJdbcUrl(), config.getJdbcUsername(), config.getJdbcPassword(), manager, plugin.getLogger(), type);
     }
@@ -89,7 +89,7 @@ public class SqlDataService implements DataService {
     @Override
     public @NotNull Optional<@NotNull ThimblePlayerStats> getPlayerStatistics(@NotNull UUID uuid) {
         try (PreparedStatement statement = this.getConnection().prepareStatement("SELECT * FROM thimble_players WHERE uuid = ?")) {
-            if (this.type == Type.POSTGRE) {
+            if (this.type == Type.POSTGRESQL) {
                 statement.setObject(1, uuid);
             } else {
                 statement.setString(1, uuid.toString());
@@ -133,20 +133,21 @@ public class SqlDataService implements DataService {
     public void savePlayerStatistics(@NotNull ThimblePlayerStats statistics) {
         boolean exists = this.exists(statistics);
         String query = exists ?
-                "UPDATE thimble_players SET name = ?, wins = ?, losses = ?, jumps = ?, thimbles = ? WHERE uuid = ?"
-                : "INSERT INTO thimble_players (uuid, name, wins, losses, jumps, thimbles) VALUES (?, ?, ?, ?, ?, ?)";
+                "UPDATE thimble_players SET name = ?, wins = ?, losses = ?, jumps = ?, fails = ?, thimbles = ? WHERE uuid = ?"
+                : "INSERT INTO thimble_players (uuid, name, wins, losses, jumps, fails, thimbles) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = this.getConnection().prepareStatement(query)) {
-            if (this.type == Type.POSTGRE) {
-                statement.setObject(exists ? 6 : 1, statistics.uuid());
+            if (this.type == Type.POSTGRESQL) {
+                statement.setObject(exists ? 7 : 1, statistics.uuid());
             } else {
-                statement.setString(exists ? 6 : 1, statistics.uuid().toString());
+                statement.setString(exists ? 7 : 1, statistics.uuid().toString());
             }
             int i = exists ? 1 : 2;
             statement.setString(i++, statistics.name());
             statement.setInt(i++, statistics.getWins());
             statement.setInt(i++, statistics.getLosses());
             statement.setInt(i++, statistics.getJumps());
+            statement.setInt(i++, statistics.getFailedJumps());
             statement.setInt(i, statistics.getThimbles());
             statement.execute();
         } catch (SQLException ex) {
@@ -156,7 +157,7 @@ public class SqlDataService implements DataService {
 
     private boolean exists(@NotNull ThimblePlayerStats statistics) {
         try (PreparedStatement statement = this.getConnection().prepareStatement("SELECT name FROM thimble_players WHERE uuid = ?")) {
-            if (this.type == Type.POSTGRE) {
+            if (this.type == Type.POSTGRESQL) {
                 statement.setObject(1, statistics.uuid());
             } else {
                 statement.setString(1, statistics.uuid().toString());
@@ -176,7 +177,7 @@ public class SqlDataService implements DataService {
 
     private @NotNull ThimblePlayerStats fromResultSet(@NotNull ResultSet result) throws SQLException {
         UUID uuid;
-        if (this.type == Type.POSTGRE) {
+        if (this.type == Type.POSTGRESQL) {
             uuid = result.getObject("uuid", UUID.class);
         } else {
             uuid = UUID.fromString(result.getString("uuid"));
@@ -188,6 +189,7 @@ public class SqlDataService implements DataService {
                 result.getInt("wins"),
                 result.getInt("losses"),
                 result.getInt("jumps"),
+                result.getInt("fails"),
                 result.getInt("thimbles")
         );
     }

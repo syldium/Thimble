@@ -53,6 +53,13 @@ public interface ThimblePlayerStats extends Identity {
     @Range(from=0, to=Integer.MAX_VALUE) int getJumps();
 
     /**
+     * Gets the number of failed jumps.
+     *
+     * @return The number of failed jumps.
+     */
+    @Range(from=0, to=Integer.MAX_VALUE) int getFailedJumps();
+
+    /**
      * Gets the number of "thimbles" made, i.e. the number of jumps between 4 solid blocks.
      *
      * @return The number of successful thimbles.

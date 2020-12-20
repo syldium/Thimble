@@ -36,7 +36,7 @@
             <property name="allowMultipleEmptyLines" value="false"/>
             <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
             <property name="allowNoEmptyLineBetweenFields" value="true"/>
-            <property name="tokens" value="CLASS_DEF, CTOR_DEF, IMPORT, INSTANCE_INIT, INTERFACE_DEF, METHOD_DEF, STATIC_IMPORT, STATIC_INIT, VARIABLE_DEF"/> <!-- remove PACKAGE_DEF, temporarily remove COMPACT_CTOR_DEF, RECORD_DEF -->
+            <property name="tokens" value="CLASS_DEF, CTOR_DEF, IMPORT, INSTANCE_INIT, INTERFACE_DEF, METHOD_DEF, STATIC_IMPORT, STATIC_INIT"/> <!-- remove PACKAGE_DEF, temporarily remove COMPACT_CTOR_DEF, RECORD_DEF -->
         </module>
         <module name="FallThrough">
             <property name="checkLastCaseGroup" value="true"/>
@@ -66,7 +66,6 @@
         <module name="JavadocTagContinuationIndentation"/>
         <module name="LeftCurly"/>
         <module name="MethodParamPad"/>
-        <module name="MultipleVariableDeclarations"/>
         <module name="NoFinalizer"/>
         <module name="NoLineWrap"/>
         <module name="NonEmptyAtclauseDescription"/>

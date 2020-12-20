@@ -3,120 +3,92 @@ package me.syldium.thimble.common.config;
 import me.syldium.thimble.common.player.media.TimedMedia;
 import me.syldium.thimble.common.service.DataService;
 import me.syldium.thimble.common.util.EnumUtil;
-import me.syldium.thimble.common.game.ConcurrentGame;
 import net.kyori.adventure.bossbar.BossBar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public interface MainConfig {
+public class MainConfig {
 
-    /**
-     * Gets the locale to display messages.
-     *
-     * @return The locale.
-     */
-    default @NotNull Locale getLocale() {
-        return Locale.getDefault();
+    private final Locale locale;
+    private final ConfigNode display;
+    private final ConfigNode game;
+    private final ConfigNode storage;
+    private final List<String> integrations;
+
+    public MainConfig(@NotNull ConfigNode config) {
+        this.locale = new Locale(config.getString("locale", "end"));
+        this.display = config.getNode("display");
+        this.game = config.getNode("game");
+        this.storage = config.getNode("storage");
+        this.integrations = config.getStringList("integrations");
     }
 
-    default @NotNull List<@NotNull String> getEnabledIntegrations() {
-        return Collections.emptyList();
+    public @NotNull DataService.Type getDataStorageMethod() {
+        return EnumUtil.valueOf(DataService.Type.class, this.storage.getString("storage-method", "sqlite"), DataService.Type.SQLITE);
     }
 
-    // === Database ===
-
-    /**
-     * Gets the save method chosen for the statistics.
-     *
-     * @return The storage method.
-     */
-    @NotNull DataService.Type getDataStorageMethod();
-
-    /**
-     * Gets the JDBC url to interact with the database.
-     *
-     * @return The connection url.
-     */
-    @NotNull String getJdbcUrl();
-
-    @Nullable String getJdbcUsername();
-
-    @Nullable String getJdbcPassword();
-
-    /**
-     * Returns if players should be teleported to the arena spawn at the end of a game.
-     *
-     * @return If they should be teleported.
-     */
-    boolean doesTeleportAtEnd();
-
-    /**
-     * Returns if failed jumps cost points in a {@link ConcurrentGame}.
-     *
-     * @return If any points should be removed.
-     */
-    boolean doesCountFailsInConcurrent();
-
-    /**
-     * Returns the duration in seconds of the countdown before the game starts.
-     *
-     * @return Duration in seconds.
-     */
-    int getCountdownTime();
-
-    /**
-     * Returns the time in seconds that the player has to prepare his jump in single mode.
-     *
-     * @return Duration in seconds.
-     */
-    int getJumpTimeSingleMode();
-
-    /**
-     * Returns the time in seconds that the player has to prepare his jump in concurrent mode.
-     *
-     * @return Duration in seconds.
-     */
-    int getJumpTimeConcurrentMode();
-
-    // === Display ===
-
-    @Nullable String getRawDisplayProperty(@NotNull String audienceName, @NotNull String propertyKey);
-
-    /**
-     * Returns the display type of the time counters. {@link #getRawDisplayProperty(String, String)}
-     *
-     * @param audienceName The audience name (global/jump).
-     * @return The display type.
-     */
-    default @NotNull TimedMedia.Type getDisplayType(@NotNull String audienceName) {
-        return EnumUtil.valueOf(TimedMedia.Type.class, this.getRawDisplayProperty(audienceName, "type"), TimedMedia.Type.BOSSBAR);
+    public @NotNull String getJdbcUrl() {
+        return String.format(
+                "jdbc:%s://%s:%d/%s",
+                this.getDataStorageMethod().getDriverName(),
+                this.storage.getString("host"),
+                this.storage.getInt("port", 3306),
+                this.storage.getString("database", "thimble")
+        );
     }
 
-    /**
-     * Returns the overlay of a {@link BossBar}. {@link #getRawDisplayProperty(String, String)}
-     *
-     * @param audienceName The audience name (global/jump).
-     * @return The boss bar overlay.
-     */
-    default @NotNull BossBar.Overlay getBossBarOverlay(@NotNull String audienceName) {
-        return EnumUtil.valueOf(BossBar.Overlay.class, this.getRawDisplayProperty(audienceName, "bossbar-overlay"), BossBar.Overlay.PROGRESS);
+    public @NotNull String getSqliteFilename() {
+        return this.storage.getString("file", "database.db");
     }
 
-    /**
-     * Returns the color of a {@link BossBar}. {@link #getRawDisplayProperty(String, String)}
-     *
-     * @param audienceName The audience name (global/jump).
-     * @return The boss bar color.
-     */
-    default @NotNull BossBar.Color getBossBarColor(@NotNull String audienceName) {
-        return EnumUtil.valueOf(BossBar.Color.class, this.getRawDisplayProperty(audienceName, "bossbar-color"), "global".equals(audienceName) ? BossBar.Color.YELLOW : BossBar.Color.RED);
+    public @Nullable String getJdbcUsername() {
+        return this.storage.getString("username");
     }
 
-    default double getWinnerDeposit() {
-        return 5.0D;
+    public @Nullable String getJdbcPassword() {
+        return this.storage.getString("password");
+    }
+
+    public boolean doesTeleportAtEnd() {
+        return this.game.getBool("teleport-at-end", true);
+    }
+
+    public boolean doesCountFailsInConcurrent() {
+        return this.game.getBool("teleport-at-end", true);
+    }
+
+    public int getCountdownTime() {
+        return this.game.getInt("countdown-time", 30);
+    }
+
+    public int getJumpTimeSingleMode() {
+        return this.game.getInt("jump-time-single", 15);
+    }
+
+    public int getJumpTimeConcurrentMode() {
+        return this.game.getInt("jump-time-concurrent", 40);
+    }
+
+    public @NotNull TimedMedia.Type getDisplayType(@NotNull String audienceName) {
+        return this.display.getOrCreateNode(audienceName).getIndexable("type", TimedMedia.Type.NAMES, TimedMedia.Type.BOSSBAR);
+    }
+
+    public @NotNull BossBar.Overlay getBossBarOverlay(@NotNull String audienceName) {
+        return this.display.getOrCreateNode(audienceName).getIndexable("bossbar-overlay", BossBar.Overlay.NAMES, BossBar.Overlay.PROGRESS);
+    }
+
+    public @NotNull BossBar.Color getBossBarColor(@NotNull String audienceName) {
+        return this.display.getOrCreateNode(audienceName).getIndexable("bossbar-color", BossBar.Color.NAMES, "global".equals(audienceName) ? BossBar.Color.YELLOW : BossBar.Color.RED);
+    }
+
+    public @NotNull Locale getLocale() {
+        return this.locale;
+    }
+
+    public @NotNull List<@NotNull String> getEnabledIntegrations() {
+        return this.integrations;
     }
 }

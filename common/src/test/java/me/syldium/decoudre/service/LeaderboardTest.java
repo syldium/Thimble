@@ -97,10 +97,10 @@ public class LeaderboardTest {
     }
 
     public @NotNull PlayerStats newPlayerStats(int wins) {
-        return new PlayerStats(new UUID(this.uuids++, 0), "test" + this.uuids, wins, 0, 0, 0);
+        return new PlayerStats(new UUID(this.uuids++, 0), "test" + this.uuids, wins, 0, 0, 0, 0);
     }
 
     public @NotNull PlayerStats newPlayerStats(@NotNull ThimblePlayerStats stats) {
-        return new PlayerStats(stats.uuid(), stats.name(), stats.getWins(), stats.getLosses(), stats.getJumps(), stats.getThimbles());
+        return new PlayerStats(stats.uuid(), stats.name(), stats.getWins(), stats.getLosses(), stats.getJumps(), stats.getFailedJumps(), stats.getThimbles());
     }
 }
