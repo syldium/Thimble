@@ -4,6 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * Defines a block position in a world.
+ */
 public class BlockPos extends BlockVector {
 
     private final UUID world;
@@ -18,6 +21,11 @@ public class BlockPos extends BlockVector {
         this.world = world;
     }
 
+    /**
+     * Gets the unique identifier of the world.
+     *
+     * @return The {@link UUID}.
+     */
     public @NotNull UUID getWorldUUID() {
         return this.world;
     }

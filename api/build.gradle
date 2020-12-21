@@ -1,4 +1,10 @@
 apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
 repositories {
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
@@ -6,9 +12,46 @@ repositories {
 }
 
 dependencies {
-    api 'org.jetbrains:annotations:19.0.0'
+    api 'org.jetbrains:annotations:20.1.0'
     api 'net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT'
 
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
     compileOnly 'org.spongepowered:spongeapi:7.3.0'
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/syldium/Thimble")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            groupId = 'me.syldium'
+            artifactId = 'thimble-api'
+            version = project.ext.fullVersion
+
+            pom {
+                licenses {
+                    license {
+                        name = 'GNU General Public License (GPL) version 3.0'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+                    }
+                }
+            }
+
+            from components.java
+        }
+    }
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
 }

@@ -2,11 +2,17 @@ package me.syldium.thimble.api.util;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.examination.Examinable;
+import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.stream.Stream;
 
-public class BlockVector implements Serializable, Cloneable {
+/**
+ * Defines a block position relative to the current world.
+ */
+public class BlockVector implements Examinable, Serializable, Cloneable {
 
     protected final int x;
     protected final int y;
@@ -18,26 +24,56 @@ public class BlockVector implements Serializable, Cloneable {
         this.z = z;
     }
 
+    /**
+     * Gets the x-coordinate.
+     *
+     * @return x-coordinate
+     */
     public int getX() {
         return this.x;
     }
 
+    /**
+     * Gets the x-coordinate of the chunk where the block is located.
+     *
+     * @return x-coordinate
+     */
     public int getChunkX() {
         return this.x >> 4;
     }
 
+    /**
+     * Gets the y-coordinate.
+     *
+     * @return y-coordinate
+     */
     public int getY() {
         return this.y;
     }
 
+    /**
+     * Gets the y-coordinate of the chunk where the block is located.
+     *
+     * @return y-coordinate
+     */
     public int getChunkY() {
         return this.y >> 4;
     }
 
+    /**
+     * Gets the z-coordinate.
+     *
+     * @return z-coordinate
+     */
     public int getZ() {
         return this.z;
     }
 
+    /**
+     * Gets the z-coordinate of the chunk where the block is located.
+     *
+     * @return z-coordinate
+     */
     public int getChunkZ() {
         return this.z >> 4;
     }
@@ -79,5 +115,14 @@ public class BlockVector implements Serializable, Cloneable {
     @Override
     public @NotNull BlockVector clone() {
         return new BlockVector(this.x, this.y, this.z);
+    }
+
+    @Override
+    public @NotNull Stream<? extends ExaminableProperty> examinableProperties() {
+        return Stream.of(
+                ExaminableProperty.of("x", this.x),
+                ExaminableProperty.of("y", this.y),
+                ExaminableProperty.of("z", this.z)
+        );
     }
 }

@@ -15,6 +15,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * The manager of the arenas and the games.
+ */
 public interface GameService {
 
     /**

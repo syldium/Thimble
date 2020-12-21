@@ -4,6 +4,9 @@ import me.syldium.thimble.api.Ranking;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+/**
+ * A position in a leaderboard.
+ */
 public class RankingPosition {
 
     private final Ranking ranking;
@@ -19,10 +22,20 @@ public class RankingPosition {
         this.position = position;
     }
 
+    /**
+     * Gets the ranking type.
+     *
+     * @return The {@link Ranking}.
+     */
     public @NotNull Ranking getRanking() {
         return this.ranking;
     }
 
+    /**
+     * Gets the position in the leaderboard
+     *
+     * @return The position.
+     */
     public @Range(from = 0, to = Leaderboard.MAX_LENGTH - 1) int getPosition() {
         return this.position;
     }

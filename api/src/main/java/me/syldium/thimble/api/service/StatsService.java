@@ -4,6 +4,7 @@ import me.syldium.thimble.api.Ranking;
 import me.syldium.thimble.api.util.RankingPosition;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
 import me.syldium.thimble.api.util.Leaderboard;
+import net.kyori.adventure.identity.Identified;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,6 +12,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The player statistics manager.
+ */
 public interface StatsService {
 
     /**
@@ -28,6 +32,16 @@ public interface StatsService {
      * @return Statistics, if the player has already played.
      */
     @NotNull CompletableFuture<@NotNull Optional<@NotNull ThimblePlayerStats>> getPlayerStatistics(@NotNull String name);
+
+    /**
+     * Fetch the player's stats from an {@link net.kyori.adventure.identity.Identity}.
+     *
+     * @param identified The player.
+     * @return Statistics, if the player has already played.
+     */
+    default @NotNull CompletableFuture<@NotNull Optional<@NotNull ThimblePlayerStats>> getPlayerStatistics(@NotNull Identified identified) {
+        return this.getPlayerStatistics(identified.identity().uuid());
+    }
 
     /**
      * Saves the statistics.

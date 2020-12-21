@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
+/**
+ * Represents a 3-dimensional position in a world.
+ */
 public class Location {
 
     private final UUID world;
@@ -28,26 +31,56 @@ public class Location {
         this(world, x, y, z, 0, 0);
     }
 
+    /**
+     * Gets the x-coordinate.
+     *
+     * @return x-coordinate
+     */
     public double getX() {
         return this.x;
     }
 
+    /**
+     * Gets the y-coordinate.
+     *
+     * @return y-coordinate
+     */
     public double getY() {
         return this.y;
     }
 
+    /**
+     * Gets the z-coordinate.
+     *
+     * @return z-coordinate
+     */
     public double getZ() {
         return this.z;
     }
 
+    /**
+     * Gets the pitch of this location, in degrees.
+     *
+     * @return The pitch.
+     */
     public float getPitch() {
         return this.pitch;
     }
 
+    /**
+     * Gets the yaw of this location, in degrees.
+     *
+     * @return The yaw.
+     */
     public float getYaw() {
         return this.yaw;
     }
 
+    /**
+     * Gets the unique identifier of the world.
+     *
+     * @return The {@link UUID}.
+     */
     public @NotNull UUID getWorldUUID() {
         return this.world;
     }

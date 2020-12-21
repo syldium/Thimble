@@ -3,6 +3,9 @@ package me.syldium.thimble.api.arena;
 import net.kyori.adventure.util.Index;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * List of game modes.
+ */
 public enum ThimbleGameMode {
 
     /**
