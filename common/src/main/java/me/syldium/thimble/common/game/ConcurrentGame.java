@@ -9,6 +9,7 @@ import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.world.PoolBlock;
+import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +24,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
     public ConcurrentGame(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
         super(plugin, arena);
         this.countFails = plugin.getMainConfig().doesCountFailsInConcurrent();
-        this.jumpTicks = plugin.getMainConfig().getJumpTimeConcurrentMode() * Ticks.TICKS_PER_SECOND;
+        this.jumpTicks = plugin.getMainConfig().getGameInt("jump-time-concurrent", 40) * Ticks.TICKS_PER_SECOND;
     }
 
     @Override
@@ -73,6 +74,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
                 inGamePlayer.incrementLifes();
                 inGamePlayer.incrementThimbles();
             }
+            this.players.sendMessage(MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
         }
 
         if (player != null) {
@@ -87,9 +89,9 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             player.sendActionBar(MessageKey.ACTIONBAR_MISSED);
             player.playSound(GameConfig.getJumpFailedSound());
         } else if (verdict == JumpVerdict.THIMBLE) {
-            player.sendActionBar(MessageKey.ACTIONBAR_COMBO);
+            player.sendActionBar(MessageKey.ACTIONBAR_THIMBLE);
             player.playSound(GameConfig.getJumpSucceedSound());
-            this.plugin.spawnFireworks(player.getLocation());
+            this.plugin.spawnFireworks(player.getLocation().up(2)).spawn(this.fireworksThimble);
         } else {
             player.sendActionBar(MessageKey.ACTIONBAR_SUCCESSFUL_JUMP);
         }

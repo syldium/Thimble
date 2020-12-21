@@ -60,6 +60,14 @@ public class Location {
         return new BlockVector((int) Math.floor(this.x), (int) Math.floor(this.y), (int) Math.floor(this.z));
     }
 
+    public @NotNull Location up(int distance) {
+        return distance == 0 ? this : new Location(this.world, this.x, this.y + distance, this.z, this.pitch, this.yaw);
+    }
+
+    public @NotNull Location down(int distance) {
+        return this.up(-distance);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

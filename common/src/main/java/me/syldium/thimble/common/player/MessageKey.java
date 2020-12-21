@@ -10,18 +10,24 @@ import java.util.Locale;
 
 public enum MessageKey {
 
-    ACTIONBAR_COMBO("actionbar.combo"),
     ACTIONBAR_ENDED("actionbar.ended"),
     ACTIONBAR_MISSED("actionbar.missed"),
     ACTIONBAR_MISSED_LIFE("actionbar.missed.life"),
     ACTIONBAR_MISSED_LIFES("actionbar.missed.lifes"),
     ACTIONBAR_NOT_ENOUGH_PLAYERS("actionbar.not-enough-players"),
     ACTIONBAR_SUCCESSFUL_JUMP("actionbar.successful-jump"),
+    ACTIONBAR_THIMBLE("actionbar.thimble"),
     ACTIONBAR_WAITING("actionbar.waiting"),
+
+    CHAT_ELIMINATED("chat.eliminated"),
+    CHAT_JOINED("chat.joined"),
+    CHAT_LEFT("chat.left"),
+    CHAT_THIMBLE("chat.thimble"),
 
     FEEDBACK_ARENA_ALREADY_EXISTS("feedback.arena.already-exists"),
     FEEDBACK_ARENA_CREATED("feedback.arena.created"),
     FEEDBACK_ARENA_NOT_CONFIGURED("feedback.arena.not-configured"),
+    FEEDBACK_ARENA_REMOVE("feedback.arena.remove"),
     FEEDBACK_ARENA_SET_GAME_MODE("feedback.arena.set-game-mode"),
     FEEDBACK_ARENA_SET_GAME_MODE_UNKNOWN("feedback.arena.set-game-mode.unknown"),
     FEEDBACK_ARENA_SET_JUMP("feedback.arena.set-jump"),
@@ -34,8 +40,8 @@ public enum MessageKey {
     FEEDBACK_ARENA_SET_SPAWN("feedback.arena.set-spawn"),
     FEEDBACK_ARENA_SET_WAIT("feedback.arena.set-wait"),
 
-    FEEDBACK_GAME_COMMAND("feedback.command-in-game"),
     FEEDBACK_GAME_ALREADY_IN_GAME("feedback.game.already-in-game"),
+    FEEDBACK_GAME_COMMAND("feedback.command-in-game"),
     FEEDBACK_GAME_JOINED("feedback.game.joined"),
     FEEDBACK_GAME_LEFT("feedback.game.left"),
     FEEDBACK_GAME_NOT_IN_GAME("feedback.game.not-in-game"),
@@ -53,6 +59,7 @@ public enum MessageKey {
     HELP_JOIN("help.join"),
     HELP_LEAVE("help.leave"),
     HELP_LIST("help.list"),
+    HELP_REMOVE("help.remove"),
     HELP_SET_GAME_MODE("help.set-game-mode"),
     HELP_SET_JUMP("help.set-jump"),
     HELP_SET_SPAWN("help.set-spawn"),

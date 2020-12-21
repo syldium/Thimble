@@ -60,16 +60,8 @@ public class MainConfig {
         return this.game.getBool("teleport-at-end", true);
     }
 
-    public int getCountdownTime() {
-        return this.game.getInt("countdown-time", 30);
-    }
-
-    public int getJumpTimeSingleMode() {
-        return this.game.getInt("jump-time-single", 15);
-    }
-
-    public int getJumpTimeConcurrentMode() {
-        return this.game.getInt("jump-time-concurrent", 40);
+    public int getGameInt(@NotNull @NodePath String path, int def) {
+        return this.game.getInt(path, def);
     }
 
     public @NotNull TimedMedia.Type getDisplayType(@NotNull String audienceName) {

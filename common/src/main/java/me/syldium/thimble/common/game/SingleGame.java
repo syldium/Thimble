@@ -5,8 +5,10 @@ import me.syldium.thimble.api.arena.ThimbleGameState;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.InGamePlayer;
+import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.world.PoolBlock;
+import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +27,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
 
     public SingleGame(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
         super(plugin, arena);
-        this.jumpTicks = plugin.getMainConfig().getJumpTimeSingleMode() * Ticks.TICKS_PER_SECOND;
+        this.jumpTicks = plugin.getMainConfig().getGameInt("jump-time-single", 15) * Ticks.TICKS_PER_SECOND;
     }
 
     @Override
@@ -51,7 +53,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     @Override
     protected void tickGame() {
         if (this.jumper == null) {
-            this.timer = this.plugin.getMainConfig().getJumpTimeSingleMode() * Ticks.TICKS_PER_SECOND;
+            this.timer = this.jumpTicks;
             if (this.queue.isEmpty()) {
                 this.state = ThimbleGameState.END;
                 return;
@@ -98,6 +100,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             if (verdict == JumpVerdict.THIMBLE) {
                 inGamePlayer.incrementLifes();
                 inGamePlayer.incrementThimbles();
+                this.players.sendMessage(MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
             }
         }
 
@@ -110,8 +113,11 @@ public class SingleGame extends Game implements ThimbleSingleGame {
         this.jumper = null;
         if (inGamePlayer.getPoints() > 0) {
             this.queue.offer(inGamePlayer.uuid());
-        } else if (this.queue.size() < 2) {
-            this.end(inGamePlayer);
+        } else {
+            this.players.sendMessage(MessageKey.CHAT_ELIMINATED, Template.of("player", inGamePlayer.name()));
+            if (this.queue.size() < 2) {
+                this.end(inGamePlayer);
+            }
         }
     }
 

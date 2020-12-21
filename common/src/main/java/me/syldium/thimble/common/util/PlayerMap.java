@@ -7,6 +7,8 @@ import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.player.media.TimedMedia;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements PlayerAudience, ForwardingAudience, Iterable<E> {
@@ -61,12 +64,28 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements P
         return this.containsValue(identity);
     }
 
-    public void sendMessage(@NotNull MessageKey messageKey) {
-        for (Player player : this.audiences()) player.sendMessage(messageKey);
+    public void sendMessage(@NotNull MessageKey messageKey, @NotNull Template... templates) {
+        Component component = ThimblePlugin.PREFIX.append(this.plugin.getMessageService().formatMessage(messageKey, templates));
+        for (Player player : this.audiences()) player.sendMessage(component);
     }
 
-    public void sendActionBar(@NotNull MessageKey messageKey) {
-        for (Player player : this.audiences()) player.sendActionBar(messageKey);
+    public void sendMessage(@NotNull MessageKey messageKey, @NotNull Predicate<@NotNull E> predicate, @NotNull Template... templates) {
+        Component component = ThimblePlugin.PREFIX.append(this.plugin.getMessageService().formatMessage(messageKey, templates));
+        for (E identity : this) {
+            if (!predicate.test(identity)) {
+                continue;
+            }
+
+            Player player = this.plugin.getPlayer(identity.uuid());
+            if (player != null) {
+                player.sendMessage(component);
+            }
+        }
+    }
+
+    public void sendActionBar(@NotNull MessageKey messageKey, @NotNull Template... templates) {
+        Component component = this.plugin.getMessageService().formatMessage(messageKey, templates);
+        for (Player player : this.audiences()) player.sendActionBar(component);
     }
 
     @Override

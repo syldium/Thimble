@@ -8,6 +8,7 @@ import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.adapter.BlockBalancer;
 import me.syldium.thimble.common.config.GameConfig;
+import me.syldium.thimble.common.config.MainConfig;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
@@ -57,16 +58,20 @@ public abstract class Game implements ThimbleGame, Runnable {
 
     protected int timer;
     protected final int countdownTicks;
+    protected final int fireworksThimble, fireworksEnd;
 
     public Game(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
+        MainConfig config = plugin.getMainConfig();
         this.plugin = plugin;
         this.arena = arena;
         this.players = new PlayerMap<>(plugin);
-        this.timer = plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND;
+        this.timer = config.getGameInt("countdown-time", 30) * Ticks.TICKS_PER_SECOND;
         this.task = plugin.startGameTask(this);
         this.jumperMedia = TimedMedia.from(plugin.getMainConfig(), "jump");
 
-        this.countdownTicks = this.plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND;
+        this.countdownTicks = this.timer;
+        this.fireworksThimble = config.getGameInt("fireworks-thimble", 1);
+        this.fireworksEnd = config.getGameInt("fireworks-end", 4);
 
         this.remainingWaterBlocks = this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null ?
                 Collections.emptySet()
@@ -125,7 +130,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                 return;
             }
             this.state = ThimbleGameState.WAITING;
-            this.timer = this.plugin.getMainConfig().getCountdownTime() * Ticks.TICKS_PER_SECOND;
+            this.timer = this.countdownTicks;
             this.players.sendActionBar(MessageKey.ACTIONBAR_NOT_ENOUGH_PLAYERS);
             return;
         }
@@ -173,9 +178,9 @@ public abstract class Game implements ThimbleGame, Runnable {
             }
             player.playSound(GameConfig.getJumpFailedSound());
         } else if (verdict == JumpVerdict.THIMBLE) {
-            player.sendActionBar(MessageKey.ACTIONBAR_COMBO);
+            player.sendActionBar(MessageKey.ACTIONBAR_THIMBLE);
             player.playSound(GameConfig.getJumpSucceedSound());
-            this.plugin.spawnFireworks(player.getLocation());
+            this.plugin.spawnFireworks(player.getLocation().up(2)).spawn(this.fireworksThimble);
         } else {
             player.sendActionBar(MessageKey.ACTIONBAR_SUCCESSFUL_JUMP);
         }
@@ -186,8 +191,9 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.jumperMedia.hide(this.players);
         Player latestPlayer = latest == null ? null : this.plugin.getPlayer(latest.uuid());
         if (latestPlayer != null) {
-            this.plugin.spawnFireworks(latestPlayer.getLocation()).spawn(4);
+            this.plugin.spawnFireworks(latestPlayer.getLocation()).spawn(this.fireworksEnd);
         }
+
         for (InGamePlayer player : this.players) {
             if (player.equals(latest)) {
                 player.incrementWins();
@@ -198,13 +204,17 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.plugin.getStatsService().updateLeaderboard(player);
             this.plugin.getGameService().setPlayerGame(player.uuid(), null);
 
-            if (this.plugin.getMainConfig().doesTeleportAtEnd()) {
-                Player p = this.plugin.getPlayer(player.uuid());
-                if (p != null) {
+
+            Player p = this.plugin.getPlayer(player.uuid());
+            if (p != null) {
+                if (this.plugin.getMainConfig().doesTeleportAtEnd()) {
                     p.teleport(this.arena.getSpawnLocation());
+                } else {
+                    p.teleport(player.getLastLocation());
                 }
             }
         }
+
         this.players.sendActionBar(MessageKey.ACTIONBAR_ENDED);
         this.players.clear();
         for (PoolBlock block : this.blocks) {
@@ -280,10 +290,11 @@ public abstract class Game implements ThimbleGame, Runnable {
                 .thenApply(optional -> {
                     BlockData block = this.plugin.getPlayerAdapter().getRandomBlock();
                     InGamePlayer inGamePlayer = optional
-                            .map(stats -> new InGamePlayer(stats, block, this))
-                            .orElseGet(() -> new InGamePlayer(player.uuid(), player.name(), block, this));
+                            .map(stats -> new InGamePlayer(player, stats, block, this))
+                            .orElseGet(() -> new InGamePlayer(player, block, this));
                     if (this.players.add(inGamePlayer)) {
                         this.plugin.getGameService().setPlayerGame(player.uuid(), this);
+                        this.players.sendMessage(MessageKey.CHAT_JOINED, p -> !p.uuid().equals(player.uuid()), Template.of("player", player.name()));
                         this.plugin.runSync(() -> player.teleport(this.arena.getSpawnLocation()));
                         return true;
                     }

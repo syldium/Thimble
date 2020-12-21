@@ -25,7 +25,7 @@ game:
   countdown-time: 30
   jump-time-single: 15
   jump-time-concurrent: 40
-  fireworks-de-coudre: 2
+  fireworks-thimble: 1
   fireworks-end: 4
 
 display:
