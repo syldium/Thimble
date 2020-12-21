@@ -56,7 +56,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     protected final Set<BlockVector> remainingWaterBlocks;
     protected final List<PoolBlock> blocks = new ArrayList<>();
 
-    protected int timer;
+    protected int timer, messageTimer;
     protected final int countdownTicks;
     protected final int fireworksThimble, fireworksEnd;
 
@@ -66,6 +66,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.arena = arena;
         this.players = new PlayerMap<>(plugin);
         this.timer = config.getGameInt("countdown-time", 30) * Ticks.TICKS_PER_SECOND;
+        this.messageTimer = 0;
         this.task = plugin.startGameTask(this);
         this.jumperMedia = TimedMedia.from(plugin.getMainConfig(), "jump");
 
@@ -88,7 +89,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             case WAITING:
                 if (this.canStart() && !this.plugin.getEventAdapter().callGameChangeState(this, ThimbleGameState.STARTING)) {
                     this.state = ThimbleGameState.STARTING;
-                } else {
+                } else if ((this.messageTimer++ & 0xF) == 0) {
                     this.players.sendActionBar(MessageKey.ACTIONBAR_WAITING);
                 }
                 return;
