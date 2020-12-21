@@ -204,7 +204,6 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.plugin.getStatsService().updateLeaderboard(player);
             this.plugin.getGameService().setPlayerGame(player.uuid(), null);
 
-
             Player p = this.plugin.getPlayer(player.uuid());
             if (p != null) {
                 if (this.plugin.getMainConfig().doesTeleportAtEnd()) {

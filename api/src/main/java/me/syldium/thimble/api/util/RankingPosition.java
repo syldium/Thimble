@@ -32,7 +32,7 @@ public class RankingPosition {
     }
 
     /**
-     * Gets the position in the leaderboard
+     * Gets the position in the leaderboard.
      *
      * @return The position.
      */
