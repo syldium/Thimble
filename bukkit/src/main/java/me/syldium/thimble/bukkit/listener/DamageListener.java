@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -32,10 +31,10 @@ public class DamageListener implements Listener {
         event.setCancelled(true);
         ThimbleGame game = optional.get();
 
-        if (game.isJumping(player.getUniqueId()) && game.verdict(player.getUniqueId(), JumpVerdict.MISSED)) {
-            event.setCancelled(true);
-            player.setVelocity(new Vector(0, 0, 0));
+        if (game.isJumping(player.getUniqueId()) && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+            game.verdict(player.getUniqueId(), JumpVerdict.MISSED);
         }
+        event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true)

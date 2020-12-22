@@ -62,7 +62,7 @@ public interface GameService {
      * @param name The pool name.
      * @return The new pool, or null if the name was already taken.
      */
-    @Nullable ThimbleArena createArena(@NotNull @Pattern("\\w+") String name);
+    @Nullable ThimbleArena createArena(@NotNull @Pattern("[\\w-]+") String name);
 
     /**
      * Gets a {@link ThimbleArena}.

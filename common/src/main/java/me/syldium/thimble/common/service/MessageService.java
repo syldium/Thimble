@@ -13,6 +13,13 @@ import java.util.Objects;
 public interface MessageService {
 
     /**
+     * Gets the plugin prefix.
+     *
+     * @return The prefix.
+     */
+    @NotNull Component prefix();
+
+    /**
      * Gets the translated string from a {@link MessageKey}, and formats it.
      *
      * @param key The message key.

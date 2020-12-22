@@ -3,6 +3,7 @@ package me.syldium.thimble.common.command.abstraction;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.MessageKey;
+import me.syldium.thimble.common.service.MessageService;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.MessageType;
 import net.kyori.adventure.bossbar.BossBar;
@@ -49,18 +50,18 @@ public abstract class AbstractSender<S> implements Sender {
         if (feedback.getMessageKey() == null) {
             return;
         }
-        Component component = this.plugin.getMessageService().formatMessage(feedback);
-        this.audience.sendMessage(ThimblePlugin.PREFIX.append(component));
+        Component component = this.getMessageService().formatMessage(feedback);
+        this.audience.sendMessage(this.getMessageService().prefix().append(component));
     }
 
     @Override
     public void sendMessage(@NotNull MessageKey key, Template... templates) {
-        this.audience.sendMessage(this.plugin.getMessageService().formatMessage(key, templates));
+        this.audience.sendMessage(this.getMessageService().formatMessage(key, templates));
     }
 
     @Override
     public void sendActionBar(@NotNull MessageKey key, Template... templates) {
-        this.audience.sendActionBar(this.plugin.getMessageService().formatMessage(key, templates));
+        this.audience.sendActionBar(this.getMessageService().formatMessage(key, templates));
     }
 
     @Override
@@ -126,5 +127,9 @@ public abstract class AbstractSender<S> implements Sender {
     @Override
     public void openBook(@NotNull Book book) {
         this.audience.openBook(book);
+    }
+
+    private @NotNull MessageService getMessageService() {
+        return this.plugin.getMessageService();
     }
 }

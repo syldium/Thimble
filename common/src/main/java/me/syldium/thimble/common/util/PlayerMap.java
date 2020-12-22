@@ -5,6 +5,7 @@ import me.syldium.thimble.common.player.PlayerAudience;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.player.media.TimedMedia;
+import me.syldium.thimble.common.service.MessageService;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
@@ -65,12 +66,14 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements P
     }
 
     public void sendMessage(@NotNull MessageKey messageKey, @NotNull Template... templates) {
-        Component component = ThimblePlugin.PREFIX.append(this.plugin.getMessageService().formatMessage(messageKey, templates));
+        MessageService messageService = this.plugin.getMessageService();
+        Component component = messageService.prefix().append(messageService.formatMessage(messageKey, templates));
         for (Player player : this.audiences()) player.sendMessage(component);
     }
 
     public void sendMessage(@NotNull MessageKey messageKey, @NotNull Predicate<@NotNull E> predicate, @NotNull Template... templates) {
-        Component component = ThimblePlugin.PREFIX.append(this.plugin.getMessageService().formatMessage(messageKey, templates));
+        MessageService messageService = this.plugin.getMessageService();
+        Component component = messageService.prefix().append(messageService.formatMessage(messageKey, templates));
         for (E identity : this) {
             if (!predicate.test(identity)) {
                 continue;

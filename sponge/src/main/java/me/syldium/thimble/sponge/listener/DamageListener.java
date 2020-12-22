@@ -9,6 +9,8 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.data.ChangeDataHolderEvent;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
@@ -25,16 +27,16 @@ public class DamageListener {
     }
 
     @Listener
-    public void onPlayerDamage(DamageEntityEvent event, @First Player player) {
+    public void onPlayerDamage(DamageEntityEvent event, @First Player player, @First EntityDamageSource source) {
         Optional<ThimbleGame> optional = this.plugin.getGameService().getGame(player.getUniqueId());
         if (!optional.isPresent()) return;
         event.setCancelled(true);
         ThimbleGame game = optional.get();
 
-        if (game.isJumping(player.getUniqueId()) && game.verdict(player.getUniqueId(), JumpVerdict.MISSED)) {
-            event.setCancelled(true);
-            player.setVelocity(Vector3d.ZERO);
+        if (game.isJumping(player.getUniqueId()) && DamageTypes.FALL.equals(source.getType())) {
+            game.verdict(player.getUniqueId(), JumpVerdict.MISSED);
         }
+        event.setCancelled(true);
     }
 
     @Listener

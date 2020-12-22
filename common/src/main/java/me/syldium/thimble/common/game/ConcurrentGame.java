@@ -73,8 +73,8 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             if (verdict == JumpVerdict.THIMBLE) {
                 inGamePlayer.incrementLifes();
                 inGamePlayer.incrementThimbles();
+                this.players.sendMessage(MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
             }
-            this.players.sendMessage(MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
         }
 
         if (player != null) {

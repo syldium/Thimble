@@ -1,6 +1,5 @@
 package me.syldium.thimble.sponge.command;
 
-import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.CommandManager;
 import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.sponge.ThSpongePlugin;
@@ -37,7 +36,7 @@ public class SpongeCommandExecutor extends CommandManager implements CommandCall
         }
 
         if (result.getMessageKey() != null) {
-            Component component = ThimblePlugin.PREFIX.append(this.plugin.getMessageService().formatMessage(result));
+            Component component = this.plugin.getMessageService().prefix().append(this.plugin.getMessageService().formatMessage(result));
             throw new CommandException(SpongeComponentSerializer.get().serialize(component));
         }
         return CommandResult.empty();
