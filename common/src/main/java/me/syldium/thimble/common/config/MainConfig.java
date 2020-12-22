@@ -64,7 +64,11 @@ public class MainConfig {
     }
 
     public boolean doesCountFailsInConcurrent() {
-        return this.game.getBool("teleport-at-end", true);
+        return this.game.getBool("count-fails-concurrent", true);
+    }
+
+    public boolean doesSaveStatesInFile() {
+        return this.game.getBool("save-states-in-file", true);
     }
 
     public int getGameInt(@NotNull @NodePath String path, int def) {

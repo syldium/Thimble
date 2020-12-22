@@ -12,6 +12,7 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.entity.ExperienceHolderData;
 import org.spongepowered.api.data.property.block.MatterProperty;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -58,6 +59,12 @@ public class SpongePlayer extends AbstractPlayer<Player> {
     @Override
     public boolean isInWater() {
         return this.getHandle().getLocation().getBlock().getType().equals(BlockTypes.WATER);
+    }
+
+    @Override
+    public void setMiniGameMode() {
+        this.getHandle().offer(Keys.GAME_MODE, GameModes.ADVENTURE);
+        //this.getHandle().getInventory().clear();
     }
 
     @Override

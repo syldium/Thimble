@@ -6,6 +6,7 @@ import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.command.CommandManager;
 import me.syldium.thimble.common.config.ConfigManager;
 import me.syldium.thimble.common.config.MainConfig;
+import me.syldium.thimble.common.config.SavedPlayersManager;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.service.DataService;
 import me.syldium.thimble.common.service.GameServiceImpl;
@@ -14,8 +15,6 @@ import me.syldium.thimble.common.service.MessageServiceImpl;
 import me.syldium.thimble.common.service.StatsServiceImpl;
 import me.syldium.thimble.common.util.Fireworks;
 import me.syldium.thimble.common.util.Task;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,8 +25,6 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public abstract class ThimblePlugin {
-    public static final Component PREFIX = Component.text("Thimble", NamedTextColor.DARK_AQUA)
-            .append(Component.text(" » ", NamedTextColor.DARK_GRAY));
 
     private DataService dataService;
     private GameServiceImpl gameService;
@@ -37,7 +34,7 @@ public abstract class ThimblePlugin {
     public void enable() {
         this.dataService = DataService.fromConfig(this, this.getMainConfig());
         this.gameService = new GameServiceImpl(this);
-        this.messageService = new MessageServiceImpl(this.getMainConfig(), this.getLogger());
+        this.messageService = new MessageServiceImpl(this);
         this.statsService = new StatsServiceImpl(this.dataService, Executors.newSingleThreadExecutor());
         this.gameService.load();
     }
@@ -100,6 +97,8 @@ public abstract class ThimblePlugin {
     public abstract @NotNull PlayerAdapter<?, ?> getPlayerAdapter();
 
     public abstract @NotNull ConfigManager<? extends ThimblePlugin> getConfigManager();
+
+    public abstract @NotNull SavedPlayersManager<?> getSavedPlayersManager();
 
     public abstract void runSync(@NotNull Runnable runnable);
 

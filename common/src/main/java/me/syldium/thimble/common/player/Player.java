@@ -41,4 +41,9 @@ public interface Player extends PlayerAudience, Identified, Identity, Sender {
      * @return Whether the player is in water.
      */
     boolean isInWater();
+
+    /**
+     * Clears the inventory, sets the game mode to adventure...
+     */
+    void setMiniGameMode();
 }

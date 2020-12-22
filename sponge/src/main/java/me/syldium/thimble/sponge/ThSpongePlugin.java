@@ -14,6 +14,7 @@ import me.syldium.thimble.sponge.adapter.SpongeEventAdapter;
 import me.syldium.thimble.sponge.adapter.SpongePlayerAdapter;
 import me.syldium.thimble.sponge.command.SpongeCommandExecutor;
 import me.syldium.thimble.sponge.config.SpongeConfigManager;
+import me.syldium.thimble.sponge.config.SpongeSavedPlayersManager;
 import me.syldium.thimble.sponge.listener.DamageListener;
 import me.syldium.thimble.sponge.listener.RestrictionListener;
 import me.syldium.thimble.sponge.util.LoggerWrapper;
@@ -60,12 +61,10 @@ public class ThSpongePlugin extends ThimblePlugin {
     private PluginContainer container;
 
     private SpongeAudiences audiences;
-
     private SpongeEventAdapter eventAdapter;
-
     private SpongePlayerAdapter playerAdapter;
-
     private SpongeConfigManager configManager;
+    private SpongeSavedPlayersManager savedPlayersManager;
 
     @Inject @DefaultConfig(sharedRoot = true)
     private Path configDir;
@@ -87,6 +86,7 @@ public class ThSpongePlugin extends ThimblePlugin {
         this.commandManager = new SpongeCommandExecutor(this);
         this.game.getCommandManager().register(this, this.commandManager, "thimble", "th");
         this.configManager = new SpongeConfigManager(this);
+        this.savedPlayersManager = new SpongeSavedPlayersManager(this);
 
         this.enable();
 
@@ -154,6 +154,11 @@ public class ThSpongePlugin extends ThimblePlugin {
 
     public @NotNull SpongeConfigManager getConfigManager() {
         return this.configManager;
+    }
+
+    @Override
+    public @NotNull SpongeSavedPlayersManager getSavedPlayersManager() {
+        return this.savedPlayersManager;
     }
 
     @Override

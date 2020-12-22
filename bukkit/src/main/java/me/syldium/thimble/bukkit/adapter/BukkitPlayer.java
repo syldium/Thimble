@@ -6,6 +6,7 @@ import me.syldium.thimble.common.player.AbstractPlayer;
 import me.syldium.thimble.common.world.PoolBlock;
 import me.syldium.thimble.bukkit.world.BukkitPoolBlock;
 import net.kyori.adventure.audience.Audience;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -75,6 +76,12 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
             return this.getHandle().isInWater();
         }
         return this.getHandle().getLocation().getBlock().getType() == Material.WATER;
+    }
+
+    @Override
+    public void setMiniGameMode() {
+        this.getHandle().getInventory().clear();
+        this.getHandle().setGameMode(GameMode.ADVENTURE);
     }
 
     @Override

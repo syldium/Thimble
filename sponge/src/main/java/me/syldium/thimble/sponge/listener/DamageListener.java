@@ -1,6 +1,5 @@
 package me.syldium.thimble.sponge.listener;
 
-import com.flowpowered.math.vector.Vector3d;
 import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.sponge.ThSpongePlugin;
@@ -10,7 +9,7 @@ import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
-import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.event.data.ChangeDataHolderEvent;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
@@ -27,7 +26,7 @@ public class DamageListener {
     }
 
     @Listener
-    public void onPlayerDamage(DamageEntityEvent event, @First Player player, @First EntityDamageSource source) {
+    public void onPlayerDamage(DamageEntityEvent event, @First Player player, @First DamageSource source) {
         Optional<ThimbleGame> optional = this.plugin.getGameService().getGame(player.getUniqueId());
         if (!optional.isPresent()) return;
         event.setCancelled(true);

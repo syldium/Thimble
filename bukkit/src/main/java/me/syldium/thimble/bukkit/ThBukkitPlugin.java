@@ -8,8 +8,10 @@ import me.syldium.thimble.bukkit.adapter.BukkitPlayerAdapter;
 import me.syldium.thimble.bukkit.command.BukkitCommandExecutor;
 import me.syldium.thimble.bukkit.command.PaperCommandExecutor;
 import me.syldium.thimble.bukkit.config.BukkitConfigManager;
+import me.syldium.thimble.bukkit.config.BukkitSavedPlayersManager;
 import me.syldium.thimble.bukkit.hook.PluginHook;
 import me.syldium.thimble.bukkit.listener.DamageListener;
+import me.syldium.thimble.bukkit.listener.PlayerLoginListener;
 import me.syldium.thimble.bukkit.listener.SignInteractListener;
 import me.syldium.thimble.bukkit.listener.RestrictionListener;
 import me.syldium.thimble.bukkit.listener.SignChangeListener;
@@ -45,6 +47,7 @@ public class ThBukkitPlugin extends ThimblePlugin {
     private final BukkitEventAdapter eventAdapter;
     private final BukkitPlayerAdapter playerAdapter;
     private final BukkitConfigManager configManager;
+    private final BukkitSavedPlayersManager savedPlayersManager;
 
     public ThBukkitPlugin(@NotNull ThBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -54,6 +57,7 @@ public class ThBukkitPlugin extends ThimblePlugin {
 
         this.eventAdapter = new BukkitEventAdapter(bootstrap.getServer().getPluginManager());
         this.playerAdapter = new BukkitPlayerAdapter(this, bootstrap, this.audiences);
+        this.savedPlayersManager = new BukkitSavedPlayersManager(this);
 
         ServicesManager servicesManager = bootstrap.getServer().getServicesManager();
         servicesManager.register(GameService.class, this.getGameService(), bootstrap, ServicePriority.High);
@@ -71,6 +75,7 @@ public class ThBukkitPlugin extends ThimblePlugin {
         new SignInteractListener(this, clickable);
         new SignChangeListener(this, clickable);
         new RestrictionListener(this, clickable);
+        new PlayerLoginListener(this);
         new PluginHook(this, bootstrap);
     }
 
@@ -125,6 +130,11 @@ public class ThBukkitPlugin extends ThimblePlugin {
     @Override
     public @NotNull BukkitConfigManager getConfigManager() {
         return this.configManager;
+    }
+
+    @Override
+    public @NotNull BukkitSavedPlayersManager getSavedPlayersManager() {
+        return this.savedPlayersManager;
     }
 
     @Override
