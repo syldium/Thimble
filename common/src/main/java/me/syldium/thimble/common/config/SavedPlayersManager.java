@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -29,22 +28,19 @@ import java.util.concurrent.Executors;
 public abstract class SavedPlayersManager<P> {
 
     private final Map<UUID, SavedPlayer<P>> savedPlayers = new HashMap<>();
-    private final Set<UUID> savesAtStart;
+    private final Set<UUID> pending = new HashSet<>();
     private final @Nullable File saveDirectory;
     private final Executor executor;
 
     public SavedPlayersManager(@NotNull ThimblePlugin plugin) {
         this.saveDirectory = plugin.getMainConfig().doesSaveStatesInFile() ? new File(plugin.getDataFolder(), "saves") : null;
-        if (this.saveDirectory == null) {
-            this.savesAtStart = Collections.emptySet();
-        } else {
+        if (this.saveDirectory != null) {
             this.saveDirectory.mkdirs();
-            this.savesAtStart = new HashSet<>();
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(this.saveDirectory.toPath().toAbsolutePath())) {
                 for (Path path : stream) {
                     if (!Files.isDirectory(path)) {
                         String filename = path.getFileName().toString();
-                        this.savesAtStart.add(UUID.fromString(filename.substring(0, filename.lastIndexOf('.'))));
+                        this.pending.add(UUID.fromString(filename.substring(0, filename.lastIndexOf('.'))));
                     }
                 }
             } catch (IOException | IllegalArgumentException ex) {
@@ -131,12 +127,12 @@ public abstract class SavedPlayersManager<P> {
     }
 
     /**
-     * Returns the set of {@link UUID}s of the saves found at the initialization of the plugin.
+     * Returns the set of {@link UUID}s of the saves that should be reapplied as soon as possible.
      *
      * @return The set.
      */
-    public @NotNull Set<@NotNull UUID> getSavedUUID() {
-        return this.savesAtStart;
+    public @NotNull Set<@NotNull UUID> getPending() {
+        return this.pending;
     }
 
     /**

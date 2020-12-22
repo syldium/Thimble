@@ -59,6 +59,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     protected int timer, messageTimer;
     protected final int countdownTicks;
     protected final int fireworksThimble, fireworksEnd;
+    protected final boolean teleportSpawnAtEnd;
 
     public Game(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
         MainConfig config = plugin.getMainConfig();
@@ -73,6 +74,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.countdownTicks = this.timer;
         this.fireworksThimble = config.getGameInt("fireworks-thimble", 1);
         this.fireworksEnd = config.getGameInt("fireworks-end", 4);
+        this.teleportSpawnAtEnd = config.doesTeleportAtEnd();
 
         this.remainingWaterBlocks = this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null ?
                 Collections.emptySet()
@@ -208,7 +210,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             Player p = this.plugin.getPlayer(player.uuid());
             if (p != null) {
                 this.plugin.getSavedPlayersManager().restore(p);
-                if (this.plugin.getMainConfig().doesTeleportAtEnd()) {
+                if (this.teleportSpawnAtEnd) {
                     p.teleport(this.arena.getSpawnLocation());
                 } else {
                     p.teleport(player.getLastLocation());
@@ -311,15 +313,24 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     @Override
-    public boolean removePlayer(@NotNull UUID player) {
-        if (!this.players.remove(player)) {
+    public boolean removePlayer(@NotNull UUID player, boolean teleport) {
+        InGamePlayer inGamePlayer = this.players.remove(player);
+        if (inGamePlayer == null) {
             return false;
         }
+
         this.plugin.getGameService().setPlayerGame(player, null);
         Player p = this.plugin.getPlayer(player);
         if (p != null) {
             this.players.sendMessage(MessageKey.CHAT_LEFT, Template.of("player", p.name()));
             this.plugin.getSavedPlayersManager().restore(p);
+            if (teleport) {
+                if (this.teleportSpawnAtEnd) {
+                    p.teleport(this.arena.getSpawnLocation());
+                } else {
+                    p.teleport(inGamePlayer.getLastLocation());
+                }
+            }
         }
         this.arena.checkGame();
         return true;

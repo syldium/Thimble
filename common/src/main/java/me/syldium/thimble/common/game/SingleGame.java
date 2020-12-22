@@ -137,8 +137,8 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     }
 
     @Override
-    public boolean removePlayer(@NotNull UUID player) {
-        boolean removed = super.removePlayer(player);
+    public boolean removePlayer(@NotNull UUID player, boolean teleport) {
+        boolean removed = super.removePlayer(player, teleport);
         if (removed && Objects.equals(this.jumper, player)) {
             this.jumper = null;
             Player p = this.plugin.getPlayer(player);

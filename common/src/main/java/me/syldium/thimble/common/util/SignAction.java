@@ -29,7 +29,7 @@ public enum SignAction {
         public void run(@NotNull ThimblePlugin plugin, @NotNull Player player) {
             Optional<ThimbleGame> thimbleGame = plugin.getGameService().getGame(player);
             if (thimbleGame.isPresent()) {
-                thimbleGame.get().removePlayer(player);
+                thimbleGame.get().removePlayer(player.uuid());
             } else {
                 player.sendFeedback(CommandResult.error(MessageKey.FEEDBACK_GAME_NOT_IN_GAME));
             }

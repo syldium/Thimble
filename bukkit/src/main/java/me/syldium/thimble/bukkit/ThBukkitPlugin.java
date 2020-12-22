@@ -11,7 +11,7 @@ import me.syldium.thimble.bukkit.config.BukkitConfigManager;
 import me.syldium.thimble.bukkit.config.BukkitSavedPlayersManager;
 import me.syldium.thimble.bukkit.hook.PluginHook;
 import me.syldium.thimble.bukkit.listener.DamageListener;
-import me.syldium.thimble.bukkit.listener.PlayerLoginListener;
+import me.syldium.thimble.bukkit.listener.BukkitConnectionListener;
 import me.syldium.thimble.bukkit.listener.SignInteractListener;
 import me.syldium.thimble.bukkit.listener.RestrictionListener;
 import me.syldium.thimble.bukkit.listener.SignChangeListener;
@@ -75,7 +75,7 @@ public class ThBukkitPlugin extends ThimblePlugin {
         new SignInteractListener(this, clickable);
         new SignChangeListener(this, clickable);
         new RestrictionListener(this, clickable);
-        new PlayerLoginListener(this);
+        new BukkitConnectionListener(this);
         new PluginHook(this, bootstrap);
     }
 

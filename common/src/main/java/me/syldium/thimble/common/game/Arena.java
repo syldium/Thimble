@@ -154,8 +154,11 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public boolean removePlayer(@NotNull UUID player) {
-        return this.game.removePlayer(player);
+    public boolean removePlayer(@NotNull UUID player, boolean teleport) {
+        if (this.game == null) {
+            return false;
+        }
+        return this.game.removePlayer(player, teleport);
     }
 
     @Override

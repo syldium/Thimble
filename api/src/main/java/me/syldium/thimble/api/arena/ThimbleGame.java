@@ -85,16 +85,28 @@ public interface ThimbleGame {
      * @param player A player uuid.
      * @return If the player has left the game.
      */
-    boolean removePlayer(@NotNull UUID player);
+    default boolean removePlayer(@NotNull UUID player) {
+        return this.removePlayer(player, true);
+    }
+
+    /**
+     * Removes a player from the game.
+     *
+     * @param player A player uuid.
+     * @param teleport {@code true} if the player has to be teleported depending on the arena configuration.
+     * @return If the player has left the game.
+     */
+    boolean removePlayer(@NotNull UUID player, boolean teleport);
 
     /**
      * Removes an {@link Identified} player from the game.
      *
      * @param identified A player.
+     * @param teleport {@code true} if the player has to be teleported depending on the arena configuration.
      * @return If the player has left the game.
      */
-    default boolean removePlayer(@NotNull Identified identified) {
-        return this.removePlayer(identified.identity().uuid());
+    default boolean removePlayer(@NotNull Identified identified, boolean teleport) {
+        return this.removePlayer(identified.identity().uuid(), teleport);
     }
 
     /**

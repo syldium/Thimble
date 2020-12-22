@@ -40,8 +40,8 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements P
         return this.get(player.uuid());
     }
 
-    public boolean remove(@NotNull UUID uuid) {
-        boolean removed = this.remove((Object) uuid) != null;
+    public E remove(@NotNull UUID uuid) {
+        E removed = this.remove((Object) uuid);
         Player player = this.plugin.getPlayer(uuid);
         if (player != null) {
             this.media.hide(player);

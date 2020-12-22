@@ -17,6 +17,7 @@ import me.syldium.thimble.sponge.config.SpongeConfigManager;
 import me.syldium.thimble.sponge.config.SpongeSavedPlayersManager;
 import me.syldium.thimble.sponge.listener.DamageListener;
 import me.syldium.thimble.sponge.listener.RestrictionListener;
+import me.syldium.thimble.sponge.listener.SpongeConnectionListener;
 import me.syldium.thimble.sponge.util.LoggerWrapper;
 import me.syldium.thimble.sponge.util.SpongeFireworks;
 import me.syldium.thimble.sponge.util.SpongeTask;
@@ -97,6 +98,7 @@ public class ThSpongePlugin extends ThimblePlugin {
 
         new DamageListener(this);
         new RestrictionListener(this);
+        new SpongeConnectionListener(this);
     }
 
     @Listener

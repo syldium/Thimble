@@ -107,8 +107,8 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
     }
 
     @Override
-    public boolean removePlayer(@NotNull UUID player) {
-        boolean removed = super.removePlayer(player);
+    public boolean removePlayer(@NotNull UUID player, boolean teleport) {
+        boolean removed = super.removePlayer(player, teleport);
         if (removed) {
             Player p = this.plugin.getPlayer(player);
             if (p != null) {
