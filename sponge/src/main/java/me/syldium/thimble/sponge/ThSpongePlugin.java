@@ -39,6 +39,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.service.ServiceManager;
 
 import java.io.File;
@@ -46,7 +47,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 @Plugin(
         id = "thimble",
@@ -67,6 +70,7 @@ public class ThSpongePlugin extends ThimblePlugin {
     private SpongePlayerAdapter playerAdapter;
     private SpongeConfigManager configManager;
     private SpongeSavedPlayersManager savedPlayersManager;
+    private SpongeExecutorService syncExecutor;
 
     @Inject @DefaultConfig(sharedRoot = true)
     private Path configDir;
@@ -89,6 +93,7 @@ public class ThSpongePlugin extends ThimblePlugin {
         this.game.getCommandManager().register(this, this.commandManager, "thimble", "th");
         this.configManager = new SpongeConfigManager(this);
         this.savedPlayersManager = new SpongeSavedPlayersManager(this);
+        this.syncExecutor = this.game.getScheduler().createSyncExecutor(this.container);
 
         this.enable();
 
@@ -168,6 +173,11 @@ public class ThSpongePlugin extends ThimblePlugin {
     @Override
     public void runSync(@NotNull Runnable runnable) {
         this.game.getScheduler().createTaskBuilder().execute(runnable).submit(this);
+    }
+
+    @Override
+    public <T> @NotNull CompletableFuture<T> runSync(@NotNull Supplier<T> supplier) {
+        return CompletableFuture.supplyAsync(supplier, this.syncExecutor);
     }
 
     public void sendFeedback(@NotNull org.spongepowered.api.entity.living.player.Player spongePlayer, @NotNull CommandResult result) {

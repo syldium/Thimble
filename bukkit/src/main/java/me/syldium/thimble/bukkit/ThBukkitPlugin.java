@@ -38,6 +38,8 @@ import java.io.File;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 public class ThBukkitPlugin extends ThimblePlugin {
@@ -142,6 +144,13 @@ public class ThBukkitPlugin extends ThimblePlugin {
     @Override
     public void runSync(@NotNull Runnable runnable) {
         this.bootstrap.getServer().getScheduler().runTask(this.bootstrap, runnable);
+    }
+
+    @Override
+    public @NotNull <T> CompletableFuture<T> runSync(@NotNull Supplier<T> supplier) {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        this.bootstrap.getServer().getScheduler().runTask(this.bootstrap, () -> future.complete(supplier.get()));
+        return future;
     }
 
     public void registerEvents(@NotNull Listener listener) {

@@ -21,7 +21,9 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 public abstract class ThimblePlugin {
@@ -101,6 +103,8 @@ public abstract class ThimblePlugin {
     public abstract @NotNull SavedPlayersManager<?> getSavedPlayersManager();
 
     public abstract void runSync(@NotNull Runnable runnable);
+
+    public abstract <T> @NotNull CompletableFuture<T> runSync(@NotNull Supplier<T> supplier);
 
     public @NotNull MainConfig getMainConfig() {
         return this.getConfigManager().getMainConfig();

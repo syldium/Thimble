@@ -1,5 +1,6 @@
 package me.syldium.thimble.common.game;
 
+import me.syldium.thimble.api.player.ThimblePlayerStats;
 import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.arena.ThimbleGameState;
@@ -29,7 +30,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -283,7 +284,17 @@ public abstract class Game implements ThimbleGame, Runnable {
 
     @Override
     public @NotNull CompletableFuture<Boolean> addPlayer(@NotNull UUID uuid) {
-        return this.addPlayer(Objects.requireNonNull(this.plugin.getPlayer(uuid), "Player is offline."));
+        if (this.players.contains(uuid)) {
+            return CompletableFuture.completedFuture(false);
+        }
+        Player player = this.plugin.getPlayer(uuid);
+        if (player == null) {
+            throw new IllegalArgumentException("Player is offline.");
+        }
+        if (this.plugin.getEventAdapter().callPlayerJoinArenaEvent(this, player)) {
+            return CompletableFuture.completedFuture(false);
+        }
+        return this.getStatisticsToJoin(uuid);
     }
 
     public @NotNull CompletableFuture<Boolean> addPlayer(@NotNull Player player) {
@@ -293,28 +304,52 @@ public abstract class Game implements ThimbleGame, Runnable {
         if (this.plugin.getEventAdapter().callPlayerJoinArenaEvent(this, player)) {
             return CompletableFuture.completedFuture(false);
         }
+        return this.getStatisticsToJoin(player.uuid());
+    }
 
-        return this.plugin.getStatsService().getPlayerStatistics(player.uuid())
-                .thenApply(optional -> {
-                    BlockData block = this.plugin.getPlayerAdapter().getRandomBlock();
-                    InGamePlayer inGamePlayer = optional
-                            .map(stats -> new InGamePlayer(player, stats, block, this))
-                            .orElseGet(() -> new InGamePlayer(player, block, this));
-                    if (this.players.add(inGamePlayer)) {
-                        this.plugin.getGameService().setPlayerGame(player.uuid(), this);
-                        this.players.sendMessage(MessageKey.CHAT_JOINED, p -> !p.uuid().equals(player.uuid()), Template.of("player", player.name()));
-                        this.plugin.runSync(() -> {
-                            this.plugin.getSavedPlayersManager().save(player);
-                            player.setMiniGameMode();
-                            player.teleport(this.arena.getSpawnLocation());
-                        });
-                        return true;
-                    }
-                    return false;
-                }).exceptionally(throwable -> {
+    private @NotNull CompletableFuture<Boolean> getStatisticsToJoin(@NotNull UUID uuid) {
+        return this.plugin.getStatsService().getPlayerStatistics(uuid)
+                .thenCompose(optional -> this.plugin.runSync(() -> this.addPlayer(uuid, optional)))
+                .exceptionally(throwable -> {
                     this.plugin.getLogger().log(Level.SEVERE, "Exception when adding the player to the arena.", throwable.getCause());
                     return null;
                 });
+    }
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private boolean addPlayer(@NotNull UUID uuid, @NotNull Optional<ThimblePlayerStats> statsOpt) {
+        Player player = this.plugin.getPlayer(uuid);
+        if (player == null) {
+            return false;
+        }
+
+        BlockData block = this.plugin.getPlayerAdapter().getRandomBlock();
+        InGamePlayer inGamePlayer = statsOpt
+                .map(stats -> new InGamePlayer(player, stats, block, this))
+                .orElseGet(() -> new InGamePlayer(player, block, this));
+
+        if (this.players.add(inGamePlayer)) {
+            this.plugin.getGameService().setPlayerGame(player.uuid(), this);
+
+            this.players.sendMessage(
+                MessageKey.CHAT_JOINED,
+                p -> {
+                    if (!p.uuid().equals(player.uuid())) {
+                        return false;
+                    }
+                    return player.isVanished() && p.isVanished() || !player.isVanished();
+                },
+                Template.of("player", player.name())
+            );
+
+            if (!player.isVanished()) {
+                this.plugin.getSavedPlayersManager().save(player);
+                player.setMiniGameMode();
+            }
+            player.teleport(this.arena.getSpawnLocation());
+            return true;
+        }
+        return false;
     }
 
     @Override
