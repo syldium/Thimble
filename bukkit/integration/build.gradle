@@ -12,6 +12,15 @@ dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.10.9'
     compileOnly 'com.alessiodp.parties:parties-api:2.6.16'
-    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.5-SNAPSHOT'
-    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+    compileOnly ('com.sk89q.worldguard:worldguard-bukkit:7.0.5-SNAPSHOT') {
+        exclude(module: 'spigot-api')
+    }
+    compileOnly ('com.github.MilkBowl:VaultAPI:1.7') {
+        exclude(module: 'bukkit')
+    }
+    compileOnly ('com.github.MyzelYam:SuperVanish:6.1.8') {
+        exclude(module: 'MVdWPlaceholderAPI')
+        exclude(module: 'ProtocolLib-API')
+        exclude(module: 'citizensapi')
+    }
 }

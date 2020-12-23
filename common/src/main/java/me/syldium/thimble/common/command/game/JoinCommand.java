@@ -1,5 +1,6 @@
 package me.syldium.thimble.common.command.game;
 
+import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.abstraction.ChildCommand;
 import me.syldium.thimble.common.command.abstraction.CommandException;
@@ -13,6 +14,8 @@ import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class JoinCommand extends ChildCommand.One<Arena> {
 
     public JoinCommand() {
@@ -24,6 +27,10 @@ public class JoinCommand extends ChildCommand.One<Arena> {
     public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull Arena arena) throws CommandException {
         if (!arena.isSetup()) {
             throw new CommandException(MessageKey.FEEDBACK_ARENA_NOT_CONFIGURED);
+        }
+        Optional<ThimbleGame> game = arena.getGame();
+        if (game.isPresent() && game.get().size() >= arena.getMaxPlayers() && !((Player) sender).isVanished()) {
+            throw new CommandException(MessageKey.FEEDBACK_GAME_FULL);
         }
         arena.addPlayer((Player) sender);
         return CommandResult.success(MessageKey.FEEDBACK_GAME_JOINED);

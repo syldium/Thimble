@@ -13,6 +13,7 @@ import me.syldium.thimble.common.service.GameServiceImpl;
 import me.syldium.thimble.common.service.MessageService;
 import me.syldium.thimble.common.service.MessageServiceImpl;
 import me.syldium.thimble.common.service.StatsServiceImpl;
+import me.syldium.thimble.common.service.VanishService;
 import me.syldium.thimble.common.util.Fireworks;
 import me.syldium.thimble.common.util.Task;
 import org.jetbrains.annotations.NotNull;
@@ -90,6 +91,10 @@ public abstract class ThimblePlugin {
 
     public @NotNull StatsServiceImpl getStatsService() {
         return this.statsService;
+    }
+
+    public @NotNull VanishService getVanishService() {
+        return VanishService.DUMMY_SERVICE;
     }
 
     public abstract @Nullable Player getPlayer(@NotNull UUID uuid);

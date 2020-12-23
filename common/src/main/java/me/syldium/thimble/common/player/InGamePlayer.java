@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class InGamePlayer extends PlayerStats implements ThimblePlayer {
 
     private boolean spectator = false;
+    private final boolean vanished;
     private final Game game;
     private final Location lastLocation;
     private BlockData block;
@@ -20,6 +21,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
         this.block = block;
         this.game = game;
         this.lastLocation = player.getLocation();
+        this.vanished = player.isVanished();
     }
 
     public InGamePlayer(@NotNull Player player, @NotNull BlockData block, @NotNull Game game) {
@@ -27,6 +29,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
         this.block = block;
         this.game = game;
         this.lastLocation = player.getLocation();
+        this.vanished = player.isVanished();
     }
 
     @Override
@@ -46,7 +49,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
 
     @Override
     public boolean isVanished() {
-        return false;
+        return this.vanished;
     }
 
     @Override

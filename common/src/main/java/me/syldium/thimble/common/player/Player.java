@@ -51,4 +51,11 @@ public interface Player extends PlayerAudience, Identified, Identity, Sender {
      * Puts the player in spectator mode.
      */
     void spectate();
+
+    /**
+     * Returns if the player is invisible.
+     *
+     * @return {@code true} if the player is invisible, {@code false} otherwise.
+     */
+    boolean isVanished();
 }
