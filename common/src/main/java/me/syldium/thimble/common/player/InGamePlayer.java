@@ -9,10 +9,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class InGamePlayer extends PlayerStats implements ThimblePlayer {
 
+    private boolean spectator = false;
     private final Game game;
     private final Location lastLocation;
     private BlockData block;
-    protected int lifes = 1;
+    private int points = 1;
 
     public InGamePlayer(@NotNull Player player, @NotNull ThimblePlayerStats stats, @NotNull BlockData block, @NotNull Game game) {
         super(stats.uuid(), stats.name(), stats.getWins(), stats.getLosses(), stats.getJumps(), stats.getFailedJumps(), stats.getThimbles());
@@ -30,12 +31,27 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
 
     @Override
     public int getPoints() {
-        return this.lifes;
+        return this.points;
     }
 
     @Override
     public boolean isSpectator() {
+        return this.spectator;
+    }
+
+    @Override
+    public void setSpectator(boolean spectator) {
+        this.spectator = spectator;
+    }
+
+    @Override
+    public boolean isVanished() {
         return false;
+    }
+
+    @Override
+    public boolean isJumping() {
+        return this.game.isJumping(this.uuid());
     }
 
     @Override
@@ -43,12 +59,14 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
         return this.game;
     }
 
-    public void incrementLifes() {
-        this.lifes++;
+    public void incrementPoints() {
+        this.points++;
     }
 
-    public void decrementLifes() {
-        this.lifes--;
+    public void decrementPoints() {
+        if (--this.points < 1) {
+            this.spectator = true;
+        }
     }
 
     public @NotNull BlockData getChosenBlock() {

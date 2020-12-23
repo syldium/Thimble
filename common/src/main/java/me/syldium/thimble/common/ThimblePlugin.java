@@ -102,7 +102,7 @@ public abstract class ThimblePlugin {
 
     public abstract void runSync(@NotNull Runnable runnable);
 
-    public MainConfig getMainConfig() {
+    public @NotNull MainConfig getMainConfig() {
         return this.getConfigManager().getMainConfig();
     }
 }

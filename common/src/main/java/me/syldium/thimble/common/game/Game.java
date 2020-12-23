@@ -59,7 +59,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     protected int timer, messageTimer;
     protected final int countdownTicks;
     protected final int fireworksThimble, fireworksEnd;
-    protected final boolean teleportSpawnAtEnd;
+    protected final boolean spectatorMode, teleportSpawnAtEnd;
 
     public Game(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
         MainConfig config = plugin.getMainConfig();
@@ -72,9 +72,10 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.jumperMedia = TimedMedia.from(plugin.getMainConfig(), "jump");
 
         this.countdownTicks = this.timer;
-        this.fireworksThimble = config.getGameInt("fireworks-thimble", 1);
-        this.fireworksEnd = config.getGameInt("fireworks-end", 4);
-        this.teleportSpawnAtEnd = config.doesTeleportAtEnd();
+        this.fireworksThimble = config.getGameNode().getInt("fireworks-thimble", 1);
+        this.fireworksEnd = config.getGameNode().getInt("fireworks-end", 4);
+        this.spectatorMode = config.getGameNode().getBool("spectator-mode", true);
+        this.teleportSpawnAtEnd = config.getGameNode().getBool("teleport-at-end", false);
 
         this.remainingWaterBlocks = this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null ?
                 Collections.emptySet()
@@ -155,7 +156,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     protected @Nullable InGamePlayer getFirstPlayer() {
         Comparator<InGamePlayer> comparator = Comparator.comparingInt(InGamePlayer::getPoints);
         return this.players.stream()
-                .filter(player -> !player.isSpectator())
+                .filter(player -> !player.isVanished())
                 .max(comparator)
                 .orElse(null);
     }
@@ -198,6 +199,8 @@ public abstract class Game implements ThimbleGame, Runnable {
         }
 
         for (InGamePlayer player : this.players) {
+            if (player.isVanished()) continue;
+
             if (player.equals(latest)) {
                 player.incrementWins();
             } else {
@@ -215,6 +218,8 @@ public abstract class Game implements ThimbleGame, Runnable {
                 } else {
                     p.teleport(player.getLastLocation());
                 }
+            } else {
+                this.plugin.getSavedPlayersManager().getPending().add(player.uuid());
             }
         }
 
@@ -250,7 +255,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     public @NotNull Set<ThimblePlayer> getAlivePlayers() {
         Set<ThimblePlayer> players = new HashSet<>(Math.min(10, this.players.size()));
         for (ThimblePlayer player : this.players) {
-            if (player.getPoints() > 0 && !player.isSpectator()) {
+            if (player.getPoints() > 0 && !player.isSpectator() && !player.isVanished()) {
                 players.add(player);
             }
         }
@@ -357,6 +362,18 @@ public abstract class Game implements ThimbleGame, Runnable {
             throw new IllegalStateException("The pool dimensions have not been defined.");
         }
         return this.remainingWaterBlocks.size();
+    }
+
+    public void spectate(@NotNull ThimblePlayer inGamePlayer, @NotNull UUID playerUniqueId) {
+        Player player = this.plugin.getPlayer(playerUniqueId);
+        if (player == null) {
+            return;
+        }
+
+        if (this.spectatorMode && inGamePlayer.isSpectator()) {
+            player.spectate();
+        }
+        player.teleport(this.arena.getWaitLocation());
     }
 
     void cancel() {

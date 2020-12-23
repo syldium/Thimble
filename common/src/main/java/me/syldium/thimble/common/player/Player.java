@@ -46,4 +46,9 @@ public interface Player extends PlayerAudience, Identified, Identity, Sender {
      * Clears the inventory, sets the game mode to adventure...
      */
     void setMiniGameMode();
+
+    /**
+     * Puts the player in spectator mode.
+     */
+    void spectate();
 }

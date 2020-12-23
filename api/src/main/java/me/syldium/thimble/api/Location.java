@@ -4,6 +4,7 @@ import me.syldium.thimble.api.util.BlockVector;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -89,16 +90,54 @@ public class Location {
         return this.asBlockPosition().asTemplates();
     }
 
+    /**
+     * Returns the block position to this location.
+     *
+     * @return A new block vector.
+     */
     public @NotNull BlockVector asBlockPosition() {
         return new BlockVector((int) Math.floor(this.x), (int) Math.floor(this.y), (int) Math.floor(this.z));
     }
 
+    /**
+     * Increases the y-coordinate of this location.
+     *
+     * @param distance The distance to add.
+     * @return A new location, or this if {@code distance = 0}
+     */
     public @NotNull Location up(int distance) {
         return distance == 0 ? this : new Location(this.world, this.x, this.y + distance, this.z, this.pitch, this.yaw);
     }
 
     public @NotNull Location down(int distance) {
         return this.up(-distance);
+    }
+
+    /**
+     * Gets the squared distance between this location and another.
+     *
+     * @param other The other location.
+     * @return The distance.
+     */
+    public double distanceSquared(@NotNull Location other) {
+        if (!Objects.equals(this.world, other.world)) {
+            throw new IllegalArgumentException("Cannot determine the distance between two different worlds!");
+        }
+        return square(this.x - other.x) + square(this.y - other.y) + square(this.z - other.z);
+    }
+
+    /**
+     * Gets the squared distance between this location and a block vector.
+     *
+     * @param vector The block vector.
+     * @return The distance.
+     */
+    public double distanceSquared(@NotNull BlockVector vector) {
+        return square(this.x - vector.getX()) + square(this.y - vector.getY()) + square(this.z - vector.getZ());
+    }
+
+    public double horizontalDistanceSquared(@NotNull BlockVector vector) {
+        return square(this.x - vector.getX()) + square(this.z - vector.getZ());
     }
 
     @Override
@@ -132,5 +171,9 @@ public class Location {
 
     private static int hash(float value) {
         return Float.floatToIntBits(value * 663608941.737f);
+    }
+
+    private static double square(double x) {
+        return x * x;
     }
 }

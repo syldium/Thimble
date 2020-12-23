@@ -10,6 +10,7 @@ import me.syldium.thimble.bukkit.command.PaperCommandExecutor;
 import me.syldium.thimble.bukkit.config.BukkitConfigManager;
 import me.syldium.thimble.bukkit.config.BukkitSavedPlayersManager;
 import me.syldium.thimble.bukkit.hook.PluginHook;
+import me.syldium.thimble.bukkit.listener.BukkitMoveListener;
 import me.syldium.thimble.bukkit.listener.DamageListener;
 import me.syldium.thimble.bukkit.listener.BukkitConnectionListener;
 import me.syldium.thimble.bukkit.listener.SignInteractListener;
@@ -76,6 +77,7 @@ public class ThBukkitPlugin extends ThimblePlugin {
         new SignChangeListener(this, clickable);
         new RestrictionListener(this, clickable);
         new BukkitConnectionListener(this);
+        new BukkitMoveListener(this);
         new PluginHook(this, bootstrap);
     }
 

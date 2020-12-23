@@ -17,6 +17,7 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.entity.Transform;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
@@ -106,6 +107,22 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     @Override
     public me.syldium.thimble.api.@NotNull Location asAbstractLocation(@NotNull Location<World> location) {
         return this.asAbstractLocation(location, Vector3d.ZERO);
+    }
+
+    public me.syldium.thimble.api.@NotNull Location asAbstractLocation(@NotNull Transform<World> transform) {
+        Optional<World> world = this.plugin.getServer().getWorld(transform.getExtent().getUniqueId());
+        return new me.syldium.thimble.api.Location(
+                world.orElseThrow(() -> new RuntimeException("A world was expected here.")).getUniqueId(),
+                transform.getPosition().getX(),
+                transform.getPosition().getY(),
+                transform.getPosition().getZ(),
+                (float) transform.getPitch(),
+                (float) transform.getYaw()
+        );
+    }
+
+    public @NotNull BlockVector asBlockVector(@NotNull Vector3d position) {
+        return new BlockVector(position.getFloorX(), position.getFloorY(), position.getFloorZ());
     }
 
     @Override

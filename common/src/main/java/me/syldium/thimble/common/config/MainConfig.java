@@ -59,16 +59,8 @@ public class MainConfig {
         return this.storage.getString("password");
     }
 
-    public boolean doesTeleportAtEnd() {
-        return this.game.getBool("teleport-at-end", true);
-    }
-
-    public boolean doesCountFailsInConcurrent() {
-        return this.game.getBool("count-fails-concurrent", true);
-    }
-
-    public boolean doesSaveStatesInFile() {
-        return this.game.getBool("save-states-in-file", true);
+    public @NotNull ConfigNode getGameNode() {
+        return this.game;
     }
 
     public int getGameInt(@NotNull @NodePath String path, int def) {

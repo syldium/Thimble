@@ -116,6 +116,10 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
         );
     }
 
+    public @NotNull BlockVector asBlockVector(@NotNull Location location) {
+        return new BlockVector(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+    }
+
     @Override
     public void openBlockSelectionInventory(@NotNull org.bukkit.entity.Player player, @NotNull InGamePlayer inGamePlayer) {
         this.inventory.open(player, inGamePlayer);

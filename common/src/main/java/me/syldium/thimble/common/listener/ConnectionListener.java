@@ -1,8 +1,10 @@
 package me.syldium.thimble.common.listener;
 
 import me.syldium.thimble.api.arena.ThimbleGame;
+import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.config.SavedPlayer;
+import me.syldium.thimble.common.game.Game;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -11,6 +13,7 @@ import java.util.UUID;
 public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> {
 
     protected final Plugin plugin;
+    private final boolean quitOnDisconnect;
 
     public ConnectionListener(@NotNull Plugin plugin) {
         this.plugin = plugin;
@@ -18,10 +21,17 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> {
         if (savesSize > 0) {
             plugin.getLogger().info("Found " + savesSize + " player save(s).");
         }
+        this.quitOnDisconnect = plugin.getMainConfig().getGameNode().getBool("quit-game-on-disconnect", false);
     }
 
     @SuppressWarnings("unchecked")
     public final void onJoin(@NotNull UUID playerUniqueId) {
+        Optional<ThimblePlayer> inGamePlayerOpt = this.plugin.getGameService().getInGamePlayer(playerUniqueId);
+        if (inGamePlayerOpt.isPresent()) {
+            ((Game) inGamePlayerOpt.get().getGame()).spectate(inGamePlayerOpt.get(), playerUniqueId);
+            return;
+        }
+
         if (!this.plugin.getSavedPlayersManager().getPending().contains(playerUniqueId)) {
             return;
         }
@@ -36,10 +46,8 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> {
         if (!optional.isPresent()) return;
         ThimbleGame game = optional.get();
 
-        if (game.getState().acceptPlayers()) {
+        if (this.quitOnDisconnect || game.getState().acceptPlayers()) {
             game.removePlayer(playerUniqueId);
-        } else {
-            this.plugin.getSavedPlayersManager().getPending().add(playerUniqueId);
         }
     }
 

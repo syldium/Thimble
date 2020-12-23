@@ -85,6 +85,11 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     }
 
     @Override
+    public void spectate() {
+        this.getHandle().setGameMode(GameMode.SPECTATOR);
+    }
+
+    @Override
     public void sendExperienceChange(float percent, int level) {
         this.getHandle().sendExperienceChange(percent, level);
     }

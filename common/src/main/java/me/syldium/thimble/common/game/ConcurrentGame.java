@@ -23,15 +23,15 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
 
     public ConcurrentGame(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
         super(plugin, arena);
-        this.countFails = plugin.getMainConfig().doesCountFailsInConcurrent();
-        this.jumpTicks = plugin.getMainConfig().getGameInt("jump-time-concurrent", 40) * Ticks.TICKS_PER_SECOND;
+        this.countFails = plugin.getMainConfig().getGameNode().getBool("count-fails-concurrent", true);
+        this.jumpTicks = plugin.getMainConfig().getGameNode().getInt("jump-time-concurrent", 40) * Ticks.TICKS_PER_SECOND;
     }
 
     @Override
     protected void onCountdownEnd() {
         this.timer = this.jumpTicks;
         for (InGamePlayer inGamePlayer : this.players) {
-            if (inGamePlayer.isSpectator()) continue;
+            if (inGamePlayer.isVanished()) continue;
             Player player = this.plugin.getPlayer(inGamePlayer.uuid());
             if (player == null) continue;
             player.teleport(this.arena.getJumpLocation());
@@ -65,13 +65,13 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
     protected void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
             if (this.countFails) {
-                inGamePlayer.decrementLifes();
+                inGamePlayer.decrementPoints();
             }
             inGamePlayer.incrementFailedJumps();
         } else {
             inGamePlayer.incrementJumps();
             if (verdict == JumpVerdict.THIMBLE) {
-                inGamePlayer.incrementLifes();
+                inGamePlayer.incrementPoints();
                 inGamePlayer.incrementThimbles();
                 this.players.sendMessage(MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
             }
@@ -79,7 +79,16 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
 
         if (player != null) {
             this.sendJumpMessage(player, inGamePlayer, verdict);
-            player.teleport(this.arena.getJumpLocation());
+            if (inGamePlayer.isSpectator()) {
+                this.players.sendMessage(MessageKey.CHAT_ELIMINATED, Template.of("player", inGamePlayer.name()));
+                if (this.spectatorMode) {
+                    player.spectate();
+                } else {
+                    player.teleport(this.arena.getWaitLocation());
+                }
+            } else {
+                player.teleport(this.arena.getJumpLocation());
+            }
         }
     }
 
@@ -103,7 +112,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             return false;
         }
         InGamePlayer player = this.players.get(playerUUID);
-        return player != null && !player.isSpectator();
+        return player != null && !player.isSpectator() && !player.isVanished();
     }
 
     @Override

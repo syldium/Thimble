@@ -33,7 +33,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     @Override
     protected void onCountdownEnd() {
         for (InGamePlayer player : this.players) {
-            if (!player.isSpectator()) {
+            if (!player.isSpectator() && !player.isVanished()) {
                 this.queue.add(player.uuid());
             }
             if (this.queue.size() != 1) {
@@ -58,10 +58,13 @@ public class SingleGame extends Game implements ThimbleSingleGame {
                 this.state = ThimbleGameState.END;
                 return;
             }
-            Player player = this.plugin.getPlayer(this.queue.poll());
-            if (player != null) {
+
+            this.jumper = this.queue.poll();
+            Player player = this.plugin.getPlayer(this.jumper);
+            if (player == null) {
+                this.onJump(null, this.players.get(this.jumper), JumpVerdict.MISSED);
+            } else {
                 player.teleport(this.arena.getJumpLocation());
-                this.jumper = player.uuid();
             }
             return;
         }
@@ -93,12 +96,12 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     @Override
     protected void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
-            inGamePlayer.decrementLifes();
+            inGamePlayer.decrementPoints();
             inGamePlayer.incrementFailedJumps();
         } else {
             inGamePlayer.incrementJumps();
             if (verdict == JumpVerdict.THIMBLE) {
-                inGamePlayer.incrementLifes();
+                inGamePlayer.incrementPoints();
                 inGamePlayer.incrementThimbles();
                 this.players.sendMessage(MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
             }
@@ -107,17 +110,21 @@ public class SingleGame extends Game implements ThimbleSingleGame {
         if (player != null) {
             this.jumperMedia.hide(player);
             this.sendJumpMessage(player, inGamePlayer, verdict);
-            player.teleport(this.arena.getWaitLocation());
+            if (this.spectatorMode && inGamePlayer.isSpectator()) {
+                player.spectate();
+            } else {
+                player.teleport(this.arena.getWaitLocation());
+            }
         }
 
         this.jumper = null;
-        if (inGamePlayer.getPoints() > 0) {
-            this.queue.offer(inGamePlayer.uuid());
-        } else {
+        if (inGamePlayer.isSpectator()) {
             this.players.sendMessage(MessageKey.CHAT_ELIMINATED, Template.of("player", inGamePlayer.name()));
             if (this.queue.size() < 2) {
                 this.end(inGamePlayer);
             }
+        } else {
+            this.queue.offer(inGamePlayer.uuid());
         }
     }
 

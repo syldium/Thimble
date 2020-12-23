@@ -33,7 +33,7 @@ public abstract class SavedPlayersManager<P> {
     private final Executor executor;
 
     public SavedPlayersManager(@NotNull ThimblePlugin plugin) {
-        this.saveDirectory = plugin.getMainConfig().doesSaveStatesInFile() ? new File(plugin.getDataFolder(), "saves") : null;
+        this.saveDirectory = plugin.getMainConfig().getGameNode().getBool("save-states-in-file", true) ? new File(plugin.getDataFolder(), "saves") : null;
         if (this.saveDirectory != null) {
             this.saveDirectory.mkdirs();
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(this.saveDirectory.toPath().toAbsolutePath())) {

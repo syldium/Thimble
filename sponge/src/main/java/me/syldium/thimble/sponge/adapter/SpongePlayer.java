@@ -68,6 +68,11 @@ public class SpongePlayer extends AbstractPlayer<Player> {
     }
 
     @Override
+    public void spectate() {
+        this.getHandle().offer(Keys.GAME_MODE, GameModes.SPECTATOR);
+    }
+
+    @Override
     public void sendExperienceChange(float percent, int level) {
         Optional<ExperienceHolderData> optional = this.getHandle().get(ExperienceHolderData.class);
         if (optional.isPresent()) {

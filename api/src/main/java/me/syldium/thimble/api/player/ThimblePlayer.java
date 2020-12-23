@@ -16,11 +16,34 @@ public interface ThimblePlayer extends ThimblePlayerStats {
     /**
      * Returns {@code true} if the player is a game spectator.
      *
-     * <p>The spectator status is defined at the beginning of the game and does not change during the game.</p>
-     *
      * @return If so.
      */
     boolean isSpectator();
+
+    /**
+     * Sets the player as a spectator of the game.
+     *
+     * <p>Spectators should not jump in the pool.</p>
+     *
+     * @param spectator {@code true} if he spectate.
+     */
+    void setSpectator(boolean spectator);
+
+    /**
+     * Returns {@code true} if the player is vanished.
+     *
+     * <p>A vanished player is not necessarily a spectator. If this player is invisible, he shouldn't appear in messages.</p>
+     *
+     * @return If so.
+     */
+    boolean isVanished();
+
+    /**
+     * Returns {@code true} if the player is jumping.
+     *
+     * @return If so.
+     */
+    boolean isJumping();
 
     /**
      * Gets the game the player is in.

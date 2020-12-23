@@ -48,7 +48,7 @@ public interface ThimbleGame {
     boolean canStart();
 
     /**
-     * Gets a {@link Set} of players still alive and not spectators.
+     * Gets a {@link Set} of players still alive and not spectators/vanished.
      *
      * @return An immutable set.
      */
@@ -56,6 +56,8 @@ public interface ThimbleGame {
 
     /**
      * Gets a set of players.
+     *
+     * <p>This set may contain spectator or vanished players.</p>
      *
      * @return An immutable set.
      */

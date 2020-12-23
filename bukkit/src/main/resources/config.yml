@@ -14,6 +14,7 @@ storage:
   username: thimble
   password: password
 
+# Enabled integrations with other plugins.
 integrations:
  - Parties
  - PlaceholderAPI
@@ -46,6 +47,15 @@ game:
   # If enabled, the plugin will consider that teleporting out of the arena makes you quit the game.
   # If the cause of the teleportation is "COMMAND" then the player will always leave the arena.
   leave-arena-when-tp: true
+
+  # If enabled, when a player leaves the server, he also leaves the game.
+  quit-game-on-disconnect: false
+
+  # When a player loses, his game mode is set to spectator.
+  spectator-mode: true
+
+  # Set the maximum distance (x and z coordinates) that spectators can have from the waiting location.
+  max-spectator-distance: 40
 
 # The countdown display.
 display:
