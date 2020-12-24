@@ -24,6 +24,7 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
 
     private static final boolean IN_WATER_METHOD;
     private static final boolean TELEPORT_ASYNC;
+    private static final boolean SEND_EXPERIENCE_CHANGE;
 
     static {
         boolean hasInWater = false;
@@ -38,6 +39,12 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
             teleportAsync = true;
         } catch (NoSuchMethodException ignored) { }
         TELEPORT_ASYNC = teleportAsync;
+        boolean sendExperienceChange = false;
+        try {
+            Player.class.getMethod("sendExperienceChange", float.class, int.class);
+            sendExperienceChange = true;
+        } catch (NoSuchMethodException ignored) { }
+        SEND_EXPERIENCE_CHANGE = sendExperienceChange;
     }
 
     private final BukkitPlayerAdapter platform;
@@ -92,7 +99,12 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
 
     @Override
     public void sendExperienceChange(float percent, int level) {
-        this.getHandle().sendExperienceChange(percent, level);
+        if (SEND_EXPERIENCE_CHANGE) {
+            this.getHandle().sendExperienceChange(percent, level);
+            return;
+        }
+        this.getHandle().setLevel(level);
+        this.getHandle().setExp(percent);
     }
 
     @Override
