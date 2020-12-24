@@ -21,7 +21,6 @@ import me.syldium.thimble.bukkit.util.BukkitUtil;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.Player;
-import me.syldium.thimble.common.service.VanishService;
 import me.syldium.thimble.common.util.Fireworks;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.bukkit.util.BukkitTask;
@@ -108,11 +107,6 @@ public class ThBukkitPlugin extends ThimblePlugin {
     @Override
     public @NotNull BukkitCommandExecutor getCommandManager() {
         return this.commandExecutor;
-    }
-
-    @Override
-    public @NotNull VanishService getVanishService() {
-        return this.hooks.getVanishService();
     }
 
     @Override

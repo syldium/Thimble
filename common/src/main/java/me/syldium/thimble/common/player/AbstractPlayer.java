@@ -16,9 +16,4 @@ public abstract class AbstractPlayer<P> extends AbstractSender<P> implements Pla
     public @NotNull Identity identity() {
         return Identity.identity(this.uuid());
     }
-
-    @Override
-    public boolean isVanished() {
-        return this.getPlugin().getVanishService().isVanished(this.uuid());
-    }
 }

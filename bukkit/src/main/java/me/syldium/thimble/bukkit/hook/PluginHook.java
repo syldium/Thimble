@@ -4,7 +4,6 @@ import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.bukkit.ThBootstrap;
 import me.syldium.thimble.common.command.arena.ArenaCommand;
 import me.syldium.thimble.common.config.MainConfig;
-import me.syldium.thimble.common.service.VanishService;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +20,6 @@ public final class PluginHook {
     private final ThBukkitPlugin plugin;
     private final ThBootstrap bootstrap;
     private final List<String> integrations;
-    private final VanishService vanishService;
 
     public PluginHook(@NotNull ThBukkitPlugin plugin, @NotNull ThBootstrap bootstrap) {
         this.plugin = plugin;
@@ -39,11 +37,6 @@ public final class PluginHook {
             plugin.getCommandManager().lookup(ArenaCommand.class).getChildren()
                     .add(new RegionCommand(bootstrap.getServer()));
         }
-        if (this.isEnabled("SuperVanish")) {
-            this.vanishService = new SuperVanishHook();
-        } else {
-            this.vanishService = VanishService.DUMMY_SERVICE;
-        }
     }
 
     private boolean isEnabled(@NotNull String pluginName) {
@@ -57,9 +50,5 @@ public final class PluginHook {
 
     private @Nullable Plugin getPlugin(@NotNull String pluginName) {
         return this.bootstrap.getServer().getPluginManager().getPlugin(pluginName);
-    }
-
-    public @NotNull VanishService getVanishService() {
-        return this.vanishService;
     }
 }

@@ -73,6 +73,11 @@ public class SpongePlayer extends AbstractPlayer<Player> {
     }
 
     @Override
+    public boolean isVanished() {
+        return false;
+    }
+
+    @Override
     public void sendExperienceChange(float percent, int level) {
         Optional<ExperienceHolderData> optional = this.getHandle().get(ExperienceHolderData.class);
         if (optional.isPresent()) {

@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -97,6 +98,16 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     @Override
     public void sendRealExperience() {
         this.getHandle().setExp(this.getHandle().getExp());
+    }
+
+    @Override
+    public boolean isVanished() {
+        for (MetadataValue meta : this.getHandle().getMetadata("vanished")) {
+            if (meta.asBoolean()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
