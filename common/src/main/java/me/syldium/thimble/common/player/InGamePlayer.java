@@ -5,7 +5,11 @@ import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
 import me.syldium.thimble.common.game.Game;
 import me.syldium.thimble.common.world.BlockData;
+
+import java.util.UUID;
+
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.TestOnly;
 
 public class InGamePlayer extends PlayerStats implements ThimblePlayer {
 
@@ -30,6 +34,15 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
         this.game = game;
         this.lastLocation = player.getLocation();
         this.vanished = player.isVanished();
+    }
+
+    @TestOnly
+    public InGamePlayer(@NotNull UUID uuid, @NotNull String name, @NotNull BlockData block, @NotNull Game game) {
+        super(uuid, name);
+        this.block = block;
+        this.game = game;
+        this.lastLocation = new Location(UUID.randomUUID(), 0, 0, 0);
+        this.vanished = false;
     }
 
     @Override
