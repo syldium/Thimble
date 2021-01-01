@@ -31,10 +31,11 @@ public interface DataService {
     }
 
     enum Type {
-        SQLITE(Dependency.SQLITE_DRIVER, "org.sqlite.JDBC"),
+        H2(Dependency.H2_ENGINE, "org.h2.Driver"),
         MARIADB(Dependency.MARIADB_DRIVER, "org.mariadb.jdbc.Driver"),
         MYSQL(Dependency.MYSQL_DRIVER, "com.mysql.jdbc.Driver"),
-        POSTGRESQL(Dependency.POSTGRESQL_DRIVER, "org.postgresql.Driver");
+        POSTGRESQL(Dependency.POSTGRESQL_DRIVER, "org.postgresql.Driver"),
+        SQLITE(Dependency.SQLITE_DRIVER, "org.sqlite.JDBC");
 
         private final String driverName;
         private final String driverClassName;
@@ -65,6 +66,10 @@ public interface DataService {
 
         public @NotNull Dependency getDriver() {
             return this.driver;
+        }
+
+        public boolean hasUniqueIdType() {
+            return this == H2 || this == POSTGRESQL;
         }
     }
 }

@@ -7,7 +7,7 @@ import net.kyori.adventure.identity.Identified;
 import net.kyori.adventure.identity.Identity;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 public interface Player extends PlayerAudience, Identified, Identity, Sender {
 
@@ -24,7 +24,7 @@ public interface Player extends PlayerAudience, Identified, Identity, Sender {
      * @param location New location to teleport this player to.
      * @return {@code true} if the teleport was successful.
      */
-    @NotNull Future<@NotNull Boolean> teleport(@NotNull Location location);
+    @NotNull CompletableFuture<@NotNull Boolean> teleport(@NotNull Location location);
 
     /**
      * Gets the surface block of a water/lava column.

@@ -66,22 +66,22 @@ public class SqlDataService implements DataService {
 
         this.type = type;
         try {
-            String queryPath = String.format(TABLES, type == Type.POSTGRESQL ? "postgre" : "mysql");
+            String queryPath = String.format(TABLES, type.hasUniqueIdType() ? "postgre" : "mysql");
             this.getConnection().createStatement().execute(ResourceReader.readResource(queryPath));
         } catch (SQLException ex) {
             this.logger.log(Level.SEVERE, "Error during database setup. See the message below.", ex);
         }
     }
 
-    public SqlDataService(@NotNull File file, @NotNull DependencyResolver dependencyResolver, @NotNull Logger logger) {
-        this(String.format("jdbc:sqlite:%s", file.getAbsolutePath()), null, null, dependencyResolver, logger, Type.SQLITE);
+    public SqlDataService(@NotNull File file, @NotNull DependencyResolver dependencyResolver, @NotNull Logger logger, @NotNull Type type) {
+        this(String.format("jdbc:%s:%s", type.name().toLowerCase(Locale.ROOT), file.getAbsolutePath()), null, null, dependencyResolver, logger, type);
     }
 
     public static @NotNull SqlDataService fromConfig(@NotNull ThimblePlugin plugin, @NotNull MainConfig config) {
         Type type = config.getDataStorageMethod();
         DependencyResolver manager = new DependencyResolver(plugin);
-        if (type == Type.SQLITE) {
-            return new SqlDataService(plugin.getFile(config.getSqliteFilename()), manager, plugin.getLogger());
+        if (type == Type.H2 || type == Type.SQLITE) {
+            return new SqlDataService(plugin.getFile(config.getDatabaseFilename(type == Type.H2)), manager, plugin.getLogger(), type);
         }
         return new SqlDataService(config.getJdbcUrl(), config.getJdbcUsername(), config.getJdbcPassword(), manager, plugin.getLogger(), type);
     }
@@ -89,7 +89,7 @@ public class SqlDataService implements DataService {
     @Override
     public @NotNull Optional<@NotNull ThimblePlayerStats> getPlayerStatistics(@NotNull UUID uuid) {
         try (PreparedStatement statement = this.getConnection().prepareStatement("SELECT * FROM thimble_players WHERE uuid = ?")) {
-            if (this.type == Type.POSTGRESQL) {
+            if (this.type.hasUniqueIdType()) {
                 statement.setObject(1, uuid);
             } else {
                 statement.setString(1, uuid.toString());
@@ -137,7 +137,7 @@ public class SqlDataService implements DataService {
                 : "INSERT INTO thimble_players (uuid, name, wins, losses, jumps, fails, thimbles) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = this.getConnection().prepareStatement(query)) {
-            if (this.type == Type.POSTGRESQL) {
+            if (this.type.hasUniqueIdType()) {
                 statement.setObject(exists ? 7 : 1, statistics.uuid());
             } else {
                 statement.setString(exists ? 7 : 1, statistics.uuid().toString());
@@ -157,7 +157,7 @@ public class SqlDataService implements DataService {
 
     private boolean exists(@NotNull ThimblePlayerStats statistics) {
         try (PreparedStatement statement = this.getConnection().prepareStatement("SELECT name FROM thimble_players WHERE uuid = ?")) {
-            if (this.type == Type.POSTGRESQL) {
+            if (this.type.hasUniqueIdType()) {
                 statement.setObject(1, statistics.uuid());
             } else {
                 statement.setString(1, statistics.uuid().toString());
@@ -177,7 +177,7 @@ public class SqlDataService implements DataService {
 
     private @NotNull ThimblePlayerStats fromResultSet(@NotNull ResultSet result) throws SQLException {
         UUID uuid;
-        if (this.type == Type.POSTGRESQL) {
+        if (this.type.hasUniqueIdType()) {
             uuid = result.getObject("uuid", UUID.class);
         } else {
             uuid = UUID.fromString(result.getString("uuid"));

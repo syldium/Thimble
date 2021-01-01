@@ -47,8 +47,13 @@ public class MainConfig {
         );
     }
 
-    public @NotNull String getSqliteFilename() {
-        return this.storage.getString("file", "database.db");
+    public @NotNull String getDatabaseFilename(boolean removeExtension) {
+        String filename = this.storage.getString("file", "database.db");
+        if (removeExtension) {
+            int pos = filename.lastIndexOf('.');
+            return pos > -1 ? filename.substring(0, pos) : filename;
+        }
+        return filename;
     }
 
     public @Nullable String getJdbcUsername() {

@@ -12,6 +12,12 @@ import java.util.logging.Logger;
 
 public enum Dependency {
 
+    H2_ENGINE(
+            "com.h2database",
+            "h2",
+            "1.4.200",
+            "OtmsS2qunNnTrBxEdGXh7QYBm4UbiT3WqNdt222FvKY="
+    ),
     MARIADB_DRIVER(
             "org.mariadb.jdbc",
             "mariadb-java-client",

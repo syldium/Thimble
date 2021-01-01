@@ -18,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 public class BukkitPlayer extends AbstractPlayer<Player> {
 
@@ -69,7 +68,7 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     }
 
     @Override
-    public @NotNull Future<Boolean> teleport(@NotNull Location location) {
+    public @NotNull CompletableFuture<Boolean> teleport(@NotNull Location location) {
         this.getHandle().setVelocity(new Vector(0, 0, 0));
         org.bukkit.Location bukkitLoc = this.platform.asPlatform(location);
         if (TELEPORT_ASYNC) {
