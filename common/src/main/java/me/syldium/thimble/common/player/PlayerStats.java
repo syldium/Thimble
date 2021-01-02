@@ -66,6 +66,11 @@ public class PlayerStats implements ThimblePlayerStats, Identity {
         return this.thimbles;
     }
 
+    @Override
+    public boolean equalsPlayer(@NotNull ThimblePlayerStats o) {
+        return this.uuid.equals(o.uuid());
+    }
+
     public void incrementWins() {
         this.wins++;
     }
@@ -86,12 +91,22 @@ public class PlayerStats implements ThimblePlayerStats, Identity {
         this.thimbles++;
     }
 
+    public boolean playerEquals(@NotNull PlayerStats o) {
+        return this.uuid.equals(o.uuid);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PlayerStats)) return false;
         PlayerStats that = (PlayerStats) o;
-        return this.uuid.equals(that.uuid);
+        return this.wins == that.wins
+                && this.losses == that.losses
+                && this.jumps == that.jumps
+                && this.fails == that.fails
+                && this.thimbles == that.thimbles
+                && this.uuid.equals(that.uuid)
+                && this.name.equals(that.name);
     }
 
     @Override

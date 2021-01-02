@@ -132,4 +132,22 @@ public abstract class AbstractSender<S> implements Sender {
     private @NotNull MessageService getMessageService() {
         return this.plugin.getMessageService();
     }
+
+    @Override
+    public String toString() {
+        return "Sender{handle=" + this.handle + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractSender<?> that = (AbstractSender<?>) o;
+        return this.handle.equals(that.handle);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.handle.hashCode();
+    }
 }

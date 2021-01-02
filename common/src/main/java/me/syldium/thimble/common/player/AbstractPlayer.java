@@ -16,4 +16,9 @@ public abstract class AbstractPlayer<P> extends AbstractSender<P> implements Pla
     public @NotNull Identity identity() {
         return Identity.identity(this.uuid());
     }
+
+    @Override
+    public String toString() {
+        return "Player{handle=" + this.handle + '}';
+    }
 }

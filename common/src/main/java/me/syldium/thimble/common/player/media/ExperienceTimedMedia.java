@@ -12,6 +12,6 @@ final class ExperienceTimedMedia implements TimedMedia {
 
     @Override
     public void hide(@NotNull PlayerAudience audience) {
-        audience.sendRealExperience();
+
     }
 }

@@ -125,11 +125,6 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements P
         for (PlayerAudience expHolder : this.audiences()) expHolder.sendExperienceChange(percent, level);
     }
 
-    @Override
-    public void sendRealExperience() {
-        for (PlayerAudience expHolder : this.audiences()) expHolder.sendRealExperience();
-    }
-
     public @NotNull Stream<E> stream() {
         return this.values().stream();
     }

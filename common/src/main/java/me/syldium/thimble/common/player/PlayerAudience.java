@@ -11,9 +11,4 @@ public interface PlayerAudience extends Audience {
      * @param level New experience level.
      */
     void sendExperienceChange(float percent, int level);
-
-    /**
-     * Restores the real experience level.
-     */
-    void sendRealExperience();
 }

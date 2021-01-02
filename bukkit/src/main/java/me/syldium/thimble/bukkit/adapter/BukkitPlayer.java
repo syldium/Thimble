@@ -107,11 +107,6 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     }
 
     @Override
-    public void sendRealExperience() {
-        this.getHandle().setExp(this.getHandle().getExp());
-    }
-
-    @Override
     public boolean isVanished() {
         for (MetadataValue meta : this.getHandle().getMetadata("vanished")) {
             if (meta.asBoolean()) {
@@ -129,19 +124,6 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     @Override
     public @NotNull UUID uuid() {
         return this.getHandle().getUniqueId();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        return this.getHandle().equals(((BukkitPlayer) o).getHandle());
-    }
-
-    @Override
-    public int hashCode() {
-        return this.getHandle().hashCode();
     }
 
     @Override

@@ -14,12 +14,14 @@ import java.util.SortedSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * A leaderboard implementation relying on a {@link ArrayList}.
  *
- * @param <E> The list type. It must implement {@link #equals(Object)} which checks only unique properties.
+ * @param <E> The list type.
  */
-public class Leaderboard<E> implements SortedSet<E> {
+public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
 
     /**
      * The maximum length of the leaderboard.
@@ -69,8 +71,16 @@ public class Leaderboard<E> implements SortedSet<E> {
      * @return {@code true} if the item has been added.
      */
     @Override
-    public boolean add(E e) {
-        int rank = this.list.indexOf(e);
+    public boolean add(@NotNull E e) {
+        requireNonNull(e, "player stats");
+        int rank = -1;
+        for (int i = 0; i < this.list.size(); i++) {
+            if (this.list.get(i).equalsPlayer(e)) {
+                rank = i;
+                break;
+            }
+        }
+
         if (rank < 0 && this.list.size() < Leaderboard.MAX_LENGTH) {
             this.list.add(e);
             return true;
@@ -79,7 +89,7 @@ public class Leaderboard<E> implements SortedSet<E> {
         E latest = this.last();
         if (this.comparator.compare(latest, e) > 0) {
             if (rank >= 0) {
-                this.list.remove(e);
+                this.list.remove(rank);
             }
             this.list.add(e);
             this.list = this.list.stream()

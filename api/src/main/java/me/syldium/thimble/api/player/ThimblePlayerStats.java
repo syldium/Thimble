@@ -65,4 +65,12 @@ public interface ThimblePlayerStats extends Identity {
      * @return The number of successful thimbles.
      */
     @Range(from=0, to=Integer.MAX_VALUE) int getThimbles();
+
+    /**
+     * Returns {@code true} whether it's the same player. {@link java.util.UUID#equals(Object)}
+     *
+     * @param o An other player.
+     * @return If so.
+     */
+    boolean equalsPlayer(@NotNull ThimblePlayerStats o);
 }
