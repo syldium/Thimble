@@ -28,7 +28,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
     }
 
     @Override
-    protected void onCountdownEnd() {
+    public void onCountdownEnd() {
         this.timer = this.jumpTicks;
         for (InGamePlayer inGamePlayer : this.players) {
             if (inGamePlayer.isVanished()) continue;
@@ -39,12 +39,12 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
     }
 
     @Override
-    protected void onTimerEnd() {
+    public void onTimerEnd() {
         this.end(this.getFirstPlayer());
     }
 
     @Override
-    protected void tickGame() {
+    public void tickGame() {
         this.jumperMedia.progress(this.players, this.timer, this.jumpTicks);
         for (InGamePlayer inGamePlayer : this.players) {
             if (inGamePlayer.isSpectator()) continue;
@@ -62,7 +62,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
     }
 
     @Override
-    protected void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
+    public void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
             if (this.countFails) {
                 inGamePlayer.decrementPoints();

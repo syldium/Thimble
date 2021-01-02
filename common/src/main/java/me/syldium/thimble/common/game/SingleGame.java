@@ -31,7 +31,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     }
 
     @Override
-    protected void onCountdownEnd() {
+    public void onCountdownEnd() {
         for (InGamePlayer player : this.players) {
             if (!player.isSpectator() && !player.isVanished()) {
                 this.queue.add(player.uuid());
@@ -46,12 +46,12 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     }
 
     @Override
-    protected void onTimerEnd() {
+    public void onTimerEnd() {
 
     }
 
     @Override
-    protected void tickGame() {
+    public void tickGame() {
         if (this.jumper == null) {
             this.timer = this.jumpTicks;
             if (this.queue.isEmpty()) {
@@ -94,7 +94,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     }
 
     @Override
-    protected void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
+    public void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
             inGamePlayer.decrementPoints();
             inGamePlayer.incrementFailedJumps();

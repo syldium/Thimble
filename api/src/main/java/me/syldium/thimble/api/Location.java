@@ -169,6 +169,18 @@ public class Location {
         return hash;
     }
 
+    @Override
+    public String toString() {
+        return "Location{" +
+                "world=" + this.world.toString().substring(0, 8) +
+                ", x=" + this.x +
+                ", y=" + this.y +
+                ", z=" + this.z +
+                ", pitch=" + this.pitch +
+                ", yaw=" + this.yaw +
+                '}';
+    }
+
     private static int hash(double value) {
         long bits = Double.doubleToLongBits(value);
         return (int) (bits ^ (bits >>> 32));

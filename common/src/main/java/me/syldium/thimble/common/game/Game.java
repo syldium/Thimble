@@ -24,6 +24,7 @@ import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -146,13 +147,17 @@ public abstract class Game implements ThimbleGame, Runnable {
         }
     }
 
-    protected abstract void onCountdownEnd();
+    @VisibleForTesting
+    public abstract void onCountdownEnd();
 
-    protected abstract void onTimerEnd();
+    @VisibleForTesting
+    public abstract void onTimerEnd();
 
-    protected abstract void tickGame();
+    @VisibleForTesting
+    public abstract void tickGame();
 
-    protected abstract void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict);
+    @VisibleForTesting
+    public abstract void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict);
 
     protected @Nullable InGamePlayer getFirstPlayer() {
         Comparator<InGamePlayer> comparator = Comparator.comparingInt(InGamePlayer::getPoints);

@@ -26,6 +26,7 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return The arena name.
      */
+    @Contract(pure = true)
     @NotNull String getName();
 
     /**
@@ -33,6 +34,7 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return The spawn location.
      */
+    @Contract(pure = true)
     @Nullable Location getSpawnLocation();
 
     /**
@@ -50,6 +52,7 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return The jump location.
      */
+    @Contract(pure = true)
     @Nullable Location getJumpLocation();
 
     /**
@@ -69,6 +72,7 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return The wait location.
      */
+    @Contract(pure = true)
     @Nullable Location getWaitLocation();
 
     /**
@@ -86,6 +90,7 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return The minimum number.
      */
+    @Contract(pure = true)
     @Range(from=1, to=Integer.MAX_VALUE) int getMinPlayers();
 
     /**
@@ -103,6 +108,7 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return The maximum number.
      */
+    @Contract(pure = true)
     @Range(from=1, to=Integer.MAX_VALUE) int getMaxPlayers();
 
     /**
@@ -120,6 +126,7 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return The game if exists.
      */
+    @Contract(pure = true)
     @NotNull Optional<@NotNull ThimbleGame> getGame();
 
     /**
@@ -127,6 +134,7 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return The game mode.
      */
+    @Contract(pure = true)
     @NotNull ThimbleGameMode getGameMode();
 
     /**
@@ -183,6 +191,7 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return If no {@link Location} is {@code null}.
      */
+    @Contract(pure = true)
     default boolean isSetup() {
         return this.getJumpLocation() != null && this.getSpawnLocation() != null && this.getWaitLocation() != null;
     }
@@ -192,6 +201,7 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return The minimum point.
      */
+    @Contract(pure = true)
     @Nullable BlockVector getPoolMinPoint();
 
     /**
@@ -208,6 +218,7 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return The maximum point.
      */
+    @Contract(pure = true)
     @Nullable BlockVector getPoolMaxPoint();
 
     /**
@@ -224,5 +235,6 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @return The sign positions.
      */
+    @Contract(pure = true)
     @NotNull @UnmodifiableView Set<@NotNull BlockPos> getSigns();
 }
