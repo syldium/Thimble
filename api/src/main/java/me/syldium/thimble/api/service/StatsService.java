@@ -14,6 +14,10 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * The player statistics manager.
+ * <pre>
+ * Bukkit.getServicesManager().load(StatsService.class); // Bukkit
+ * Sponge.getServiceManager().provide(StatsService.class); // Sponge
+ * </pre>
  */
 public interface StatsService {
 

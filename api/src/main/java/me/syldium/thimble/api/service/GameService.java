@@ -17,6 +17,10 @@ import java.util.UUID;
 
 /**
  * The manager of the arenas and the games.
+ * <pre>
+ * Bukkit.getServicesManager().load(GameService.class); // Bukkit
+ * Sponge.getServiceManager().provide(GameService.class); // Sponge
+ * </pre>
  */
 public interface GameService {
 

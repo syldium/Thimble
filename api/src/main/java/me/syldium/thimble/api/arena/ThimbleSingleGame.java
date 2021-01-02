@@ -1,6 +1,7 @@
 package me.syldium.thimble.api.arena;
 
 import me.syldium.thimble.api.player.JumpVerdict;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +31,7 @@ public interface ThimbleSingleGame extends ThimbleGame {
      *
      * @return The jumper, if any.
      */
+    @Contract(pure = true)
     @Nullable UUID getCurrentJumper();
 
     /**
@@ -37,5 +39,6 @@ public interface ThimbleSingleGame extends ThimbleGame {
      *
      * @return The jumper, if any.
      */
+    @Contract(pure = true)
     @Nullable UUID peekNextJumper();
 }

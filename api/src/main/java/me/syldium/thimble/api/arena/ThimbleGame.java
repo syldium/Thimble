@@ -4,6 +4,7 @@ import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.JumpVerdict;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identified;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -25,6 +26,7 @@ public interface ThimbleGame {
      *
      * @return The game arena.
      */
+    @Contract(pure = true)
     @NotNull ThimbleArena getArena();
 
     /**
@@ -32,6 +34,7 @@ public interface ThimbleGame {
      *
      * @return The current game state.
      */
+    @Contract(pure = true)
     @NotNull ThimbleState getState();
 
     /**
@@ -39,6 +42,7 @@ public interface ThimbleGame {
      *
      * @return If so.
      */
+    @Contract(pure = true)
     boolean acceptPlayer();
 
     /**
@@ -48,6 +52,7 @@ public interface ThimbleGame {
      * @return If so.
      * @throws IllegalArgumentException If {@code count} is negative.
      */
+    @Contract(pure = true)
     boolean acceptPlayers(@Range(from = 0, to = Integer.MAX_VALUE) int count);
 
     /**
@@ -55,6 +60,7 @@ public interface ThimbleGame {
      *
      * @return If so.
      */
+    @Contract(pure = true)
     boolean canStart();
 
     /**
@@ -62,6 +68,7 @@ public interface ThimbleGame {
      *
      * @return An immutable set.
      */
+    @Contract(pure = true)
     @NotNull @UnmodifiableView Set<@NotNull ThimblePlayer> getAlivePlayers();
 
     /**
@@ -71,6 +78,7 @@ public interface ThimbleGame {
      *
      * @return An immutable set.
      */
+    @Contract(pure = true)
     @NotNull @UnmodifiableView Set<@NotNull ThimblePlayer> getPlayers();
 
     /**
@@ -141,6 +149,7 @@ public interface ThimbleGame {
      *
      * @return If empty.
      */
+    @Contract(pure = true)
     boolean isEmpty();
 
     /**
@@ -148,6 +157,7 @@ public interface ThimbleGame {
      *
      * @return The number of players.
      */
+    @Contract(pure = true)
     int size();
 
     /**
@@ -163,6 +173,7 @@ public interface ThimbleGame {
      * @param playerUUID The player's unique identifier.
      * @return If so.
      */
+    @Contract(pure = true)
     boolean isJumping(@NotNull UUID playerUUID);
 
     /**
@@ -171,6 +182,7 @@ public interface ThimbleGame {
      * @param player The player.
      * @return If so.
      */
+    @Contract(pure = true)
     default boolean isJumping(@NotNull ThimblePlayer player) {
         return this.isJumping(player.uuid());
     }
@@ -181,6 +193,7 @@ public interface ThimbleGame {
      * @return The remaining number.
      * @throws IllegalStateException If the pool dimensions have not been defined.
      */
+    @Contract(pure = true)
     int getRemainingWaterBlocks();
 
     /**
@@ -189,6 +202,7 @@ public interface ThimbleGame {
      * @return {@code true} if the pool is full.
      * @throws IllegalStateException If the pool dimensions have not been defined.
      */
+    @Contract(pure = true)
     default boolean isPoolFull() {
         return this.getRemainingWaterBlocks() < 1;
     }

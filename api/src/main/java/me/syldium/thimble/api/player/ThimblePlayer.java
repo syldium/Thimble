@@ -1,6 +1,7 @@
 package me.syldium.thimble.api.player;
 
 import me.syldium.thimble.api.arena.ThimbleGame;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -14,6 +15,7 @@ public interface ThimblePlayer extends ThimblePlayerStats {
      *
      * @return A number.
      */
+    @Contract(pure = true)
     @Range(from=0, to=Integer.MAX_VALUE) int getPoints();
 
     /**
@@ -21,6 +23,7 @@ public interface ThimblePlayer extends ThimblePlayerStats {
      *
      * @return If so.
      */
+    @Contract(pure = true)
     boolean isSpectator();
 
     /**
@@ -39,6 +42,7 @@ public interface ThimblePlayer extends ThimblePlayerStats {
      *
      * @return If so.
      */
+    @Contract(pure = true)
     boolean isVanished();
 
     /**
@@ -46,6 +50,7 @@ public interface ThimblePlayer extends ThimblePlayerStats {
      *
      * @return If so.
      */
+    @Contract(pure = true)
     boolean isJumping();
 
     /**
@@ -53,5 +58,6 @@ public interface ThimblePlayer extends ThimblePlayerStats {
      *
      * @return The game.
      */
+    @Contract(pure = true)
     @NotNull ThimbleGame getGame();
 }

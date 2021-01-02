@@ -59,7 +59,7 @@ public interface ThimbleArena extends ComponentLike {
      * Sets the jump location. {@link #getJumpLocation()}
      *
      * @param location The new jump location.
-     * @throws IllegalStateException If the argument is {@code null} and a game exists3
+     * @throws IllegalStateException If the argument is {@code null} and a game exists.
      * @return This arena.
      */
     @Contract("_ -> this")
@@ -79,7 +79,7 @@ public interface ThimbleArena extends ComponentLike {
      * Sets the wait location. {@link #getWaitLocation()}
      *
      * @param location The new wait location.
-     * @throws IllegalStateException If the argument is {@code null} and a game exists
+     * @throws IllegalStateException If the argument is {@code null} and a game exists.
      * @return This arena.
      */
     @Contract("_ -> this")

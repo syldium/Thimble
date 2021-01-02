@@ -1,6 +1,7 @@
 package me.syldium.thimble.api.player;
 
 import net.kyori.adventure.identity.Identity;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -14,6 +15,7 @@ public interface ThimblePlayerStats extends Identity {
      *
      * @return The player name.
      */
+    @Contract(pure = true)
     @NotNull String name();
 
     /**
@@ -21,6 +23,7 @@ public interface ThimblePlayerStats extends Identity {
      *
      * @return If so.
      */
+    @Contract(pure = true)
     default boolean hasPlayed() {
         return this.getWins() > 0 || this.getLosses() > 0;
     }
@@ -30,6 +33,7 @@ public interface ThimblePlayerStats extends Identity {
      *
      * @return A number.
      */
+    @Contract(pure = true)
     @Range(from=0, to=Integer.MAX_VALUE) int getWins();
 
     /**
@@ -37,6 +41,7 @@ public interface ThimblePlayerStats extends Identity {
      *
      * @return The number of losses.
      */
+    @Contract(pure = true)
     @Range(from=0, to=Integer.MAX_VALUE) int getLosses();
 
     /**
@@ -44,6 +49,7 @@ public interface ThimblePlayerStats extends Identity {
      *
      * @return The total number of games played.
      */
+    @Contract(pure = true)
     @Range(from=0, to=Integer.MAX_VALUE) default int getGamesPlayed() {
         return this.getWins() + this.getLosses();
     }
@@ -53,6 +59,7 @@ public interface ThimblePlayerStats extends Identity {
      *
      * @return The number of successful jumps.
      */
+    @Contract(pure = true)
     @Range(from=0, to=Integer.MAX_VALUE) int getJumps();
 
     /**
@@ -60,6 +67,7 @@ public interface ThimblePlayerStats extends Identity {
      *
      * @return The number of failed jumps.
      */
+    @Contract(pure = true)
     @Range(from=0, to=Integer.MAX_VALUE) int getFailedJumps();
 
     /**
@@ -67,6 +75,7 @@ public interface ThimblePlayerStats extends Identity {
      *
      * @return The number of successful thimbles.
      */
+    @Contract(pure = true)
     @Range(from=0, to=Integer.MAX_VALUE) int getThimbles();
 
     /**
@@ -75,5 +84,6 @@ public interface ThimblePlayerStats extends Identity {
      * @param o An other player.
      * @return If so.
      */
+    @Contract(pure = true)
     boolean equalsPlayer(@NotNull ThimblePlayerStats o);
 }

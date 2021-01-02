@@ -30,6 +30,11 @@ public class SpongeGameEndEvent extends AbstractEvent implements GameEvent {
         return this.game;
     }
 
+    /**
+     * Returns the player who wins the game.
+     *
+     * @return The latest player, if any.
+     */
     public @Nullable ThimblePlayer getLatestPlayer() {
         return this.latest;
     }
