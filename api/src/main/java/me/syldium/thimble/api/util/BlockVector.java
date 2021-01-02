@@ -78,10 +78,21 @@ public class BlockVector implements Examinable, Serializable, Cloneable {
         return this.z >> 4;
     }
 
+    /**
+     * Computes the squared distance with another {@link BlockVector}.
+     *
+     * @param other A block vector.
+     * @return The squared distance.
+     */
     public int distanceSquared(@NotNull BlockVector other) {
         return square(this.x - other.x) + square(this.y - other.y) + square(this.z - other.z);
     }
 
+    /**
+     * Returns a template array from the block vector.
+     *
+     * @return A template array.
+     */
     public @NotNull Template[] asTemplates() {
         //CHECKSTYLE:OFF
         return new Template[]{

@@ -1,7 +1,7 @@
 package me.syldium.thimble.common.game;
 
 import me.syldium.thimble.api.arena.ThimbleSingleGame;
-import me.syldium.thimble.api.arena.ThimbleGameState;
+import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.InGamePlayer;
@@ -55,7 +55,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
         if (this.jumper == null) {
             this.timer = this.jumpTicks;
             if (this.queue.isEmpty()) {
-                this.state = ThimbleGameState.END;
+                this.state = ThimbleState.END;
                 return;
             }
 

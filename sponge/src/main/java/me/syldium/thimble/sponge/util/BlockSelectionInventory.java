@@ -106,7 +106,7 @@ public class BlockSelectionInventory {
         if (!optional.isPresent()) return;
 
         InGamePlayer inGamePlayer = (InGamePlayer) optional.get();
-        if (!inGamePlayer.getGame().acceptPlayers()) {
+        if (!inGamePlayer.getGame().getState().isNotStarted()) {
             event.setCancelled(true);
             player.sendMessage(this.gameStarted);
             return;

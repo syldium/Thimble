@@ -9,6 +9,7 @@ import me.syldium.thimble.api.arena.ThimbleGameMode;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.Player;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -25,7 +26,8 @@ public class Arena implements ThimbleArena {
     private static final Pattern VALID_NAME = Pattern.compile("[\\w-]+");
     private static final String UNSET_LOCATION_IN_GAME = "Cannot unset the %s location on a game that has already been started.";
 
-    private final String name;
+    private final String rawName;
+    private final Component name;
     private Location spawnLocation, jumpLocation, waitLocation;
     private BlockVector minimumPoint, maximumPoint;
     private int minPlayers = 1;
@@ -40,12 +42,13 @@ public class Arena implements ThimbleArena {
             throw new IllegalArgumentException("Invalid arena name. Must be [A-Za-z0-9_-]: " + name);
         }
         this.plugin = plugin;
-        this.name = name;
+        this.rawName = name;
+        this.name = MiniMessage.get().parse(name);
     }
 
     @Override
     public @NotNull String getName() {
-        return this.name;
+        return this.rawName;
     }
 
     @Override
@@ -54,11 +57,12 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public void setSpawnLocation(@Nullable Location location) {
+    public ThimbleArena setSpawnLocation(@Nullable Location location) {
         if (this.game != null && location == null) {
             throw new IllegalStateException(String.format(UNSET_LOCATION_IN_GAME, "spawn"));
         }
         this.spawnLocation = location;
+        return this;
     }
 
     @Override
@@ -67,11 +71,12 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public void setJumpLocation(@Nullable Location location) {
+    public ThimbleArena setJumpLocation(@Nullable Location location) {
         if (this.game != null && location == null) {
             throw new IllegalStateException(String.format(UNSET_LOCATION_IN_GAME, "jump"));
         }
         this.jumpLocation = location;
+        return this;
     }
 
     @Override
@@ -80,11 +85,12 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public void setWaitLocation(@Nullable Location location) {
+    public ThimbleArena setWaitLocation(@Nullable Location location) {
         if (this.game != null && location == null) {
             throw new IllegalStateException(String.format(UNSET_LOCATION_IN_GAME, "wait"));
         }
         this.waitLocation = location;
+        return this;
     }
 
     @Override
@@ -93,11 +99,12 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public void setMinPlayers(int minimum) throws IllegalArgumentException {
+    public ThimbleArena setMinPlayers(int minimum) throws IllegalArgumentException {
         if (minimum < 1 || minimum > this.maxPlayers) {
             throw new IllegalArgumentException();
         }
         this.minPlayers = minimum;
+        return this;
     }
 
     @Override
@@ -106,11 +113,12 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public void setMaxPlayers(int maximum) throws IllegalArgumentException {
+    public ThimbleArena setMaxPlayers(int maximum) throws IllegalArgumentException {
         if (maximum < 1 || maximum < this.minPlayers) {
             throw new IllegalArgumentException();
         }
         this.maxPlayers = maximum;
+        return this;
     }
 
     @Override
@@ -124,8 +132,9 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public void setGameMode(@NotNull ThimbleGameMode gameMode) {
+    public ThimbleArena setGameMode(@NotNull ThimbleGameMode gameMode) {
         this.gameMode = Objects.requireNonNull(gameMode, "The game mode cannot be null.");
+        return this;
     }
 
     @Override
@@ -167,8 +176,9 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public void setPoolMinPoint(@NotNull BlockVector point) {
+    public ThimbleArena setPoolMinPoint(@Nullable BlockVector point) {
         this.minimumPoint = point;
+        return this;
     }
 
     @Override
@@ -177,8 +187,9 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public void setPoolMaxPoint(@NotNull BlockVector point) {
+    public ThimbleArena setPoolMaxPoint(@Nullable BlockVector point) {
         this.maximumPoint = point;
+        return this;
     }
 
     @Override
@@ -188,7 +199,7 @@ public class Arena implements ThimbleArena {
 
     @Override
     public @NotNull Component asComponent() {
-        return Component.text(this.name);
+        return this.name;
     }
 
     void checkGame() {

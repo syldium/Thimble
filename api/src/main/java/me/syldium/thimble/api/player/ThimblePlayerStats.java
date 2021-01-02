@@ -4,6 +4,9 @@ import net.kyori.adventure.identity.Identity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+/**
+ * The cumulative statistics of a thimble player.
+ */
 public interface ThimblePlayerStats extends Identity {
 
     /**

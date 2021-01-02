@@ -4,6 +4,9 @@ import me.syldium.thimble.api.arena.ThimbleGame;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+/**
+ * The properties of a thimble player.
+ */
 public interface ThimblePlayer extends ThimblePlayerStats {
 
     /**

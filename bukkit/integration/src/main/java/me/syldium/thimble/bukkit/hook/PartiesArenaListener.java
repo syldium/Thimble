@@ -2,7 +2,6 @@ package me.syldium.thimble.bukkit.hook;
 
 import com.alessiodp.parties.api.Parties;
 import com.alessiodp.parties.api.interfaces.Party;
-import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.bukkit.BukkitPlayerJoinArenaEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,8 +33,8 @@ class PartiesArenaListener implements Listener {
         Party party = Parties.getApi().getParty(partyName);
         if (!uuid.equals(party.getLeader())) return;
 
-        int size = event.getArena().getGame().map(ThimbleGame::size).orElse(0);
-        if (size + party.getMembers().size() > event.getArena().getMaxPlayers()) return;
+        int size = event.getGame().size();
+        if (!event.getGame().acceptPlayers(size)) return;
 
         for (UUID member : party.getMembers()) {
             if (uuid.equals(member)) continue;

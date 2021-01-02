@@ -2,7 +2,7 @@ package me.syldium.thimble.bukkit.listener;
 
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.arena.ThimbleArena;
-import me.syldium.thimble.api.arena.ThimbleGameState;
+import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.api.bukkit.BukkitGameChangeStateEvent;
 import me.syldium.thimble.api.bukkit.BukkitGameEndEvent;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
@@ -74,10 +74,10 @@ public class SignChangeListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onGameEnd(BukkitGameEndEvent event) {
-        this.updateSigns(event.getArena(), ThimbleGameState.WAITING);
+        this.updateSigns(event.getArena(), ThimbleState.WAITING);
     }
 
-    private void updateSigns(@NotNull ThimbleArena arena, @NotNull ThimbleGameState state) {
+    private void updateSigns(@NotNull ThimbleArena arena, @NotNull ThimbleState state) {
         UUID worldUUID = requireNonNull(arena.getSpawnLocation(), "arena spawn location").getWorldUUID();
         World world = requireNonNull(Bukkit.getWorld(worldUUID), "arena spawn world");
 

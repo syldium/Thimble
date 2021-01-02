@@ -2,7 +2,7 @@ package me.syldium.thimble.api.bukkit;
 
 import me.syldium.thimble.api.GameEvent;
 import me.syldium.thimble.api.arena.ThimbleGame;
-import me.syldium.thimble.api.arena.ThimbleGameState;
+import me.syldium.thimble.api.arena.ThimbleState;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -19,10 +19,10 @@ public class BukkitGameChangeStateEvent extends Event implements Cancellable, Ga
     private static final HandlerList handlers = new HandlerList();
 
     private final ThimbleGame game;
-    private final ThimbleGameState newState;
+    private final ThimbleState newState;
     private boolean cancelled = false;
 
-    public BukkitGameChangeStateEvent(@NotNull ThimbleGame game, @NotNull ThimbleGameState newState) {
+    public BukkitGameChangeStateEvent(@NotNull ThimbleGame game, @NotNull ThimbleState newState) {
         this.game = game;
         this.newState = newState;
     }
@@ -32,7 +32,12 @@ public class BukkitGameChangeStateEvent extends Event implements Cancellable, Ga
         return this.game;
     }
 
-    public @NotNull ThimbleGameState getNewState() {
+    /**
+     * Gets the state that will be set if the event is not cancelled.
+     *
+     * @return The new state.
+     */
+    public @NotNull ThimbleState getNewState() {
         return this.newState;
     }
 

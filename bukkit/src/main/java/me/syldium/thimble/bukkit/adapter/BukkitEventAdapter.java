@@ -1,7 +1,7 @@
 package me.syldium.thimble.bukkit.adapter;
 
 import me.syldium.thimble.api.arena.ThimbleGame;
-import me.syldium.thimble.api.arena.ThimbleGameState;
+import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.api.bukkit.BukkitGameChangeStateEvent;
 import me.syldium.thimble.api.bukkit.BukkitGameEndEvent;
 import me.syldium.thimble.api.bukkit.BukkitPlayerJoinArenaEvent;
@@ -28,7 +28,7 @@ public class BukkitEventAdapter implements EventAdapter<Player> {
     }
 
     @Override
-    public boolean callGameChangeState(@NotNull ThimbleGame game, @NotNull ThimbleGameState newState) {
+    public boolean callGameChangeState(@NotNull ThimbleGame game, @NotNull ThimbleState newState) {
         BukkitGameChangeStateEvent event = new BukkitGameChangeStateEvent(game, newState);
         this.pluginManager.callEvent(event);
         return event.isCancelled();

@@ -3,7 +3,7 @@ package me.syldium.thimble.common.game;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
 import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.arena.ThimbleGame;
-import me.syldium.thimble.api.arena.ThimbleGameState;
+import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.common.ThimblePlugin;
@@ -50,7 +50,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     protected final Arena arena;
     protected final Task task;
 
-    protected ThimbleGameState state = ThimbleGameState.WAITING;
+    protected ThimbleState state = ThimbleState.WAITING;
     protected final PlayerMap<InGamePlayer> players;
     protected final TimedMedia jumperMedia;
 
@@ -91,8 +91,8 @@ public abstract class Game implements ThimbleGame, Runnable {
     public void run() {
         switch (this.state) {
             case WAITING:
-                if (this.canStart() && !this.plugin.getEventAdapter().callGameChangeState(this, ThimbleGameState.STARTING)) {
-                    this.state = ThimbleGameState.STARTING;
+                if (this.canStart() && !this.plugin.getEventAdapter().callGameChangeState(this, ThimbleState.STARTING)) {
+                    this.state = ThimbleState.STARTING;
                 } else if ((this.messageTimer++ & 0xF) == 0) {
                     this.players.sendActionBar(MessageKey.ACTIONBAR_WAITING);
                 }
@@ -100,20 +100,20 @@ public abstract class Game implements ThimbleGame, Runnable {
             case STARTING:
                 this.tickCountdown();
                 if (this.timer < 0) {
-                    if (this.plugin.getEventAdapter().callGameChangeState(this, ThimbleGameState.PLAYING)) {
+                    if (this.plugin.getEventAdapter().callGameChangeState(this, ThimbleState.PLAYING)) {
                         this.timer = 0;
                     } else {
                         this.players.hide();
                         this.onCountdownEnd();
                         new BlockBalancer(this.players).balance(this.plugin.getPlayerAdapter().getAvailableBlocks());
-                        this.state = ThimbleGameState.PLAYING;
+                        this.state = ThimbleState.PLAYING;
                     }
                 }
                 return;
             case PLAYING:
                 if (this.players.isEmpty()) {
                     this.plugin.getEventAdapter().callGameEndEvent(this, null);
-                    this.state = ThimbleGameState.END;
+                    this.state = ThimbleState.END;
                     return;
                 }
                 this.tickGame();
@@ -129,12 +129,12 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     protected void tickCountdown() {
-        if (!this.canStart() && !this.plugin.getEventAdapter().callGameChangeState(this, ThimbleGameState.WAITING)) {
+        if (!this.canStart() && !this.plugin.getEventAdapter().callGameChangeState(this, ThimbleState.WAITING)) {
             if (this.players.isEmpty()) {
                 this.arena.checkGame();
                 return;
             }
-            this.state = ThimbleGameState.WAITING;
+            this.state = ThimbleState.WAITING;
             this.timer = this.countdownTicks;
             this.players.sendActionBar(MessageKey.ACTIONBAR_NOT_ENOUGH_PLAYERS);
             return;
@@ -238,18 +238,26 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     @Override
-    public @NotNull ThimbleGameState getState() {
+    public @NotNull ThimbleState getState() {
         return this.state;
     }
 
     @Override
-    public boolean acceptPlayers() {
-        return this.state.acceptPlayers() && this.players.size() < this.arena.getMaxPlayers();
+    public boolean acceptPlayer() {
+        return this.state.isNotStarted() && this.players.size() < this.arena.getMaxPlayers();
+    }
+
+    @Override
+    public boolean acceptPlayers(int count) {
+        if (count < 0) {
+            throw new IllegalArgumentException("count must be positive!");
+        }
+        return this.state.isNotStarted() && (this.players.size() + count) <= this.arena.getMaxPlayers();
     }
 
     @Override
     public boolean canStart() {
-        return this.state.acceptPlayers() && this.players.size() >= this.arena.getMinPlayers();
+        return this.state.isNotStarted() && this.players.size() >= this.arena.getMinPlayers();
     }
 
     @Override

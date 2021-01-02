@@ -1,7 +1,7 @@
 package me.syldium.thimble.common.game;
 
 import me.syldium.thimble.api.arena.ThimbleConcurrentGame;
-import me.syldium.thimble.api.arena.ThimbleGameState;
+import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.config.GameConfig;
@@ -108,7 +108,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
 
     @Override
     public boolean isJumping(@NotNull UUID playerUUID) {
-        if (this.state != ThimbleGameState.PLAYING) {
+        if (this.state != ThimbleState.PLAYING) {
             return false;
         }
         InGamePlayer player = this.players.get(playerUUID);

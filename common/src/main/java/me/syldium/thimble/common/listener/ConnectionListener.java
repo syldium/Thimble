@@ -46,7 +46,7 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> {
         if (!optional.isPresent()) return;
         ThimbleGame game = optional.get();
 
-        if (this.quitOnDisconnect || game.getState().acceptPlayers()) {
+        if (this.quitOnDisconnect || game.getState().isNotStarted()) {
             game.removePlayer(playerUniqueId);
         }
     }

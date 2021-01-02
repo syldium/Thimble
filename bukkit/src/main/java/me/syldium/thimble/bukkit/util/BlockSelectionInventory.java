@@ -85,7 +85,7 @@ public final class BlockSelectionInventory implements Listener {
         }
 
         // Changes the player's block
-        if (!player.getGame().acceptPlayers()) {
+        if (!player.getGame().getState().isNotStarted()) {
             event.getWhoClicked().sendMessage(this.gameStarted);
             return;
         }

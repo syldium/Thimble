@@ -34,9 +34,8 @@ class RegionCommand extends ChildCommand.One<Arena> {
         this.worldEdit = (WorldEditPlugin) server.getPluginManager().getPlugin("WorldEdit");
     }
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull Arena arena) {
-        // noinspection unchecked
         BukkitPlayer player = BukkitAdapter.adapt(((AbstractPlayer<Player>) sender).getHandle());
         try {
             Region selection = this.worldEdit.getWorldEdit().getSessionManager().get(player).getSelection(player.getWorld());

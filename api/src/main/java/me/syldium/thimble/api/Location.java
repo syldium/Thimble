@@ -86,6 +86,11 @@ public class Location {
         return this.world;
     }
 
+    /**
+     * Returns a template array from the location.
+     *
+     * @return A template array (floored coordinates).
+     */
     public @NotNull Template[] asTemplates() {
         return this.asBlockPosition().asTemplates();
     }

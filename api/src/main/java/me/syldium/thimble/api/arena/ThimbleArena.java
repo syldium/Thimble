@@ -5,6 +5,7 @@ import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
 import net.kyori.adventure.identity.Identified;
 import net.kyori.adventure.text.ComponentLike;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -39,8 +40,10 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @param location The new spawn location.
      * @throws IllegalStateException If the argument is {@code null} and a game exists
+     * @return This arena.
      */
-    void setSpawnLocation(@Nullable Location location);
+    @Contract("_ -> this")
+    ThimbleArena setSpawnLocation(@Nullable Location location);
 
     /**
      * Gets the location where players are teleported to jump.
@@ -53,9 +56,11 @@ public interface ThimbleArena extends ComponentLike {
      * Sets the jump location. {@link #getJumpLocation()}
      *
      * @param location The new jump location.
-     * @throws IllegalStateException If the argument is {@code null} and a game exists
+     * @throws IllegalStateException If the argument is {@code null} and a game exists3
+     * @return This arena.
      */
-    void setJumpLocation(@Nullable Location location);
+    @Contract("_ -> this")
+    ThimbleArena setJumpLocation(@Nullable Location location);
 
     /**
      * Gets the location where the players wait their turn when the game has started.
@@ -71,8 +76,10 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @param location The new wait location.
      * @throws IllegalStateException If the argument is {@code null} and a game exists
+     * @return This arena.
      */
-    void setWaitLocation(@Nullable Location location);
+    @Contract("_ -> this")
+    ThimbleArena setWaitLocation(@Nullable Location location);
 
     /**
      * Gets the minimum number of players to start a game.
@@ -86,8 +93,10 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @param minimum The minimum players.
      * @throws IllegalArgumentException If negative or more than the maximum.
+     * @return This arena.
      */
-    void setMinPlayers(int minimum) throws IllegalArgumentException;
+    @Contract("_ -> this")
+    ThimbleArena setMinPlayers(int minimum) throws IllegalArgumentException;
 
     /**
      * Gets the maximum number of players that the arena can host.
@@ -101,8 +110,10 @@ public interface ThimbleArena extends ComponentLike {
      *
      * @param maximum The maximum players.
      * @throws IllegalArgumentException If negative or less than the minimum.
+     * @return This arena.
      */
-    void setMaxPlayers(int maximum) throws IllegalArgumentException;
+    @Contract("_ -> this")
+    ThimbleArena setMaxPlayers(int maximum) throws IllegalArgumentException;
 
     /**
      * Gets the current game.
@@ -122,8 +133,10 @@ public interface ThimbleArena extends ComponentLike {
      * Sets the game mode for new games.
      *
      * @param gameMode A game mode.
+     * @return This arena.
      */
-    void setGameMode(@NotNull ThimbleGameMode gameMode);
+    @Contract("_ -> this")
+    ThimbleArena setGameMode(@NotNull ThimbleGameMode gameMode);
 
     /**
      * Adds the player in the pool by creating a game if needed.
@@ -185,8 +198,10 @@ public interface ThimbleArena extends ComponentLike {
      * Sets the lower point of the pool.
      *
      * @param point The minimum point.
+     * @return This arena.
      */
-    void setPoolMinPoint(@NotNull BlockVector point);
+    @Contract("_ -> this")
+    ThimbleArena setPoolMinPoint(@Nullable BlockVector point);
 
     /**
      * Gets the upper point of the pool.
@@ -199,8 +214,10 @@ public interface ThimbleArena extends ComponentLike {
      * Sets the upper point of the pool.
      *
      * @param point The maximum point.
+     * @return This arena.
      */
-    void setPoolMaxPoint(@NotNull BlockVector point);
+    @Contract("_ -> this")
+    ThimbleArena setPoolMaxPoint(@Nullable BlockVector point);
 
     /**
      * Gets the signs leading to this arena.

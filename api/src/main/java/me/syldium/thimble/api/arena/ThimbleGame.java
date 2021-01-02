@@ -5,6 +5,7 @@ import me.syldium.thimble.api.player.JumpVerdict;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identified;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Set;
@@ -31,14 +32,23 @@ public interface ThimbleGame {
      *
      * @return The current game state.
      */
-    @NotNull ThimbleGameState getState();
+    @NotNull ThimbleState getState();
+
+    /**
+     * Tests if a new player can join the game.
+     *
+     * @return If so.
+     */
+    boolean acceptPlayer();
 
     /**
      * Tests if new players can join the game.
      *
+     * @param count The number of players wanting to join the arena.
      * @return If so.
+     * @throws IllegalArgumentException If {@code count} is negative.
      */
-    boolean acceptPlayers();
+    boolean acceptPlayers(@Range(from = 0, to = Integer.MAX_VALUE) int count);
 
     /**
      * If the game can start.
@@ -66,6 +76,8 @@ public interface ThimbleGame {
     /**
      * Adds a player to the game. {@link ThimbleArena#addPlayer(UUID)}
      *
+     * <p>The player limit ({@link ThimbleArena#getMaxPlayers()}) can be exceeded.</p>
+     *
      * @param player The online player who want to play.
      * @return If the player has successfully joined the arena.
      */
@@ -73,6 +85,8 @@ public interface ThimbleGame {
 
     /**
      * Adds an {@link Identified} player to the game.
+     *
+     * <p>The player limit ({@link ThimbleArena#getMaxPlayers()}) can be exceeded.</p>
      *
      * @param identified A player.
      * @return If the player has successfully joined the arena.

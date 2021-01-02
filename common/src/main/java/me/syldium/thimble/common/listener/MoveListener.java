@@ -23,7 +23,7 @@ public class MoveListener<P extends ThimblePlugin> {
         this.plugin = plugin;
         ConfigNode node = plugin.getMainConfig().getGameNode();
         int maxDistance = node.getInt("max-spectator-distance", 40);
-        this.maxDistanceSquared = maxDistance * maxDistance;
+        this.maxDistanceSquared = maxDistance >= 0 ? maxDistance * maxDistance : -1;
         this.quitOnTp = node.getBool("leave-arena-when-tp", true);
     }
 

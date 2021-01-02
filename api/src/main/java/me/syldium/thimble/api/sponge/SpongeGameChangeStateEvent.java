@@ -2,7 +2,7 @@ package me.syldium.thimble.api.sponge;
 
 import me.syldium.thimble.api.GameEvent;
 import me.syldium.thimble.api.arena.ThimbleGame;
-import me.syldium.thimble.api.arena.ThimbleGameState;
+import me.syldium.thimble.api.arena.ThimbleState;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.cause.Cause;
@@ -17,11 +17,11 @@ import org.spongepowered.api.event.impl.AbstractEvent;
 public class SpongeGameChangeStateEvent extends AbstractEvent implements Cancellable, GameEvent {
 
     private final ThimbleGame game;
-    private final ThimbleGameState newState;
+    private final ThimbleState newState;
     private boolean cancelled = false;
     private final Cause cause;
 
-    public SpongeGameChangeStateEvent(@NotNull ThimbleGame game, @NotNull ThimbleGameState newState, @NotNull Cause cause) {
+    public SpongeGameChangeStateEvent(@NotNull ThimbleGame game, @NotNull ThimbleState newState, @NotNull Cause cause) {
         this.game = game;
         this.newState = newState;
         this.cause = cause;
@@ -32,7 +32,12 @@ public class SpongeGameChangeStateEvent extends AbstractEvent implements Cancell
         return this.game;
     }
 
-    public @NotNull ThimbleGameState getNewState() {
+    /**
+     * Gets the state that will be set if the event is not cancelled.
+     *
+     * @return The new state.
+     */
+    public @NotNull ThimbleState getNewState() {
         return this.newState;
     }
 
