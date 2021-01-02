@@ -1,4 +1,4 @@
-package me.syldium.decoudre.service;
+package me.syldium.thimble.service;
 
 import me.syldium.thimble.api.Ranking;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
@@ -21,7 +21,7 @@ public class LeaderboardTest {
 
     public LeaderboardTest() {
         this.leaderboard = Leaderboard.of(Ranking.WINS);
-        for (int wins : new int[] { 40, 37, 32, 25, 23, 11, 9, 8, 4, 3 }) {
+        for (int wins : new int[]{40, 37, 32, 25, 23, 11, 9, 8, 4, 3}) {
             this.leaderboard.add(this.newPlayerStats(wins));
         }
     }

@@ -11,12 +11,14 @@ import me.syldium.thimble.api.util.Leaderboard;
 import me.syldium.thimble.common.util.ResourceReader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -75,6 +77,11 @@ public class SqlDataService implements DataService {
 
     public SqlDataService(@NotNull File file, @NotNull DependencyResolver dependencyResolver, @NotNull Logger logger, @NotNull Type type) {
         this(String.format("jdbc:%s:%s", type.name().toLowerCase(Locale.ROOT), file.getAbsolutePath()), null, null, dependencyResolver, logger, type);
+    }
+
+    @TestOnly
+    public SqlDataService() {
+        this("jdbc:sqlite::memory:", null, null, new DependencyResolver(Paths.get(""), Logger.getLogger("Dependency")), Logger.getLogger("SqlDataService"), Type.SQLITE);
     }
 
     public static @NotNull SqlDataService fromConfig(@NotNull ThimblePlugin plugin, @NotNull MainConfig config) {

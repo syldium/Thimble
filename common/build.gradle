@@ -10,6 +10,11 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation('org.spongepowered:configurate-gson:4.0.0') {
+        exclude(module: 'checker-qual')
+        exclude(module: 'guava')
+    }
+    testImplementation 'org.xerial:sqlite-jdbc:3.34.0'
 }
 
 test {

@@ -1,8 +1,8 @@
-package me.syldium.decoudre.util;
+package me.syldium.thimble.mock.util;
 
 import me.syldium.thimble.common.world.BlockData;
 
-public enum TestableBlockData implements BlockData {
+public enum BlockDataMock implements BlockData {
     ONE,
     TWO,
     THREE,

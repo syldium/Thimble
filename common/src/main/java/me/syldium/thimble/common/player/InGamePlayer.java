@@ -7,7 +7,6 @@ import me.syldium.thimble.common.game.Game;
 import me.syldium.thimble.common.world.BlockData;
 
 import java.util.UUID;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
