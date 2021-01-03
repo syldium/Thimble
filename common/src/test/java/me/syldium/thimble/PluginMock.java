@@ -1,5 +1,6 @@
 package me.syldium.thimble;
 
+import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.mock.adpater.EventAdapterMock;
 import me.syldium.thimble.mock.adpater.PlayerAdapterMock;
 import me.syldium.thimble.mock.config.ConfigurateManager;
@@ -8,14 +9,10 @@ import me.syldium.thimble.mock.player.PlayerMock;
 import me.syldium.thimble.mock.TickScheduler;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.common.ThimblePlugin;
-import me.syldium.thimble.common.adapter.EventAdapter;
-import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.command.CommandManager;
-import me.syldium.thimble.common.config.ConfigManager;
-import me.syldium.thimble.common.config.SavedPlayersManager;
-import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.util.Fireworks;
 import me.syldium.thimble.common.util.Task;
+import me.syldium.thimble.mock.util.BlockDataMock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +30,7 @@ public class PluginMock extends ThimblePlugin {
 
     private final File dataFolder;
     private final Map<UUID, PlayerMock> players;
+    private final Map<BlockVector, BlockDataMock> world = new HashMap<>();
     private final ConfigurateManager configManager;
     private final CommandManager commandManager;
     private final TickScheduler scheduler;
@@ -48,7 +46,7 @@ public class PluginMock extends ThimblePlugin {
         this.commandManager = new CommandManager();
         this.scheduler = new TickScheduler();
         this.eventAdapter = new EventAdapterMock();
-        this.playerAdapter = new PlayerAdapterMock();
+        this.playerAdapter = new PlayerAdapterMock(this);
         this.savedPlayersManager = new SavedPlayersManagerMock(this);
         this.enable();
 
@@ -74,7 +72,12 @@ public class PluginMock extends ThimblePlugin {
 
     @Override
     public @NotNull Fireworks spawnFireworks(@NotNull Location from) {
-        return null;
+        return new Fireworks() {
+            @Override
+            public void spawn(int count) {
+
+            }
+        };
     }
 
     @Override
@@ -83,7 +86,7 @@ public class PluginMock extends ThimblePlugin {
     }
 
     @Override
-    public @Nullable Player getPlayer(@NotNull UUID uuid) {
+    public @Nullable PlayerMock getPlayer(@NotNull UUID uuid) {
         return this.players.get(uuid);
     }
 
@@ -103,22 +106,22 @@ public class PluginMock extends ThimblePlugin {
     }
 
     @Override
-    public @NotNull EventAdapter<?> getEventAdapter() {
+    public @NotNull EventAdapterMock getEventAdapter() {
         return this.eventAdapter;
     }
 
     @Override
-    public @NotNull PlayerAdapter<?, ?> getPlayerAdapter() {
+    public @NotNull PlayerAdapterMock getPlayerAdapter() {
         return this.playerAdapter;
     }
 
     @Override
-    public @NotNull ConfigManager<? extends ThimblePlugin> getConfigManager() {
+    public @NotNull ConfigurateManager getConfigManager() {
         return this.configManager;
     }
 
     @Override
-    public @NotNull SavedPlayersManager<?> getSavedPlayersManager() {
+    public @NotNull SavedPlayersManagerMock getSavedPlayersManager() {
         return this.savedPlayersManager;
     }
 
@@ -136,5 +139,13 @@ public class PluginMock extends ThimblePlugin {
 
     public @NotNull TickScheduler getScheduler() {
         return this.scheduler;
+    }
+
+    public @NotNull Map<BlockVector, BlockDataMock> getWorld() {
+        return this.world;
+    }
+
+    public @Nullable BlockDataMock getBlockData(@NotNull BlockVector pos) {
+        return this.world.get(pos);
     }
 }

@@ -35,7 +35,6 @@ shadowJar {
     dependencies {
         exclude(dependency('org.checkerframework:checker-qual'))
         exclude(dependency('org.jetbrains:annotations'))
-        exclude(dependency('net.kyori:examination-string'))
     }
 
     relocate 'net.kyori.adventure', 'me.syldium.thimble.lib.adventure'

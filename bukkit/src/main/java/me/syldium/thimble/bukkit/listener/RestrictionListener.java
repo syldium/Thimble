@@ -36,7 +36,8 @@ public class RestrictionListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         if (this.isRestricted(event.getPlayer())) {
             event.setCancelled(true);
-        } else if (this.clickable.contains(event.getBlock().getType())) {
+        }
+        if (this.clickable.contains(event.getBlock().getType())) {
             Block block = event.getBlock();
             this.plugin.getGameService().removeSign(new BlockPos(block.getWorld().getUID(), block.getX(), block.getY(), block.getZ()));
         }

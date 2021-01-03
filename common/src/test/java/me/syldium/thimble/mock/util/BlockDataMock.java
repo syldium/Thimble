@@ -10,6 +10,6 @@ public enum BlockDataMock implements BlockData {
     FIVE,
     SIX,
     SEVEN,
-    EIGHT,
-    NINE
+    WATER,
+    AIR
 }

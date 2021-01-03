@@ -17,8 +17,6 @@ import me.syldium.thimble.common.player.media.TimedMedia;
 import me.syldium.thimble.common.util.PlayerMap;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.common.world.BlockData;
-import me.syldium.thimble.common.world.Blocks;
-import me.syldium.thimble.common.world.PoolBlock;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.util.Ticks;
@@ -26,11 +24,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -56,7 +54,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     protected final TimedMedia jumperMedia;
 
     protected final Set<BlockVector> remainingWaterBlocks;
-    protected final List<PoolBlock> blocks = new ArrayList<>();
+    protected final Map<BlockVector, BlockData> blocks = new HashMap<>();
 
     protected int timer, messageTimer;
     protected final int countdownTicks;
@@ -198,6 +196,7 @@ public abstract class Game implements ThimbleGame, Runnable {
 
     protected void end(@Nullable InGamePlayer latest) {
         this.plugin.getEventAdapter().callGameEndEvent(this, latest);
+        this.state = ThimbleState.END;
         this.jumperMedia.hide(this.players);
         Player latestPlayer = latest == null ? null : this.plugin.getPlayer(latest.uuid());
         if (latestPlayer != null) {
@@ -231,9 +230,8 @@ public abstract class Game implements ThimbleGame, Runnable {
 
         this.players.sendActionBar(MessageKey.ACTIONBAR_ENDED);
         this.players.clear();
-        for (PoolBlock block : this.blocks) {
-            block.setBlockData(Blocks.WATER);
-        }
+        this.plugin.getPlayerAdapter().clearPool(this.arena.getJumpLocation().getWorldUUID(), this.blocks);
+        this.blocks.clear();
         this.arena.checkGame();
     }
 
@@ -291,7 +289,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         return set;
     }
 
-    public @Nullable ThimblePlayer getPlayer(@NotNull UUID uuid) {
+    public @Nullable InGamePlayer getPlayer(@NotNull UUID uuid) {
         return this.players.get(uuid);
     }
 

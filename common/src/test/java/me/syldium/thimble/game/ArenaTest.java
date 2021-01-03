@@ -28,11 +28,19 @@ public class ArenaTest {
 
     @Test
     public void locations() throws IOException {
-        Arena arena = new Arena(new PluginMock(), "arena");
+        PluginMock plugin = new PluginMock();
+        Arena arena = new Arena(plugin, "arena");
         assertThrows(IllegalStateException.class, () -> arena.addPlayer(UUID.randomUUID()));
         UUID world = UUID.randomUUID();
         arena.setSpawnLocation(new Location(world, 400, 70, 70));
         arena.setWaitLocation(new Location(world, 400, 70, 70));
         assertThrows(IllegalStateException.class, () -> arena.addPlayer(UUID.randomUUID()));
+
+        arena.setJumpLocation(new Location(world, 400, 70, 70));
+        arena.addPlayer(plugin.addPlayer());
+        arena.setJumpLocation(new Location(world, 10, 70, -20));
+        assertThrows(IllegalStateException.class, () -> arena.setJumpLocation(null));
+        assertEquals(new Location(world, 10, 70, -20), arena.getJumpLocation());
+        plugin.getScheduler().cancelAllTasks();
     }
 }

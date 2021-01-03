@@ -1,5 +1,7 @@
 package me.syldium.thimble.mock.adpater;
 
+import me.syldium.thimble.PluginMock;
+import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.mock.player.PlayerMock;
 import me.syldium.thimble.mock.util.BlockDataMock;
 import me.syldium.thimble.api.Location;
@@ -12,12 +14,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 public class PlayerAdapterMock implements PlayerAdapter<PlayerMock, Location> {
 
     private final List<BlockDataMock> blocks = List.of(BlockDataMock.ONE, BlockDataMock.TWO, BlockDataMock.THREE);
+    private final PluginMock plugin;
+
+    public PlayerAdapterMock(@NotNull PluginMock plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean isDeCoudre(@NotNull PoolBlock abstracted) {
@@ -27,6 +35,11 @@ public class PlayerAdapterMock implements PlayerAdapter<PlayerMock, Location> {
     @Override
     public @NotNull List<BlockDataMock> getAvailableBlocks() {
         return this.blocks;
+    }
+
+    @Override
+    public void clearPool(@NotNull UUID worldUUID, @NotNull Map<BlockVector, BlockData> blocks) {
+        this.plugin.getWorld().clear();
     }
 
     @Override

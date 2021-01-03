@@ -53,8 +53,8 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
 
             if (player.isInWater()) {
                 PoolBlock block = player.getFirstLiquidBlock();
+                this.blocks.put(block.getPosition(), block.getBlockData());
                 block.setBlockData(inGamePlayer.getChosenBlock());
-                this.blocks.add(block);
                 JumpVerdict verdict = this.plugin.getPlayerAdapter().isDeCoudre(block) ? JumpVerdict.THIMBLE : JumpVerdict.LANDED;
                 this.onJump(player, inGamePlayer, verdict);
             }

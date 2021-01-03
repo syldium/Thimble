@@ -10,6 +10,7 @@ import me.syldium.thimble.common.world.PoolBlock;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -25,6 +26,8 @@ public interface PlayerAdapter<P, L> {
     boolean isDeCoudre(@NotNull PoolBlock abstracted);
 
     @NotNull List<@NotNull ? extends BlockData> getAvailableBlocks();
+
+    void clearPool(@NotNull UUID worldUUID, @NotNull Map<BlockVector, BlockData> blocks);
 
     default @NotNull BlockData getRandomBlock() {
         return this.getAvailableBlocks().get(new Random().nextInt(this.getAvailableBlocks().size()));

@@ -42,6 +42,12 @@ public class TickScheduler {
         }
     }
 
+    public void assertNothingScheduled() {
+        if (!this.tasks.isEmpty()) {
+            fail("Something is scheduled.");
+        }
+    }
+
     static class TaskMock implements Task {
 
         private final TickScheduler scheduler;

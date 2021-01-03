@@ -11,6 +11,7 @@ import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.Player;
+import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.PoolBlock;
 import me.syldium.thimble.bukkit.world.BukkitPoolBlock;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -69,6 +70,16 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     @Override
     public @NotNull List<BukkitBlockData> getAvailableBlocks() {
         return this.blockDatas;
+    }
+
+    @Override
+    public void clearPool(@NotNull UUID worldUUID, @NotNull Map<BlockVector, BlockData> blocks) {
+        World world = requireNonNull(this.bootstrap.getServer().getWorld(worldUUID), "world");
+        for (Map.Entry<BlockVector, BlockData> entry : blocks.entrySet()) {
+            BlockVector pos = entry.getKey();
+            Block block = world.getBlockAt(pos.getX(), pos.getY(), pos.getZ());
+            block.setBlockData(((BukkitBlockData) entry.getValue()).getHandle());
+        }
     }
 
     @Override

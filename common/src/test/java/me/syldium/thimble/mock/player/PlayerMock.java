@@ -5,7 +5,8 @@ import me.syldium.thimble.api.Location;
 import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
-import me.syldium.thimble.common.world.PoolBlock;
+import me.syldium.thimble.mock.util.BlockDataMock;
+import me.syldium.thimble.mock.util.BlockMock;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +26,7 @@ public class PlayerMock implements Player {
     private final PluginMock plugin;
 
     private Location location = new Location(UUID.randomUUID(), 0, 0, 0);
-    private boolean clearedInventory, inWater, spectator, vanished;
+    private boolean clearedInventory, spectator, vanished;
 
     public PlayerMock(@NotNull PluginMock plugin, @NotNull String name, @NotNull UUID uniqueId) {
         this.plugin = plugin;
@@ -75,8 +76,8 @@ public class PlayerMock implements Player {
     }
 
     @Override
-    public @NotNull PoolBlock getFirstLiquidBlock() {
-        throw new UnsupportedOperationException();
+    public @NotNull BlockMock getFirstLiquidBlock() {
+        return new BlockMock(this.plugin, this.getLocation().asBlockPosition());
     }
 
     public void restoreInventory() {
@@ -85,11 +86,7 @@ public class PlayerMock implements Player {
 
     @Override
     public boolean isInWater() {
-        return this.inWater;
-    }
-
-    public void setInWater(boolean inWater) {
-        this.inWater = inWater;
+        return this.plugin.getBlockData(this.location.asBlockPosition()) == BlockDataMock.WATER;
     }
 
     @Override
@@ -101,6 +98,10 @@ public class PlayerMock implements Player {
     @Override
     public void spectate() {
         this.spectator = true;
+    }
+
+    public boolean isSpectator() {
+        return this.spectator;
     }
 
     @Override

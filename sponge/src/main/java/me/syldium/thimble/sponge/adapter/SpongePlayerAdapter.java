@@ -5,6 +5,7 @@ import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.player.InGamePlayer;
+import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.PoolBlock;
 import me.syldium.thimble.sponge.ThSpongePlugin;
 import me.syldium.thimble.sponge.command.SpongeSender;
@@ -69,6 +70,15 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     @Override
     public @NotNull List<SpongeBlockData> getAvailableBlocks() {
         return this.blockDatas;
+    }
+
+    @Override
+    public void clearPool(@NotNull UUID worldUUID, @NotNull Map<BlockVector, BlockData> blocks) {
+        World world = this.plugin.getServer().getWorld(worldUUID).orElseThrow(() -> new RuntimeException("A world was expected here."));
+        for (Map.Entry<BlockVector, BlockData> entry : blocks.entrySet()) {
+            BlockVector pos = entry.getKey();
+            world.setBlock(pos.getX(), pos.getY(), pos.getZ(), ((SpongeBlockData) entry.getValue()).getHandle());
+        }
     }
 
     @Override

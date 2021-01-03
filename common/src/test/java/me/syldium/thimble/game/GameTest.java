@@ -2,23 +2,34 @@ package me.syldium.thimble.game;
 
 import me.syldium.thimble.PluginMock;
 import me.syldium.thimble.api.arena.ThimbleGameMode;
+import me.syldium.thimble.api.player.JumpVerdict;
+import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.common.game.Game;
+import me.syldium.thimble.common.game.SingleGame;
+import me.syldium.thimble.common.player.InGamePlayer;
+import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.mock.player.PlayerMock;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.common.game.Arena;
+import me.syldium.thimble.mock.util.BlockDataMock;
 import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -33,6 +44,7 @@ public class GameTest {
     @AfterEach
     public void cancelTasks() {
         this.plugin.getScheduler().cancelAllTasks();
+        this.plugin.getWorld().clear();
     }
 
     @Test
@@ -88,6 +100,40 @@ public class GameTest {
         }
     }
 
+    @Test
+    public void singleMode() {
+        Arena arena = this.newArena(ThimbleGameMode.SINGLE);
+        this.joinThreePlayers(arena);
+        SingleGame game = (SingleGame) arena.getGame().get();
+        this.plugin.getScheduler().nextTicks(Ticks.TICKS_PER_SECOND + 3);
+        UUID jumperUniqueId = game.getCurrentJumper();
+        assertNotNull(jumperUniqueId);
+
+        // The first player fails.
+        game.verdict(jumperUniqueId, JumpVerdict.MISSED);
+        assertFalse(game.getAlivePlayers().stream().anyMatch(p -> p.uuid().equals(jumperUniqueId)));
+        this.plugin.getScheduler().nextTick();
+        List<UUID> playersWhoJumped = new LinkedList<>();
+        playersWhoJumped.add(jumperUniqueId);
+
+        // The others pass their jump.
+        UUID uuid = this.assertLanded(game, 21);
+        assertFalse(playersWhoJumped.contains(uuid));
+        playersWhoJumped.add(uuid);
+        uuid = this.assertLanded(game, 23);
+        assertFalse(playersWhoJumped.contains(uuid));
+        playersWhoJumped.add(uuid);
+
+        // End of the game.
+        this.plugin.getScheduler().nextTick();
+        assertEquals(2, game.getAlivePlayers().size());
+        assertEquals(playersWhoJumped.get(1), game.getCurrentJumper());
+        game.verdict(playersWhoJumped.get(1), JumpVerdict.MISSED);
+        assertEquals(ThimbleState.END, game.getState());
+        this.plugin.getScheduler().assertNothingScheduled();
+        assertTrue(this.plugin.getWorld().isEmpty());
+    }
+
     private @NotNull Arena newArena(@NotNull ThimbleGameMode gameMode) {
         Arena arena = new Arena(this.plugin, "test");
         UUID world = UUID.randomUUID();
@@ -108,5 +154,39 @@ public class GameTest {
             assertEquals(arena.getSpawnLocation(), players.get(i).getLocation());
         }
         return players;
+    }
+
+    /**
+     * Verifies that the player makes a successful jump while in the water.
+     *
+     * @param game The player's game.
+     * @param down The height of the water block where the player will land.
+     * @return The player who jumped.
+     */
+    private @NotNull UUID assertLanded(@NotNull SingleGame game, @Range(from = 1, to = Integer.MAX_VALUE) int down) {
+        UUID jumperUniqueId = game.getCurrentJumper();
+        assertNotNull(jumperUniqueId, "A player must jump.");
+        InGamePlayer inGamePlayer = game.getPlayer(jumperUniqueId);
+        assertNotNull(inGamePlayer, "The player who jumps must have an instance of InGamePlayer.");
+        Player player = requireNonNull(this.plugin.getPlayer(jumperUniqueId), "player");
+        int prevJumps = inGamePlayer.getJumps();
+
+        // Sets the player's location.
+        assertEquals(game.getArena().getJumpLocation(), player.getLocation(), "The player must be at the jump location.");
+        Location location = game.getArena().getJumpLocation().down(down);
+        BlockVector pos = location.asBlockPosition();
+        this.plugin.getWorld().put(pos, BlockDataMock.WATER);
+        player.teleport(location);
+
+        // The player must have scored.
+        this.plugin.getScheduler().nextTick();
+        assertEquals(game.getArena().getWaitLocation(), player.getLocation(), "The player should be teleported at the waiting location.");
+        assertEquals(prevJumps + 1, inGamePlayer.getJumps(), "The jump counter should be updated.");
+        assertEquals(inGamePlayer.getChosenBlock(), this.plugin.getBlockData(pos), "The player's block should be placed.");
+        assertFalse(inGamePlayer.isSpectator(), "The player must not be a spectator.");
+        assertTrue(game.getAlivePlayers().stream().anyMatch(p -> p.uuid().equals(jumperUniqueId)), "The player should be in the set of alive players.");
+        this.plugin.getScheduler().nextTick();
+
+        return jumperUniqueId;
     }
 }

@@ -72,10 +72,10 @@ public class BlockBalancerTest {
 
     private @NotNull List<@NotNull InGamePlayer> newLongPlayerList() {
         List<InGamePlayer> list = this.newPlayerList();
-        list.add(this.newInGamePlayer(BlockDataMock.NINE));
+        list.add(this.newInGamePlayer(BlockDataMock.TWO));
         list.add(this.newInGamePlayer(BlockDataMock.SEVEN));
-        list.add(this.newInGamePlayer(BlockDataMock.NINE));
-        list.add(this.newInGamePlayer(BlockDataMock.EIGHT));
+        list.add(this.newInGamePlayer(BlockDataMock.TWO));
+        list.add(this.newInGamePlayer(BlockDataMock.FIVE));
         list.add(this.newInGamePlayer(BlockDataMock.SIX));
         return list;
     }
