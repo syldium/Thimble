@@ -34,6 +34,13 @@ public abstract class AbstractCommand {
         return this.name;
     }
 
+    protected @NotNull String getPath() {
+        if (this.parent != null) {
+            return this.parent.getPath() + " " + this.name;
+        }
+        return this.name;
+    }
+
     public abstract @NotNull Component getHelp(@NotNull MessageService service);
 
     public abstract @NotNull Component getUsage(@NotNull MessageService service);

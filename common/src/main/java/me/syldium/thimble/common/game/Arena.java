@@ -19,11 +19,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Pattern;
 
 public class Arena implements ThimbleArena {
 
-    private static final Pattern VALID_NAME = Pattern.compile("[\\w-]+");
     private static final String UNSET_LOCATION_IN_GAME = "Cannot unset the %s location on a game that has already been started.";
 
     private final String rawName;
@@ -38,9 +36,6 @@ public class Arena implements ThimbleArena {
     private ThimbleGameMode gameMode = ThimbleGameMode.SINGLE;
 
     public Arena(@NotNull ThimblePlugin plugin, @NotNull String name) {
-        if (!VALID_NAME.matcher(name).matches()) {
-            throw new IllegalArgumentException("Invalid arena name. Must be [A-Za-z0-9_-]: " + name);
-        }
         this.plugin = plugin;
         this.rawName = name;
         this.name = MiniMessage.get().parse(name);

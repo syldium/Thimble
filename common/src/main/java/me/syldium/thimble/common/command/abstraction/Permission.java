@@ -13,6 +13,10 @@ public final class Permission {
         return new Permission("thimble.arena");
     }
 
+    public static @NotNull Permission migrate() {
+        return new Permission("thimble.migrate");
+    }
+
     public static @NotNull Permission player(@NotNull String property) {
         return new Permission("thimble.player." + property);
     }

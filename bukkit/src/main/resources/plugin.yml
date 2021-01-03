@@ -9,8 +9,9 @@ softdepend: [Parties, PlaceholderAPI, WorldEdit]
 
 commands:
   thimble:
-    usage: /<command> <join|leave> [args]
+    usage: /<command> help
     aliases: [th]
+    permission: thimble.command
 
 permissions:
   thimble.arena.*:
@@ -23,6 +24,9 @@ permissions:
       thimble.arena.set.max.players: true
       thimble.arena.set.min.players: true
       thimble.arena.set.spawn: true
+  thimble.command:
+    default: true
+    description: Access to the main command.
   thimble.player.*:
     default: true
     description: Allows players to play in arenas.

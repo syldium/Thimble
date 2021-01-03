@@ -3,11 +3,13 @@ package me.syldium.thimble.bukkit.hook;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.bukkit.ThBootstrap;
 import me.syldium.thimble.common.command.arena.ArenaCommand;
+import me.syldium.thimble.common.command.migrate.MigrateCommand;
 import me.syldium.thimble.common.config.MainConfig;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -36,6 +38,11 @@ public final class PluginHook {
         if (this.isEnabled("WorldEdit")) {
             plugin.getCommandManager().lookup(ArenaCommand.class).getChildren()
                     .add(new RegionCommand(bootstrap.getServer()));
+        }
+        File file = new File(plugin.getDataFolder().getParentFile(), "DeACoudre");
+        if (file.isDirectory()) {
+            plugin.getCommandManager().lookup(MigrateCommand.class).getChildren()
+                    .add(new DeACoudreMigration(this.getPlugin("DeACoudre"), file));
         }
     }
 

@@ -32,7 +32,7 @@ public class ParentCommand extends AbstractCommand {
             throw new CommandException(MessageKey.FEEDBACK_UNKNOWN_COMMAND);
         }
 
-        sendHelp(sender, "th", this.children);
+        sendHelp(sender, "th " + this.getPath(), this.children);
         return CommandResult.success();
     }
 
@@ -99,5 +99,10 @@ public class ParentCommand extends AbstractCommand {
 
     public @NotNull List<@NotNull AbstractCommand> getChildren() {
         return this.children;
+    }
+
+    @Override
+    public boolean shouldDisplay() {
+        return !this.children.isEmpty();
     }
 }

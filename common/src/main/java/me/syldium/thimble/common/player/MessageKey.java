@@ -50,6 +50,7 @@ public enum MessageKey {
     FEEDBACK_GAME_STATS("feedback.game.stats"),
     FEEDBACK_GAME_STATS_UNKNOWN("feedback.game.stats.unknown"),
     FEEDBACK_GAME_UNKNOWN("feedback.game.unknown"),
+    FEEDBACK_MIGRATION("feedback.migration"),
     FEEDBACK_NAN("feedback.nan"),
     FEEDBACK_NOT_VALID_EXECUTOR("feedback.not-valid-executor"),
     FEEDBACK_STATS_UNKNOWN_PLAYER("feedback.stats.unknown-player"),

@@ -6,7 +6,6 @@ import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import net.kyori.adventure.identity.Identified;
 import net.kyori.adventure.identity.Identity;
-import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -66,7 +65,7 @@ public interface GameService {
      * @param name The pool name.
      * @return The new pool, or null if the name was already taken.
      */
-    @Nullable ThimbleArena createArena(@NotNull @Pattern("[\\w-]+") String name);
+    @Nullable ThimbleArena createArena(@NotNull String name);
 
     /**
      * Gets a {@link ThimbleArena}.
