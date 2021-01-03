@@ -2,9 +2,7 @@ package me.syldium.thimble.bukkit.world;
 
 import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.common.world.BlockData;
-import me.syldium.thimble.common.world.Blocks;
 import me.syldium.thimble.common.world.PoolBlock;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,10 +16,6 @@ public class BukkitPoolBlock implements PoolBlock {
 
     @Override
     public void setBlockData(@NotNull BlockData blockData) {
-        if (Blocks.WATER.equals(blockData)) {
-            this.handle.setType(Material.WATER);
-            return;
-        }
         this.handle.setBlockData(((BukkitBlockData) blockData).handle);
     }
 
