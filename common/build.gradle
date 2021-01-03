@@ -14,7 +14,7 @@ dependencies {
         exclude(module: 'checker-qual')
         exclude(module: 'guava')
     }
-    testImplementation 'org.xerial:sqlite-jdbc:3.34.0'
+    testRuntime 'org.xerial:sqlite-jdbc:3.34.0'
 }
 
 test {
