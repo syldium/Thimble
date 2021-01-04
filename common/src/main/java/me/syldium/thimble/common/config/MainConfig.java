@@ -19,13 +19,14 @@ public class MainConfig {
     private final List<String> integrations;
 
     public MainConfig(@NotNull ConfigNode config) {
-        String[] parts = config.getString("locale", "en").split("[_\\.]");
+        String languageTag = config.getString("locale", null);
+        String[] parts = languageTag == null ? new String[0] : languageTag.split("[_\\.]");
         if (parts.length == 2) {
             this.locale = new Locale(parts[0], parts[1]);
         } else if (parts.length == 3) {
             this.locale = new Locale(parts[0], parts[1], parts[2]);
         } else {
-            this.locale = new Locale(parts.length > 0 ? parts[0]: "en");
+            this.locale = parts.length > 0 ? new Locale(parts[0]) : Locale.getDefault();
         }
         this.display = config.getNode("display");
         this.game = config.getNode("game");

@@ -139,6 +139,7 @@ public class MessageServiceImpl implements MessageService {
      */
     private static class UTF8PropertiesControl extends ResourceBundle.Control {
 
+        @Override
         public ResourceBundle newBundle(final String baseName, final Locale locale, final String format, final ClassLoader loader, final boolean reload) throws IOException {
             String resourceName = this.toResourceName(this.toBundleName(baseName, locale), "properties");
             ResourceBundle bundle = null;
@@ -163,6 +164,11 @@ public class MessageServiceImpl implements MessageService {
                 }
             }
             return bundle;
+        }
+
+        @Override // ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_DEFAULT)
+        public @Nullable Locale getFallbackLocale(final String baseName, final Locale locale) {
+            return null;
         }
     }
 }
