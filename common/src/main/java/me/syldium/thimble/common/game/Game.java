@@ -210,11 +210,9 @@ public abstract class Game implements ThimbleGame, Runnable {
 
             Player p = this.plugin.getPlayer(player.uuid());
             if (p != null) {
-                this.plugin.getSavedPlayersManager().restore(p);
+                this.plugin.getSavedPlayersManager().restore(p, !this.teleportSpawnAtEnd);
                 if (this.teleportSpawnAtEnd) {
                     p.teleport(this.arena.getSpawnLocation());
-                } else {
-                    p.teleport(player.getLastLocation());
                 }
             } else {
                 this.plugin.getSavedPlayersManager().getPending().add(player.uuid());
@@ -377,13 +375,9 @@ public abstract class Game implements ThimbleGame, Runnable {
         Player p = this.plugin.getPlayer(player);
         if (p != null) {
             this.players.sendMessage(MessageKey.CHAT_LEFT, Template.of("player", p.name()));
-            this.plugin.getSavedPlayersManager().restore(p);
-            if (teleport) {
-                if (this.teleportSpawnAtEnd) {
-                    p.teleport(this.arena.getSpawnLocation());
-                } else {
-                    p.teleport(inGamePlayer.getLastLocation());
-                }
+            this.plugin.getSavedPlayersManager().restore(p, teleport && !this.teleportSpawnAtEnd);
+            if (teleport && this.teleportSpawnAtEnd) {
+                p.teleport(this.arena.getSpawnLocation());
             }
         }
         this.arena.checkGame();

@@ -93,11 +93,11 @@ public abstract class SavedPlayersManager<P> {
      *
      * @param player The player.
      */
-    public void restore(@NotNull Player player) {
+    public void restore(@NotNull Player player, boolean withLocation) {
         UUID uuid = player.uuid();
         SavedPlayer<P> saved = this.savedPlayers.get(uuid);
         if (saved != null) {
-            saved.restore(player);
+            saved.restore(player, withLocation);
             this.savedPlayers.remove(uuid);
             if (this.saveDirectory != null) {
                 this.delete(uuid);

@@ -5,13 +5,14 @@ import me.syldium.thimble.api.util.BlockVector;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Represents a 3-dimensional position in a world.
  */
-public class Location {
+public class Location implements Serializable {
 
     private final UUID world;
     private final double x;

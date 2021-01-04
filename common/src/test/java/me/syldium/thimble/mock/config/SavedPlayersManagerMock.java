@@ -33,7 +33,7 @@ public class SavedPlayersManagerMock extends SavedPlayersManager<PlayerMock> {
         }
 
         @Override
-        public void restore(@NotNull PlayerMock player) {
+        public void restore(@NotNull PlayerMock player, boolean withLocation) {
             player.restoreInventory();
         }
     }

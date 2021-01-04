@@ -162,7 +162,7 @@ public class GameTest {
         Set<Location> locations = Set.of(arena.getJumpLocation(), arena.getWaitLocation());
         for (PlayerMock player : this.plugin.getPlayers()) {
             if (player.equals(vanishedPlayer)) {
-                assertEquals(arena.getWaitLocation(), player.getLocation());
+                assertTrue(Set.of(arena.getSpawnLocation(), arena.getWaitLocation()).contains(player.getLocation()));
             } else {
                 assertTrue(locations.contains(player.getLocation()));
             }
