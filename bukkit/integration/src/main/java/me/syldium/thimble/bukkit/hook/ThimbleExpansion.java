@@ -9,6 +9,8 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -22,10 +24,17 @@ class ThimbleExpansion extends PlaceholderExpansion {
     private static final Pattern DELIMITER = Pattern.compile("_");
 
     private final StatsService service;
+    private final List<String> placeholders;
 
     ThimbleExpansion(@NotNull StatsService service) {
         this.service = service;
         this.register();
+        this.placeholders = new ArrayList<>(Ranking.values().length * 2);
+        for (Ranking ranking : Ranking.values()) {
+            String placeholder = this.getIdentifier() + "_lb_" + ranking.name().toLowerCase(Locale.ROOT);
+            this.placeholders.add(placeholder);
+            this.placeholders.add(placeholder + "_name");
+        }
     }
 
     @Override
@@ -46,6 +55,11 @@ class ThimbleExpansion extends PlaceholderExpansion {
         }
 
         return null;
+    }
+
+    @Override
+    public @NotNull List<String> getPlaceholders() {
+        return this.placeholders;
     }
 
     private @Nullable RankingPosition parseRankingPosition(@NotNull String ranking, @NotNull String position) {
