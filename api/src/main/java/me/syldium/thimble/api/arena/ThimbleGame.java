@@ -2,6 +2,7 @@ package me.syldium.thimble.api.arena;
 
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.JumpVerdict;
+import me.syldium.thimble.api.util.BlockVector;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identified;
 import org.jetbrains.annotations.Contract;
@@ -153,12 +154,20 @@ public interface ThimbleGame {
     boolean isEmpty();
 
     /**
+     * Returns the number of players in the game - vanished players are ignored.
+     *
+     * @return The number of non vanished players.
+     */
+    @Contract(pure = true)
+    int size();
+
+    /**
      * Returns the number of players in the game.
      *
      * @return The number of players.
      */
     @Contract(pure = true)
-    int size();
+    int realSize();
 
     /**
      * Gets the player audience.
@@ -188,13 +197,13 @@ public interface ThimbleGame {
     }
 
     /**
-     * Returns the number of known remaining water blocks.
+     * Returns the position of known remaining water blocks.
      *
-     * @return The remaining number.
+     * @return The remaining block vectors.
      * @throws IllegalStateException If the pool dimensions have not been defined.
      */
     @Contract(pure = true)
-    int getRemainingWaterBlocks();
+    @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks();
 
     /**
      * Returns {@code true} if the pool is full.
@@ -204,6 +213,6 @@ public interface ThimbleGame {
      */
     @Contract(pure = true)
     default boolean isPoolFull() {
-        return this.getRemainingWaterBlocks() < 1;
+        return this.getRemainingWaterBlocks().size() < 1;
     }
 }

@@ -358,7 +358,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                 player.setMiniGameMode();
             }
             player.teleport(this.arena.getSpawnLocation());
-            if (this.remainingWaterBlocks == null && this.size() >= this.arena.getMinPlayers()) {
+            if (this.remainingWaterBlocks == null && this.players.size() >= this.arena.getMinPlayers()) {
                 this.searchRemainingBlocks();
             }
             return true;
@@ -401,16 +401,24 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     @Override
+    public int realSize() {
+        return this.players.realSize();
+    }
+
+    @Override
     public @NotNull Audience audience() {
         return this.players;
     }
 
     @Override
-    public int getRemainingWaterBlocks() {
+    public @NotNull Set<BlockVector> getRemainingWaterBlocks() {
         if (this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null) {
             throw new IllegalStateException("The pool dimensions have not been defined.");
         }
-        return this.remainingWaterBlocks.size();
+        if (this.remainingWaterBlocks == null) {
+            this.searchRemainingBlocks();
+        }
+        return this.remainingWaterBlocks;
     }
 
     public void spectate(@NotNull ThimblePlayer inGamePlayer, @NotNull UUID playerUniqueId) {

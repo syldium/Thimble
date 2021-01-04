@@ -1,5 +1,6 @@
 package me.syldium.thimble.common.util;
 
+import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.PlayerAudience;
 import me.syldium.thimble.common.player.MessageKey;
@@ -7,7 +8,6 @@ import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.player.media.TimedMedia;
 import me.syldium.thimble.common.service.MessageService;
 import net.kyori.adventure.audience.ForwardingAudience;
-import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
@@ -22,10 +22,11 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements PlayerAudience, ForwardingAudience, Iterable<E> {
+public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> implements PlayerAudience, ForwardingAudience, Iterable<E> {
 
     private final ThimblePlugin plugin;
     private final TimedMedia media;
+    private transient int size = 0; // Without invisible players
 
     public PlayerMap(@NotNull ThimblePlugin plugin) {
         this.plugin = plugin;
@@ -33,6 +34,7 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements P
     }
 
     public boolean add(@NotNull E player) {
+        if (!player.isVanished()) this.size++;
         return this.put(player.uuid(), player) == null;
     }
 
@@ -42,11 +44,23 @@ public class PlayerMap<E extends Identity> extends HashMap<UUID, E> implements P
 
     public E remove(@NotNull UUID uuid) {
         E removed = this.remove((Object) uuid);
+        if (removed != null && !removed.isVanished()) {
+            this.size--;
+        }
         Player player = this.plugin.getPlayer(uuid);
         if (player != null) {
             this.media.hide(player);
         }
         return removed;
+    }
+
+    @Override
+    public int size() {
+        return this.size;
+    }
+
+    public int realSize() {
+        return super.size();
     }
 
     public @NotNull Set<UUID> uuidSet() {

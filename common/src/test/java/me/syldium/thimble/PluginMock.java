@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -103,6 +104,14 @@ public class PluginMock extends ThimblePlugin {
 
     public void removePlayer(@NotNull UUID uuid) {
         this.players.remove(uuid);
+    }
+
+    public void removeAllPlayers() {
+        this.players.clear();
+    }
+
+    public @NotNull Collection<PlayerMock> getPlayers() {
+        return this.players.values();
     }
 
     @Override

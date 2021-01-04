@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
@@ -45,6 +46,7 @@ public class GameTest {
     public void cancelTasks() {
         this.plugin.getScheduler().cancelAllTasks();
         this.plugin.getWorld().clear();
+        this.plugin.removeAllPlayers();
     }
 
     @Test
@@ -132,6 +134,50 @@ public class GameTest {
         assertEquals(ThimbleState.END, game.getState());
         this.plugin.getScheduler().assertNothingScheduled();
         assertTrue(this.plugin.getWorld().isEmpty());
+    }
+
+    @Test
+    public void vanishedPlayer() {
+        Arena arena = this.newArena(ThimbleGameMode.SINGLE);
+        arena.addPlayer(this.plugin.addPlayer());
+        arena.addPlayer(this.plugin.addPlayer());
+        PlayerMock vanishedPlayer = this.plugin.addPlayer();
+        vanishedPlayer.setVanished(true);
+        arena.addPlayer(vanishedPlayer);
+
+        // The player should not have any influence on the game start.
+        arena.setMinPlayers(3);
+        this.plugin.getScheduler().nextTick();
+        SingleGame game = (SingleGame) arena.getGame().get();
+        assertEquals(ThimbleState.WAITING, game.getState());
+        arena.setMinPlayers(2);
+
+        this.plugin.getScheduler().nextTick();
+        assertEquals(ThimbleState.STARTING, game.getState());
+        assertEquals(2, game.size(), "The vanished player should not be counted in the players count.");
+        assertEquals(3, game.realSize());
+
+        // The vanished player is teleported, but must not be in the queue...
+        this.plugin.getScheduler().nextTicks(Ticks.TICKS_PER_SECOND + 3);
+        Set<Location> locations = Set.of(arena.getJumpLocation(), arena.getWaitLocation());
+        for (PlayerMock player : this.plugin.getPlayers()) {
+            if (player.equals(vanishedPlayer)) {
+                assertEquals(arena.getWaitLocation(), player.getLocation());
+            } else {
+                assertTrue(locations.contains(player.getLocation()));
+            }
+        }
+        assertNotEquals(game.getCurrentJumper(), vanishedPlayer.uuid());
+        assertNotEquals(game.peekNextJumper(), vanishedPlayer.uuid());
+        game.verdict(JumpVerdict.LANDED);
+        this.plugin.getScheduler().nextTick();
+        assertNotEquals(game.peekNextJumper(), vanishedPlayer.uuid());
+
+        // ...and must not prevent the game from ending.
+        game.verdict(JumpVerdict.MISSED);
+        this.plugin.getScheduler().nextTick();
+        assertEquals(ThimbleState.END, game.getState());
+        this.plugin.getScheduler().assertNothingScheduled();
     }
 
     private @NotNull Arena newArena(@NotNull ThimbleGameMode gameMode) {
