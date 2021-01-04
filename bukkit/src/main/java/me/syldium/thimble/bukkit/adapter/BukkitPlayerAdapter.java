@@ -22,6 +22,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -92,15 +93,31 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
         World world = requireNonNull(this.bootstrap.getServer().getWorld(worldUUID), "world");
         Set<BlockVector> set = new HashSet<>();
         for (int x = minPoint.getX(); x <= maxPoint.getX(); x++) {
-            for (int y = minPoint.getY(); y <= maxPoint.getY(); y++) {
-                for (int z = minPoint.getZ(); z <= maxPoint.getZ(); z++) {
-                    if (world.getBlockAt(x, y, z).isLiquid()) {
-                        set.add(new BlockVector(x, y, z));
-                    }
+            for (int z = minPoint.getZ(); z <= maxPoint.getZ(); z++) {
+                BlockVector block = this.getHighestWaterBlock(world, x, z, minPoint.getY(), maxPoint.getY());
+                if (block != null) {
+                    set.add(block);
                 }
             }
         }
         return set;
+    }
+
+    private @Nullable BlockVector getHighestWaterBlock(@NotNull World world, int x, int z, int minY, int maxY) {
+        Block block = world.getBlockAt(x, minY, z);
+        boolean liquid = BukkitUtil.containsLiquid(block);
+        int y = minY;
+        while (++y <= maxY) {
+            block = world.getBlockAt(x, y, z);
+            if (liquid) {
+                if (!BukkitUtil.containsLiquid(block)) {
+                    return new BlockVector(x, y - 1, z);
+                }
+            } else {
+                liquid = BukkitUtil.containsLiquid(block);
+            }
+        }
+        return liquid ? new BlockVector(x, maxY, z) : null;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package me.syldium.thimble.api;
 
+import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,14 @@ public class Location {
 
     public Location(@NotNull UUID world, double x, double y, double z) {
         this(world, x, y, z, 0, 0);
+    }
+
+    public Location(@NotNull UUID world, @NotNull BlockVector position) {
+        this(world, position.getX(), position.getY(), position.getZ());
+    }
+
+    public Location(@NotNull BlockPos position) {
+        this(position.getWorldUUID(), position.getX(), position.getY(), position.getZ());
     }
 
     /**
@@ -123,6 +132,7 @@ public class Location {
      *
      * @param other The other location.
      * @return The distance.
+     * @throws IllegalArgumentException If the worlds are different.
      */
     public double distanceSquared(@NotNull Location other) {
         if (!Objects.equals(this.world, other.world)) {

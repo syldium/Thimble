@@ -231,6 +231,14 @@ public interface ThimbleArena extends ComponentLike {
     ThimbleArena setPoolMaxPoint(@Nullable BlockVector point);
 
     /**
+     * Gets the center point of the pool.
+     *
+     * @return The center point.
+     */
+    @Contract(pure = true)
+    @Nullable BlockVector getPoolCenterPoint();
+
+    /**
      * Gets the signs leading to this arena.
      *
      * @return The sign positions.

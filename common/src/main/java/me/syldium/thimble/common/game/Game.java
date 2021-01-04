@@ -1,5 +1,6 @@
 package me.syldium.thimble.common.game;
 
+import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
 import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.arena.ThimbleGame;
@@ -53,7 +54,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     protected final PlayerMap<InGamePlayer> players;
     protected final TimedMedia jumperMedia;
 
-    protected final Set<BlockVector> remainingWaterBlocks;
+    protected Set<BlockVector> remainingWaterBlocks = null;
     protected final Map<BlockVector, BlockData> blocks = new HashMap<>();
 
     protected int timer, messageTimer;
@@ -76,14 +77,6 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.fireworksEnd = config.getGameNode().getInt("fireworks-end", 4);
         this.spectatorMode = config.getGameNode().getBool("spectator-mode", true);
         this.teleportSpawnAtEnd = config.getGameNode().getBool("teleport-at-end", false);
-
-        this.remainingWaterBlocks = this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null ?
-                Collections.emptySet()
-                : this.plugin.getPlayerAdapter().getRemainingWaterBlocks(
-                        arena.getJumpLocation().getWorldUUID(),
-                        this.arena.getPoolMinPoint(),
-                        this.arena.getPoolMaxPoint()
-        );
     }
 
     @Override
@@ -198,9 +191,9 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.plugin.getEventAdapter().callGameEndEvent(this, latest);
         this.state = ThimbleState.END;
         this.jumperMedia.hide(this.players);
-        Player latestPlayer = latest == null ? null : this.plugin.getPlayer(latest.uuid());
-        if (latestPlayer != null) {
-            this.plugin.spawnFireworks(latestPlayer.getLocation()).spawn(this.fireworksEnd);
+        Location fireworksLocation = this.getFireworkLocation(latest == null ? null : this.plugin.getPlayer(latest.uuid()));
+        if (fireworksLocation != null) {
+            this.plugin.spawnFireworks(fireworksLocation).spawn(this.fireworksEnd);
         }
 
         for (InGamePlayer player : this.players) {
@@ -233,6 +226,13 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.plugin.getPlayerAdapter().clearPool(this.arena.getJumpLocation().getWorldUUID(), this.blocks);
         this.blocks.clear();
         this.arena.checkGame();
+    }
+
+    private @Nullable Location getFireworkLocation(@Nullable Player player) {
+        if (this.arena.getPoolCenterPoint() != null) {
+            return new Location(this.arena.getJumpLocation().getWorldUUID(), this.arena.getPoolCenterPoint());
+        }
+        return player == null ? null : player.getLocation();
     }
 
     @Override
@@ -358,6 +358,9 @@ public abstract class Game implements ThimbleGame, Runnable {
                 player.setMiniGameMode();
             }
             player.teleport(this.arena.getSpawnLocation());
+            if (this.remainingWaterBlocks == null && this.size() >= this.arena.getMinPlayers()) {
+                this.searchRemainingBlocks();
+            }
             return true;
         }
         return false;
@@ -420,6 +423,16 @@ public abstract class Game implements ThimbleGame, Runnable {
             player.spectate();
         }
         player.teleport(this.arena.getWaitLocation());
+    }
+
+    private void searchRemainingBlocks() {
+        this.remainingWaterBlocks = this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null ?
+                Collections.emptySet()
+                : this.plugin.getPlayerAdapter().getRemainingWaterBlocks(
+                this.arena.getJumpLocation().getWorldUUID(),
+                this.arena.getPoolMinPoint(),
+                this.arena.getPoolMaxPoint()
+        );
     }
 
     void cancel() {

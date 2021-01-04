@@ -76,7 +76,7 @@ public interface ConfigNode {
         node.setValue("yaw", location.getYaw());
     }
 
-    default void getBlockVector(@NotNull @NodePath String path, @NotNull Consumer<@NotNull BlockVector> consumer) {
+    default void hydrateBlockVector(@NotNull @NodePath String path, @NotNull Consumer<@NotNull BlockVector> consumer) {
         ConfigNode node = this.getNode(path);
         if (node == null) return;
         consumer.accept(new BlockVector(

@@ -43,6 +43,8 @@ public class ArenaConfig {
             arena.setMinPlayers(node.getInt("min-players", arena.getMinPlayers()));
             arena.setMaxPlayers(node.getInt("max-players", arena.getMaxPlayers()));
             arena.setGameMode(EnumUtil.valueOf(ThimbleGameMode.class, node.getString("gamemode"), ThimbleGameMode.SINGLE));
+            node.hydrateBlockVector("min-point", arena::setPoolMinPoint);
+            node.hydrateBlockVector("max-point", arena::setPoolMaxPoint);
 
             ConfigNode signsNode = node.getNode("signs");
             if (signsNode == null) {

@@ -3,6 +3,9 @@ package me.syldium.thimble.bukkit.util;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.syldium.thimble.common.util.EnumUtil;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Waterlogged;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -104,5 +107,26 @@ public final class BukkitUtil {
                 .map(Pattern::compile)
                 .toArray(Pattern[]::new);
         return getAllBlocksMatching(logger, patterns);
+    }
+
+    /**
+     * Checks if this block is or contains liquid.
+     *
+     * @param block A block.
+     * @return {@code true} if this block is/contains liquid.
+     */
+    public static boolean containsLiquid(@NotNull Block block) {
+        if (block.isLiquid()) {
+            return true;
+        }
+        if (block.isEmpty()) {
+            return false;
+        }
+
+        BlockData blockData = block.getBlockData();
+        if (blockData instanceof Waterlogged){
+            return ((Waterlogged) blockData).isWaterlogged();
+        }
+        return false;
     }
 }

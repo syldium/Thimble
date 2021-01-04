@@ -27,7 +27,7 @@ public class Arena implements ThimbleArena {
     private final String rawName;
     private final Component name;
     private Location spawnLocation, jumpLocation, waitLocation;
-    private BlockVector minimumPoint, maximumPoint;
+    private BlockVector centerPoint, minimumPoint, maximumPoint;
     private int minPlayers = 1;
     private int maxPlayers = 8;
 
@@ -173,7 +173,7 @@ public class Arena implements ThimbleArena {
     @Override
     public ThimbleArena setPoolMinPoint(@Nullable BlockVector point) {
         this.minimumPoint = point;
-        return this;
+        return this.updatePoolCenter();
     }
 
     @Override
@@ -184,6 +184,24 @@ public class Arena implements ThimbleArena {
     @Override
     public ThimbleArena setPoolMaxPoint(@Nullable BlockVector point) {
         this.maximumPoint = point;
+        return this.updatePoolCenter();
+    }
+
+    @Override
+    public @Nullable BlockVector getPoolCenterPoint() {
+        return this.centerPoint;
+    }
+
+    private @NotNull ThimbleArena updatePoolCenter() {
+        if (this.minimumPoint != null && this.maximumPoint != null) {
+            this.centerPoint = new BlockVector(
+                    (this.minimumPoint.getX() + this.maximumPoint.getX()) / 2,
+                    this.maximumPoint.getY(),
+                    (this.minimumPoint.getZ() + this.maximumPoint.getZ()) / 2
+            );
+        } else {
+            this.centerPoint = null;
+        }
         return this;
     }
 

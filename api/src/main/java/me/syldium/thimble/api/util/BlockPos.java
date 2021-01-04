@@ -2,6 +2,7 @@ package me.syldium.thimble.api.util;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -28,6 +29,20 @@ public class BlockPos extends BlockVector {
      */
     public @NotNull UUID getWorldUUID() {
         return this.world;
+    }
+
+    /**
+     * Computes the squared distance with another {@link BlockPos}.
+     *
+     * @param other A block position.
+     * @return The squared distance.
+     * @throws IllegalArgumentException If the worlds are different.
+     */
+    public int distanceSquared(@NotNull BlockPos other) {
+        if (!Objects.equals(this.world, other.world)) {
+            throw new IllegalArgumentException("Cannot determine the center between two different worlds!");
+        }
+        return super.distanceSquared(other);
     }
 
     @Override
