@@ -75,6 +75,22 @@ public class GameServiceImpl implements GameService {
         return Collections.unmodifiableSet(this.arenas);
     }
 
+    public @NotNull String getArenaCount() {
+        int count = this.plugin.getGameService().getArenas().size();
+        if (count < 1) return "0";
+        if (count < 3) return "1-2";
+        if (count < 6) return "3-5";
+        return "6+";
+    }
+
+    public int getAveragePlayerCapacity() {
+        double average = this.arenas.stream()
+                .mapToInt(arena -> (arena.getMinPlayers() + arena.getMaxPlayers()) / 2)
+                .average()
+                .orElse(0f);
+        return (int) Math.round(average);
+    }
+
     @Override
     public void removeArena(@NotNull ThimbleArena arena) {
         // noinspection SuspiciousMethodCalls

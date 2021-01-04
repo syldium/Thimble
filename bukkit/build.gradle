@@ -4,6 +4,7 @@ plugins {
 
 repositories {
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url 'https://repo.codemc.org/repository/maven-public/' }
     maven { url 'https://libraries.minecraft.net' }
 }
 
@@ -19,6 +20,7 @@ dependencies {
         exclude(module: 'checker-qual')
         exclude(module: 'guava')
     }
+    implementation 'org.bstats:bstats-bukkit:1.8'
 }
 
 processResources {
@@ -39,6 +41,7 @@ shadowJar {
 
     relocate 'net.kyori.adventure', 'me.syldium.thimble.lib.adventure'
     relocate 'net.kyori.examination', 'me.syldium.thimble.lib.examination'
+    relocate 'org.bstats.bukkit', 'me.syldium.thimble.lib.metrics'
     minimize()
 }
 
