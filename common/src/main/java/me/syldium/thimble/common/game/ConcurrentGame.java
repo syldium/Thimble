@@ -19,12 +19,13 @@ import java.util.UUID;
 public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
 
     private final boolean countFails;
-    private final int jumpTicks;
+    private final int jumpTicks, thimblePoints;
 
     public ConcurrentGame(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
         super(plugin, arena);
         this.countFails = plugin.getMainConfig().getGameNode().getBool("count-fails-concurrent", true);
         this.jumpTicks = plugin.getMainConfig().getGameNode().getInt("jump-time-concurrent", 40) * Ticks.TICKS_PER_SECOND;
+        this.thimblePoints = plugin.getMainConfig().getGameNode().getInt("thimble-points-concurrent", 1);
     }
 
     @Override
@@ -74,8 +75,9 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             inGamePlayer.incrementFailedJumps();
         } else {
             inGamePlayer.incrementJumps();
+            inGamePlayer.incrementPoints();
             if (verdict == JumpVerdict.THIMBLE) {
-                inGamePlayer.incrementPoints();
+                inGamePlayer.incrementPoints(this.thimblePoints);
                 inGamePlayer.incrementThimbles();
                 this.players.sendMessage(MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
             }

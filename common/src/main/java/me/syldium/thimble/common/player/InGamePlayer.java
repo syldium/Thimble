@@ -78,6 +78,10 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
         this.points++;
     }
 
+    public void incrementPoints(int points) {
+        this.points += points;
+    }
+
     public void decrementPoints() {
         if (--this.points < 1) {
             this.spectator = true;
