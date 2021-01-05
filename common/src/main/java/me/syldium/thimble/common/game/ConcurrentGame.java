@@ -60,6 +60,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
                 this.onJump(player, inGamePlayer, verdict);
 
                 if (this.remainingWaterBlocks.remove(block.getPosition()) && this.remainingWaterBlocks.isEmpty()) {
+                    this.players.sendMessage(MessageKey.CHAT_ARENA_FULL);
                     this.end(this.getFirstPlayer());
                 }
             }

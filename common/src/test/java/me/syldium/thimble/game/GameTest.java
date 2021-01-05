@@ -71,7 +71,7 @@ public class GameTest {
         assertEquals(ThimbleState.WAITING, arena.getGame().get().getState());
         this.plugin.getScheduler().nextTick();
         assertEquals(ThimbleState.STARTING, arena.getGame().get().getState());
-        this.plugin.getScheduler().nextTicks(Ticks.TICKS_PER_SECOND + 1);
+        this.plugin.getScheduler().nextSecond();
         assertEquals(ThimbleState.PLAYING, arena.getGame().get().getState());
         this.plugin.getScheduler().nextTick();
 
@@ -107,7 +107,7 @@ public class GameTest {
         Arena arena = this.newArena(ThimbleGameMode.SINGLE);
         this.joinThreePlayers(arena);
         SingleGame game = (SingleGame) arena.getGame().get();
-        this.plugin.getScheduler().nextTicks(Ticks.TICKS_PER_SECOND + 3);
+        this.plugin.getScheduler().nextTicks(Ticks.TICKS_PER_SECOND + 2);
         UUID jumperUniqueId = game.getCurrentJumper();
         assertNotNull(jumperUniqueId);
 
@@ -132,6 +132,8 @@ public class GameTest {
         assertEquals(playersWhoJumped.get(1), game.getCurrentJumper());
         game.verdict(playersWhoJumped.get(1), JumpVerdict.MISSED);
         assertEquals(ThimbleState.END, game.getState());
+        this.plugin.getScheduler().assertScheduled();
+        this.plugin.getScheduler().nextSecond();
         this.plugin.getScheduler().assertNothingScheduled();
         assertTrue(this.plugin.getWorld().isEmpty());
     }
@@ -158,7 +160,7 @@ public class GameTest {
         assertEquals(3, game.realSize());
 
         // The vanished player is teleported, but must not be in the queue...
-        this.plugin.getScheduler().nextTicks(Ticks.TICKS_PER_SECOND + 3);
+        this.plugin.getScheduler().nextTicks(Ticks.TICKS_PER_SECOND + 2);
         Set<Location> locations = Set.of(arena.getJumpLocation(), arena.getWaitLocation());
         for (PlayerMock player : this.plugin.getPlayers()) {
             if (player.equals(vanishedPlayer)) {
@@ -177,6 +179,7 @@ public class GameTest {
         game.verdict(JumpVerdict.MISSED);
         this.plugin.getScheduler().nextTick();
         assertEquals(ThimbleState.END, game.getState());
+        this.plugin.getScheduler().nextSecond();
         this.plugin.getScheduler().assertNothingScheduled();
     }
 

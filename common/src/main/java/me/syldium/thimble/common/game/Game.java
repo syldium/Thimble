@@ -91,7 +91,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                 return;
             case STARTING:
                 this.tickCountdown();
-                if (this.timer < 0) {
+                if (this.timer <= 0) {
                     if (this.plugin.getEventAdapter().callGameChangeState(this, ThimbleState.PLAYING)) {
                         this.timer = 0;
                     } else {
@@ -109,9 +109,13 @@ public abstract class Game implements ThimbleGame, Runnable {
                     return;
                 }
                 this.tickGame();
-                this.timer--;
-                if (this.timer < 0) {
+                if (--this.timer <= 0) {
                     this.onTimerEnd();
+                }
+                return;
+            case END:
+                if (--this.timer <= 0) {
+                    this.closeArena();
                 }
                 return;
             default:
@@ -204,8 +208,16 @@ public abstract class Game implements ThimbleGame, Runnable {
             } else {
                 player.incrementLosses();
             }
+
             this.plugin.getStatsService().savePlayerStatistics(player);
             this.plugin.getStatsService().updateLeaderboard(player);
+        }
+
+        this.timer = this.plugin.getMainConfig().getGameNode().getInt("end-time", 5) * Ticks.TICKS_PER_SECOND;
+    }
+
+    private void closeArena() {
+        for (InGamePlayer player : this.players) {
             this.plugin.getGameService().setPlayerGame(player.uuid(), null);
 
             Player p = this.plugin.getPlayer(player.uuid());

@@ -1,16 +1,20 @@
 package me.syldium.thimble.mock;
 
 import me.syldium.thimble.common.util.Task;
+import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class TickScheduler {
 
-    private final List<TaskMock> tasks = new LinkedList<>();
+    private final List<TaskMock> tasks = new ArrayList<>();
+    private @Nullable Iterator<TaskMock> iterator;
 
     public TaskMock schedule(@NotNull Runnable runnable) {
         TaskMock task = new TaskMock(this, runnable);
@@ -19,17 +23,30 @@ public class TickScheduler {
     }
 
     public void nextTick() {
-        this.tasks.forEach(TaskMock::run);
+        this.iterator = this.tasks.iterator();
+        while (this.iterator.hasNext()) {
+            TaskMock task = this.iterator.next();
+            task.runnable.run();
+        }
+        this.iterator = null;
     }
 
     public void nextTicks(int ticks) {
         for (int i = 0; i < ticks; i++) {
-            this.tasks.forEach(TaskMock::run);
+            this.nextTick();
         }
     }
 
+    public void nextSecond() {
+        this.nextTicks(Ticks.TICKS_PER_SECOND);
+    }
+
     void cancel(@NotNull TaskMock task) {
-        this.tasks.remove(task);
+        if (this.iterator == null) {
+            this.tasks.remove(task);
+        } else {
+            this.iterator.remove();
+        }
     }
 
     public void cancelAllTasks() {
@@ -56,10 +73,6 @@ public class TickScheduler {
         TaskMock(@NotNull TickScheduler scheduler, @NotNull Runnable runnable) {
             this.scheduler = scheduler;
             this.runnable = runnable;
-        }
-
-        public void run() {
-            this.runnable.run();
         }
 
         @Override

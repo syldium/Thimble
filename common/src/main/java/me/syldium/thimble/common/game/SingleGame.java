@@ -84,6 +84,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             this.onJump(jumper, this.players.get(jumper), verdict);
 
             if (this.remainingWaterBlocks.remove(block.getPosition()) && this.remainingWaterBlocks.isEmpty()) {
+                this.players.sendMessage(MessageKey.CHAT_ARENA_FULL);
                 this.end(this.getFirstPlayer());
             }
         }

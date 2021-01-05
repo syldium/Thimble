@@ -52,6 +52,7 @@ public class PluginMock extends ThimblePlugin {
         this.enable();
 
         this.getMainConfig().getGameNode().setValue("countdown-time", 1);
+        this.getMainConfig().getGameNode().setValue("end-time", 1);
         this.getMainConfig().getGameNode().setValue("jump-time-single", 1);
         this.getMainConfig().getGameNode().setValue("jump-time-concurrent", 1);
     }

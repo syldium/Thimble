@@ -23,7 +23,7 @@ public class MoveListener<P extends ThimblePlugin> {
         this.plugin = plugin;
         ConfigNode node = plugin.getMainConfig().getGameNode();
         int maxDistance = node.getInt("max-spectator-distance", 40);
-        this.maxDistanceSquared = maxDistance >= 0 ? maxDistance * maxDistance : -1;
+        this.maxDistanceSquared = maxDistance > 0 ? maxDistance * maxDistance : -1;
         this.quitOnTp = node.getBool("leave-arena-when-tp", true);
     }
 
@@ -35,14 +35,16 @@ public class MoveListener<P extends ThimblePlugin> {
         ThimblePlayer inGamePlayer = inGamePlayerOpt.get();
         if (inGamePlayer.isVanished() || inGamePlayer.isJumping()) return;
 
-        Location waitLoc = inGamePlayer.getGame().getArena().getWaitLocation();
-        if (waitLoc == null) return;
+        Location loc = inGamePlayer.getGame().getState().isStarted() ?
+                inGamePlayer.getGame().getArena().getWaitLocation()
+                : inGamePlayer.getGame().getArena().getSpawnLocation();
+        if (loc == null) return;
 
-        int distanceSquared = (int) waitLoc.horizontalDistanceSquared(to);
+        int distanceSquared = (int) loc.horizontalDistanceSquared(to);
         if (distanceSquared > this.maxDistanceSquared) {
             Player player = this.plugin.getPlayer(playerUniqueId);
             if (player != null) {
-                player.teleport(waitLoc);
+                player.teleport(loc);
             }
         }
     }

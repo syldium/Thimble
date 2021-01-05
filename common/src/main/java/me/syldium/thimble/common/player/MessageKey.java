@@ -19,6 +19,7 @@ public enum MessageKey {
     ACTIONBAR_THIMBLE("actionbar.thimble"),
     ACTIONBAR_WAITING("actionbar.waiting"),
 
+    CHAT_ARENA_FULL("chat.arena-full"),
     CHAT_ELIMINATED("chat.eliminated"),
     CHAT_JOINED("chat.joined"),
     CHAT_LEFT("chat.left"),
