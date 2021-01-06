@@ -367,7 +367,11 @@ public abstract class Game implements ThimbleGame, Runnable {
                 this.plugin.getSavedPlayersManager().save(player);
                 player.setMiniGameMode();
             }
-            player.teleport(this.arena.getSpawnLocation());
+            if (this.players.realSize() > 1) {
+                player.teleport(this.arena.getSpawnLocation());
+            } else {
+                player.teleportAsync(this.arena.getSpawnLocation());
+            }
             if (this.remainingWaterBlocks == null && this.players.size() >= this.arena.getMinPlayers()) {
                 this.searchRemainingBlocks();
             }

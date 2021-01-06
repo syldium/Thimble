@@ -10,7 +10,6 @@ import me.syldium.thimble.bukkit.world.BukkitBlockData;
 import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.player.InGamePlayer;
-import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.PoolBlock;
 import me.syldium.thimble.bukkit.world.BukkitPoolBlock;
@@ -24,12 +23,12 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -40,7 +39,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
 
     private final ThBootstrap bootstrap;
     private final BukkitAudiences audiences;
-    private final Map<org.bukkit.entity.Player, Player> players = new WeakHashMap<>();
+    private final Map<UUID, BukkitPlayer> players = new HashMap<>();
     private final List<BukkitBlockData> blockDatas;
     private final BlockSelectionInventory inventory;
 
@@ -84,8 +83,18 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     }
 
     @Override
-    public @NotNull Player asAbstractPlayer(org.bukkit.entity.@NotNull Player player) {
-        return this.players.computeIfAbsent(player, s -> new BukkitPlayer(this.bootstrap.getPlugin(), player, this.audiences.player(player), this));
+    public @NotNull BukkitPlayer asAbstractPlayer(org.bukkit.entity.@NotNull Player player) {
+        BukkitPlayer p = this.players.get(player.getUniqueId());
+        if (p != null) {
+            return p;
+        }
+        p = new BukkitPlayer(this.bootstrap.getPlugin(), player, this.audiences.player(player), this);
+        this.players.put(player.getUniqueId(), p);
+        return p;
+    }
+
+    public void unregisterPlayer(@NotNull UUID uuid) {
+        this.players.remove(uuid);
     }
 
     @Override

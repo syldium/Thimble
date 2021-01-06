@@ -24,7 +24,15 @@ public interface Player extends PlayerAudience, Identified, Identity, Sender {
      * @param location New location to teleport this player to.
      * @return {@code true} if the teleport was successful.
      */
-    @NotNull CompletableFuture<@NotNull Boolean> teleport(@NotNull Location location);
+    boolean teleport(@NotNull Location location);
+
+    /**
+     * Teleports this entity to the given location.
+     *
+     * @param location New location to teleport this player to.
+     * @return {@code true} if the teleport was successful.
+     */
+    @NotNull CompletableFuture<@NotNull Boolean> teleportAsync(@NotNull Location location);
 
     /**
      * Gets the surface block of a water/lava column.

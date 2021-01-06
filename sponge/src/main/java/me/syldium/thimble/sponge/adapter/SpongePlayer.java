@@ -36,8 +36,13 @@ public class SpongePlayer extends AbstractPlayer<Player> {
     }
 
     @Override
-    public @NotNull CompletableFuture<Boolean> teleport(@NotNull me.syldium.thimble.api.Location location) {
-        return CompletableFuture.completedFuture(this.getHandle().setLocationAndRotation(this.platform.asPlatform(location), this.platform.asHeadRotation(location)));
+    public boolean teleport(me.syldium.thimble.api.@NotNull Location location) {
+        return this.getHandle().setLocationAndRotation(this.platform.asPlatform(location), this.platform.asHeadRotation(location));
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Boolean> teleportAsync(@NotNull me.syldium.thimble.api.Location location) {
+        return CompletableFuture.completedFuture(this.teleport(location));
     }
 
     @Override

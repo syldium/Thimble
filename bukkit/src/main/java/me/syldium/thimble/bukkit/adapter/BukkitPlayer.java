@@ -13,7 +13,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -68,13 +67,17 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     }
 
     @Override
-    public @NotNull CompletableFuture<Boolean> teleport(@NotNull Location location) {
-        this.getHandle().setVelocity(new Vector(0, 0, 0));
-        org.bukkit.Location bukkitLoc = this.platform.asPlatform(location);
+    public boolean teleport(@NotNull Location location) {
+        return this.getHandle().teleport(this.platform.asPlatform(location));
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Boolean> teleportAsync(@NotNull Location location) {
         if (TELEPORT_ASYNC) {
+            org.bukkit.Location bukkitLoc = this.platform.asPlatform(location);
             return this.getHandle().teleportAsync(bukkitLoc);
         }
-        return CompletableFuture.completedFuture(this.getHandle().teleport(bukkitLoc));
+        return CompletableFuture.completedFuture(this.teleport(location));
     }
 
     @Override

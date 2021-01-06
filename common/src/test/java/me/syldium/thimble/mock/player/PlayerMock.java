@@ -70,9 +70,14 @@ public class PlayerMock implements Player {
     }
 
     @Override
-    public @NotNull CompletableFuture<@NotNull Boolean> teleport(@NotNull Location location) {
+    public boolean teleport(@NotNull Location location) {
         this.location = requireNonNull(location, "location");
-        return CompletableFuture.completedFuture(true);
+        return true;
+    }
+
+    @Override
+    public @NotNull CompletableFuture<@NotNull Boolean> teleportAsync(@NotNull Location location) {
+        return CompletableFuture.completedFuture(this.teleport(location));
     }
 
     @Override
