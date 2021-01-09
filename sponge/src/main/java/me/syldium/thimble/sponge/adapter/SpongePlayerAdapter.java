@@ -14,6 +14,7 @@ import me.syldium.thimble.sponge.world.SpongeBlockData;
 import me.syldium.thimble.sponge.world.SpongePoolBlock;
 import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -25,20 +26,20 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.WeakHashMap;
 
 public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World>> {
 
     private static final Direction[] DIRECTIONS = new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
     private final SpongeAudiences audiences;
-    private final Map<Player, me.syldium.thimble.common.player.Player> players = new WeakHashMap<>();
+    private final Map<UUID, SpongePlayer> players = new HashMap<>();
     private final ThSpongePlugin plugin;
     private final List<SpongeBlockData> blockDatas = new ArrayList<>();
     private final BlockSelectionInventory inventory;
@@ -82,8 +83,35 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     }
 
     @Override
-    public me.syldium.thimble.common.player.@NotNull Player asAbstractPlayer(@NotNull Player player) {
-        return this.players.computeIfAbsent(player, s -> new SpongePlayer(this.plugin, player, this.audiences.player(player), this));
+    public @Nullable SpongePlayer getPlayer(@NotNull UUID uuid) {
+        SpongePlayer p = this.players.get(uuid);
+        if (p != null) {
+            return p;
+        }
+
+        Optional<Player> playerOpt = this.plugin.getServer().getPlayer(uuid);
+        if (playerOpt.isPresent()) {
+            Player player = playerOpt.get();
+            p = new SpongePlayer(this.plugin, player, this.audiences.player(player), this);
+            this.players.put(player.getUniqueId(), p);
+            return p;
+        }
+        return null;
+    }
+
+    @Override
+    public @NotNull SpongePlayer asAbstractPlayer(@NotNull Player player) {
+        SpongePlayer p = this.players.get(player.getUniqueId());
+        if (p != null) {
+            return p;
+        }
+        p = new SpongePlayer(this.plugin, player, this.audiences.player(player), this);
+        this.players.put(player.getUniqueId(), p);
+        return p;
+    }
+
+    public void unregisterPlayer(@NotNull UUID uuid) {
+        this.players.remove(uuid);
     }
 
     @Override

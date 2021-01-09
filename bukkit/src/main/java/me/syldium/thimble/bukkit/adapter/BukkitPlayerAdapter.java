@@ -20,6 +20,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,6 +81,22 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
             Block block = world.getBlockAt(pos.getX(), pos.getY(), pos.getZ());
             block.setBlockData(((BukkitBlockData) entry.getValue()).getHandle());
         }
+    }
+
+    @Override
+    public @Nullable BukkitPlayer getPlayer(@NotNull UUID uuid) {
+        BukkitPlayer p = this.players.get(uuid);
+        if (p != null) {
+            return p;
+        }
+
+        Player player = this.bootstrap.getServer().getPlayer(uuid);
+        if (player == null) {
+            return null;
+        }
+        p = new BukkitPlayer(this.bootstrap.getPlugin(), player, this.audiences.player(player), this);
+        this.players.put(player.getUniqueId(), p);
+        return p;
     }
 
     @Override

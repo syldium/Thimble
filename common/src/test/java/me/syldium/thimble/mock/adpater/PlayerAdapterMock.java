@@ -11,8 +11,11 @@ import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.world.PoolBlock;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +24,7 @@ import java.util.UUID;
 public class PlayerAdapterMock implements PlayerAdapter<PlayerMock, Location> {
 
     private final List<BlockDataMock> blocks = List.of(BlockDataMock.ONE, BlockDataMock.TWO, BlockDataMock.THREE);
+    private final Map<UUID, PlayerMock> players = new HashMap<>();
     private final PluginMock plugin;
 
     public PlayerAdapterMock(@NotNull PluginMock plugin) {
@@ -45,6 +49,26 @@ public class PlayerAdapterMock implements PlayerAdapter<PlayerMock, Location> {
     @Override
     public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull UUID worldUUID, @NotNull BlockVector minimumPoint, @NotNull BlockVector maximumPoint) {
         return Collections.emptySet();
+    }
+
+    @Override
+    public @Nullable PlayerMock getPlayer(@NotNull UUID uuid) {
+        return this.players.get(uuid);
+    }
+
+    public @NotNull PlayerMock addPlayer() {
+        UUID uuid = UUID.randomUUID();
+        PlayerMock player = new PlayerMock(this.plugin, uuid.toString().substring(0, 16), uuid);
+        this.players.put(uuid, player);
+        return player;
+    }
+
+    public void removeAllPlayers() {
+        this.players.clear();
+    }
+
+    public @NotNull Collection<@NotNull PlayerMock> getPlayers() {
+        return this.players.values();
     }
 
     @Override

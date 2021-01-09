@@ -22,7 +22,6 @@ import java.nio.file.Files;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -30,7 +29,6 @@ import java.util.logging.Logger;
 public class PluginMock extends ThimblePlugin {
 
     private final File dataFolder;
-    private final Map<UUID, PlayerMock> players;
     private final Map<BlockVector, BlockDataMock> world = new HashMap<>();
     private final ConfigurateManager configManager;
     private final CommandManager commandManager;
@@ -42,7 +40,6 @@ public class PluginMock extends ThimblePlugin {
     public PluginMock() throws IOException {
         this.dataFolder = Files.createTempDirectory("ThimbleTest-").toFile();
         this.dataFolder.deleteOnExit();
-        this.players = new HashMap<>();
         this.configManager = new ConfigurateManager(this);
         this.commandManager = new CommandManager();
         this.scheduler = new TickScheduler();
@@ -87,32 +84,12 @@ public class PluginMock extends ThimblePlugin {
         return this.commandManager;
     }
 
-    @Override
-    public @Nullable PlayerMock getPlayer(@NotNull UUID uuid) {
-        return this.players.get(uuid);
-    }
-
-    public PlayerMock addPlayer() {
-        UUID uuid = UUID.randomUUID();
-        PlayerMock player = new PlayerMock(this, uuid.toString().substring(0, 16), uuid);
-        this.players.put(uuid, player);
-        return player;
-    }
-
-    public void removePlayer(@NotNull PlayerMock player) {
-        this.players.remove(player.uuid());
-    }
-
-    public void removePlayer(@NotNull UUID uuid) {
-        this.players.remove(uuid);
-    }
-
-    public void removeAllPlayers() {
-        this.players.clear();
+    public @NotNull PlayerMock addPlayer() {
+        return this.playerAdapter.addPlayer();
     }
 
     public @NotNull Collection<PlayerMock> getPlayers() {
-        return this.players.values();
+        return this.playerAdapter.getPlayers();
     }
 
     @Override

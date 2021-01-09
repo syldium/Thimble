@@ -92,7 +92,9 @@ public abstract class ThimblePlugin {
         return this.statsService;
     }
 
-    public abstract @Nullable Player getPlayer(@NotNull UUID uuid);
+    public @Nullable Player getPlayer(@NotNull UUID uuid) {
+        return this.getPlayerAdapter().getPlayer(uuid);
+    }
 
     public abstract @NotNull EventAdapter<?> getEventAdapter();
 

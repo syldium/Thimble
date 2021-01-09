@@ -8,6 +8,7 @@ import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.PoolBlock;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,8 @@ public interface PlayerAdapter<P, L> {
     }
 
     @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull UUID worldUUID, @NotNull BlockVector minimumPoint, @NotNull BlockVector maximumPoint);
+
+    @Nullable Player getPlayer(@NotNull UUID uuid);
 
     @NotNull Player asAbstractPlayer(@NotNull P player);
 

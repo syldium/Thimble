@@ -42,6 +42,6 @@ public class ArenaTest {
         assertThrows(IllegalStateException.class, () -> arena.setJumpLocation(null));
         assertEquals(new Location(world, 10, 70, -20), arena.getJumpLocation());
         plugin.getScheduler().cancelAllTasks();
-        plugin.removeAllPlayers();
+        plugin.getPlayerAdapter().removeAllPlayers();
     }
 }

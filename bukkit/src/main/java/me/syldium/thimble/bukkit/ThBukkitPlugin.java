@@ -20,7 +20,6 @@ import me.syldium.thimble.bukkit.util.BukkitFireworks;
 import me.syldium.thimble.bukkit.util.BukkitUtil;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.CommandResult;
-import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.util.Fireworks;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.bukkit.util.BukkitTask;
@@ -32,12 +31,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -107,15 +104,6 @@ public class ThBukkitPlugin extends ThimblePlugin {
     @Override
     public @NotNull BukkitCommandExecutor getCommandManager() {
         return this.commandExecutor;
-    }
-
-    @Override
-    public @Nullable Player getPlayer(@NotNull UUID uuid) {
-        org.bukkit.entity.Player player = this.bootstrap.getServer().getPlayer(uuid);
-        if (player == null) {
-            return null;
-        }
-        return this.playerAdapter.asAbstractPlayer(player);
     }
 
     public void sendFeedback(@NotNull org.bukkit.entity.Player bukkitPlayer, @NotNull CommandResult result) {

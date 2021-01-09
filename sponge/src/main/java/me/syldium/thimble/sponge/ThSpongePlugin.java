@@ -9,7 +9,6 @@ import me.syldium.thimble.common.command.CommandManager;
 import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.util.Fireworks;
 import me.syldium.thimble.common.util.Task;
-import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.sponge.adapter.SpongeEventAdapter;
 import me.syldium.thimble.sponge.adapter.SpongePlayerAdapter;
 import me.syldium.thimble.sponge.command.SpongeCommandExecutor;
@@ -27,7 +26,6 @@ import net.kyori.adventure.util.Ticks;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.GameRegistry;
@@ -46,7 +44,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -144,11 +141,6 @@ public class ThSpongePlugin extends ThimblePlugin {
     @Override
     public @NotNull CommandManager getCommandManager() {
         return this.commandManager;
-    }
-
-    @Override
-    public @Nullable Player getPlayer(@NotNull UUID uuid) {
-        return this.getServer().getPlayer(uuid).map(this.playerAdapter::asAbstractPlayer).orElse(null);
     }
 
     @Override

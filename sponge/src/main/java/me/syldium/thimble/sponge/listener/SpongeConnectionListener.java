@@ -35,6 +35,8 @@ public class SpongeConnectionListener extends ConnectionListener<ThSpongePlugin,
 
     @Listener
     public void onQuit(ClientConnectionEvent.Disconnect event, @First Player player) {
-        this.onQuit(player.getUniqueId());
+        UUID uuid = player.getUniqueId();
+        this.onQuit(uuid);
+        this.plugin.getPlayerAdapter().unregisterPlayer(uuid);
     }
 }

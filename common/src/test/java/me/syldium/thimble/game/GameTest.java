@@ -46,7 +46,7 @@ public class GameTest {
     public void cancelTasks() {
         this.plugin.getScheduler().cancelAllTasks();
         this.plugin.getWorld().clear();
-        this.plugin.removeAllPlayers();
+        this.plugin.getPlayerAdapter().removeAllPlayers();
     }
 
     @Test
