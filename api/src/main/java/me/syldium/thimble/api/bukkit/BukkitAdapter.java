@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  *
  * <p>Sample usage:
  * <pre>
- * Bukkit.getServicesManager().load(GameService.class).getArena("demo").ifPresent(arena -> {
+ * Bukkit.getServicesManager().load(GameService.class).getArena("demo").ifPresent(arena -&gt; {
  *     arena.setJumpLocation(BukkitAdapter.get().asAbstractLoc(player));
  *     if (arena.getPoolCenterPoint() != null) {
  *         Block block = BukkitAdapter.get().asBukkit(arena.getPoolCenterPoint(), arena.getJumpLocation().getWorldKey());
