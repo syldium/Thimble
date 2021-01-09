@@ -1,34 +1,36 @@
 package me.syldium.thimble.api.util;
 
+import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.UUID;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Defines a block position in a world.
  */
 public class BlockPos extends BlockVector {
 
-    private final UUID world;
+    private final Key worldKey;
 
-    public BlockPos(@NotNull UUID world, int x, int y, int z) {
+    public BlockPos(@NotNull Key worldKey, int x, int y, int z) {
         super(x, y, z);
-        this.world = world;
+        this.worldKey = worldKey;
     }
 
-    public BlockPos(@NotNull UUID world, @NotNull BlockVector vector) {
-        super(vector.getX(), vector.getY(), vector.getZ());
-        this.world = world;
+    public BlockPos(@NotNull BlockVector vector, @NotNull Key worldKey) {
+        super(vector.x(), vector.y(), vector.z());
+        this.worldKey = requireNonNull(worldKey, "world resource key");
     }
 
     /**
-     * Gets the unique identifier of the world.
+     * Gets the resource key of the world.
      *
-     * @return The {@link UUID}.
+     * @return The {@link Key}.
      */
-    public @NotNull UUID getWorldUUID() {
-        return this.world;
+    public @NotNull Key worldKey() {
+        return this.worldKey;
     }
 
     /**
@@ -39,7 +41,7 @@ public class BlockPos extends BlockVector {
      * @throws IllegalArgumentException If the worlds are different.
      */
     public int distanceSquared(@NotNull BlockPos other) {
-        if (!Objects.equals(this.world, other.world)) {
+        if (!Objects.equals(this.worldKey, other.worldKey)) {
             throw new IllegalArgumentException("Cannot determine the center between two different worlds!");
         }
         return super.distanceSquared(other);
@@ -51,16 +53,16 @@ public class BlockPos extends BlockVector {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         BlockPos blockPos = (BlockPos) o;
-        return this.world.equals(blockPos.world);
+        return this.worldKey.equals(blockPos.worldKey);
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode() + 53 * this.world.hashCode();
+        return super.hashCode() + 53 * this.worldKey.hashCode();
     }
 
     @Override
     public String toString() {
-        return "BlockPos{" + this.x + "," + this.y + "," + this.z + "," + this.world + "}";
+        return "BlockPos{" + this.x + "," + this.y + "," + this.z + "," + this.worldKey.asString() + "}";
     }
 }

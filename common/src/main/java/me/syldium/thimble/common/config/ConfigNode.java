@@ -3,13 +3,13 @@ package me.syldium.thimble.common.config;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.util.Index;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
@@ -43,20 +43,20 @@ public interface ConfigNode {
 
     @NotNull Iterable<@NotNull NodeEntry> getChildren();
 
-    default @Nullable UUID getUniqueId(@NotNull @NodePath String path) {
+    default @Nullable Key getKey(@NotNull @NodePath String path) {
         String raw = this.getString(path, null);
-        return raw == null ? null : UUID.fromString(raw);
+        return raw == null ? null : Key.key(raw);
     }
 
-    default void setUniqueId(@NotNull @NodePath String path, @NotNull UUID uuid) {
-        this.setValue(path, uuid.toString());
+    default void setValue(@NotNull @NodePath String path, @NotNull Key key) {
+        this.setValue(path, key.namespace().equals(Key.MINECRAFT_NAMESPACE) ? key.value() : key.asString());
     }
 
     default void hydrateLocation(@NotNull @NodePath String path, @NotNull Consumer<@NotNull Location> consumer) {
         ConfigNode node = this.getNode(path);
         if (node == null) return;
         consumer.accept(new Location(
-                requireNonNull(node.getUniqueId("world"), "world"),
+                requireNonNull(node.getKey("world"), "world"),
                 node.getDouble("x", 0),
                 node.getDouble("y", 0),
                 node.getDouble("z", 0),
@@ -68,12 +68,12 @@ public interface ConfigNode {
     default void setLocation(@NotNull @NodePath String path, @Nullable Location location) {
         if (location == null) return;
         ConfigNode node = this.getOrCreateNode(path);
-        node.setValue("world", location.getWorldUUID().toString());
-        node.setValue("x", location.getX());
-        node.setValue("y", location.getY());
-        node.setValue("z", location.getZ());
-        node.setValue("pitch", location.getPitch());
-        node.setValue("yaw", location.getYaw());
+        node.setValue("world", location.worldKey());
+        node.setValue("x", location.x());
+        node.setValue("y", location.y());
+        node.setValue("z", location.z());
+        node.setValue("pitch", location.pitch());
+        node.setValue("yaw", location.yaw());
     }
 
     default void hydrateBlockVector(@NotNull @NodePath String path, @NotNull Consumer<@NotNull BlockVector> consumer) {
@@ -89,9 +89,9 @@ public interface ConfigNode {
     default void setBlockVector(@NotNull @NodePath String path, @Nullable BlockVector blockVector) {
         if (blockVector == null) return;
         ConfigNode node = this.getOrCreateNode(path);
-        node.setValue("x", blockVector.getX());
-        node.setValue("y", blockVector.getY());
-        node.setValue("z", blockVector.getZ());
+        node.setValue("x", blockVector.x());
+        node.setValue("y", blockVector.y());
+        node.setValue("z", blockVector.z());
     }
 
     default @Nullable BlockPos getBlockPos(@NotNull @NodePath String path) {
@@ -101,7 +101,7 @@ public interface ConfigNode {
 
     default @Nullable BlockPos asBlockPos() {
         return new BlockPos(
-                requireNonNull(this.getUniqueId("world"), "world"),
+                requireNonNull(this.getKey("world"), "world"),
                 this.getInt("x", 0),
                 this.getInt("y", 0),
                 this.getInt("z", 0)
@@ -110,10 +110,10 @@ public interface ConfigNode {
 
     default void setBlockPos(@NotNull @NodePath String path, @NotNull BlockPos position) {
         ConfigNode node = this.getOrCreateNode(path);
-        node.setUniqueId("world", position.getWorldUUID());
-        node.setValue("x", position.getX());
-        node.setValue("y", position.getY());
-        node.setValue("z", position.getZ());
+        node.setValue("world", position.worldKey());
+        node.setValue("x", position.x());
+        node.setValue("y", position.y());
+        node.setValue("z", position.z());
     }
 
     @Contract("_, _, !null -> !null")

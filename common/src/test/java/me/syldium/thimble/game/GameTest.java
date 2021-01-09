@@ -13,6 +13,8 @@ import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.mock.util.BlockDataMock;
+import me.syldium.thimble.mock.util.MockUtil;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -185,7 +187,7 @@ public class GameTest {
 
     private @NotNull Arena newArena(@NotNull ThimbleGameMode gameMode) {
         Arena arena = new Arena(this.plugin, "test");
-        UUID world = UUID.randomUUID();
+        Key world = MockUtil.randomKey();
         arena.setMinPlayers(2).setMaxPlayers(4)
             .setGameMode(gameMode)
             .setSpawnLocation(new Location(world, 100, 70, 100))

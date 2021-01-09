@@ -3,6 +3,8 @@ package me.syldium.thimble.game;
 import me.syldium.thimble.PluginMock;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.common.game.Arena;
+import me.syldium.thimble.mock.util.MockUtil;
+import net.kyori.adventure.key.Key;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -31,7 +33,7 @@ public class ArenaTest {
         PluginMock plugin = new PluginMock();
         Arena arena = new Arena(plugin, "arena");
         assertThrows(IllegalStateException.class, () -> arena.addPlayer(UUID.randomUUID()));
-        UUID world = UUID.randomUUID();
+        Key world = MockUtil.randomKey();
         arena.setSpawnLocation(new Location(world, 400, 70, 70));
         arena.setWaitLocation(new Location(world, 400, 70, 70));
         assertThrows(IllegalStateException.class, () -> arena.addPlayer(UUID.randomUUID()));

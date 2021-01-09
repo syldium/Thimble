@@ -1,5 +1,6 @@
 package me.syldium.thimble.bukkit;
 
+import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +28,7 @@ public final class ThBootstrap extends JavaPlugin {
     @Override
     public void onDisable() {
         this.plugin.disable();
+        BukkitAdapter.unregister();
     }
 
     public @NotNull ThBukkitPlugin getPlugin() {

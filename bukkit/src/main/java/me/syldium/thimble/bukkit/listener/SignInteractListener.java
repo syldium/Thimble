@@ -1,6 +1,7 @@
 package me.syldium.thimble.bukkit.listener;
 
 import me.syldium.thimble.api.arena.ThimbleArena;
+import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.common.command.CommandResult;
@@ -36,7 +37,7 @@ public class SignInteractListener implements Listener {
         if (!event.getPlayer().hasPermission("thimble.sign.use")) return;
 
         Block block = event.getClickedBlock();
-        BlockPos position = new BlockPos(block.getWorld().getUID(), block.getX(), block.getY(), block.getZ());
+        BlockPos position = BukkitAdapter.get().asAbstract(block);
 
         Optional<ThimbleArena> arena = this.plugin.getGameService().getArenaFromSign(position);
         if (arena.isPresent()) {

@@ -51,7 +51,7 @@ class ThimbleExpansion extends PlaceholderExpansion {
             }
 
             boolean requestUsername = tokens.length > 3 && "name".equals(tokens[3]);
-            return this.formatPlayerStats(this.service.getLeaderboard(rankingPosition), rankingPosition.getRanking(), requestUsername);
+            return this.formatPlayerStats(this.service.getLeaderboard(rankingPosition), rankingPosition.ranking(), requestUsername);
         }
 
         return null;

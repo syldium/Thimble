@@ -72,7 +72,7 @@ public interface StatsService {
      * @return The player statistics, if so
      */
     default @Nullable ThimblePlayerStats getLeaderboard(@NotNull RankingPosition position) {
-        Leaderboard<ThimblePlayerStats> leaderboard = this.getLeaderboard(position.getRanking());
-        return leaderboard.size() > position.getPosition() ? leaderboard.get(position.getPosition()) : null;
+        Leaderboard<ThimblePlayerStats> leaderboard = this.getLeaderboard(position.ranking());
+        return leaderboard.size() > position.position() ? leaderboard.get(position.position()) : null;
     }
 }

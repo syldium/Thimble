@@ -29,7 +29,7 @@ public class BlockVector implements Examinable, Serializable, Cloneable {
      *
      * @return x-coordinate
      */
-    public int getX() {
+    public int x() {
         return this.x;
     }
 
@@ -38,7 +38,7 @@ public class BlockVector implements Examinable, Serializable, Cloneable {
      *
      * @return x-coordinate
      */
-    public int getChunkX() {
+    public int chunkX() {
         return this.x >> 4;
     }
 
@@ -47,7 +47,7 @@ public class BlockVector implements Examinable, Serializable, Cloneable {
      *
      * @return y-coordinate
      */
-    public int getY() {
+    public int y() {
         return this.y;
     }
 
@@ -56,7 +56,7 @@ public class BlockVector implements Examinable, Serializable, Cloneable {
      *
      * @return y-coordinate
      */
-    public int getChunkY() {
+    public int chunkY() {
         return this.y >> 4;
     }
 
@@ -65,7 +65,7 @@ public class BlockVector implements Examinable, Serializable, Cloneable {
      *
      * @return z-coordinate
      */
-    public int getZ() {
+    public int z() {
         return this.z;
     }
 
@@ -74,7 +74,7 @@ public class BlockVector implements Examinable, Serializable, Cloneable {
      *
      * @return z-coordinate
      */
-    public int getChunkZ() {
+    public int chunkZ() {
         return this.z >> 4;
     }
 

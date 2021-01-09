@@ -60,9 +60,9 @@ public class MoveListener<P extends ThimblePlugin> {
 
         ThimbleArena arena = game.get().getArena();
         for (Location arenaLoc : new Location[]{arena.getSpawnLocation(), arena.getJumpLocation(), arena.getWaitLocation()}) {
-            if ((int) arenaLoc.getX() == (int) location.getX()
-                && (int) arenaLoc.getY() == (int) location.getY()
-                && (int) arenaLoc.getZ() == (int) location.getZ()) {
+            if ((int) arenaLoc.x() == (int) location.x()
+                && (int) arenaLoc.y() == (int) location.y()
+                && (int) arenaLoc.z() == (int) location.z()) {
                 return;
             }
         }

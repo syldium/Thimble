@@ -95,7 +95,7 @@ public class ArenaConfig {
             node.setBlockVector("min-point", arena.getPoolMinPoint());
             node.setBlockVector("max-point", arena.getPoolMaxPoint());
 
-            ConfigNode signsSection = node.getOrCreateNode("signs");
+            ConfigNode signsSection = node.createNode("signs");
             int i = 0;
             for (BlockPos position : arena.getSigns()) {
                 signsSection.setBlockPos(String.valueOf(i++), position);
@@ -105,7 +105,7 @@ public class ArenaConfig {
 
     public void save(@NotNull Map<SignAction, Set<BlockPos>> actionSigns) {
         for (Map.Entry<SignAction, Set<BlockPos>> entry : actionSigns.entrySet()) {
-            ConfigNode node = this.config.getOrCreateNode("signs", entry.getKey().name());
+            ConfigNode node = this.config.createNode("signs", entry.getKey().name());
 
             int i = 0;
             for (BlockPos position : entry.getValue()) {

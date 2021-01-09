@@ -1,6 +1,6 @@
 package me.syldium.thimble.bukkit.listener;
 
-import me.syldium.thimble.api.util.BlockPos;
+import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.MessageKey;
@@ -39,7 +39,7 @@ public class RestrictionListener implements Listener {
         }
         if (this.clickable.contains(event.getBlock().getType())) {
             Block block = event.getBlock();
-            this.plugin.getGameService().removeSign(new BlockPos(block.getWorld().getUID(), block.getX(), block.getY(), block.getZ()));
+            this.plugin.getGameService().removeSign(BukkitAdapter.get().asAbstract(block));
         }
     }
 

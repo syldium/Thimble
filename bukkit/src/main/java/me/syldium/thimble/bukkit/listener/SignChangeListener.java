@@ -1,5 +1,6 @@
 package me.syldium.thimble.bukkit.listener;
 
+import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.arena.ThimbleArena;
 import me.syldium.thimble.api.arena.ThimbleState;
@@ -10,7 +11,7 @@ import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.util.SignAction;
 import me.syldium.thimble.common.util.EnumUtil;
-import org.bukkit.Bukkit;
+import net.kyori.adventure.key.Key;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -27,7 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -50,7 +50,7 @@ public class SignChangeListener implements Listener {
         if (lines.length < 2 || !containsPrefix(lines[0])) return;
 
         Block block = event.getBlock();
-        BlockPos position = new BlockPos(block.getWorld().getUID(), block.getX(), block.getY(), block.getZ());
+        BlockPos position = BukkitAdapter.get().asAbstract(block);
 
         Optional<ThimbleArena> arena = this.plugin.getGameService().getArena(ChatColor.stripColor(lines[1]));
         if (arena.isPresent()) {
@@ -78,16 +78,16 @@ public class SignChangeListener implements Listener {
     }
 
     private void updateSigns(@NotNull ThimbleArena arena, @NotNull ThimbleState state) {
-        UUID worldUUID = requireNonNull(arena.getSpawnLocation(), "arena spawn location").getWorldUUID();
-        World world = requireNonNull(Bukkit.getWorld(worldUUID), "arena spawn world");
+        Key worldKey = requireNonNull(arena.getSpawnLocation(), "arena spawn location").worldKey();
+        World world = requireNonNull(BukkitAdapter.get().getWorldFromKey(worldKey), "arena spawn world");
 
         List<BlockPos> removable = new LinkedList<>();
         for (BlockPos pos : this.plugin.getGameService().getArenaSigns(arena)) {
-            if (!world.isChunkLoaded(pos.getChunkX(), pos.getChunkZ())) {
+            if (!world.isChunkLoaded(pos.chunkX(), pos.chunkZ())) {
                 continue;
             }
 
-            Block block = world.getBlockAt(pos.getX(), pos.getY(), pos.getZ());
+            Block block = world.getBlockAt(pos.x(), pos.y(), pos.z());
             if (this.clickable.contains(block.getType())) {
                 BlockState blockState = block.getState();
                 if (blockState instanceof Sign) {

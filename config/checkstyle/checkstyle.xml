@@ -20,7 +20,7 @@
     <module name="TreeWalker">
         <module name="ArrayTypeStyle"/>
         <module name="AtclauseOrder">
-            <property name="violateExecutionOnNonTightHtml" value="true"/>
+            <property name="violateExecutionOnNonTightHtml" value="false"/>
             <property name="tagOrder" value="@author, @deprecated, @exception, @param, @return, @serial, @serialData, @serialField, @throws, @see, @since, @version"/>
         </module>
         <module name="AvoidStarImport"/>

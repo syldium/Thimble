@@ -13,10 +13,10 @@ import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.PlayerStats;
 import me.syldium.thimble.common.util.ComponentUtil;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -128,10 +128,8 @@ class DeACoudreMigration extends ChildCommand {
 
     private void setLoc(@Nullable ConfigurationSection section, @NotNull Consumer<Location> consumer) {
         if (section == null) return;
-        World world = Bukkit.getWorld(requireNonNull(section.getString("world"), "world node"));
-        if (world == null) return;
         consumer.accept(new Location(
-                world.getUID(),
+                Key.key(requireNonNull(section.getString("world"), "world")),
                 section.getDouble("x"),
                 section.getDouble("y"),
                 section.getDouble("z"),

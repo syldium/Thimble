@@ -47,10 +47,10 @@ public class SpongeSavedPlayer implements SavedPlayer<Player> {
         player.offer(Keys.GAME_MODE, this.gameMode);
         if (withLocation) {
             player.setLocation(new org.spongepowered.api.world.Location<>(
-                    Sponge.getServer().getWorld(this.location.getWorldUUID()).get(),
-                    this.location.getX(),
-                    this.location.getY(),
-                    this.location.getZ()
+                    Sponge.getServer().getWorld(this.location.worldKey().value()).get(),
+                    this.location.x(),
+                    this.location.y(),
+                    this.location.z()
             ));
         }
         player.offer(Keys.HEALTH, this.health);

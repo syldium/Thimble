@@ -12,6 +12,7 @@ import me.syldium.thimble.sponge.command.SpongeSender;
 import me.syldium.thimble.sponge.util.BlockSelectionInventory;
 import me.syldium.thimble.sponge.world.SpongeBlockData;
 import me.syldium.thimble.sponge.world.SpongePoolBlock;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -74,11 +75,11 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     }
 
     @Override
-    public void clearPool(@NotNull UUID worldUUID, @NotNull Map<BlockVector, BlockData> blocks) {
-        World world = this.plugin.getServer().getWorld(worldUUID).orElseThrow(() -> new RuntimeException("A world was expected here."));
+    public void clearPool(@NotNull Key worldKey, @NotNull Map<BlockVector, BlockData> blocks) {
+        World world = this.plugin.getServer().getWorld(worldKey.value()).orElseThrow(() -> new RuntimeException("A world was expected here."));
         for (Map.Entry<BlockVector, BlockData> entry : blocks.entrySet()) {
             BlockVector pos = entry.getKey();
-            world.setBlock(pos.getX(), pos.getY(), pos.getZ(), ((SpongeBlockData) entry.getValue()).getHandle());
+            world.setBlock(pos.x(), pos.y(), pos.z(), ((SpongeBlockData) entry.getValue()).getHandle());
         }
     }
 
@@ -115,12 +116,12 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     }
 
     @Override
-    public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull UUID worldUUID, @NotNull BlockVector minPoint, @NotNull BlockVector maxPoint) {
-        World world = this.plugin.getServer().getWorld(worldUUID).orElseThrow(() -> new RuntimeException("A world was expected here."));
+    public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull Key worldKey, @NotNull BlockVector minPoint, @NotNull BlockVector maxPoint) {
+        World world = this.plugin.getServer().getWorld(worldKey.value()).orElseThrow(() -> new RuntimeException("A world was expected here."));
         Set<BlockVector> set = new HashSet<>();
-        for (int x = minPoint.getX(); x <= maxPoint.getX(); x++) {
-            for (int y = minPoint.getY(); y <= maxPoint.getY(); y++) {
-                for (int z = minPoint.getZ(); z <= maxPoint.getZ(); z++) {
+        for (int x = minPoint.x(); x <= maxPoint.x(); x++) {
+            for (int y = minPoint.y(); y <= maxPoint.y(); y++) {
+                for (int z = minPoint.z(); z <= maxPoint.z(); z++) {
                     BlockType type = world.getBlock(x, y, z).getType();
                     if (type.equals(BlockTypes.WATER) || type.equals(BlockTypes.FLOWING_WATER)) {
                         set.add(new BlockVector(x, y, z));
@@ -133,12 +134,12 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
 
     @Override
     public @NotNull Location<World> asPlatform(me.syldium.thimble.api.@NotNull Location location) {
-        Optional<World> world = this.plugin.getServer().getWorld(location.getWorldUUID());
+        Optional<World> world = this.plugin.getServer().getWorld(location.worldKey().value());
         return new Location<>(
                 world.orElseThrow(() -> new RuntimeException("A world was expected here.")),
-                location.getX(),
-                location.getY(),
-                location.getZ()
+                location.x(),
+                location.y(),
+                location.z()
         );
     }
 
@@ -150,7 +151,7 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     public me.syldium.thimble.api.@NotNull Location asAbstractLocation(@NotNull Transform<World> transform) {
         Optional<World> world = this.plugin.getServer().getWorld(transform.getExtent().getUniqueId());
         return new me.syldium.thimble.api.Location(
-                world.orElseThrow(() -> new RuntimeException("A world was expected here.")).getUniqueId(),
+                Key.key(world.orElseThrow(() -> new RuntimeException("A world was expected here.")).getName()),
                 transform.getPosition().getX(),
                 transform.getPosition().getY(),
                 transform.getPosition().getZ(),
@@ -170,7 +171,7 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
 
     public me.syldium.thimble.api.@NotNull Location asAbstractLocation(@NotNull Location<World> location, @NotNull Vector3d headRotation) {
         return new me.syldium.thimble.api.Location(
-                location.getExtent().getUniqueId(),
+                Key.key(location.getExtent().getName()),
                 location.getX(),
                 location.getY(),
                 location.getZ(),
@@ -180,7 +181,7 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     }
 
     public @NotNull Vector3d asHeadRotation(@NotNull me.syldium.thimble.api.Location location) {
-        return new Vector3d(location.getPitch(), location.getYaw(), 0);
+        return new Vector3d(location.pitch(), location.yaw(), 0);
     }
 
     public @NotNull Sender asAbstractSender(@NotNull CommandSource source) {

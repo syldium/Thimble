@@ -2,27 +2,29 @@ package me.syldium.thimble.api;
 
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Represents a 3-dimensional position in a world.
  */
 public class Location implements Serializable {
 
-    private final UUID world;
+    private final Key worldKey;
     private final double x;
     private final double y;
     private final double z;
     private final float pitch;
     private final float yaw;
 
-    public Location(@NotNull UUID world, double x, double y, double z, float pitch, float yaw) {
-        this.world = world;
+    public Location(@NotNull Key worldKey, double x, double y, double z, float pitch, float yaw) {
+        this.worldKey = requireNonNull(worldKey, "world resource key");
         this.x = x;
         this.y = y;
         this.z = z;
@@ -30,16 +32,16 @@ public class Location implements Serializable {
         this.yaw = yaw;
     }
 
-    public Location(@NotNull UUID world, double x, double y, double z) {
-        this(world, x, y, z, 0, 0);
+    public Location(@NotNull Key worldKey, double x, double y, double z) {
+        this(worldKey, x, y, z, 0, 0);
     }
 
-    public Location(@NotNull UUID world, @NotNull BlockVector position) {
-        this(world, position.getX(), position.getY(), position.getZ());
+    public Location(@NotNull Key worldKey, @NotNull BlockVector position) {
+        this(worldKey, position.x(), position.y(), position.z());
     }
 
     public Location(@NotNull BlockPos position) {
-        this(position.getWorldUUID(), position.getX(), position.getY(), position.getZ());
+        this(position.worldKey(), position.x(), position.y(), position.z());
     }
 
     /**
@@ -47,7 +49,7 @@ public class Location implements Serializable {
      *
      * @return x-coordinate
      */
-    public double getX() {
+    public double x() {
         return this.x;
     }
 
@@ -56,7 +58,7 @@ public class Location implements Serializable {
      *
      * @return y-coordinate
      */
-    public double getY() {
+    public double y() {
         return this.y;
     }
 
@@ -65,7 +67,7 @@ public class Location implements Serializable {
      *
      * @return z-coordinate
      */
-    public double getZ() {
+    public double z() {
         return this.z;
     }
 
@@ -74,7 +76,7 @@ public class Location implements Serializable {
      *
      * @return The pitch.
      */
-    public float getPitch() {
+    public float pitch() {
         return this.pitch;
     }
 
@@ -83,17 +85,17 @@ public class Location implements Serializable {
      *
      * @return The yaw.
      */
-    public float getYaw() {
+    public float yaw() {
         return this.yaw;
     }
 
     /**
-     * Gets the unique identifier of the world.
+     * Gets the resource key of the world.
      *
-     * @return The {@link UUID}.
+     * @return The {@link Key}.
      */
-    public @NotNull UUID getWorldUUID() {
-        return this.world;
+    public @NotNull Key worldKey() {
+        return this.worldKey;
     }
 
     /**
@@ -121,7 +123,7 @@ public class Location implements Serializable {
      * @return A new location, or this if {@code distance = 0}
      */
     public @NotNull Location up(int distance) {
-        return distance == 0 ? this : new Location(this.world, this.x, this.y + distance, this.z, this.pitch, this.yaw);
+        return distance == 0 ? this : new Location(this.worldKey, this.x, this.y + distance, this.z, this.pitch, this.yaw);
     }
 
     public @NotNull Location down(int distance) {
@@ -136,7 +138,7 @@ public class Location implements Serializable {
      * @throws IllegalArgumentException If the worlds are different.
      */
     public double distanceSquared(@NotNull Location other) {
-        if (!Objects.equals(this.world, other.world)) {
+        if (!Objects.equals(this.worldKey, other.worldKey)) {
             throw new IllegalArgumentException("Cannot determine the distance between two different worlds!");
         }
         return square(this.x - other.x) + square(this.y - other.y) + square(this.z - other.z);
@@ -149,11 +151,11 @@ public class Location implements Serializable {
      * @return The distance.
      */
     public double distanceSquared(@NotNull BlockVector vector) {
-        return square(this.x - vector.getX()) + square(this.y - vector.getY()) + square(this.z - vector.getZ());
+        return square(this.x - vector.x()) + square(this.y - vector.y()) + square(this.z - vector.z());
     }
 
     public double horizontalDistanceSquared(@NotNull BlockVector vector) {
-        return square(this.x - vector.getX()) + square(this.z - vector.getZ());
+        return square(this.x - vector.x()) + square(this.z - vector.z());
     }
 
     @Override
@@ -166,12 +168,12 @@ public class Location implements Serializable {
                 && Double.compare(location.z, this.z) == 0
                 && Float.compare(location.pitch, this.pitch) == 0
                 && Float.compare(location.yaw, this.yaw) == 0
-                && this.world.equals(location.world);
+                && this.worldKey.equals(location.worldKey);
     }
 
     @Override
     public int hashCode() {
-        int hash = this.world.hashCode();
+        int hash = this.worldKey.hashCode();
         hash = 53 * hash + (this.x != 0.0D ? hash(this.x) : 0);
         hash = 53 * hash + (this.y != 0.0D ? hash(this.y) : 0);
         hash = 53 * hash + (this.z != 0.0D ? hash(this.z) : 0);
@@ -183,7 +185,7 @@ public class Location implements Serializable {
     @Override
     public String toString() {
         return "Location{" +
-                "world=" + this.world.toString().substring(0, 8) +
+                "world=" + this.worldKey.asString() +
                 ", x=" + this.x +
                 ", y=" + this.y +
                 ", z=" + this.z +

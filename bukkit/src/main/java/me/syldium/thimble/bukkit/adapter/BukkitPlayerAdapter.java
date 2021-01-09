@@ -1,5 +1,6 @@
 package me.syldium.thimble.bukkit.adapter;
 
+import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.bukkit.ThBootstrap;
@@ -13,6 +14,7 @@ import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.PoolBlock;
 import me.syldium.thimble.bukkit.world.BukkitPoolBlock;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,6 +45,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     private final Map<UUID, BukkitPlayer> players = new HashMap<>();
     private final List<BukkitBlockData> blockDatas;
     private final BlockSelectionInventory inventory;
+    private final BukkitAdapter locationAdapter;
 
     public BukkitPlayerAdapter(@NotNull ThBukkitPlugin plugin, @NotNull ThBootstrap bootstrap, @NotNull BukkitAudiences audiences) {
         this.bootstrap = bootstrap;
@@ -55,6 +58,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
         }
         this.blockDatas = materials.stream().map(BukkitBlockData::new).collect(Collectors.toList());
         this.inventory = new BlockSelectionInventory(plugin, this);
+        this.locationAdapter = new BukkitAdapter(bootstrap);
     }
 
     @Override
@@ -74,11 +78,11 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     }
 
     @Override
-    public void clearPool(@NotNull UUID worldUUID, @NotNull Map<BlockVector, BlockData> blocks) {
-        World world = requireNonNull(this.bootstrap.getServer().getWorld(worldUUID), "world");
+    public void clearPool(@NotNull Key worldKey, @NotNull Map<BlockVector, BlockData> blocks) {
+        World world = requireNonNull(this.locationAdapter.getWorldFromKey(worldKey), "world");
         for (Map.Entry<BlockVector, BlockData> entry : blocks.entrySet()) {
             BlockVector pos = entry.getKey();
-            Block block = world.getBlockAt(pos.getX(), pos.getY(), pos.getZ());
+            Block block = world.getBlockAt(pos.x(), pos.y(), pos.z());
             block.setBlockData(((BukkitBlockData) entry.getValue()).getHandle());
         }
     }
@@ -115,12 +119,12 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     }
 
     @Override
-    public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull UUID worldUUID, @NotNull BlockVector minPoint, @NotNull BlockVector maxPoint) {
-        World world = requireNonNull(this.bootstrap.getServer().getWorld(worldUUID), "world");
+    public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull Key worldKey, @NotNull BlockVector minPoint, @NotNull BlockVector maxPoint) {
+        World world = requireNonNull(this.locationAdapter.getWorldFromKey(worldKey), "world");
         Set<BlockVector> set = new HashSet<>();
-        for (int x = minPoint.getX(); x <= maxPoint.getX(); x++) {
-            for (int z = minPoint.getZ(); z <= maxPoint.getZ(); z++) {
-                BlockVector block = this.getHighestWaterBlock(world, x, z, minPoint.getY(), maxPoint.getY());
+        for (int x = minPoint.x(); x <= maxPoint.x(); x++) {
+            for (int z = minPoint.z(); z <= maxPoint.z(); z++) {
+                BlockVector block = this.getHighestWaterBlock(world, x, z, minPoint.y(), maxPoint.y());
                 if (block != null) {
                     set.add(block);
                 }
@@ -148,26 +152,16 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
 
     @Override
     public @NotNull Location asPlatform(me.syldium.thimble.api.@NotNull Location location) {
-        return new Location(
-                this.bootstrap.getServer().getWorld(location.getWorldUUID()),
-                location.getX(),
-                location.getY(),
-                location.getZ(),
-                location.getYaw(),
-                location.getPitch()
-        );
+        return this.locationAdapter.asBukkit(location);
+    }
+
+    private @Nullable World getWorldFromKey(@NotNull Key key) {
+        return this.bootstrap.getServer().getWorld(key.asString());
     }
 
     @Override
     public me.syldium.thimble.api.@NotNull Location asAbstractLocation(@NotNull Location location) {
-        return new me.syldium.thimble.api.Location(
-                location.getWorld().getUID(),
-                location.getX(),
-                location.getY(),
-                location.getZ(),
-                location.getPitch(),
-                location.getYaw()
-        );
+        return this.locationAdapter.asAbstract(location);
     }
 
     public @NotNull BlockVector asBlockVector(@NotNull Location location) {

@@ -27,7 +27,7 @@ public class RankingPosition {
      *
      * @return The {@link Ranking}.
      */
-    public @NotNull Ranking getRanking() {
+    public @NotNull Ranking ranking() {
         return this.ranking;
     }
 
@@ -36,7 +36,7 @@ public class RankingPosition {
      *
      * @return The position.
      */
-    public @Range(from = 0, to = Leaderboard.MAX_LENGTH - 1) int getPosition() {
+    public @Range(from = 0, to = Leaderboard.MAX_LENGTH - 1) int position() {
         return this.position;
     }
 }

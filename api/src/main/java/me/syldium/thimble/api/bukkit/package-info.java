@@ -1,4 +1,4 @@
 /**
- * Bukkit events.
+ * Bukkit stuff.
  */
 package me.syldium.thimble.api.bukkit;

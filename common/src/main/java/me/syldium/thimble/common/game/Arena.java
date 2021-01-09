@@ -195,9 +195,9 @@ public class Arena implements ThimbleArena {
     private @NotNull ThimbleArena updatePoolCenter() {
         if (this.minimumPoint != null && this.maximumPoint != null) {
             this.centerPoint = new BlockVector(
-                    (this.minimumPoint.getX() + this.maximumPoint.getX()) / 2,
-                    this.maximumPoint.getY(),
-                    (this.minimumPoint.getZ() + this.maximumPoint.getZ()) / 2
+                    (this.minimumPoint.x() + this.maximumPoint.x()) / 2,
+                    this.maximumPoint.y(),
+                    (this.minimumPoint.z() + this.maximumPoint.z()) / 2
             );
         } else {
             this.centerPoint = null;

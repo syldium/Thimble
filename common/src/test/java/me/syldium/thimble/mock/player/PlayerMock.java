@@ -7,6 +7,7 @@ import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.mock.util.BlockDataMock;
 import me.syldium.thimble.mock.util.BlockMock;
+import me.syldium.thimble.mock.util.MockUtil;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +26,7 @@ public class PlayerMock implements Player {
     private final Set<String> unsetPermissions = new HashSet<>();
     private final PluginMock plugin;
 
-    private Location location = new Location(UUID.randomUUID(), 0, 0, 0);
+    private Location location = new Location(MockUtil.randomKey(), 0, 0, 0);
     private boolean clearedInventory, spectator, vanished;
 
     public PlayerMock(@NotNull PluginMock plugin, @NotNull String name, @NotNull UUID uniqueId) {

@@ -233,14 +233,14 @@ public abstract class Game implements ThimbleGame, Runnable {
 
         this.players.sendActionBar(MessageKey.ACTIONBAR_ENDED);
         this.players.clear();
-        this.plugin.getPlayerAdapter().clearPool(this.arena.getJumpLocation().getWorldUUID(), this.blocks);
+        this.plugin.getPlayerAdapter().clearPool(this.arena.getJumpLocation().worldKey(), this.blocks);
         this.blocks.clear();
         this.arena.checkGame();
     }
 
     private @Nullable Location getFireworkLocation(@Nullable Player player) {
         if (this.arena.getPoolCenterPoint() != null) {
-            return new Location(this.arena.getJumpLocation().getWorldUUID(), this.arena.getPoolCenterPoint());
+            return new Location(this.arena.getJumpLocation().worldKey(), this.arena.getPoolCenterPoint());
         }
         return player == null ? null : player.getLocation();
     }
@@ -447,7 +447,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.remainingWaterBlocks = this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null ?
                 Collections.emptySet()
                 : this.plugin.getPlayerAdapter().getRemainingWaterBlocks(
-                this.arena.getJumpLocation().getWorldUUID(),
+                this.arena.getJumpLocation().worldKey(),
                 this.arena.getPoolMinPoint(),
                 this.arena.getPoolMaxPoint()
         );
