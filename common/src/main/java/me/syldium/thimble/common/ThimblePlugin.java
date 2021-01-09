@@ -1,6 +1,7 @@
 package me.syldium.thimble.common;
 
 import me.syldium.thimble.api.Location;
+import me.syldium.thimble.api.Thimble;
 import me.syldium.thimble.common.adapter.EventAdapter;
 import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.command.CommandManager;
@@ -39,9 +40,13 @@ public abstract class ThimblePlugin {
         this.messageService = new MessageServiceImpl(this);
         this.statsService = new StatsServiceImpl(this.dataService, Executors.newSingleThreadExecutor());
         this.gameService.load();
+        Thimble.setGameService(this.gameService);
+        Thimble.setStatsService(this.statsService);
     }
 
     public void disable() {
+        Thimble.setGameService(null);
+        Thimble.setStatsService(null);
         this.gameService.save();
         this.dataService.close();
     }
