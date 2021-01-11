@@ -136,7 +136,8 @@ public final class BlockSelectionInventory implements Listener {
                     null
                     : ChatColor.AQUA + players.stream().map(InGamePlayer::name).collect(Collectors.joining(", "));
 
-            if (itemStack.getType() == ((BukkitBlockData) inGamePlayer.getChosenBlock()).getHandle().getMaterial()) {
+            Material chosenMaterial = ((BukkitBlockData) inGamePlayer.getChosenBlock()).getHandle().getMaterial();
+            if (itemStack.getType() == chosenMaterial || !players.isEmpty() && inGamePlayer.getGame().getState().isStarted()) {
                 // Adds an enchantment glint
                 ItemMeta meta = itemStack.getItemMeta();
                 meta.setDisplayName(displayName);

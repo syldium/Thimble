@@ -57,6 +57,9 @@ game:
   # If enabled, when a player leaves the server, he also leaves the game.
   quit-game-on-disconnect: false
 
+  # Ignore the statistics if the player is alone in the arena or is the only one who jumped.
+  ignore-stats-if-solo: true
+
   # When a player loses, his game mode is set to spectator.
   spectator-mode: true
 

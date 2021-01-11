@@ -46,7 +46,7 @@ public final class Thimble {
      */
     public static @NotNull StatsService getStatsService() {
         if (STATS_SERVICE == null) {
-            throw new IllegalStateException("The game service is not loaded.");
+            throw new IllegalStateException("The stats service is not loaded.");
         }
         return STATS_SERVICE;
     }
@@ -63,26 +63,22 @@ public final class Thimble {
     /**
      * Is the requested version is greater than or equal to the current version.
      *
-     * @param major The major version number.
-     * @param minor The minor number.
-     * @param patch The patch number.
+     * @param version The version number.
      * @return {@code true} if the version is correct.
      */
-    public static boolean isVersion(int major, int minor, int patch) {
-        return PLUGIN_VERSION.compareTo(new PluginVersion(major, minor, patch)) >= 0;
+    public static boolean isVersion(int... version) {
+        return PLUGIN_VERSION.compareTo(new PluginVersion(version)) >= 0;
     }
 
     /**
      * Runs the code if the requested version is greater than or equal to the current version.
      *
-     * @param major The major version number.
-     * @param minor The minor number.
-     * @param patch The patch number.
      * @param runnable The code if the version is satisfied.
+     * @param version The version number.
      */
-    public static void ifVersion(int major, int minor, int patch, @NotNull Runnable runnable) {
+    public static void ifVersion(@NotNull Runnable runnable, int... version) {
         requireNonNull(runnable, "runnable");
-        if (isVersion(major, minor, patch)) {
+        if (isVersion(version)) {
             runnable.run();
         }
     }
@@ -90,16 +86,14 @@ public final class Thimble {
     /**
      * Runs the code if the requested version is less than or equal to the current version.
      *
-     * @param major The major version number.
-     * @param minor The minor number.
-     * @param patch The patch number.
      * @param supplier The code if the version is satisfied.
+     * @param version The version number.
      * @param <T> The return type.
      * @return The return, or nothing.
      */
-    public static <T> @NotNull Optional<T> ifVersion(int major, int minor, int patch, @NotNull Supplier<T> supplier) {
+    public static <T> @NotNull Optional<T> ifVersion(@NotNull Supplier<T> supplier, int... version) {
         requireNonNull(supplier, "supplier");
-        return isVersion(major, minor, patch) ? Optional.of(supplier.get()) : Optional.empty();
+        return isVersion(version) ? Optional.of(supplier.get()) : Optional.empty();
     }
 
     @ApiStatus.Internal

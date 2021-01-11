@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 final class BossBarTimedMedia implements TimedMedia {
 
     private final BossBar bossBar;
+    private int time = 0;
 
     BossBarTimedMedia(@NotNull BossBar baseBossBar) {
         this.bossBar = baseBossBar;
@@ -16,7 +17,10 @@ final class BossBarTimedMedia implements TimedMedia {
     @Override
     public void progress(@NotNull PlayerAudience audience, float progress, int time) {
         this.bossBar.progress(progress);
-        this.bossBar.name(Component.text(time));
+        if (this.time != time) {
+            this.bossBar.name(Component.text(time));
+            this.time = time;
+        }
         audience.showBossBar(this.bossBar);
     }
 

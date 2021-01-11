@@ -101,6 +101,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             inGamePlayer.incrementFailedJumps();
         } else {
             inGamePlayer.incrementJumps();
+            this.playersWhoJumped.add(inGamePlayer.uuid());
             if (verdict == JumpVerdict.THIMBLE) {
                 inGamePlayer.incrementPoints();
                 inGamePlayer.incrementThimbles();

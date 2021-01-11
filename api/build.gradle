@@ -15,8 +15,18 @@ dependencies {
     api 'org.jetbrains:annotations:20.1.0'
     api 'net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT'
 
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
-    compileOnly 'org.spongepowered:spongeapi:7.3.0'
+    compileOnly ('com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT') {
+        exclude(module: 'bungeecord-chat')
+        exclude(module: 'guava')
+        exclude(module: 'json-simple')
+    }
+    compileOnly ('org.spongepowered:spongeapi:7.3.0') {
+        exclude(module: 'caffeine')
+        exclude(module: 'guava')
+    }
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
 
 publishing {
@@ -55,3 +65,8 @@ javadoc {
         options.addBooleanOption('html5', true)
     }
 }
+
+test {
+    useJUnitPlatform()
+}
+

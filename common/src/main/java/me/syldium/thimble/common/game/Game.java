@@ -52,6 +52,7 @@ public abstract class Game implements ThimbleGame, Runnable {
 
     protected ThimbleState state = ThimbleState.WAITING;
     protected final PlayerMap<InGamePlayer> players;
+    protected final Set<UUID> playersWhoJumped = new HashSet<>();
     protected final TimedMedia jumperMedia;
 
     protected Set<BlockVector> remainingWaterBlocks = null;
@@ -60,7 +61,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     protected int timer, messageTimer;
     protected final int countdownTicks;
     protected final int fireworksThimble, fireworksEnd;
-    protected final boolean spectatorMode, teleportSpawnAtEnd;
+    protected final boolean ignoreStatsIfSolo, spectatorMode, teleportSpawnAtEnd;
 
     public Game(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
         MainConfig config = plugin.getMainConfig();
@@ -75,6 +76,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.countdownTicks = this.timer;
         this.fireworksThimble = config.getGameNode().getInt("fireworks-thimble", 1);
         this.fireworksEnd = config.getGameNode().getInt("fireworks-end", 4);
+        this.ignoreStatsIfSolo = config.getGameNode().getBool("ignore-stats-if-solo", true);
         this.spectatorMode = config.getGameNode().getBool("spectator-mode", true);
         this.teleportSpawnAtEnd = config.getGameNode().getBool("teleport-at-end", false);
     }
@@ -203,10 +205,23 @@ public abstract class Game implements ThimbleGame, Runnable {
         for (InGamePlayer player : this.players) {
             if (player.isVanished()) continue;
 
+            if (this.spectatorMode) {
+                Player p = this.plugin.getPlayer(player.uuid());
+                if (p != null) {
+                    p.spectate();
+                }
+            }
+
+            if (this.ignoreStatsIfSolo && this.playersWhoJumped.size() < 2) {
+                continue;
+            }
             if (player.equals(latest)) {
                 player.incrementWins();
             } else {
                 player.incrementLosses();
+            }
+            if (latest != null) {
+                this.players.sendMessage(MessageKey.CHAT_WIN, Template.of("player", latest.name()));
             }
 
             this.plugin.getStatsService().savePlayerStatistics(player);
@@ -290,7 +305,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     public @NotNull Set<InGamePlayer> getPlayers(@NotNull BlockData blockData) {
-        Set<InGamePlayer> set = new HashSet<>();
+        Set<InGamePlayer> set = new HashSet<>(Math.min(this.players.realSize(), 4));
         for (InGamePlayer player : this.players) {
             if (player.getChosenBlock().equals(blockData)) {
                 set.add(player);

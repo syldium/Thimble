@@ -24,6 +24,7 @@ public enum MessageKey {
     CHAT_JOINED("chat.joined"),
     CHAT_LEFT("chat.left"),
     CHAT_THIMBLE("chat.thimble"),
+    CHAT_WIN("chat.win"),
 
     FEEDBACK_ARENA_ALREADY_EXISTS("feedback.arena.already-exists"),
     FEEDBACK_ARENA_CREATED("feedback.arena.created"),

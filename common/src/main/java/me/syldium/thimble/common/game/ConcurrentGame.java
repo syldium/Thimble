@@ -77,6 +77,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
         } else {
             inGamePlayer.incrementJumps();
             inGamePlayer.incrementPoints();
+            this.playersWhoJumped.add(inGamePlayer.uuid());
             if (verdict == JumpVerdict.THIMBLE) {
                 inGamePlayer.incrementPoints(this.thimblePoints);
                 inGamePlayer.incrementThimbles();
