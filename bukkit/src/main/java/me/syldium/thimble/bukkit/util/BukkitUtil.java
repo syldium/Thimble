@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
 
 public final class BukkitUtil {
 
+    private static final Set<Material> AIR_TYPES = getAllMatching(material -> material.name().endsWith("AIR"));
+
     private static final Constructor<?> FAST_UTIL_OBJECT2INT;
 
     static {
@@ -55,10 +57,26 @@ public final class BukkitUtil {
     }
 
     /**
-     * Returns a set containing all {@link Material}s that match some patterns.
+     * Returns a set containing all {@link Material}s that match a predicate.
      *
      * <p>Since Spigot uses ASM to remove the legacy values, {@link EnumUtil#getAllMatching(Class, Predicate)}
      * sees the legacy values, whereas this method does not.</p>
+     *
+     * @param predicate The predicate that determines if the Material is valid.
+     * @return All matching Materials.
+     */
+    public static @NotNull Set<Material> getAllMatching(@NotNull Predicate<Material> predicate) {
+        Set<Material> set = EnumSet.noneOf(Material.class);
+        for (Material material : Material.values()) {
+            if (predicate.test(material)) {
+                set.add(material);
+            }
+        }
+        return set;
+    }
+
+    /**
+     * Returns a set containing all {@link Material}s that match some patterns.
      *
      * @param logger Writes the list of patterns that do not find any material.
      * @param patterns Some patterns.
@@ -71,7 +89,7 @@ public final class BukkitUtil {
         for (Material material : Material.values()) {
             for (int i = 0; i < patterns.length; i++) {
                 if (patterns[i].matcher(material.name()).matches()) {
-                    if (!material.isBlock() || material.isAir()) {
+                    if (!material.isBlock() || isAir(material)) {
                         if (logger != null) {
                             logger.warning("Skipping " + material.name() + " since it's not a block!");
                         }
@@ -124,9 +142,19 @@ public final class BukkitUtil {
         }
 
         BlockData blockData = block.getBlockData();
-        if (blockData instanceof Waterlogged){
+        if (blockData instanceof Waterlogged) {
             return ((Waterlogged) blockData).isWaterlogged();
         }
         return false;
+    }
+
+    /**
+     * Checks if the {@link Material} is an air block without using {@link Material#isAir()}.
+     *
+     * @param material The Material to test.
+     * @return {@code true} if it's an air block.
+     */
+    public static boolean isAir(@NotNull Material material) {
+        return AIR_TYPES.contains(material);
     }
 }
