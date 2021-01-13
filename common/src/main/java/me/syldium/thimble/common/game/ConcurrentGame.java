@@ -85,6 +85,20 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             }
         }
 
+        if (inGamePlayer.isSpectator()) {
+            // Check for remaining players
+            boolean latest = true;
+            for (InGamePlayer p : this.players) {
+                if (!p.isSpectator() && !p.isVanished()) {
+                    latest = false;
+                    break;
+                }
+            }
+            if (latest) {
+                this.end(this.getFirstPlayer());
+            }
+        }
+
         if (player != null) {
             this.sendJumpMessage(player, inGamePlayer, verdict);
             if (inGamePlayer.isSpectator()) {

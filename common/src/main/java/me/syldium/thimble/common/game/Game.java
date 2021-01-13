@@ -369,12 +369,7 @@ public abstract class Game implements ThimbleGame, Runnable {
 
             this.players.sendMessage(
                 MessageKey.CHAT_JOINED,
-                p -> {
-                    if (!p.uuid().equals(player.uuid())) {
-                        return false;
-                    }
-                    return player.isVanished() && p.isVanished() || !player.isVanished();
-                },
+                inGamePlayer,
                 Template.of("player", player.name())
             );
 

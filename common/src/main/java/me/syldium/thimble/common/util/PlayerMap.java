@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> implements PlayerAudience, ForwardingAudience, Iterable<E> {
@@ -85,11 +84,12 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
         for (Player player : this.audiences()) player.sendMessage(component);
     }
 
-    public void sendMessage(@NotNull MessageKey messageKey, @NotNull Predicate<@NotNull E> predicate, @NotNull Template... templates) {
+    public void sendMessage(@NotNull MessageKey messageKey, @NotNull E from, @NotNull Template... templates) {
         MessageService messageService = this.plugin.getMessageService();
         Component component = messageService.prefix().append(messageService.formatMessage(messageKey, templates));
         for (E identity : this) {
-            if (!predicate.test(identity)) {
+            // The player who sent the message should not see the message, and a vanished player should not be visible in the message.
+            if (identity.uuid().equals(from.uuid()) || !from.isVanished() || identity.isVanished()) {
                 continue;
             }
 
