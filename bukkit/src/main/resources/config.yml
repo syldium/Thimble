@@ -16,6 +16,7 @@ storage:
 
 # Enabled integrations with other plugins.
 integrations:
+ - LuckPerms
  - Parties
  - PlaceholderAPI
  - WorldEdit

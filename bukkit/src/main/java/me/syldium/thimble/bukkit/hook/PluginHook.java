@@ -29,6 +29,9 @@ public final class PluginHook {
 
         MainConfig config = plugin.getMainConfig();
         this.integrations = config.getEnabledIntegrations();
+        if (this.isEnabled("LuckPerms")) {
+            new LuckPermsContext(bootstrap.getServer().getServicesManager(), plugin.getGameService());
+        }
         if (this.isEnabled("PlaceholderAPI")) {
             new ThimbleExpansion(plugin.getStatsService());
         }
