@@ -65,11 +65,11 @@ public class StatsServiceImpl implements StatsService {
         this.updateLeaderboard(new PlayerStats(
                 player.uuid(),
                 player.name(),
-                player.getWins(),
-                player.getLosses(),
-                player.getJumps(),
-                player.getFailedJumps(),
-                player.getThimbles()
+                player.wins(),
+                player.losses(),
+                player.jumps(),
+                player.failedJumps(),
+                player.thimbles()
         ));
     }
 }

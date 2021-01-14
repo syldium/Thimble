@@ -151,11 +151,11 @@ public class SqlDataService implements DataService {
             }
             int i = exists ? 1 : 2;
             statement.setString(i++, statistics.name());
-            statement.setInt(i++, statistics.getWins());
-            statement.setInt(i++, statistics.getLosses());
-            statement.setInt(i++, statistics.getJumps());
-            statement.setInt(i++, statistics.getFailedJumps());
-            statement.setInt(i, statistics.getThimbles());
+            statement.setInt(i++, statistics.wins());
+            statement.setInt(i++, statistics.losses());
+            statement.setInt(i++, statistics.jumps());
+            statement.setInt(i++, statistics.failedJumps());
+            statement.setInt(i, statistics.thimbles());
             statement.execute();
         } catch (SQLException ex) {
             this.logger.log(Level.SEVERE, "Error when saving statistics in the database.", ex);

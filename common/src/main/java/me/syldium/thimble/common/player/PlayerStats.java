@@ -42,27 +42,27 @@ public class PlayerStats implements ThimblePlayerStats, Identity {
     }
 
     @Override
-    public int getWins() {
+    public int wins() {
         return this.wins;
     }
 
     @Override
-    public int getLosses() {
+    public int losses() {
         return this.losses;
     }
 
     @Override
-    public int getJumps() {
+    public int jumps() {
         return this.jumps;
     }
 
     @Override
-    public int getFailedJumps() {
+    public int failedJumps() {
         return this.fails;
     }
 
     @Override
-    public int getThimbles() {
+    public int thimbles() {
         return this.thimbles;
     }
 

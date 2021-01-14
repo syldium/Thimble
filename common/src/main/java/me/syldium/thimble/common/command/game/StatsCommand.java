@@ -36,10 +36,10 @@ public class StatsCommand extends ChildCommand.One<String> {
                 List<Template> args = new ArrayList<>();
                 MessageService service = plugin.getMessageService();
                 args.add(Template.of("player", stats.name()));
-                args.addAll(MessageKey.Unit.WINS.tl(stats.getWins(), service));
-                args.addAll(MessageKey.Unit.LOSSES.tl(stats.getLosses(), service));
-                args.addAll(MessageKey.Unit.JUMPS.tl(stats.getJumps(), service));
-                args.addAll(MessageKey.Unit.THIMBLES.tl(stats.getThimbles(), service));
+                args.addAll(MessageKey.Unit.WINS.tl(stats.wins(), service));
+                args.addAll(MessageKey.Unit.LOSSES.tl(stats.losses(), service));
+                args.addAll(MessageKey.Unit.JUMPS.tl(stats.jumps(), service));
+                args.addAll(MessageKey.Unit.THIMBLES.tl(stats.thimbles(), service));
                 sender.sendFeedback(CommandResult.success(MessageKey.FEEDBACK_GAME_STATS, args.toArray(new Template[0])));
             } else {
                 sender.sendFeedback(CommandResult.error(MessageKey.FEEDBACK_GAME_STATS_UNKNOWN, Template.of("player", username)));

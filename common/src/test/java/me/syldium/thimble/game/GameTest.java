@@ -220,7 +220,7 @@ public class GameTest {
         InGamePlayer inGamePlayer = game.getPlayer(jumperUniqueId);
         assertNotNull(inGamePlayer, "The player who jumps must have an instance of InGamePlayer.");
         Player player = requireNonNull(this.plugin.getPlayer(jumperUniqueId), "player");
-        int prevJumps = inGamePlayer.getJumps();
+        int prevJumps = inGamePlayer.jumps();
 
         // Sets the player's location.
         assertEquals(game.getArena().getJumpLocation(), player.getLocation(), "The player must be at the jump location.");
@@ -232,7 +232,7 @@ public class GameTest {
         // The player must have scored.
         this.plugin.getScheduler().nextTick();
         assertEquals(game.getArena().getWaitLocation(), player.getLocation(), "The player should be teleported at the waiting location.");
-        assertEquals(prevJumps + 1, inGamePlayer.getJumps(), "The jump counter should be updated.");
+        assertEquals(prevJumps + 1, inGamePlayer.jumps(), "The jump counter should be updated.");
         assertEquals(inGamePlayer.getChosenBlock(), this.plugin.getBlockData(pos), "The player's block should be placed.");
         assertFalse(inGamePlayer.isSpectator(), "The player must not be a spectator.");
         assertTrue(game.getAlivePlayers().stream().anyMatch(p -> p.uuid().equals(jumperUniqueId)), "The player should be in the set of alive players.");

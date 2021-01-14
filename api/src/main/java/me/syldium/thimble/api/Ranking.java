@@ -13,27 +13,27 @@ public enum Ranking {
     /**
      * Depending on the number of victories.
      */
-    WINS(ThimblePlayerStats::getWins),
+    WINS(ThimblePlayerStats::wins),
 
     /**
      * Based on the number of defeats.
      */
-    LOSSES(ThimblePlayerStats::getLosses),
+    LOSSES(ThimblePlayerStats::losses),
 
     /**
      * Per the number of successful jumps.
      */
-    JUMPS(ThimblePlayerStats::getJumps),
+    JUMPS(ThimblePlayerStats::jumps),
 
     /**
      * Per the number of failed jumps.
      */
-    FAILS(ThimblePlayerStats::getFailedJumps),
+    FAILS(ThimblePlayerStats::failedJumps),
 
     /**
      * According to the number of thimbles.
      */
-    THIMBLES(ThimblePlayerStats::getThimbles);
+    THIMBLES(ThimblePlayerStats::thimbles);
 
     private final Function<ThimblePlayerStats, Integer> getter;
 

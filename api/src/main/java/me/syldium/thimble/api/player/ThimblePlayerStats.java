@@ -25,7 +25,7 @@ public interface ThimblePlayerStats extends Identity {
      */
     @Contract(pure = true)
     default boolean hasPlayed() {
-        return this.getWins() > 0 || this.getLosses() > 0;
+        return this.wins() > 0 || this.losses() > 0;
     }
 
     /**
@@ -34,7 +34,7 @@ public interface ThimblePlayerStats extends Identity {
      * @return A number.
      */
     @Contract(pure = true)
-    @Range(from=0, to=Integer.MAX_VALUE) int getWins();
+    @Range(from=0, to=Integer.MAX_VALUE) int wins();
 
     /**
      * Gets the number of defeats.
@@ -42,7 +42,7 @@ public interface ThimblePlayerStats extends Identity {
      * @return The number of losses.
      */
     @Contract(pure = true)
-    @Range(from=0, to=Integer.MAX_VALUE) int getLosses();
+    @Range(from=0, to=Integer.MAX_VALUE) int losses();
 
     /**
      * Gets the number of games won added to those lost.
@@ -50,8 +50,8 @@ public interface ThimblePlayerStats extends Identity {
      * @return The total number of games played.
      */
     @Contract(pure = true)
-    @Range(from=0, to=Integer.MAX_VALUE) default int getGamesPlayed() {
-        return this.getWins() + this.getLosses();
+    @Range(from=0, to=Integer.MAX_VALUE) default int gamesPlayed() {
+        return this.wins() + this.losses();
     }
 
     /**
@@ -60,7 +60,7 @@ public interface ThimblePlayerStats extends Identity {
      * @return The number of successful jumps.
      */
     @Contract(pure = true)
-    @Range(from=0, to=Integer.MAX_VALUE) int getJumps();
+    @Range(from=0, to=Integer.MAX_VALUE) int jumps();
 
     /**
      * Gets the number of failed jumps.
@@ -68,7 +68,7 @@ public interface ThimblePlayerStats extends Identity {
      * @return The number of failed jumps.
      */
     @Contract(pure = true)
-    @Range(from=0, to=Integer.MAX_VALUE) int getFailedJumps();
+    @Range(from=0, to=Integer.MAX_VALUE) int failedJumps();
 
     /**
      * Gets the number of "thimbles" made, i.e. the number of jumps between 4 solid blocks.
@@ -76,7 +76,7 @@ public interface ThimblePlayerStats extends Identity {
      * @return The number of successful thimbles.
      */
     @Contract(pure = true)
-    @Range(from=0, to=Integer.MAX_VALUE) int getThimbles();
+    @Range(from=0, to=Integer.MAX_VALUE) int thimbles();
 
     /**
      * Returns {@code true} whether it's the same player. {@link java.util.UUID#equals(Object)}

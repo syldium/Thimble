@@ -22,7 +22,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
     private int points = 1;
 
     public InGamePlayer(@NotNull Player player, @NotNull ThimblePlayerStats stats, @NotNull BlockData block, @NotNull Game game) {
-        super(stats.uuid(), stats.name(), stats.getWins(), stats.getLosses(), stats.getJumps(), stats.getFailedJumps(), stats.getThimbles());
+        super(stats.uuid(), stats.name(), stats.wins(), stats.losses(), stats.jumps(), stats.failedJumps(), stats.thimbles());
         this.block = block;
         this.game = game;
         this.lastLocation = player.getLocation();
@@ -47,7 +47,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
     }
 
     @Override
-    public int getPoints() {
+    public int points() {
         return this.points;
     }
 

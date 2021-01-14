@@ -157,7 +157,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     public abstract void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict);
 
     protected @Nullable InGamePlayer getFirstPlayer() {
-        Comparator<InGamePlayer> comparator = Comparator.comparingInt(InGamePlayer::getPoints);
+        Comparator<InGamePlayer> comparator = Comparator.comparingInt(InGamePlayer::points);
         return this.players.stream()
                 .filter(player -> !player.isVanished())
                 .max(comparator)
@@ -177,8 +177,8 @@ public abstract class Game implements ThimbleGame, Runnable {
 
     protected void sendJumpMessage(@NotNull Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
-            Template lifesTemplate = Template.of("lifes", String.valueOf(inGamePlayer.getPoints()));
-            if (inGamePlayer.getPoints() > 1) {
+            Template lifesTemplate = Template.of("lifes", String.valueOf(inGamePlayer.points()));
+            if (inGamePlayer.points() > 1) {
                 player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFES, lifesTemplate);
             } else {
                 player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFE, lifesTemplate);
@@ -292,7 +292,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     public @NotNull Set<ThimblePlayer> getAlivePlayers() {
         Set<ThimblePlayer> players = new HashSet<>(Math.min(10, this.players.size()));
         for (ThimblePlayer player : this.players) {
-            if (player.getPoints() > 0 && !player.isSpectator() && !player.isVanished()) {
+            if (player.points() > 0 && !player.isSpectator() && !player.isVanished()) {
                 players.add(player);
             }
         }

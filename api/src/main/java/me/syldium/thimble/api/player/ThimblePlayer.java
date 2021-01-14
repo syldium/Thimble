@@ -16,7 +16,7 @@ public interface ThimblePlayer extends ThimblePlayerStats {
      * @return A number.
      */
     @Contract(pure = true)
-    @Range(from=0, to=Integer.MAX_VALUE) int getPoints();
+    @Range(from=0, to=Integer.MAX_VALUE) int points();
 
     /**
      * Returns {@code true} if the player is a game spectator.

@@ -44,7 +44,7 @@ public class LeaderboardTest {
 
         int wins = 20;
         for (ThimblePlayerStats stats : leaderboard) {
-            assertEquals(wins--, stats.getWins());
+            assertEquals(wins--, stats.wins());
         }
         assertEquals(10, leaderboard.size());
     }
@@ -101,6 +101,6 @@ public class LeaderboardTest {
     }
 
     public @NotNull PlayerStats newPlayerStats(@NotNull ThimblePlayerStats stats) {
-        return new PlayerStats(stats.uuid(), stats.name(), stats.getWins(), stats.getLosses(), stats.getJumps(), stats.getFailedJumps(), stats.getThimbles());
+        return new PlayerStats(stats.uuid(), stats.name(), stats.wins(), stats.losses(), stats.jumps(), stats.failedJumps(), stats.thimbles());
     }
 }
