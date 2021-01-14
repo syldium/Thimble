@@ -1,35 +1,24 @@
 package me.syldium.thimble.bukkit.world;
 
+import me.syldium.thimble.common.world.BlockData;
 import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class BukkitBlockData implements me.syldium.thimble.common.world.BlockData {
+import static me.syldium.thimble.common.ThimblePlugin.classExists;
 
-    final BlockData handle;
+public interface BukkitBlockData extends BlockData {
 
-    public BukkitBlockData(@NotNull Material material) {
-        this.handle = material.createBlockData();
-    }
+    boolean IS_FLAT = classExists("org.bukkit.block.data.BlockData");
 
-    public BukkitBlockData(@NotNull BlockData handle) {
-        this.handle = handle;
-    }
+    @NotNull Material material();
 
-    public @NotNull BlockData getHandle() {
-        return this.handle;
-    }
+    @NotNull ItemStack itemStack();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BukkitBlockData that = (BukkitBlockData) o;
-        return this.handle.getMaterial().equals(that.handle.getMaterial());
-    }
+    void setBlock(@NotNull Block block);
 
-    @Override
-    public int hashCode() {
-        return this.handle.getMaterial().hashCode();
+    static @NotNull BukkitBlockData build(@NotNull Material material) {
+        return IS_FLAT ? new BukkitModernBlockData(material) : new BukkitMaterialData(material);
     }
 }

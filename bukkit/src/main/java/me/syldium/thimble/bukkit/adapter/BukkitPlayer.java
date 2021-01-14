@@ -7,7 +7,6 @@ import me.syldium.thimble.common.world.PoolBlock;
 import me.syldium.thimble.bukkit.world.BukkitPoolBlock;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -17,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+
+import static me.syldium.thimble.bukkit.util.BukkitUtil.isWater;
 
 public class BukkitPlayer extends AbstractPlayer<Player> {
 
@@ -85,7 +86,7 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
         if (IN_WATER_METHOD) {
             return this.getHandle().isInWater();
         }
-        return this.getHandle().getLocation().getBlock().getType() == Material.WATER;
+        return isWater(this.getHandle().getLocation().getBlock().getType());
     }
 
     @Override

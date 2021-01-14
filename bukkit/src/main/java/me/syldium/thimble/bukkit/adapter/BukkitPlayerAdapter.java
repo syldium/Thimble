@@ -35,6 +35,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
+import static me.syldium.thimble.bukkit.util.BukkitUtil.isWater;
+import static me.syldium.thimble.bukkit.world.BukkitBlockData.IS_FLAT;
 
 public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Player, Location> {
 
@@ -56,7 +58,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
             plugin.getLogger().severe("The list of blocks in the configuration file is empty/invalid!"
                     + " This will cause an error every time a player tries to join an arena.");
         }
-        this.blockDatas = materials.stream().map(BukkitBlockData::new).collect(Collectors.toList());
+        this.blockDatas = materials.stream().map(BukkitBlockData::build).collect(Collectors.toList());
         this.inventory = new BlockSelectionInventory(plugin, this);
         this.locationAdapter = new BukkitAdapter(bootstrap);
     }
@@ -65,7 +67,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     public boolean isDeCoudre(@NotNull PoolBlock abstracted) {
         Block block = ((BukkitPoolBlock) abstracted).getHandle();
         for (BlockFace direction : DIRECTIONS) {
-            if (block.getRelative(direction).isPassable()) {
+            if (IS_FLAT ? block.getRelative(direction).isPassable() : isWater(block.getRelative(direction).getType())) {
                 return false;
             }
         }
@@ -83,7 +85,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
         for (Map.Entry<BlockVector, BlockData> entry : blocks.entrySet()) {
             BlockVector pos = entry.getKey();
             Block block = world.getBlockAt(pos.x(), pos.y(), pos.z());
-            block.setBlockData(((BukkitBlockData) entry.getValue()).getHandle());
+            ((BukkitBlockData) entry.getValue()).setBlock(block);
         }
     }
 

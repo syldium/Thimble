@@ -6,6 +6,8 @@ import me.syldium.thimble.common.world.PoolBlock;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
+import static me.syldium.thimble.bukkit.world.BukkitBlockData.IS_FLAT;
+
 public class BukkitPoolBlock implements PoolBlock {
 
     private final Block handle;
@@ -16,12 +18,14 @@ public class BukkitPoolBlock implements PoolBlock {
 
     @Override
     public void setBlockData(@NotNull BlockData blockData) {
-        this.handle.setBlockData(((BukkitBlockData) blockData).handle);
+        ((BukkitBlockData) blockData).setBlock(this.handle);
     }
 
     @Override
     public @NotNull BlockData getBlockData() {
-        return new BukkitBlockData(this.handle.getBlockData());
+        return IS_FLAT ?
+                new BukkitModernBlockData(this.handle.getBlockData())
+                : new BukkitMaterialData(this.handle.getType());
     }
 
     @Override

@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 public final class BukkitUtil {
 
     private static final Set<Material> AIR_TYPES = getAllMatching(material -> material.name().endsWith("AIR"));
+    private static final Set<Material> WATER_TYPES = getAllMatching(material -> material.name().endsWith("WATER"));
 
     private static final Constructor<?> FAST_UTIL_OBJECT2INT;
 
@@ -156,5 +157,15 @@ public final class BukkitUtil {
      */
     public static boolean isAir(@NotNull Material material) {
         return AIR_TYPES.contains(material);
+    }
+
+    /**
+     * Checks if the {@link Material} is a water block.
+     *
+     * @param material The Material to test.
+     * @return {@code true} if it's a water block.
+     */
+    public static boolean isWater(@NotNull Material material) {
+        return WATER_TYPES.contains(material);
     }
 }

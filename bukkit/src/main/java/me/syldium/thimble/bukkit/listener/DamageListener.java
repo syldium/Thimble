@@ -1,6 +1,7 @@
 package me.syldium.thimble.bukkit.listener;
 
 import me.syldium.thimble.api.arena.ThimbleGame;
+import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import org.bukkit.entity.Player;
@@ -32,7 +33,9 @@ public class DamageListener implements Listener {
         ThimbleGame game = optional.get();
 
         if (game.isJumping(player.getUniqueId()) && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            game.verdict(player.getUniqueId(), JumpVerdict.MISSED);
+            if (!BukkitAdapter.get().asAbstractLoc(player).asBlockPosition().equals(game.getArena().getJumpLocation().asBlockPosition())) {
+                game.verdict(player.getUniqueId(), JumpVerdict.MISSED);
+            }
         }
         event.setCancelled(true);
     }
