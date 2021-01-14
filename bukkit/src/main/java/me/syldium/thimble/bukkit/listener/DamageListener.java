@@ -27,13 +27,13 @@ public class DamageListener implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
-        Optional<ThimbleGame> optional = this.plugin.getGameService().getGame(player.getUniqueId());
+        Optional<ThimbleGame> optional = this.plugin.getGameService().playerGame(player.getUniqueId());
         if (!optional.isPresent()) return;
         event.setCancelled(true);
         ThimbleGame game = optional.get();
 
         if (game.isJumping(player.getUniqueId()) && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            if (!BukkitAdapter.get().asAbstractLoc(player).asBlockPosition().equals(game.getArena().getJumpLocation().asBlockPosition())) {
+            if (!BukkitAdapter.get().asAbstractLoc(player).asBlockPosition().equals(game.arena().jumpLocation().asBlockPosition())) {
                 game.verdict(player.getUniqueId(), JumpVerdict.MISSED);
             }
         }
@@ -43,7 +43,7 @@ public class DamageListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
-        if (!this.plugin.getGameService().getGame(event.getEntity().getUniqueId()).isPresent()) return;
+        if (!this.plugin.getGameService().playerGame(event.getEntity().getUniqueId()).isPresent()) return;
 
         Player player = (Player) event.getEntity();
         if (player.getFoodLevel() > event.getFoodLevel()) {

@@ -44,12 +44,12 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public @NotNull Optional<@NotNull ThimbleGame> getGame(@NotNull UUID uuid) {
+    public @NotNull Optional<@NotNull ThimbleGame> playerGame(@NotNull UUID uuid) {
         return Optional.ofNullable(this.games.get(uuid));
     }
 
     @Override
-    public @NotNull Optional<@NotNull ThimblePlayer> getInGamePlayer(@NotNull UUID uuid) {
+    public @NotNull Optional<@NotNull ThimblePlayer> player(@NotNull UUID uuid) {
         Game game = this.games.get(uuid);
         return game == null ? Optional.empty() : Optional.ofNullable(game.getPlayer(uuid));
     }
@@ -61,9 +61,9 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public @NotNull Optional<@NotNull ThimbleArena> getArena(@NotNull String name) {
+    public @NotNull Optional<@NotNull ThimbleArena> arena(@NotNull String name) {
         for (ThimbleArena arena : this.arenas) {
-            if (arena.getName().equals(name)) {
+            if (arena.name().equals(name)) {
                 return Optional.of(arena);
             }
         }
@@ -71,24 +71,16 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public @NotNull Set<@NotNull ThimbleArena> getArenas() {
+    public @NotNull Set<@NotNull ThimbleArena> arenas() {
         return Collections.unmodifiableSet(this.arenas);
     }
 
-    public @NotNull String getArenaCount() {
-        int count = this.plugin.getGameService().getArenas().size();
+    public @NotNull String arenaCount() {
+        int count = this.plugin.getGameService().arenas().size();
         if (count < 1) return "0";
         if (count < 3) return "1-2";
         if (count < 6) return "3-5";
         return "6+";
-    }
-
-    public int getAveragePlayerCapacity() {
-        double average = this.arenas.stream()
-                .mapToInt(arena -> (arena.getMinPlayers() + arena.getMaxPlayers()) / 2)
-                .average()
-                .orElse(0f);
-        return (int) Math.round(average);
     }
 
     @Override
@@ -129,7 +121,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public @NotNull Optional<@NotNull ThimbleArena> getArenaFromSign(@NotNull BlockPos position) {
+    public @NotNull Optional<@NotNull ThimbleArena> arenaFromSign(@NotNull BlockPos position) {
         return Optional.ofNullable(this.signsToArena.get(position));
     }
 
@@ -138,13 +130,13 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public @NotNull Set<@NotNull BlockPos> getArenaSigns(@NotNull ThimbleArena arena) {
+    public @NotNull Set<@NotNull BlockPos> arenaSigns(@NotNull ThimbleArena arena) {
         Set<BlockPos> positions = this.arenaToSigns.get(arena);
         return positions == null ? Collections.emptySet() : Collections.unmodifiableSet(positions);
     }
 
     @Override
-    public @NotNull Set<@NotNull BlockPos> getActionSigns() {
+    public @NotNull Set<@NotNull BlockPos> actionSigns() {
         return Collections.unmodifiableSet(this.signsToAction.keySet());
     }
 

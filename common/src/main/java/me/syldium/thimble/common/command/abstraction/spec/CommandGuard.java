@@ -45,7 +45,7 @@ public interface CommandGuard {
      * Ensures that the player is not in a game.
      */
     CommandGuard EXCEPT_NOT_IN_GAME = CommandGuard.except(
-        (plugin, sender) -> !(plugin.getGameService().getGame(sender.uuid()).isPresent()),
+        (plugin, sender) -> !(plugin.getGameService().playerGame(sender.uuid()).isPresent()),
         MessageKey.FEEDBACK_GAME_ALREADY_IN_GAME
     );
 
@@ -53,7 +53,7 @@ public interface CommandGuard {
      * Verifies that the player is in a game.
      */
     CommandGuard EXCEPT_IN_GAME = CommandGuard.except(
-        (plugin, sender) -> plugin.getGameService().getGame(sender.uuid()).isPresent(),
+        (plugin, sender) -> plugin.getGameService().playerGame(sender.uuid()).isPresent(),
         MessageKey.FEEDBACK_GAME_NOT_IN_GAME
     );
 }

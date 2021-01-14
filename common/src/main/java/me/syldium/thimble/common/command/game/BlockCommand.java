@@ -23,7 +23,7 @@ public class BlockCommand extends ChildCommand {
 
     @Override
     public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args) throws CommandException {
-        plugin.getPlayerAdapter().openBlockSelectionInventory((Player) sender, (InGamePlayer) plugin.getGameService().getInGamePlayer(sender.uuid()).get());
+        plugin.getPlayerAdapter().openBlockSelectionInventory((Player) sender, (InGamePlayer) plugin.getGameService().player(sender.uuid()).get());
         return CommandResult.success();
     }
 

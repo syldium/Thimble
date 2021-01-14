@@ -33,18 +33,18 @@ class LuckPermsContext implements ContextCalculator<Player> {
 
     @Override
     public void calculate(@NotNull Player target, @NotNull ContextConsumer consumer) {
-        Optional<ThimbleGame> gameOpt = this.gameService.getGame(target.getUniqueId());
+        Optional<ThimbleGame> gameOpt = this.gameService.playerGame(target.getUniqueId());
         // noinspection OptionalIsPresent
         if (gameOpt.isPresent()) {
-            consumer.accept(KEY, gameOpt.get().getArena().getName());
+            consumer.accept(KEY, gameOpt.get().arena().name());
         }
     }
 
     @Override
     public ContextSet estimatePotentialContexts() {
         ImmutableContextSet.Builder builder = ImmutableContextSet.builder();
-        for (ThimbleArena arena : this.gameService.getArenas()) {
-            builder.add(KEY, arena.getName());
+        for (ThimbleArena arena : this.gameService.arenas()) {
+            builder.add(KEY, arena.name());
         }
         return builder.build();
     }

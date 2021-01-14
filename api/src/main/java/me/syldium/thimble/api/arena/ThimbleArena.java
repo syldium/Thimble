@@ -27,7 +27,7 @@ public interface ThimbleArena extends ComponentLike {
      * @return The arena name.
      */
     @Contract(pure = true)
-    @NotNull String getName();
+    @NotNull String name();
 
     /**
      * Gets the location where players are teleported when they arrive in the pool and after a jump.
@@ -35,13 +35,13 @@ public interface ThimbleArena extends ComponentLike {
      * @return The spawn location.
      */
     @Contract(pure = true)
-    @Nullable Location getSpawnLocation();
+    @Nullable Location spawnLocation();
 
     /**
-     * Sets the spawn location. {@link #getSpawnLocation()}
+     * Sets the spawn location. {@link #spawnLocation()}
      *
      * @param location The new spawn location.
-     * @throws IllegalStateException If the argument is {@code null} and a game exists
+     * @throws IllegalStateException If the argument is {@code null} and a game exists.
      * @return This arena.
      */
     @Contract("_ -> this")
@@ -53,10 +53,10 @@ public interface ThimbleArena extends ComponentLike {
      * @return The jump location.
      */
     @Contract(pure = true)
-    @Nullable Location getJumpLocation();
+    @Nullable Location jumpLocation();
 
     /**
-     * Sets the jump location. {@link #getJumpLocation()}
+     * Sets the jump location. {@link #jumpLocation()}
      *
      * @param location The new jump location.
      * @throws IllegalStateException If the argument is {@code null} and a game exists.
@@ -73,10 +73,10 @@ public interface ThimbleArena extends ComponentLike {
      * @return The wait location.
      */
     @Contract(pure = true)
-    @Nullable Location getWaitLocation();
+    @Nullable Location waitLocation();
 
     /**
-     * Sets the wait location. {@link #getWaitLocation()}
+     * Sets the wait location. {@link #waitLocation()}
      *
      * @param location The new wait location.
      * @throws IllegalStateException If the argument is {@code null} and a game exists.
@@ -91,7 +91,7 @@ public interface ThimbleArena extends ComponentLike {
      * @return The minimum number.
      */
     @Contract(pure = true)
-    @Range(from=1, to=Integer.MAX_VALUE) int getMinPlayers();
+    @Range(from=1, to=Integer.MAX_VALUE) int minPlayers();
 
     /**
      * Sets the minimum number of players the pool can host.
@@ -109,7 +109,7 @@ public interface ThimbleArena extends ComponentLike {
      * @return The maximum number.
      */
     @Contract(pure = true)
-    @Range(from=1, to=Integer.MAX_VALUE) int getMaxPlayers();
+    @Range(from=1, to=Integer.MAX_VALUE) int maxPlayers();
 
     /**
      * Sets the maximum number of players the arena can host.
@@ -127,7 +127,7 @@ public interface ThimbleArena extends ComponentLike {
      * @return The game if exists.
      */
     @Contract(pure = true)
-    @NotNull Optional<@NotNull ThimbleGame> getGame();
+    @NotNull Optional<@NotNull ThimbleGame> game();
 
     /**
      * Returns the game mode that will be used for new games.
@@ -135,7 +135,7 @@ public interface ThimbleArena extends ComponentLike {
      * @return The game mode.
      */
     @Contract(pure = true)
-    @NotNull ThimbleGameMode getGameMode();
+    @NotNull ThimbleGameMode gameMode();
 
     /**
      * Sets the game mode for new games.
@@ -193,7 +193,7 @@ public interface ThimbleArena extends ComponentLike {
      */
     @Contract(pure = true)
     default boolean isSetup() {
-        return this.getJumpLocation() != null && this.getSpawnLocation() != null && this.getWaitLocation() != null;
+        return this.jumpLocation() != null && this.spawnLocation() != null && this.waitLocation() != null;
     }
 
     /**
@@ -202,7 +202,7 @@ public interface ThimbleArena extends ComponentLike {
      * @return The minimum point.
      */
     @Contract(pure = true)
-    @Nullable BlockVector getPoolMinPoint();
+    @Nullable BlockVector poolMinPoint();
 
     /**
      * Sets the lower point of the pool.
@@ -219,7 +219,7 @@ public interface ThimbleArena extends ComponentLike {
      * @return The maximum point.
      */
     @Contract(pure = true)
-    @Nullable BlockVector getPoolMaxPoint();
+    @Nullable BlockVector poolMaxPoint();
 
     /**
      * Sets the upper point of the pool.
@@ -236,7 +236,7 @@ public interface ThimbleArena extends ComponentLike {
      * @return The center point.
      */
     @Contract(pure = true)
-    @Nullable BlockVector getPoolCenterPoint();
+    @Nullable BlockVector poolCenterPoint();
 
     /**
      * Gets the signs leading to this arena.
@@ -244,5 +244,5 @@ public interface ThimbleArena extends ComponentLike {
      * @return The sign positions.
      */
     @Contract(pure = true)
-    @NotNull @UnmodifiableView Set<@NotNull BlockPos> getSigns();
+    @NotNull @UnmodifiableView Set<@NotNull BlockPos> signs();
 }

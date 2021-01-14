@@ -52,7 +52,7 @@ public class SignChangeListener implements Listener {
         Block block = event.getBlock();
         BlockPos position = BukkitAdapter.get().asAbstract(block);
 
-        Optional<ThimbleArena> arena = this.plugin.getGameService().getArena(ChatColor.stripColor(lines[1]));
+        Optional<ThimbleArena> arena = this.plugin.getGameService().arena(ChatColor.stripColor(lines[1]));
         if (arena.isPresent()) {
             this.plugin.getGameService().addSign(position, arena.get());
             event.setLine(0, ChatColor.DARK_GREEN + lines[0]);
@@ -78,11 +78,11 @@ public class SignChangeListener implements Listener {
     }
 
     private void updateSigns(@NotNull ThimbleArena arena, @NotNull ThimbleState state) {
-        Key worldKey = requireNonNull(arena.getSpawnLocation(), "arena spawn location").worldKey();
+        Key worldKey = requireNonNull(arena.spawnLocation(), "arena spawn location").worldKey();
         World world = requireNonNull(BukkitAdapter.get().getWorldFromKey(worldKey), "arena spawn world");
 
         List<BlockPos> removable = new LinkedList<>();
-        for (BlockPos pos : this.plugin.getGameService().getArenaSigns(arena)) {
+        for (BlockPos pos : this.plugin.getGameService().arenaSigns(arena)) {
             if (!world.isChunkLoaded(pos.chunkX(), pos.chunkZ())) {
                 continue;
             }

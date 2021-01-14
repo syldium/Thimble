@@ -39,11 +39,11 @@ public class SignInteractListener implements Listener {
         Block block = event.getClickedBlock();
         BlockPos position = BukkitAdapter.get().asAbstract(block);
 
-        Optional<ThimbleArena> arena = this.plugin.getGameService().getArenaFromSign(position);
+        Optional<ThimbleArena> arena = this.plugin.getGameService().arenaFromSign(position);
         if (arena.isPresent()) {
             event.setCancelled(true);
 
-            if (this.plugin.getGameService().getGame(event.getPlayer().getUniqueId()).isPresent()) {
+            if (this.plugin.getGameService().playerGame(event.getPlayer().getUniqueId()).isPresent()) {
                 this.plugin.sendFeedback(event.getPlayer(), CommandResult.error(MessageKey.FEEDBACK_GAME_ALREADY_IN_GAME));
                 return;
             }

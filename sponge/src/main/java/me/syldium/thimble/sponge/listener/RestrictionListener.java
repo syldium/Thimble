@@ -33,7 +33,7 @@ public class RestrictionListener {
     }
 
     private boolean isRestricted(@NotNull Player player) {
-        return this.plugin.getGameService().getGame(player.getUniqueId()).isPresent()
+        return this.plugin.getGameService().playerGame(player.getUniqueId()).isPresent()
                 && !player.gameMode().get().equals(GameModes.CREATIVE);
     }
 }

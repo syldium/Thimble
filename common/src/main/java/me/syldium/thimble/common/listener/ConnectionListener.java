@@ -26,7 +26,7 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> {
 
     @SuppressWarnings("unchecked")
     public final void onJoin(@NotNull UUID playerUniqueId) {
-        Optional<ThimblePlayer> inGamePlayerOpt = this.plugin.getGameService().getInGamePlayer(playerUniqueId);
+        Optional<ThimblePlayer> inGamePlayerOpt = this.plugin.getGameService().player(playerUniqueId);
         if (inGamePlayerOpt.isPresent()) {
             ((Game) inGamePlayerOpt.get().getGame()).spectate(inGamePlayerOpt.get(), playerUniqueId);
             return;
@@ -42,11 +42,11 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> {
     }
 
     public final void onQuit(@NotNull UUID playerUniqueId) {
-        Optional<ThimbleGame> optional = this.plugin.getGameService().getGame(playerUniqueId);
+        Optional<ThimbleGame> optional = this.plugin.getGameService().playerGame(playerUniqueId);
         if (!optional.isPresent()) return;
         ThimbleGame game = optional.get();
 
-        if (this.quitOnDisconnect || game.getState().isNotStarted()) {
+        if (this.quitOnDisconnect || game.state().isNotStarted()) {
             game.removePlayer(playerUniqueId);
         }
     }

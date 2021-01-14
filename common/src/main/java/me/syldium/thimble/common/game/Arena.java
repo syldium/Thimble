@@ -42,12 +42,12 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public @NotNull String getName() {
+    public @NotNull String name() {
         return this.rawName;
     }
 
     @Override
-    public @Nullable Location getSpawnLocation() {
+    public @Nullable Location spawnLocation() {
         return this.spawnLocation;
     }
 
@@ -61,7 +61,7 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public @Nullable Location getJumpLocation() {
+    public @Nullable Location jumpLocation() {
         return this.jumpLocation;
     }
 
@@ -75,7 +75,7 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public @Nullable Location getWaitLocation() {
+    public @Nullable Location waitLocation() {
         return this.waitLocation;
     }
 
@@ -89,7 +89,7 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public @Range(from = 1, to = Integer.MAX_VALUE) int getMinPlayers() {
+    public @Range(from = 1, to = Integer.MAX_VALUE) int minPlayers() {
         return this.minPlayers;
     }
 
@@ -103,7 +103,7 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public @Range(from = 1, to = Integer.MAX_VALUE) int getMaxPlayers() {
+    public @Range(from = 1, to = Integer.MAX_VALUE) int maxPlayers() {
         return this.maxPlayers;
     }
 
@@ -117,12 +117,12 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public @NotNull Optional<@NotNull ThimbleGame> getGame() {
+    public @NotNull Optional<@NotNull ThimbleGame> game() {
         return Optional.ofNullable(this.game);
     }
 
     @Override
-    public @NotNull ThimbleGameMode getGameMode() {
+    public @NotNull ThimbleGameMode gameMode() {
         return this.gameMode;
     }
 
@@ -166,7 +166,7 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public @Nullable BlockVector getPoolMinPoint() {
+    public @Nullable BlockVector poolMinPoint() {
         return this.minimumPoint;
     }
 
@@ -177,7 +177,7 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public @Nullable BlockVector getPoolMaxPoint() {
+    public @Nullable BlockVector poolMaxPoint() {
         return this.maximumPoint;
     }
 
@@ -188,7 +188,7 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public @Nullable BlockVector getPoolCenterPoint() {
+    public @Nullable BlockVector poolCenterPoint() {
         return this.centerPoint;
     }
 
@@ -206,8 +206,8 @@ public class Arena implements ThimbleArena {
     }
 
     @Override
-    public @NotNull Set<@NotNull BlockPos> getSigns() {
-        return this.plugin.getGameService().getArenaSigns(this);
+    public @NotNull Set<@NotNull BlockPos> signs() {
+        return this.plugin.getGameService().arenaSigns(this);
     }
 
     @Override

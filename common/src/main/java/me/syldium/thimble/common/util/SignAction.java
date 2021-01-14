@@ -16,7 +16,7 @@ public enum SignAction {
     BLOCK {
         @Override
         public void run(@NotNull ThimblePlugin plugin, @NotNull Player player) {
-            Optional<ThimblePlayer> thimblePlayer = plugin.getGameService().getInGamePlayer(player);
+            Optional<ThimblePlayer> thimblePlayer = plugin.getGameService().player(player);
             if (thimblePlayer.isPresent()) {
                 plugin.getPlayerAdapter().openBlockSelectionInventory(player, (InGamePlayer) thimblePlayer.get());
             } else {
@@ -27,7 +27,7 @@ public enum SignAction {
     LEAVE {
         @Override
         public void run(@NotNull ThimblePlugin plugin, @NotNull Player player) {
-            Optional<ThimbleGame> thimbleGame = plugin.getGameService().getGame(player);
+            Optional<ThimbleGame> thimbleGame = plugin.getGameService().playerGame(player);
             if (thimbleGame.isPresent()) {
                 thimbleGame.get().removePlayer(player.uuid());
             } else {

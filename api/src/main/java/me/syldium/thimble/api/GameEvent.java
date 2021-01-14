@@ -22,6 +22,6 @@ public interface GameEvent {
      * @return The arena.
      */
     default @NotNull ThimbleArena getArena() {
-        return this.getGame().getArena();
+        return this.getGame().arena();
     }
 }

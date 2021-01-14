@@ -66,7 +66,7 @@ public final class BlockSelectionInventory implements Listener {
         event.setCancelled(true);
 
         // Gets the player back
-        Optional<ThimblePlayer> optional = this.plugin.getGameService().getInGamePlayer(playerUUID);
+        Optional<ThimblePlayer> optional = this.plugin.getGameService().player(playerUUID);
         if (!optional.isPresent()) return;
         InGamePlayer player = (InGamePlayer) optional.get();
 
@@ -85,7 +85,7 @@ public final class BlockSelectionInventory implements Listener {
         }
 
         // Changes the player's block
-        if (!player.getGame().getState().isNotStarted()) {
+        if (!player.getGame().state().isNotStarted()) {
             event.getWhoClicked().sendMessage(this.gameStarted);
             return;
         }
@@ -137,7 +137,7 @@ public final class BlockSelectionInventory implements Listener {
                     : ChatColor.AQUA + players.stream().map(InGamePlayer::name).collect(Collectors.joining(", "));
 
             BukkitBlockData chosenBlockData = (BukkitBlockData) inGamePlayer.getChosenBlock();
-            if (blockData.equals(chosenBlockData) || !players.isEmpty() && inGamePlayer.getGame().getState().isStarted()) {
+            if (blockData.equals(chosenBlockData) || !players.isEmpty() && inGamePlayer.getGame().state().isStarted()) {
                 // Adds an enchantment glint
                 ItemMeta meta = itemStack.getItemMeta();
                 meta.setDisplayName(displayName);

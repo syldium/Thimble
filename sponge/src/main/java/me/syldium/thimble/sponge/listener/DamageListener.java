@@ -27,7 +27,7 @@ public class DamageListener {
 
     @Listener
     public void onPlayerDamage(DamageEntityEvent event, @First Player player, @First DamageSource source) {
-        Optional<ThimbleGame> optional = this.plugin.getGameService().getGame(player.getUniqueId());
+        Optional<ThimbleGame> optional = this.plugin.getGameService().playerGame(player.getUniqueId());
         if (!optional.isPresent()) return;
         event.setCancelled(true);
         ThimbleGame game = optional.get();
@@ -42,7 +42,7 @@ public class DamageListener {
     public void onFoodLevelChange(ChangeDataHolderEvent.ValueChange event, @First Player player) {
         for (ImmutableValue<?> immutableValue : event.getOriginalChanges().getSuccessfulData()) {
             if (immutableValue.getKey().equals(Keys.FOOD_LEVEL)) {
-                if (!this.plugin.getGameService().getGame(player.getUniqueId()).isPresent()) {
+                if (!this.plugin.getGameService().playerGame(player.getUniqueId()).isPresent()) {
                     return;
                 }
                 event.setCancelled(true);

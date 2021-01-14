@@ -70,7 +70,7 @@ public class RestrictionListener implements Listener {
     }
 
     private boolean isRestricted(@NotNull Player player) {
-        return this.plugin.getGameService().getGame(player.getUniqueId()).isPresent()
+        return this.plugin.getGameService().playerGame(player.getUniqueId()).isPresent()
                 && player.getGameMode() != GameMode.CREATIVE
                 && !player.hasPermission("thimble.restrictions.bypass");
     }

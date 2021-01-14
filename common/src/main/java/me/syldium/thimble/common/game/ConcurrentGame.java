@@ -35,7 +35,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             if (inGamePlayer.isVanished()) continue;
             Player player = this.plugin.getPlayer(inGamePlayer.uuid());
             if (player == null) continue;
-            player.teleport(this.arena.getJumpLocation());
+            player.teleport(this.arena.jumpLocation());
         }
     }
 
@@ -106,10 +106,10 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
                 if (this.spectatorMode) {
                     player.spectate();
                 } else {
-                    player.teleport(this.arena.getWaitLocation());
+                    player.teleport(this.arena.waitLocation());
                 }
             } else {
-                player.teleport(this.arena.getJumpLocation());
+                player.teleport(this.arena.jumpLocation());
             }
         }
     }

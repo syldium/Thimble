@@ -40,8 +40,8 @@ public class ArenaConfig {
             node.hydrateLocation("spawn-location", arena::setSpawnLocation);
             node.hydrateLocation("jump-location", arena::setJumpLocation);
             node.hydrateLocation("wait-location", arena::setWaitLocation);
-            arena.setMinPlayers(node.getInt("min-players", arena.getMinPlayers()));
-            arena.setMaxPlayers(node.getInt("max-players", arena.getMaxPlayers()));
+            arena.setMinPlayers(node.getInt("min-players", arena.minPlayers()));
+            arena.setMaxPlayers(node.getInt("max-players", arena.maxPlayers()));
             arena.setGameMode(EnumUtil.valueOf(ThimbleGameMode.class, node.getString("gamemode"), ThimbleGameMode.SINGLE));
             node.hydrateBlockVector("min-point", arena::setPoolMinPoint);
             node.hydrateBlockVector("max-point", arena::setPoolMaxPoint);
@@ -86,19 +86,19 @@ public class ArenaConfig {
     public void save(@NotNull Set<@NotNull Arena> arenas) {
         ConfigNode arenaNode = this.config.createNode("arenas");
         for (Arena arena : arenas) {
-            ConfigNode node = arenaNode.createNode(arena.getName());
-            node.setLocation("spawn-location", arena.getSpawnLocation());
-            node.setLocation("jump-location", arena.getJumpLocation());
-            node.setLocation("wait-location", arena.getWaitLocation());
-            node.setValue("min-players", arena.getMinPlayers());
-            node.setValue("max-players", arena.getMaxPlayers());
-            node.setValue("gamemode", arena.getGameMode().name());
-            node.setBlockVector("min-point", arena.getPoolMinPoint());
-            node.setBlockVector("max-point", arena.getPoolMaxPoint());
+            ConfigNode node = arenaNode.createNode(arena.name());
+            node.setLocation("spawn-location", arena.spawnLocation());
+            node.setLocation("jump-location", arena.jumpLocation());
+            node.setLocation("wait-location", arena.waitLocation());
+            node.setValue("min-players", arena.minPlayers());
+            node.setValue("max-players", arena.maxPlayers());
+            node.setValue("gamemode", arena.gameMode().name());
+            node.setBlockVector("min-point", arena.poolMinPoint());
+            node.setBlockVector("max-point", arena.poolMaxPoint());
 
             ConfigNode signsSection = node.createNode("signs");
             int i = 0;
-            for (BlockPos position : arena.getSigns()) {
+            for (BlockPos position : arena.signs()) {
                 signsSection.setBlockPos(String.valueOf(i++), position);
             }
         }

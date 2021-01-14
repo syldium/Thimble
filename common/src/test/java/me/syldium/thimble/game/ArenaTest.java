@@ -20,9 +20,9 @@ public class ArenaTest {
         //noinspection ConstantConditions
         Arena arena = new Arena(null, "arena");
         arena.setMinPlayers(5);
-        assertEquals(5, arena.getMinPlayers());
+        assertEquals(5, arena.minPlayers());
         arena.setMaxPlayers(11);
-        assertEquals(11, arena.getMaxPlayers());
+        assertEquals(11, arena.maxPlayers());
         assertThrows(IllegalArgumentException.class, () -> arena.setMinPlayers(0));
         assertThrows(IllegalArgumentException.class, () -> arena.setMinPlayers(12));
         assertThrows(IllegalArgumentException.class, () -> arena.setMaxPlayers(3));
@@ -42,7 +42,7 @@ public class ArenaTest {
         arena.addPlayer(plugin.addPlayer());
         arena.setJumpLocation(new Location(world, 10, 70, -20));
         assertThrows(IllegalStateException.class, () -> arena.setJumpLocation(null));
-        assertEquals(new Location(world, 10, 70, -20), arena.getJumpLocation());
+        assertEquals(new Location(world, 10, 70, -20), arena.jumpLocation());
         plugin.getScheduler().cancelAllTasks();
         plugin.getPlayerAdapter().removeAllPlayers();
     }

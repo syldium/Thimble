@@ -54,38 +54,38 @@ public class GameTest {
     @Test
     public void start() {
         Arena arena = this.newArena(ThimbleGameMode.SINGLE);
-        assertTrue(arena.getGame().isEmpty(), "No Game instance should exist.");
+        assertTrue(arena.game().isEmpty(), "No Game instance should exist.");
         PlayerMock player = this.plugin.addPlayer();
-        assertNotEquals(arena.getSpawnLocation(), player.getLocation());
+        assertNotEquals(arena.spawnLocation(), player.getLocation());
         arena.addPlayer(player);
-        assertTrue(arena.getGame().isPresent(), "A game object should be created.");
-        assertTrue(this.plugin.getGameService().getGame(player).isPresent());
+        assertTrue(arena.game().isPresent(), "A game object should be created.");
+        assertTrue(this.plugin.getGameService().playerGame(player).isPresent());
         this.plugin.getScheduler().assertScheduled();
         this.plugin.getScheduler().nextTick();
-        assertEquals(ThimbleState.WAITING, arena.getGame().get().getState());
-        assertEquals(arena.getSpawnLocation(), player.getLocation());
+        assertEquals(ThimbleState.WAITING, arena.game().get().state());
+        assertEquals(arena.spawnLocation(), player.getLocation());
     }
 
     @Test
     public void startingSingleMode() {
         Arena arena = this.newArena(ThimbleGameMode.SINGLE);
         List<PlayerMock> players = this.joinThreePlayers(arena);
-        assertEquals(ThimbleState.WAITING, arena.getGame().get().getState());
+        assertEquals(ThimbleState.WAITING, arena.game().get().state());
         this.plugin.getScheduler().nextTick();
-        assertEquals(ThimbleState.STARTING, arena.getGame().get().getState());
+        assertEquals(ThimbleState.STARTING, arena.game().get().state());
         this.plugin.getScheduler().nextSecond();
-        assertEquals(ThimbleState.PLAYING, arena.getGame().get().getState());
+        assertEquals(ThimbleState.PLAYING, arena.game().get().state());
         this.plugin.getScheduler().nextTick();
 
         boolean oneIsJumping = false;
         for (PlayerMock player : players) {
-            if (player.getLocation().equals(arena.getJumpLocation())) {
+            if (player.getLocation().equals(arena.jumpLocation())) {
                 if (oneIsJumping) {
                     fail("Only one player should be jumping.");
                 }
                 oneIsJumping = true;
             } else {
-                assertEquals(arena.getWaitLocation(), player.getLocation());
+                assertEquals(arena.waitLocation(), player.getLocation());
             }
         }
         if (!oneIsJumping) {
@@ -97,10 +97,10 @@ public class GameTest {
     public void startingConcurrentMode() {
         Arena arena = this.newArena(ThimbleGameMode.CONCURRENT);
         List<PlayerMock> players = this.joinThreePlayers(arena);
-        Game game = (Game) arena.getGame().get();
+        Game game = (Game) arena.game().get();
         game.onCountdownEnd();
         for (PlayerMock player : players) {
-            assertEquals(arena.getJumpLocation(), player.getLocation(), "All players should be at the jump location.");
+            assertEquals(arena.jumpLocation(), player.getLocation(), "All players should be at the jump location.");
         }
     }
 
@@ -108,9 +108,9 @@ public class GameTest {
     public void singleMode() {
         Arena arena = this.newArena(ThimbleGameMode.SINGLE);
         this.joinThreePlayers(arena);
-        SingleGame game = (SingleGame) arena.getGame().get();
+        SingleGame game = (SingleGame) arena.game().get();
         this.plugin.getScheduler().nextTicks(Ticks.TICKS_PER_SECOND + 2);
-        UUID jumperUniqueId = game.getCurrentJumper();
+        UUID jumperUniqueId = game.currentJumper();
         assertNotNull(jumperUniqueId);
 
         // The first player fails.
@@ -131,9 +131,9 @@ public class GameTest {
         // End of the game.
         this.plugin.getScheduler().nextTick();
         assertEquals(2, game.getAlivePlayers().size());
-        assertEquals(playersWhoJumped.get(1), game.getCurrentJumper());
+        assertEquals(playersWhoJumped.get(1), game.currentJumper());
         game.verdict(playersWhoJumped.get(1), JumpVerdict.MISSED);
-        assertEquals(ThimbleState.END, game.getState());
+        assertEquals(ThimbleState.END, game.state());
         this.plugin.getScheduler().assertScheduled();
         this.plugin.getScheduler().nextSecond();
         this.plugin.getScheduler().assertNothingScheduled();
@@ -152,26 +152,26 @@ public class GameTest {
         // The player should not have any influence on the game start.
         arena.setMinPlayers(3);
         this.plugin.getScheduler().nextTick();
-        SingleGame game = (SingleGame) arena.getGame().get();
-        assertEquals(ThimbleState.WAITING, game.getState());
+        SingleGame game = (SingleGame) arena.game().get();
+        assertEquals(ThimbleState.WAITING, game.state());
         arena.setMinPlayers(2);
 
         this.plugin.getScheduler().nextTick();
-        assertEquals(ThimbleState.STARTING, game.getState());
+        assertEquals(ThimbleState.STARTING, game.state());
         assertEquals(2, game.size(), "The vanished player should not be counted in the players count.");
         assertEquals(3, game.realSize());
 
         // The vanished player is teleported, but must not be in the queue...
         this.plugin.getScheduler().nextTicks(Ticks.TICKS_PER_SECOND + 2);
-        Set<Location> locations = Set.of(arena.getJumpLocation(), arena.getWaitLocation());
+        Set<Location> locations = Set.of(arena.jumpLocation(), arena.waitLocation());
         for (PlayerMock player : this.plugin.getPlayers()) {
             if (player.equals(vanishedPlayer)) {
-                assertTrue(Set.of(arena.getSpawnLocation(), arena.getWaitLocation()).contains(player.getLocation()));
+                assertTrue(Set.of(arena.spawnLocation(), arena.waitLocation()).contains(player.getLocation()));
             } else {
                 assertTrue(locations.contains(player.getLocation()));
             }
         }
-        assertNotEquals(game.getCurrentJumper(), vanishedPlayer.uuid());
+        assertNotEquals(game.currentJumper(), vanishedPlayer.uuid());
         assertNotEquals(game.peekNextJumper(), vanishedPlayer.uuid());
         game.verdict(JumpVerdict.LANDED);
         this.plugin.getScheduler().nextTick();
@@ -180,7 +180,7 @@ public class GameTest {
         // ...and must not prevent the game from ending.
         game.verdict(JumpVerdict.MISSED);
         this.plugin.getScheduler().nextTick();
-        assertEquals(ThimbleState.END, game.getState());
+        assertEquals(ThimbleState.END, game.state());
         this.plugin.getScheduler().nextSecond();
         this.plugin.getScheduler().assertNothingScheduled();
     }
@@ -202,7 +202,7 @@ public class GameTest {
         for (int i = 0; i < 3; i++) {
             players.add(this.plugin.addPlayer());
             arena.addPlayer(players.get(i));
-            assertEquals(arena.getSpawnLocation(), players.get(i).getLocation());
+            assertEquals(arena.spawnLocation(), players.get(i).getLocation());
         }
         return players;
     }
@@ -215,7 +215,7 @@ public class GameTest {
      * @return The player who jumped.
      */
     private @NotNull UUID assertLanded(@NotNull SingleGame game, @Range(from = 1, to = Integer.MAX_VALUE) int down) {
-        UUID jumperUniqueId = game.getCurrentJumper();
+        UUID jumperUniqueId = game.currentJumper();
         assertNotNull(jumperUniqueId, "A player must jump.");
         InGamePlayer inGamePlayer = game.getPlayer(jumperUniqueId);
         assertNotNull(inGamePlayer, "The player who jumps must have an instance of InGamePlayer.");
@@ -223,15 +223,15 @@ public class GameTest {
         int prevJumps = inGamePlayer.jumps();
 
         // Sets the player's location.
-        assertEquals(game.getArena().getJumpLocation(), player.getLocation(), "The player must be at the jump location.");
-        Location location = game.getArena().getJumpLocation().down(down);
+        assertEquals(game.arena().jumpLocation(), player.getLocation(), "The player must be at the jump location.");
+        Location location = game.arena().jumpLocation().down(down);
         BlockVector pos = location.asBlockPosition();
         this.plugin.getWorld().put(pos, BlockDataMock.WATER);
         player.teleport(location);
 
         // The player must have scored.
         this.plugin.getScheduler().nextTick();
-        assertEquals(game.getArena().getWaitLocation(), player.getLocation(), "The player should be teleported at the waiting location.");
+        assertEquals(game.arena().waitLocation(), player.getLocation(), "The player should be teleported at the waiting location.");
         assertEquals(prevJumps + 1, inGamePlayer.jumps(), "The jump counter should be updated.");
         assertEquals(inGamePlayer.getChosenBlock(), this.plugin.getBlockData(pos), "The player's block should be placed.");
         assertFalse(inGamePlayer.isSpectator(), "The player must not be a spectator.");

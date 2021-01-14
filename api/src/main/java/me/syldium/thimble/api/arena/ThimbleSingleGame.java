@@ -20,10 +20,10 @@ public interface ThimbleSingleGame extends ThimbleGame {
      * @throws IllegalStateException If no players are currently jumping.
      */
     default boolean verdict(@NotNull JumpVerdict verdict) {
-        if (this.getCurrentJumper() == null) {
+        if (this.currentJumper() == null) {
             throw new IllegalStateException("No players is currently jumping.");
         }
-        return this.verdict(this.getCurrentJumper(), verdict);
+        return this.verdict(this.currentJumper(), verdict);
     }
 
     /**
@@ -32,7 +32,7 @@ public interface ThimbleSingleGame extends ThimbleGame {
      * @return The jumper, if any.
      */
     @Contract(pure = true)
-    @Nullable UUID getCurrentJumper();
+    @Nullable UUID currentJumper();
 
     /**
      * Returns the player who will jump right after.

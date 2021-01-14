@@ -239,7 +239,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             if (p != null) {
                 this.plugin.getSavedPlayersManager().restore(p, !this.teleportSpawnAtEnd);
                 if (this.teleportSpawnAtEnd) {
-                    p.teleport(this.arena.getSpawnLocation());
+                    p.teleport(this.arena.spawnLocation());
                 }
             } else {
                 this.plugin.getSavedPlayersManager().getPending().add(player.uuid());
@@ -248,31 +248,31 @@ public abstract class Game implements ThimbleGame, Runnable {
 
         this.players.sendActionBar(MessageKey.ACTIONBAR_ENDED);
         this.players.clear();
-        this.plugin.getPlayerAdapter().clearPool(this.arena.getJumpLocation().worldKey(), this.blocks);
+        this.plugin.getPlayerAdapter().clearPool(this.arena.jumpLocation().worldKey(), this.blocks);
         this.blocks.clear();
         this.arena.checkGame();
     }
 
     private @Nullable Location getFireworkLocation(@Nullable Player player) {
-        if (this.arena.getPoolCenterPoint() != null) {
-            return new Location(this.arena.getJumpLocation().worldKey(), this.arena.getPoolCenterPoint());
+        if (this.arena.poolCenterPoint() != null) {
+            return new Location(this.arena.jumpLocation().worldKey(), this.arena.poolCenterPoint());
         }
         return player == null ? null : player.getLocation();
     }
 
     @Override
-    public @NotNull Arena getArena() {
+    public @NotNull Arena arena() {
         return this.arena;
     }
 
     @Override
-    public @NotNull ThimbleState getState() {
+    public @NotNull ThimbleState state() {
         return this.state;
     }
 
     @Override
     public boolean acceptPlayer() {
-        return this.state.isNotStarted() && this.players.size() < this.arena.getMaxPlayers();
+        return this.state.isNotStarted() && this.players.size() < this.arena.maxPlayers();
     }
 
     @Override
@@ -280,12 +280,12 @@ public abstract class Game implements ThimbleGame, Runnable {
         if (count < 0) {
             throw new IllegalArgumentException("count must be positive!");
         }
-        return this.state.isNotStarted() && (this.players.size() + count) <= this.arena.getMaxPlayers();
+        return this.state.isNotStarted() && (this.players.size() + count) <= this.arena.maxPlayers();
     }
 
     @Override
     public boolean canStart() {
-        return this.state.isNotStarted() && this.players.size() >= this.arena.getMinPlayers();
+        return this.state.isNotStarted() && this.players.size() >= this.arena.minPlayers();
     }
 
     @Override
@@ -378,11 +378,11 @@ public abstract class Game implements ThimbleGame, Runnable {
                 player.setMiniGameMode();
             }
             if (this.players.realSize() > 1) {
-                player.teleport(this.arena.getSpawnLocation());
+                player.teleport(this.arena.spawnLocation());
             } else {
-                player.teleportAsync(this.arena.getSpawnLocation());
+                player.teleportAsync(this.arena.spawnLocation());
             }
-            if (this.remainingWaterBlocks == null && this.players.size() >= this.arena.getMinPlayers()) {
+            if (this.remainingWaterBlocks == null && this.players.size() >= this.arena.minPlayers()) {
                 this.searchRemainingBlocks();
             }
             return true;
@@ -403,7 +403,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.players.sendMessage(MessageKey.CHAT_LEFT, Template.of("player", p.name()));
             this.plugin.getSavedPlayersManager().restore(p, teleport && !this.teleportSpawnAtEnd);
             if (teleport && this.teleportSpawnAtEnd) {
-                p.teleport(this.arena.getSpawnLocation());
+                p.teleport(this.arena.spawnLocation());
             }
         }
         this.arena.checkGame();
@@ -432,7 +432,7 @@ public abstract class Game implements ThimbleGame, Runnable {
 
     @Override
     public @NotNull Set<BlockVector> getRemainingWaterBlocks() {
-        if (this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null) {
+        if (this.arena.poolMinPoint() == null || this.arena.poolMaxPoint() == null) {
             throw new IllegalStateException("The pool dimensions have not been defined.");
         }
         if (this.remainingWaterBlocks == null) {
@@ -450,16 +450,16 @@ public abstract class Game implements ThimbleGame, Runnable {
         if (this.spectatorMode && inGamePlayer.isSpectator()) {
             player.spectate();
         }
-        player.teleport(this.arena.getWaitLocation());
+        player.teleport(this.arena.waitLocation());
     }
 
     private void searchRemainingBlocks() {
-        this.remainingWaterBlocks = this.arena.getPoolMinPoint() == null || this.arena.getPoolMaxPoint() == null ?
+        this.remainingWaterBlocks = this.arena.poolMinPoint() == null || this.arena.poolMaxPoint() == null ?
                 Collections.emptySet()
                 : this.plugin.getPlayerAdapter().getRemainingWaterBlocks(
-                this.arena.getJumpLocation().worldKey(),
-                this.arena.getPoolMinPoint(),
-                this.arena.getPoolMaxPoint()
+                this.arena.jumpLocation().worldKey(),
+                this.arena.poolMinPoint(),
+                this.arena.poolMaxPoint()
         );
     }
 

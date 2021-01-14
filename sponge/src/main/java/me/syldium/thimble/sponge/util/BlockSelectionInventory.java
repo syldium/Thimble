@@ -102,11 +102,11 @@ public class BlockSelectionInventory {
 
         Container inventory = event.getTargetInventory();
 
-        Optional<ThimblePlayer> optional = this.plugin.getGameService().getInGamePlayer(playerUUID);
+        Optional<ThimblePlayer> optional = this.plugin.getGameService().player(playerUUID);
         if (!optional.isPresent()) return;
 
         InGamePlayer inGamePlayer = (InGamePlayer) optional.get();
-        if (!inGamePlayer.getGame().getState().isNotStarted()) {
+        if (!inGamePlayer.getGame().state().isNotStarted()) {
             event.setCancelled(true);
             player.sendMessage(this.gameStarted);
             return;

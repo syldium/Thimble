@@ -23,7 +23,7 @@ class SetWaitCommand extends ChildCommand.One<Arena> {
     public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull Arena arena) throws CommandException {
         Location loc = ((Player) sender).getLocation();
         arena.setWaitLocation(loc);
-        if (arena.getSpawnLocation() == null) {
+        if (arena.spawnLocation() == null) {
             arena.setSpawnLocation(loc);
         }
         return CommandResult.success(

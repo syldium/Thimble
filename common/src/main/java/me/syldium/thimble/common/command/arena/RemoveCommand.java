@@ -20,6 +20,6 @@ class RemoveCommand extends ChildCommand.One<Arena> {
     @Override
     public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull Arena arena) {
         plugin.getGameService().removeArena(arena);
-        return CommandResult.success(MessageKey.FEEDBACK_ARENA_REMOVE, Template.of("arena", arena.getName()));
+        return CommandResult.success(MessageKey.FEEDBACK_ARENA_REMOVE, Template.of("arena", arena.name()));
     }
 }

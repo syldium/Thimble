@@ -19,13 +19,13 @@ class ArenaArgument extends Argument<Arena> {
 
     @Override
     public @NotNull Arena parse(@NotNull ThimblePlugin plugin, @NotNull String given) throws CommandException {
-        return (Arena) plugin.getGameService().getArena(given).orElseThrow(() -> new CommandException(MessageKey.FEEDBACK_GAME_UNKNOWN));
+        return (Arena) plugin.getGameService().arena(given).orElseThrow(() -> new CommandException(MessageKey.FEEDBACK_GAME_UNKNOWN));
     }
 
     @Override
     public List<String> tabComplete(@NotNull ThimblePlugin plugin, @NotNull String given, @NotNull Sender sender) {
-        return plugin.getGameService().getArenas().stream()
-                .map(ThimbleArena::getName)
+        return plugin.getGameService().arenas().stream()
+                .map(ThimbleArena::name)
                 .filter(s -> s.startsWith(given))
                 .collect(Collectors.toList());
     }

@@ -29,15 +29,15 @@ public class MoveListener<P extends ThimblePlugin> {
 
     protected final void onMove(@NotNull UUID playerUniqueId, @NotNull BlockVector from, @NotNull BlockVector to) {
         if (from.equals(to)) return;
-        Optional<ThimblePlayer> inGamePlayerOpt = this.plugin.getGameService().getInGamePlayer(playerUniqueId);
+        Optional<ThimblePlayer> inGamePlayerOpt = this.plugin.getGameService().player(playerUniqueId);
         if (!inGamePlayerOpt.isPresent()) return;
 
         ThimblePlayer inGamePlayer = inGamePlayerOpt.get();
         if (inGamePlayer.isVanished() || inGamePlayer.isJumping()) return;
 
-        Location loc = inGamePlayer.getGame().getState().isStarted() ?
-                inGamePlayer.getGame().getArena().getWaitLocation()
-                : inGamePlayer.getGame().getArena().getSpawnLocation();
+        Location loc = inGamePlayer.getGame().state().isStarted() ?
+                inGamePlayer.getGame().arena().waitLocation()
+                : inGamePlayer.getGame().arena().spawnLocation();
         if (loc == null) return;
 
         int distanceSquared = (int) loc.horizontalDistanceSquared(to);
@@ -58,8 +58,8 @@ public class MoveListener<P extends ThimblePlugin> {
         Optional<ThimbleGame> game = this.getGame(playerUniqueId);
         if (!game.isPresent()) return;
 
-        ThimbleArena arena = game.get().getArena();
-        for (Location arenaLoc : new Location[]{arena.getSpawnLocation(), arena.getJumpLocation(), arena.getWaitLocation()}) {
+        ThimbleArena arena = game.get().arena();
+        for (Location arenaLoc : new Location[]{arena.spawnLocation(), arena.jumpLocation(), arena.waitLocation()}) {
             if ((int) arenaLoc.x() == (int) location.x()
                 && (int) arenaLoc.y() == (int) location.y()
                 && (int) arenaLoc.z() == (int) location.z()) {
@@ -70,6 +70,6 @@ public class MoveListener<P extends ThimblePlugin> {
     }
 
     private @NotNull Optional<@NotNull ThimbleGame> getGame(@NotNull UUID playerUniqueId) {
-        return this.plugin.getGameService().getGame(playerUniqueId);
+        return this.plugin.getGameService().playerGame(playerUniqueId);
     }
 }

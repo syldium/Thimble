@@ -87,7 +87,7 @@ public abstract class ChildCommand extends AbstractCommand {
     }
 
     protected @NotNull Game getGame(@NotNull ThimblePlugin plugin, @NotNull Sender player) throws CommandException {
-        return (Game) plugin.getGameService().getGame(player.uuid()).orElseThrow(() -> new CommandException(MessageKey.FEEDBACK_GAME_NOT_IN_GAME));
+        return (Game) plugin.getGameService().playerGame(player.uuid()).orElseThrow(() -> new CommandException(MessageKey.FEEDBACK_GAME_NOT_IN_GAME));
     }
 
     private @NotNull Component buildComponent(@NotNull String name, @NotNull Argument<?>[] arguments) {

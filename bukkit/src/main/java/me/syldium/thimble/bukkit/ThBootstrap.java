@@ -22,7 +22,7 @@ public final class ThBootstrap extends JavaPlugin {
 
         try {
             Metrics metrics = new Metrics(this, PLUGIN_ID);
-            metrics.addCustomChart(new Metrics.SimplePie("arena_count", this.plugin.getGameService()::getArenaCount));
+            metrics.addCustomChart(new Metrics.SimplePie("arena_count", this.plugin.getGameService()::arenaCount));
             metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> this.plugin.getMainConfig().getLocale().toLanguageTag()));
         } catch (ExceptionInInitializerError ex) {
             this.getLogger().severe(ex.getCause().getMessage());

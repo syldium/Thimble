@@ -28,7 +28,7 @@ public interface ThimbleGame {
      * @return The game arena.
      */
     @Contract(pure = true)
-    @NotNull ThimbleArena getArena();
+    @NotNull ThimbleArena arena();
 
     /**
      * Gets the game state.
@@ -36,7 +36,7 @@ public interface ThimbleGame {
      * @return The current game state.
      */
     @Contract(pure = true)
-    @NotNull ThimbleState getState();
+    @NotNull ThimbleState state();
 
     /**
      * Tests if a new player can join the game.
@@ -85,7 +85,7 @@ public interface ThimbleGame {
     /**
      * Adds a player to the game. {@link ThimbleArena#addPlayer(UUID)}
      *
-     * <p>The player limit ({@link ThimbleArena#getMaxPlayers()}) can be exceeded.</p>
+     * <p>The player limit ({@link ThimbleArena#maxPlayers()}) can be exceeded.</p>
      *
      * @param player The online player who want to play.
      * @return If the player has successfully joined the arena.
@@ -95,7 +95,7 @@ public interface ThimbleGame {
     /**
      * Adds an {@link Identified} player to the game.
      *
-     * <p>The player limit ({@link ThimbleArena#getMaxPlayers()}) can be exceeded.</p>
+     * <p>The player limit ({@link ThimbleArena#maxPlayers()}) can be exceeded.</p>
      *
      * @param identified A player.
      * @return If the player has successfully joined the arena.
