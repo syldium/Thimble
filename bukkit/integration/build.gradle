@@ -2,17 +2,21 @@ repositories {
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
     maven { url 'https://repo.codemc.org/repository/maven-public/' }
-    maven { url "https://maven.enginehub.org/repo/" }
+    maven { url 'https://maven.enginehub.org/repo/' }
     maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     implementation project(':common')
 
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
+    compileOnly ('com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT') {
+        exclude(module: 'json-simple')
+    }
     compileOnly 'me.clip:placeholderapi:2.10.9'
     compileOnly 'com.alessiodp.parties:parties-api:2.6.16'
-    compileOnly ('com.sk89q.worldguard:worldguard-bukkit:7.0.5-SNAPSHOT') {
+    compileOnly ('com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT') {
+        exclude(module: 'bukkit')
+        exclude(module: 'core')
         exclude(module: 'spigot-api')
     }
     compileOnly ('com.github.MilkBowl:VaultAPI:1.7') {

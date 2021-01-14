@@ -19,6 +19,8 @@ import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import static me.syldium.thimble.bukkit.world.BukkitBlockData.IS_FLAT;
+
 public final class BukkitUtil {
 
     private static final Set<Material> AIR_TYPES = getAllMatching(material -> material.name().endsWith("AIR"));
@@ -142,7 +144,7 @@ public final class BukkitUtil {
         if (block.isLiquid()) {
             return true;
         }
-        if (block.isEmpty()) {
+        if (block.isEmpty() || !IS_FLAT) {
             return false;
         }
 

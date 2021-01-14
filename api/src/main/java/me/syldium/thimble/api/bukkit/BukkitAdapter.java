@@ -89,6 +89,24 @@ public final class BukkitAdapter implements Listener {
     }
 
     /**
+     * Converts a {@link org.bukkit.Location} from Bukkit to a {@link BlockPos} for the plugin.
+     *
+     * @param bukkitLoc The Bukkit location.
+     * @return A new block position.
+     */
+    @Contract("_ -> new")
+    public @NotNull BlockPos asAbstractPos(@NotNull org.bukkit.Location bukkitLoc) {
+        requireNonNull(bukkitLoc, "location");
+        World world = requireNonNull(bukkitLoc.getWorld(), "world");
+        return new BlockPos(
+                this.getWorldKey(world),
+                bukkitLoc.getBlockX(),
+                bukkitLoc.getBlockY(),
+                bukkitLoc.getBlockZ()
+        );
+    }
+
+    /**
      * Converts a {@link Location} for the plugin from an {@link Entity}.
      *
      * @param bukkitEntity The Bukkit entity.
