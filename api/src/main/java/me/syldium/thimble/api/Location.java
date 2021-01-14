@@ -12,7 +12,7 @@ import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Represents a 3-dimensional position in a world.
+ * Represents an immutable 3-dimensional position in a world.
  */
 public class Location implements Serializable {
 
@@ -23,6 +23,16 @@ public class Location implements Serializable {
     private final float pitch;
     private final float yaw;
 
+    /**
+     * Constructs a new location with the given coordinates.
+     *
+     * @param worldKey The world's resource key.
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
+     * @param z The z-coordinate.
+     * @param pitch The absolute rotation on the y-plane, in degrees.
+     * @param yaw The absolute rotation on the x-plane, in degrees.
+     */
     public Location(@NotNull Key worldKey, double x, double y, double z, float pitch, float yaw) {
         this.worldKey = requireNonNull(worldKey, "world resource key");
         this.x = x;
@@ -32,14 +42,33 @@ public class Location implements Serializable {
         this.yaw = yaw;
     }
 
+    /**
+     * Constructs a new location with the given coordinates.
+     *
+     * @param worldKey The world's resource key.
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
+     * @param z The z-coordinate.
+     */
     public Location(@NotNull Key worldKey, double x, double y, double z) {
         this(worldKey, x, y, z, 0, 0);
     }
 
+    /**
+     * Constructs a new location from a resource key and a block vector.
+     *
+     * @param worldKey The world's resource key.
+     * @param position The position.
+     */
     public Location(@NotNull Key worldKey, @NotNull BlockVector position) {
         this(worldKey, position.x(), position.y(), position.z());
     }
 
+    /**
+     * Constructs a new location from a block position.
+     *
+     * @param position The position.
+     */
     public Location(@NotNull BlockPos position) {
         this(position.worldKey(), position.x(), position.y(), position.z());
     }
@@ -126,6 +155,12 @@ public class Location implements Serializable {
         return distance == 0 ? this : new Location(this.worldKey, this.x, this.y + distance, this.z, this.pitch, this.yaw);
     }
 
+    /**
+     * Decreases the y-coordinate of this location.
+     *
+     * @param distance The distance to remove.
+     * @return A new location, or this if {@code distance = 0}
+     */
     public @NotNull Location down(int distance) {
         return this.up(-distance);
     }
@@ -154,6 +189,12 @@ public class Location implements Serializable {
         return square(this.x - vector.x()) + square(this.y - vector.y()) + square(this.z - vector.z());
     }
 
+    /**
+     * Gets the squared distance on a horizontal plane between this location and a block vector.
+     *
+     * @param vector The block vector.
+     * @return The distance.
+     */
     public double horizontalDistanceSquared(@NotNull BlockVector vector) {
         return square(this.x - vector.x()) + square(this.z - vector.z());
     }

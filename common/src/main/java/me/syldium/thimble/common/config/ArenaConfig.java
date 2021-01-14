@@ -84,8 +84,9 @@ public class ArenaConfig {
     }
 
     public void save(@NotNull Set<@NotNull Arena> arenas) {
+        ConfigNode arenaNode = this.config.createNode("arenas");
         for (Arena arena : arenas) {
-            ConfigNode node = this.config.getOrCreateNode("arenas", arena.getName());
+            ConfigNode node = arenaNode.createNode(arena.getName());
             node.setLocation("spawn-location", arena.getSpawnLocation());
             node.setLocation("jump-location", arena.getJumpLocation());
             node.setLocation("wait-location", arena.getWaitLocation());

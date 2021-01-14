@@ -8,17 +8,31 @@ import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Defines a block position in a world.
+ * Defines an immutable block position in a world.
  */
 public class BlockPos extends BlockVector {
 
     private final Key worldKey;
 
+    /**
+     * Constructs a new block position with the given coordinates.
+     *
+     * @param worldKey The world's resource key.
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
+     * @param z The z-coordinate.
+     */
     public BlockPos(@NotNull Key worldKey, int x, int y, int z) {
         super(x, y, z);
         this.worldKey = worldKey;
     }
 
+    /**
+     * Constructs a new block position from a block vector and a resource key.
+     *
+     * @param vector The block vector.
+     * @param worldKey The world's resource key.
+     */
     public BlockPos(@NotNull BlockVector vector, @NotNull Key worldKey) {
         super(vector.x(), vector.y(), vector.z());
         this.worldKey = requireNonNull(worldKey, "world resource key");
@@ -34,6 +48,22 @@ public class BlockPos extends BlockVector {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull BlockPos add(int x, int y, int z) {
+        return new BlockPos(this.worldKey, this.x + x, this.y + y, this.z + z);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull BlockPos multiply(int amount) {
+        return new BlockPos(this.worldKey, this.x * amount, this.y * amount, this.z * amount);
+    }
+
+    /**
      * Computes the squared distance with another {@link BlockPos}.
      *
      * @param other A block position.
@@ -45,6 +75,21 @@ public class BlockPos extends BlockVector {
             throw new IllegalArgumentException("Cannot determine the center between two different worlds!");
         }
         return super.distanceSquared(other);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull BlockPos max(@NotNull BlockVector other) {
+        return new BlockPos(this.worldKey, Math.max(this.x, other.x), Math.max(this.y, other.y), Math.max(this.z, other.z));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public @NotNull BlockPos min(@NotNull BlockVector other) {
+        return new BlockPos(this.worldKey, Math.min(this.x, other.x), Math.min(this.y, other.y), Math.min(this.z, other.z));
     }
 
     @Override
@@ -64,5 +109,10 @@ public class BlockPos extends BlockVector {
     @Override
     public String toString() {
         return "BlockPos{" + this.x + "," + this.y + "," + this.z + "," + this.worldKey.asString() + "}";
+    }
+
+    @Override
+    public @NotNull BlockPos clone() {
+        return new BlockPos(this.worldKey, this.x, this.y, this.z);
     }
 }

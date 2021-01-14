@@ -95,8 +95,12 @@ class DeACoudreMigration extends ChildCommand {
             this.setLoc(section.getConfigurationSection("diving"), arena::setJumpLocation);
             this.setLoc(section.getConfigurationSection("lobby"), arena::setSpawnLocation);
             this.setLoc(section.getConfigurationSection("pool"), arena::setWaitLocation);
-            this.setBlockVector(section.getConfigurationSection("region.a"), arena::setPoolMinPoint);
-            this.setBlockVector(section.getConfigurationSection("region.b"), arena::setPoolMaxPoint);
+            BlockVector a = this.getBlockVector(section.getConfigurationSection("region.a"));
+            BlockVector b = this.getBlockVector(section.getConfigurationSection("region.b"));
+            if (a != null && b != null) {
+                arena.setPoolMinPoint(a.min(b));
+                arena.setPoolMaxPoint(a.max(b));
+            }
         }
     }
 
@@ -138,9 +142,9 @@ class DeACoudreMigration extends ChildCommand {
         ));
     }
 
-    private void setBlockVector(@Nullable ConfigurationSection section, @NotNull Consumer<BlockVector> consumer) {
-        if (section == null) return;
-        consumer.accept(new BlockVector(section.getInt("x"), section.getInt("y"), section.getInt("z")));
+    private BlockVector getBlockVector(@Nullable ConfigurationSection section) {
+        if (section == null) return null;
+        return new BlockVector(section.getInt("x"), section.getInt("y"), section.getInt("z"));
     }
 
     @SuppressWarnings("deprecation")
