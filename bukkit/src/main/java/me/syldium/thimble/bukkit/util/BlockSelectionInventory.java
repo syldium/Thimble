@@ -89,16 +89,16 @@ public final class BlockSelectionInventory implements Listener {
             event.getWhoClicked().sendMessage(this.gameStarted);
             return;
         }
-        Material previous = ((BukkitBlockData) player.getChosenBlock()).material();
-        player.setChosenBlock(BukkitBlockData.build(event.getCurrentItem().getType()));
+        BukkitBlockData previous = (BukkitBlockData) player.getChosenBlock();
+        player.setChosenBlock(BukkitBlockData.build(event.getCurrentItem()));
         for (ItemStack itemStack : event.getInventory().getContents()) {
             if (itemStack == null) {
                 continue;
             }
 
-            if (itemStack.getType() == previous || itemStack.equals(event.getCurrentItem())) {
+            if (previous.isSimilar(itemStack) || itemStack.equals(event.getCurrentItem())) {
                 ItemMeta meta = itemStack.getItemMeta();
-                if (itemStack.getType() == previous) {
+                if (previous.isSimilar(itemStack)) {
                     meta.setDisplayName(null);
                     meta.removeEnchant(Enchantment.LUCK);
                 } else {
@@ -136,8 +136,8 @@ public final class BlockSelectionInventory implements Listener {
                     null
                     : ChatColor.AQUA + players.stream().map(InGamePlayer::name).collect(Collectors.joining(", "));
 
-            Material chosenMaterial = ((BukkitBlockData) inGamePlayer.getChosenBlock()).material();
-            if (itemStack.getType() == chosenMaterial || !players.isEmpty() && inGamePlayer.getGame().getState().isStarted()) {
+            BukkitBlockData chosenBlockData = (BukkitBlockData) inGamePlayer.getChosenBlock();
+            if (blockData.equals(chosenBlockData) || !players.isEmpty() && inGamePlayer.getGame().getState().isStarted()) {
                 // Adds an enchantment glint
                 ItemMeta meta = itemStack.getItemMeta();
                 meta.setDisplayName(displayName);

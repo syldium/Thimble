@@ -13,6 +13,10 @@ public final class ThBootstrap extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if (!me.syldium.thimble.bukkit.world.BukkitBlockData.IS_FLAT) {
+            this.getLogger().warning("This plugin is not actively tested with older versions.");
+        }
+
         this.saveDefaultConfig();
         this.plugin = new ThBukkitPlugin(this);
 

@@ -6,8 +6,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 @SuppressWarnings("deprecation")
 class BukkitMaterialData implements BukkitBlockData {
+
+    private static final Method SET_DATA;
+
+    static {
+        Method setData = null;
+        try {
+            // noinspection JavaReflectionMemberAccess
+            setData = Block.class.getMethod("setData", byte.class);
+        } catch (NoSuchMethodException ignored) { }
+        SET_DATA = setData;
+    }
 
     final MaterialData handle;
 
@@ -45,5 +59,15 @@ class BukkitMaterialData implements BukkitBlockData {
     @Override
     public void setBlock(@NotNull Block block) {
         block.setType(this.handle.getItemType());
+        try {
+            SET_DATA.invoke(block, this.handle.getData());
+        } catch (IllegalAccessException | InvocationTargetException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean isSimilar(@NotNull ItemStack itemStack) {
+        return this.handle.equals(itemStack.getData());
     }
 }

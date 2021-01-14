@@ -45,4 +45,9 @@ class BukkitModernBlockData implements BukkitBlockData {
     public void setBlock(@NotNull Block block) {
         block.setBlockData(this.handle);
     }
+
+    @Override
+    public boolean isSimilar(@NotNull ItemStack itemStack) {
+        return this.handle.getMaterial() == itemStack.getType();
+    }
 }

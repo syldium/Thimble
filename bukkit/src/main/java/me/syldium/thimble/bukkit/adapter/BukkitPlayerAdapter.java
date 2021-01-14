@@ -26,13 +26,13 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 import static me.syldium.thimble.bukkit.util.BukkitUtil.isWater;
@@ -58,7 +58,10 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
             plugin.getLogger().severe("The list of blocks in the configuration file is empty/invalid!"
                     + " This will cause an error every time a player tries to join an arena.");
         }
-        this.blockDatas = materials.stream().map(BukkitBlockData::build).collect(Collectors.toList());
+        this.blockDatas = new ArrayList<>();
+        for (Material material : materials) {
+            this.blockDatas.addAll(BukkitBlockData.buildAll(material));
+        }
         this.inventory = new BlockSelectionInventory(plugin, this);
         this.locationAdapter = new BukkitAdapter(bootstrap);
     }

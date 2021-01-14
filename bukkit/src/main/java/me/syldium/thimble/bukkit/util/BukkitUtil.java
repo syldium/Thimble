@@ -46,7 +46,11 @@ public final class BukkitUtil {
      */
     public static <E> @NotNull Map<E, Integer> newObject2IntMap() {
         if (FAST_UTIL_OBJECT2INT == null) {
-            return new Object2IntOpenHashMap<>();
+            try {
+                return new Object2IntOpenHashMap<>();
+            } catch (Throwable throwable) {
+                return new HashMap<>();
+            }
         }
 
         try {

@@ -81,7 +81,7 @@ display:
 # List of blocks that the player can choose. This accepts regex.
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 blocks:
-  - ".*_WOOL"
+  - ".*WOOL"
   - ".*_TERRACOTTA"
 
 # List of clickable elements. As the text of a clickable sign is no longer used once created,
