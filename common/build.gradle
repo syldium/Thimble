@@ -7,6 +7,7 @@ repositories {
 dependencies {
     api project(':api')
     compileOnly 'com.mojang:brigadier:1.0.17'
+    compileOnly 'com.google.code.gson:gson:2.8.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
