@@ -3,6 +3,7 @@ package me.syldium.thimble.bukkit;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
+import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.bukkit.adapter.BukkitEventAdapter;
 import me.syldium.thimble.bukkit.adapter.BukkitPlayerAdapter;
 import me.syldium.thimble.bukkit.command.BukkitCommandExecutor;
@@ -33,6 +34,7 @@ import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -89,6 +91,16 @@ public class ThBukkitPlugin extends ThimblePlugin {
     @Override
     public @NotNull File getDataFolder() {
         return this.bootstrap.getDataFolder();
+    }
+
+    @Override
+    public @NotNull Path getPluginPath() {
+        return this.bootstrap.getFile().toPath().toAbsolutePath();
+    }
+
+    @Override
+    public @NotNull ServerType getServerType() {
+        return ServerType.BUKKIT;
     }
 
     @Override

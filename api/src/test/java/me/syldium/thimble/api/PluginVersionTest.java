@@ -13,6 +13,7 @@ public class PluginVersionTest {
         assertNotEquals(new PluginVersion(1, 15), new PluginVersion(1, 15, 2));
         assertEquals(new PluginVersion("2.0-SNAPSHOT"), new PluginVersion("2.0-SNAPSHOT"));
         assertNotEquals(new PluginVersion("2.0-SNAPSHOT"), new PluginVersion(2));
+        assertEquals(new PluginVersion("v1.3"), new PluginVersion(1, 3));
     }
 
     @Test

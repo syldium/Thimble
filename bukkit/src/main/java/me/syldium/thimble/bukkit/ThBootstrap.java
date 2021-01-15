@@ -5,6 +5,8 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+
 public final class ThBootstrap extends JavaPlugin {
 
     private static final int PLUGIN_ID = 9881;
@@ -27,12 +29,21 @@ public final class ThBootstrap extends JavaPlugin {
         } catch (ExceptionInInitializerError ex) {
             this.getLogger().severe(ex.getCause().getMessage());
         }
+
+        if (this.getConfig().getBoolean("update-checker", true)) {
+            this.getServer().getScheduler().runTaskTimerAsynchronously(this, this.plugin.getUpdateChecker(), 5L, 20L * 60L * 60L * 24L);
+        }
     }
 
     @Override
     public void onDisable() {
         this.plugin.disable();
         BukkitAdapter.unregister();
+    }
+
+    @Override
+    public @NotNull File getFile() {
+        return super.getFile();
     }
 
     public @NotNull ThBukkitPlugin getPlugin() {

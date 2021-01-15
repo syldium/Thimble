@@ -60,6 +60,10 @@ public final class Thimble {
         return Thimble.class.getPackage().getImplementationVersion();
     }
 
+    public static @NotNull PluginVersion pluginVersion() {
+        return PLUGIN_VERSION;
+    }
+
     /**
      * Is the requested version is greater than or equal to the current version.
      *

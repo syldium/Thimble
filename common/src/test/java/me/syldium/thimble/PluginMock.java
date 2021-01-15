@@ -1,6 +1,7 @@
 package me.syldium.thimble;
 
 import me.syldium.thimble.api.util.BlockVector;
+import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.mock.adpater.EventAdapterMock;
 import me.syldium.thimble.mock.adpater.PlayerAdapterMock;
 import me.syldium.thimble.mock.config.ConfigurateManager;
@@ -19,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,6 +65,16 @@ public class PluginMock extends ThimblePlugin {
     @Override
     public @NotNull File getDataFolder() {
         return this.dataFolder;
+    }
+
+    @Override
+    public @NotNull Path getPluginPath() {
+        return Paths.get("");
+    }
+
+    @Override
+    public @NotNull ServerType getServerType() {
+        return ServerType.UNKNOWN;
     }
 
     @Override

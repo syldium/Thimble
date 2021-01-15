@@ -97,3 +97,7 @@ allowed-commands-in-game:
   - th
   - msg
   - tell
+
+# Defines whether the plugin checks at server startup if it is up-to-date.
+# You can also use '/th version' to check the version and update.
+update-checker: true

@@ -10,6 +10,7 @@ import me.syldium.thimble.common.command.game.JoinCommand;
 import me.syldium.thimble.common.command.game.LeaveCommand;
 import me.syldium.thimble.common.command.game.StatsCommand;
 import me.syldium.thimble.common.command.migrate.MigrateCommand;
+import me.syldium.thimble.common.command.migrate.VersionCommand;
 import me.syldium.thimble.common.player.MessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -36,7 +37,8 @@ public class CommandManager {
                 new BlockCommand(),
                 new ArenaCommand(),
                 new StatsCommand(),
-                new MigrateCommand()
+                new MigrateCommand(),
+                new VersionCommand()
         );
     }
 

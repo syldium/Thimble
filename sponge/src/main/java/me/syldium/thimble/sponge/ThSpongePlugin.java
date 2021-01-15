@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
+import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.CommandManager;
 import me.syldium.thimble.common.command.CommandResult;
@@ -103,6 +104,13 @@ public class ThSpongePlugin extends ThimblePlugin {
         new RestrictionListener(this);
         new SpongeConnectionListener(this);
         new SpongeMoveListener(this);
+
+        if (this.configManager.getConfig().getNode("update-checker").getBoolean(true)) {
+            this.game.getScheduler().createTaskBuilder()
+                    .async()
+                    .execute(this.getUpdateChecker())
+                    .submit(this);
+        }
     }
 
     @Listener
@@ -126,6 +134,16 @@ public class ThSpongePlugin extends ThimblePlugin {
     @Override
     public @NotNull File getDataFolder() {
         return this.dataFolder;
+    }
+
+    @Override
+    public @NotNull Path getPluginPath() {
+        return this.container.getSource().orElseThrow(() -> new RuntimeException("A Path was excepted"));
+    }
+
+    @Override
+    public @NotNull ServerType getServerType() {
+        return ServerType.SPONGE;
     }
 
     @Override
@@ -170,6 +188,11 @@ public class ThSpongePlugin extends ThimblePlugin {
     @Override
     public <T> @NotNull CompletableFuture<T> runSync(@NotNull Supplier<T> supplier) {
         return CompletableFuture.supplyAsync(supplier, this.syncExecutor);
+    }
+
+    @Override
+    protected @NotNull String getPluginFolder() {
+        return "mods/";
     }
 
     public void sendFeedback(@NotNull org.spongepowered.api.entity.living.player.Player spongePlayer, @NotNull CommandResult result) {

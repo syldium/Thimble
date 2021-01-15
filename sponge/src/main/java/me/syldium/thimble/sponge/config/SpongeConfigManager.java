@@ -14,6 +14,8 @@ import java.io.IOException;
 
 public class SpongeConfigManager extends ConfigManager<ThSpongePlugin> {
 
+    private ConfigurationNode config;
+
     public SpongeConfigManager(@NotNull ThSpongePlugin plugin) {
         super(plugin);
     }
@@ -34,7 +36,14 @@ public class SpongeConfigManager extends ConfigManager<ThSpongePlugin> {
             this.severe("Unable to load the config file!", ex);
             root = loader.createEmptyNode();
         }
+        if ("config.conf".equals(file.getName())) {
+            this.config = root;
+        }
         return new SpongeConfigFile(loader, root);
+    }
+
+    public @NotNull ConfigurationNode getConfig() {
+        return this.config;
     }
 
     @Override

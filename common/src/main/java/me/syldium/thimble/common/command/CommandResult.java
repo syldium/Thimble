@@ -9,14 +9,22 @@ import org.jetbrains.annotations.Nullable;
 
 public final class CommandResult {
 
-    private final boolean isSuccess;
+    private final int type;
     private final MessageKey messageKey;
     private final Template[] templates;
 
     CommandResult(boolean isSuccess, @Nullable MessageKey messageKey, @NotNull Template... templates) {
-        this.isSuccess = isSuccess;
+        this(isSuccess ? 1 : 0, messageKey, templates);
+    }
+
+    CommandResult(int type, @Nullable MessageKey messageKey, @NotNull Template... templates) {
+        this.type = type;
         this.messageKey = messageKey;
         this.templates = templates;
+    }
+
+    public static @NotNull CommandResult info(@NotNull MessageKey messageKey, @NotNull Template... placeholders) {
+        return new CommandResult(2, messageKey, placeholders);
     }
 
     public static @NotNull CommandResult success(@NotNull Template... placeholders) {
@@ -40,14 +48,21 @@ public final class CommandResult {
     }
 
     public @NotNull TextColor getTextColor() {
-        return this.isSuccess ? NamedTextColor.GREEN : NamedTextColor.RED;
+        if (this.type > 1) {
+            return NamedTextColor.GRAY;
+        }
+        return this.isSuccess() ? NamedTextColor.GREEN : NamedTextColor.RED;
     }
 
     public @NotNull Template[] getTemplates() {
         return this.templates;
     }
 
+    public boolean isInfo() {
+        return this.type == 2;
+    }
+
     public boolean isSuccess() {
-        return this.isSuccess;
+        return this.type == 1;
     }
 }

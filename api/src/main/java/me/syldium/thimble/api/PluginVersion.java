@@ -1,12 +1,14 @@
 package me.syldium.thimble.api;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-class PluginVersion implements Comparable<PluginVersion> {
+public class PluginVersion implements Comparable<PluginVersion>, ComponentLike {
 
     private static final int VERSION_MASK = 0XFF;
     private static final Pattern VERSION_SEPARATOR = Pattern.compile("\\.");
@@ -15,16 +17,17 @@ class PluginVersion implements Comparable<PluginVersion> {
     private final boolean release;
     private final int[] version;
 
-    PluginVersion(@NotNull String version) {
+    public PluginVersion(@NotNull String version) {
+        int o = !version.isEmpty() && version.charAt(0) == 'v' ? 1 : 0;
         int sep = version.indexOf('-');
-        String v = sep < 0 ? version : version.substring(0, sep);
+        String v = sep < 0 ? version.substring(o) : version.substring(o, sep);
         this.release = sep < 0;
         this.version = Arrays.stream(VERSION_SEPARATOR.split(v))
                 .mapToInt(Integer::parseInt)
                 .toArray();
     }
 
-    PluginVersion(int... version) {
+    public PluginVersion(int... version) {
         this.release = true;
         this.version = version;
     }
@@ -80,5 +83,10 @@ class PluginVersion implements Comparable<PluginVersion> {
                 .mapToObj(String::valueOf)
                 .collect(Collectors.joining("."));
         return this.release ? result : result + "-SNAPSHOT";
+    }
+
+    @Override
+    public @NotNull Component asComponent() {
+        return Component.text(this.toString());
     }
 }
