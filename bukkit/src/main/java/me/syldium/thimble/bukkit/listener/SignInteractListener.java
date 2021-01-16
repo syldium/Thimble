@@ -1,6 +1,7 @@
 package me.syldium.thimble.bukkit.listener;
 
 import me.syldium.thimble.api.arena.ThimbleArena;
+import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
@@ -17,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.Set;
+
+import static me.syldium.thimble.bukkit.adapter.BukkitPlayer.isVanished;
 
 public class SignInteractListener implements Listener {
 
@@ -46,6 +49,18 @@ public class SignInteractListener implements Listener {
             if (this.plugin.getGameService().playerGame(event.getPlayer().getUniqueId()).isPresent()) {
                 this.plugin.sendFeedback(event.getPlayer(), CommandResult.error(MessageKey.FEEDBACK_GAME_ALREADY_IN_GAME));
                 return;
+            }
+
+            Optional<ThimbleGame> game = arena.get().game();
+            if (game.isPresent()) {
+                if (game.get().state().isStarted()) {
+                    this.plugin.sendFeedback(event.getPlayer(), CommandResult.error(MessageKey.FEEDBACK_GAME_STARTED_GAME));
+                    return;
+                }
+                if (!game.get().acceptPlayer() && !isVanished(event.getPlayer())) {
+                    this.plugin.sendFeedback(event.getPlayer(), CommandResult.error(MessageKey.FEEDBACK_GAME_FULL));
+                    return;
+                }
             }
 
             try {

@@ -202,6 +202,10 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.plugin.spawnFireworks(fireworksLocation).spawn(this.fireworksEnd);
         }
 
+        if ((!this.ignoreStatsIfSolo || this.playersWhoJumped.size() > 1) && latest != null) {
+            this.players.sendMessage(MessageKey.CHAT_WIN, Template.of("player", latest.name()));
+        }
+
         for (InGamePlayer player : this.players) {
             if (player.isVanished()) continue;
 
@@ -219,9 +223,6 @@ public abstract class Game implements ThimbleGame, Runnable {
                 player.incrementWins();
             } else {
                 player.incrementLosses();
-            }
-            if (latest != null) {
-                this.players.sendMessage(MessageKey.CHAT_WIN, Template.of("player", latest.name()));
             }
 
             this.plugin.getStatsService().savePlayerStatistics(player);
@@ -248,8 +249,6 @@ public abstract class Game implements ThimbleGame, Runnable {
 
         this.players.sendActionBar(MessageKey.ACTIONBAR_ENDED);
         this.players.clear();
-        this.plugin.getPlayerAdapter().clearPool(this.arena.jumpLocation().worldKey(), this.blocks);
-        this.blocks.clear();
         this.arena.checkGame();
     }
 
@@ -464,6 +463,8 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     void cancel() {
+        this.plugin.getPlayerAdapter().clearPool(this.arena.jumpLocation().worldKey(), this.blocks);
+        this.blocks.clear();
         this.task.cancel();
     }
 }

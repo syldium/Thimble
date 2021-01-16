@@ -46,6 +46,7 @@ public final class BukkitUtil {
      * @param <E> The key type.
      * @return A new fastutil map.
      */
+    @SuppressWarnings("unchecked")
     public static <E> @NotNull Map<E, Integer> newObject2IntMap() {
         if (FAST_UTIL_OBJECT2INT == null) {
             try {
@@ -56,7 +57,6 @@ public final class BukkitUtil {
         }
 
         try {
-            // noinspection unchecked
             return (Map<E, Integer>) FAST_UTIL_OBJECT2INT.newInstance();
         } catch (ReflectiveOperationException ex) {
             return new HashMap<>();

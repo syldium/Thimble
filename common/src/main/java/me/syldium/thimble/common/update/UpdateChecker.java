@@ -98,7 +98,6 @@ public class UpdateChecker implements Runnable {
         try {
             if (!this.checkingVersion) {
                 this.run();
-                return this.releaseInfo;
             }
         } finally {
             this.versionLock.unlock();

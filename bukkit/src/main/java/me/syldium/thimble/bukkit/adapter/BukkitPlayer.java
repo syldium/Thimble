@@ -112,7 +112,11 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
 
     @Override
     public boolean isVanished() {
-        for (MetadataValue meta : this.getHandle().getMetadata("vanished")) {
+        return isVanished(this.getHandle());
+    }
+
+    public static boolean isVanished(@NotNull Player player) {
+        for (MetadataValue meta : player.getMetadata("vanished")) {
             if (meta.asBoolean()) {
                 return true;
             }
