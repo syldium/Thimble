@@ -2,6 +2,8 @@ package me.syldium.thimble.api;
 
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
+import me.syldium.thimble.api.util.PluginVersion;
+import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +58,7 @@ public final class Thimble {
      *
      * @return The implementation version.
      */
-    public static @NotNull String getImplVersion() {
+    public static @NotNull @Subst("1.0") String getImplVersion() {
         return Thimble.class.getPackage().getImplementationVersion();
     }
 

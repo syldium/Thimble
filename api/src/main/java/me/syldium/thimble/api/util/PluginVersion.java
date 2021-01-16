@@ -1,4 +1,4 @@
-package me.syldium.thimble.api;
+package me.syldium.thimble.api.util;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * A comparable plugin version.
+ */
 public class PluginVersion implements Comparable<PluginVersion>, ComponentLike {
 
     private static final int VERSION_MASK = 0XFF;
@@ -17,7 +20,15 @@ public class PluginVersion implements Comparable<PluginVersion>, ComponentLike {
     private final boolean release;
     private final int[] version;
 
-    public PluginVersion(@NotNull String version) {
+    /**
+     * Parses a version string.
+     *
+     * <p>Possible formats: {@code "v1.24"}, {@code "0.9-SNAPSHOT"}, {@code "1.12"}.</p>
+     *
+     * @param version The version string.
+     * @throws NumberFormatException If anything other than a number is found between the beginning of the string and the first hyphen or otherwise the end.
+     */
+    public PluginVersion(@NotNull @org.intellij.lang.annotations.Pattern("^v?\\d+(?:\\.\\d+)*(?:-.*)?$") String version) {
         int o = !version.isEmpty() && version.charAt(0) == 'v' ? 1 : 0;
         int sep = version.indexOf('-');
         String v = sep < 0 ? version.substring(o) : version.substring(o, sep);
@@ -27,6 +38,11 @@ public class PluginVersion implements Comparable<PluginVersion>, ComponentLike {
                 .toArray();
     }
 
+    /**
+     * Constructs a new plugin version.
+     *
+     * @param version The version numbers.
+     */
     public PluginVersion(int... version) {
         this.release = true;
         this.version = version;
@@ -47,10 +63,22 @@ public class PluginVersion implements Comparable<PluginVersion>, ComponentLike {
         return Boolean.compare(this.release, pluginVersion.release);
     }
 
+    /**
+     * Checks if this version is a full release.
+     *
+     * <p>When the version is obtained from a string, if there is no hyphen.</p>
+     *
+     * @return {@code true} if it's a release.
+     */
     public boolean isRelease() {
         return this.release;
     }
 
+    /**
+     * Gets the version numbers.
+     *
+     * @return The version.
+     */
     public int[] version() {
         return this.version;
     }

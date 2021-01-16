@@ -3,7 +3,7 @@ package me.syldium.thimble.common.update;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import me.syldium.thimble.api.PluginVersion;
+import me.syldium.thimble.api.util.PluginVersion;
 import me.syldium.thimble.common.util.ServerType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

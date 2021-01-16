@@ -1,4 +1,4 @@
-package me.syldium.thimble.api;
+package me.syldium.thimble.api.util;
 
 import org.junit.jupiter.api.Test;
 
