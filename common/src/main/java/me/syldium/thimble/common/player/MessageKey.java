@@ -3,10 +3,13 @@ package me.syldium.thimble.common.player;
 import me.syldium.thimble.common.service.MessageService;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.PropertyKey;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import static me.syldium.thimble.common.service.MessageService.MESSAGES_BUNDLE;
 
 public enum MessageKey {
 
@@ -91,7 +94,7 @@ public enum MessageKey {
 
     private final String accessor;
 
-    MessageKey(@NotNull String accessor) {
+    MessageKey(@NotNull @PropertyKey(resourceBundle = MESSAGES_BUNDLE) String accessor) {
         this.accessor = accessor;
     }
 

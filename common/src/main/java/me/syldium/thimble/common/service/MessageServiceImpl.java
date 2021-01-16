@@ -29,7 +29,6 @@ import java.util.logging.Level;
 
 public class MessageServiceImpl implements MessageService {
 
-    private static final String MESSAGES = "messages";
     private static final ResourceBundle NULL_BUNDLE = new ResourceBundle() {
         public @NotNull Enumeration<String> getKeys() {
             return Collections.emptyEnumeration();
@@ -47,7 +46,7 @@ public class MessageServiceImpl implements MessageService {
     private Component prefix;
 
     public MessageServiceImpl(@NotNull ThimblePlugin plugin) {
-        this.defaultBundle = ResourceBundle.getBundle(MESSAGES, Locale.ENGLISH, new UTF8PropertiesControl());
+        this.defaultBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, Locale.ENGLISH, new UTF8PropertiesControl());
         this.plugin = plugin;
         this.updateLocale(plugin.getMainConfig().getLocale());
     }
@@ -56,13 +55,13 @@ public class MessageServiceImpl implements MessageService {
         ResourceBundle.clearCache();
 
         try {
-            this.localeBundle = ResourceBundle.getBundle(MESSAGES, userLocale, new UTF8PropertiesControl());
+            this.localeBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, userLocale, new UTF8PropertiesControl());
         } catch (MissingResourceException ex) {
             this.localeBundle = NULL_BUNDLE;
         }
 
         try {
-            this.customBundle = ResourceBundle.getBundle(MESSAGES, userLocale, new FileResClassLoader(this.plugin.getClass().getClassLoader(), this.plugin), new UTF8PropertiesControl());
+            this.customBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, userLocale, new FileResClassLoader(this.plugin.getClass().getClassLoader(), this.plugin), new UTF8PropertiesControl());
         } catch (final MissingResourceException ex) {
             this.customBundle = NULL_BUNDLE;
         }

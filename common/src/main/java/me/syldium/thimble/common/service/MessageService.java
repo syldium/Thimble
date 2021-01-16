@@ -12,6 +12,8 @@ import java.util.Objects;
 
 public interface MessageService {
 
+    String MESSAGES_BUNDLE = "messages";
+
     /**
      * Gets the plugin prefix.
      *
