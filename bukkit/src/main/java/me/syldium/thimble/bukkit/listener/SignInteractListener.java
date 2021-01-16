@@ -65,6 +65,7 @@ public class SignInteractListener implements Listener {
 
             try {
                 arena.get().addPlayer(event.getPlayer().getUniqueId());
+                this.plugin.sendFeedback(event.getPlayer(), CommandResult.success(MessageKey.FEEDBACK_GAME_JOINED));
             } catch (IllegalStateException ex) {
                 this.plugin.sendFeedback(event.getPlayer(), CommandResult.error(MessageKey.FEEDBACK_ARENA_NOT_CONFIGURED));
             }

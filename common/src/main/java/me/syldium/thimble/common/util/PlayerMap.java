@@ -89,7 +89,7 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
         Component component = messageService.prefix().append(messageService.formatMessage(messageKey, templates));
         for (E identity : this) {
             // The player who sent the message should not see the message, and a vanished player should not be visible in the message.
-            if (identity.uuid().equals(from.uuid()) || !from.isVanished() || identity.isVanished()) {
+            if (identity.uuid().equals(from.uuid()) || (from.isVanished() && !identity.isVanished())) {
                 continue;
             }
 
