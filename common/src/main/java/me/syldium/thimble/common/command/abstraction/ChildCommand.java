@@ -22,7 +22,6 @@ public abstract class ChildCommand extends AbstractCommand {
     private final List<Argument<?>> arguments;
     private final int minArgumentCount;
     private final Component component;
-    private final @Nullable MessageKey description;
     protected @Nullable CommandGuard commandGuard;
 
     public ChildCommand(@NotNull String name, @Nullable MessageKey description, @NotNull Permission permission, Argument<?> ...arguments) {
@@ -30,7 +29,6 @@ public abstract class ChildCommand extends AbstractCommand {
         this.arguments = Arrays.asList(arguments);
         this.minArgumentCount = (int) Arrays.stream(arguments).filter(Argument::isRequired).count();
         this.component = this.buildComponent(name, arguments);
-        this.description = description;
     }
 
     @Override
@@ -42,7 +40,7 @@ public abstract class ChildCommand extends AbstractCommand {
 
     @Override
     public @NotNull List<@NotNull String> tabComplete(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args) {
-        if (args.size() < 1 || !sender.hasPermission(this.permission.getPermission())) {
+        if (args.size() < 1 || !sender.hasPermission(this.permission.get())) {
             return Collections.emptyList();
         }
 

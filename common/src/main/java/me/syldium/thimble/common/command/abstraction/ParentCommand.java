@@ -5,6 +5,7 @@ import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.service.MessageService;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +56,10 @@ public class ParentCommand extends AbstractCommand {
 
     @Override
     public @NotNull Component getHelp(@NotNull MessageService service) {
-        return this.usage;
+        if (this.description == null) {
+            return this.usage;
+        }
+        return this.usage.append(Component.space()).append(service.formatMessage(this.description, NamedTextColor.GRAY));
     }
 
     public @NotNull Component getUsage(@NotNull MessageService service) {

@@ -2,6 +2,7 @@ package me.syldium.thimble.common.command.arena;
 
 import me.syldium.thimble.common.command.abstraction.ParentCommand;
 import me.syldium.thimble.common.command.abstraction.Permission;
+import me.syldium.thimble.common.player.MessageKey;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,6 @@ public class ArenaCommand extends ParentCommand {
                 new SetJumpCommand(),
                 new SetWaitCommand(),
                 new RemoveCommand()
-        )), null, Permission.arenaSetup());
+        )), MessageKey.HELP_ARENA, Permission.arenaSetup());
     }
 }

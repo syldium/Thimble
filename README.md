@@ -38,10 +38,10 @@ Examples:
 
 ### Permissions
 
-- `thimble.arena.*`: `/th arena create`, `/th arena setSpawn`...
-- `thimble.player.*`: access to commands for players (`/th block`, `/th join` and `/th leave`)
+- `thimble.commands.arena.*`: `/th arena create`, `/th arena setSpawn`...
+- `thimble.commands.player.*`: access to commands for players (`/th block`, `/th join` and `/th leave`)
 - `thimble.sign.place`: to place clickable signs
-- `thimble.stats.*`: access to statistics
+- `thimble.commands.stats.*`: access to statistics
 
 Full list in the [plugin.yml](bukkit/src/main/resources/plugin.yml) file
 

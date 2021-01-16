@@ -11,41 +11,45 @@ commands:
   thimble:
     usage: /<command> help
     aliases: [th]
-    permission: thimble.command
+    permission: thimble.commands.base
 
 permissions:
-  thimble.arena.*:
+  thimble.commands.arena:
     default: op
     description: Grants access to commands to edit arenas.
     children:
-      thimble.arena.create: true
-      thimble.arena.set.gamemode: true
-      thimble.arena.set.jump: true
-      thimble.arena.set.max.players: true
-      thimble.arena.set.min.players: true
-      thimble.arena.set.spawn: true
-  thimble.command:
+      thimble.commands.arena.create: true
+      thimble.commands.arena.set.gamemode: true
+      thimble.commands.arena.set.jump: true
+      thimble.commands.arena.set.max.players: true
+      thimble.commands.arena.set.min.players: true
+      thimble.commands.arena.set.spawn: true
+  thimble.commands.base:
     default: true
     description: Access to the main command.
-  thimble.player.*:
+  thimble.commands.player:
     default: true
     description: Allows players to play in arenas.
     children:
-      thimble.player.block: true
-      thimble.player.join: true
-      thimble.player.leave: true
+      thimble.commands.player.block: true
+      thimble.commands.player.join: true
+      thimble.commands.player.leave: true
   thimble.restrictions.bypass:
     description: Allows the in-game player to bypass commands restrictions.
     default: op
-  thimble.sign.*:
+  thimble.sign:
     default: true
     description: Allows players to view statistics.
     children:
       thimble.sign.place: true
       thimble.sign.use: true
-  thimble.stats.*:
+  thimble.commands.stats:
     default: true
     description: Allows players to view statistics.
     children:
-      thimble.stats: true
-      thimble.stats.others: true
+      thimble.commands.stats.others: true
+  thimble.commands.version:
+    default: op
+    description: Allows to use the /th version command.
+    children:
+      thimble.commands.version.update: true

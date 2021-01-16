@@ -19,17 +19,20 @@ import java.util.List;
 
 public class VersionCommand extends ChildCommand.One<String> {
 
+    private static final Permission PERMISSION = Permission.version("update");
     private static final Template VERSION = Template.of("version", Thimble.pluginVersion().asComponent());
     private static final Template RELEASES_URL = Template.of("releases", "https://github.com/syldium/Thimble/releases");
 
     public VersionCommand() {
-        super("version", new UpdateArgument().optional(), null, Permission.migrate());
+        super("version", new UpdateArgument().optional(), MessageKey.HELP_VERSION, Permission.version());
     }
 
     @Override
     public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @Nullable String arg) throws CommandException {
         boolean update = arg != null && arg.equals("update");
-        if (!update) {
+        if (update) {
+            PERMISSION.verify(sender);
+        } else {
             sender.sendFeedback(CommandResult.info(
                     MessageKey.FEEDBACK_VERSION_CURRENT,
                     VERSION
@@ -44,6 +47,14 @@ public class VersionCommand extends ChildCommand.One<String> {
             sender.sendFeedback(this.execute(plugin, sender, releaseInfo, update));
         });
         return CommandResult.success();
+    }
+
+    @Override
+    public @NotNull List<@NotNull String> tabComplete(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args) {
+        if (args.size() == 1 && !sender.hasPermission(PERMISSION.get())) {
+            return Collections.emptyList();
+        }
+        return super.tabComplete(plugin, sender, args);
     }
 
     private @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @Nullable GitHubReleaseInfo releaseInfo, boolean update) {

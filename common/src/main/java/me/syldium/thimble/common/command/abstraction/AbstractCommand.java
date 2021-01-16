@@ -14,11 +14,12 @@ public abstract class AbstractCommand {
 
     protected final String name;
     protected final Permission permission;
-
+    protected final @Nullable MessageKey description;
     protected @Nullable ParentCommand parent;
 
     AbstractCommand(@NotNull String name, @Nullable MessageKey description, @NotNull Permission permission) {
         this.name = name;
+        this.description = description;
         this.permission = permission;
     }
 
@@ -46,11 +47,11 @@ public abstract class AbstractCommand {
     public abstract @NotNull Component getUsage(@NotNull MessageService service);
 
     public boolean hasPermission(@NotNull Sender sender) {
-        return sender.hasPermission(this.permission.getPermission());
+        return sender.hasPermission(this.permission.get());
     }
 
     public @NotNull String getPermission() {
-        return this.permission.getPermission();
+        return this.permission.get();
     }
 
     public boolean isValidExecutor(@NotNull Sender sender) {
