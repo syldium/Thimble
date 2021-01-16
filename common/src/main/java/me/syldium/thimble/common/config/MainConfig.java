@@ -4,6 +4,8 @@ import me.syldium.thimble.common.player.media.TimedMedia;
 import me.syldium.thimble.common.service.DataService;
 import me.syldium.thimble.common.util.EnumUtil;
 import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +19,8 @@ public class MainConfig {
     private final ConfigNode game;
     private final ConfigNode storage;
     private final List<String> integrations;
+    private final Sound jumpFailedSound, jumpSucceedSound, thimbleSound;
+    private final Key countdown;
 
     public MainConfig(@NotNull ConfigNode config) {
         String languageTag = config.getString("locale", null);
@@ -32,6 +36,12 @@ public class MainConfig {
         this.game = config.getNode("game");
         this.storage = config.getNode("storage");
         this.integrations = config.getStringList("integrations");
+
+        ConfigNode sound = config.getOrCreateNode("sound");
+        this.jumpFailedSound = sound.getSound("jump-failed", "block.basalt.break");
+        this.jumpSucceedSound = sound.getSound("jump-succeed", "block.note_block.xylophone");
+        this.thimbleSound = sound.getSound("thimble", "entity.experience_orb.pickup");
+        this.countdown = sound.getKey("countdown", "block.note_block.harp");
     }
 
     public @NotNull DataService.Type getDataStorageMethod() {
@@ -67,6 +77,22 @@ public class MainConfig {
 
     public @NotNull ConfigNode getGameNode() {
         return this.game;
+    }
+
+    public @NotNull Sound getJumpFailedSound() {
+        return this.jumpFailedSound;
+    }
+
+    public @NotNull Sound getJumpSucceedSound() {
+        return this.jumpSucceedSound;
+    }
+
+    public @NotNull Sound getThimbleSound() {
+        return this.thimbleSound;
+    }
+
+    public @NotNull Sound getTimerSound(int remainingTicks) {
+        return Sound.sound(this.countdown, Sound.Source.PLAYER, 1f, remainingTicks == 0 ? 1.5f : 1.0f);
     }
 
     public int getGameInt(@NotNull @NodePath String path, int def) {

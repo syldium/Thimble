@@ -4,6 +4,7 @@ import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
 import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.util.Index;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +47,15 @@ public interface ConfigNode {
     default @Nullable Key getKey(@NotNull @NodePath String path) {
         String raw = this.getString(path, null);
         return raw == null ? null : Key.key(raw);
+    }
+
+    default @NotNull Key getKey(@NotNull @NodePath String path, @NotNull String def) {
+        Key key = this.getKey(path);
+        return key == null ? Key.key(def) : key;
+    }
+
+    default @NotNull Sound getSound(@NotNull @NodePath String path, @NotNull String def) {
+        return Sound.sound(this.getKey(path, def), Sound.Source.PLAYER, 1f, 1f);
     }
 
     default void setValue(@NotNull @NodePath String path, @NotNull Key key) {

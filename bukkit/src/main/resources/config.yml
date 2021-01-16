@@ -78,6 +78,13 @@ display:
     bossbar-color: red
     bossbar-overlay: progress
 
+# Sounds used. https://minecraft.gamepedia.com/Sounds.json#Sound_events
+sound:
+  jump-failed: block.basalt.break
+  jump-succeed: block.note_block.xylophone
+  thimble: entity.experience_orb.pickup
+  countdown: block.note_block.harp
+
 # List of blocks that the player can choose. This accepts regex.
 # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 blocks:

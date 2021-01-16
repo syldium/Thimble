@@ -9,7 +9,6 @@ import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.adapter.BlockBalancer;
-import me.syldium.thimble.common.config.GameConfig;
 import me.syldium.thimble.common.config.MainConfig;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
@@ -140,7 +139,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.players.progress(this.timer, this.countdownTicks);
         this.timer--;
         if (this.timer <= TIMER_SOUND_THRESHOLD && this.timer % Ticks.TICKS_PER_SECOND == 0) {
-            this.players.playSound(GameConfig.getTimerSound(this.timer));
+            this.players.playSound(this.plugin.getMainConfig().getTimerSound(this.timer));
         }
     }
 
@@ -183,13 +182,14 @@ public abstract class Game implements ThimbleGame, Runnable {
             } else {
                 player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFE, lifesTemplate);
             }
-            player.playSound(GameConfig.getJumpFailedSound());
+            player.playSound(this.plugin.getMainConfig().getJumpFailedSound());
         } else if (verdict == JumpVerdict.THIMBLE) {
             player.sendActionBar(MessageKey.ACTIONBAR_THIMBLE);
-            player.playSound(GameConfig.getJumpSucceedSound());
+            player.playSound(this.plugin.getMainConfig().getThimbleSound());
             this.plugin.spawnFireworks(player.getLocation().up(2)).spawn(this.fireworksThimble);
         } else {
             player.sendActionBar(MessageKey.ACTIONBAR_SUCCESSFUL_JUMP);
+            player.playSound(this.plugin.getMainConfig().getJumpSucceedSound());
         }
     }
 

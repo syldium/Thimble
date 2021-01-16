@@ -4,7 +4,6 @@ import me.syldium.thimble.api.arena.ThimbleConcurrentGame;
 import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.common.ThimblePlugin;
-import me.syldium.thimble.common.config.GameConfig;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
@@ -118,13 +117,14 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
     protected void sendJumpMessage(@NotNull Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
             player.sendActionBar(MessageKey.ACTIONBAR_MISSED);
-            player.playSound(GameConfig.getJumpFailedSound());
+            player.playSound(this.plugin.getMainConfig().getJumpFailedSound());
         } else if (verdict == JumpVerdict.THIMBLE) {
             player.sendActionBar(MessageKey.ACTIONBAR_THIMBLE);
-            player.playSound(GameConfig.getJumpSucceedSound());
+            player.playSound(this.plugin.getMainConfig().getThimbleSound());
             this.plugin.spawnFireworks(player.getLocation().up(2)).spawn(this.fireworksThimble);
         } else {
             player.sendActionBar(MessageKey.ACTIONBAR_SUCCESSFUL_JUMP);
+            player.playSound(this.plugin.getMainConfig().getJumpSucceedSound());
         }
     }
 
