@@ -55,12 +55,12 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
 
     @Override
     public @NotNull Location getLocation() {
-        return this.platform.asAbstractLocation(this.getHandle().getLocation());
+        return this.platform.asAbstractLocation(this.handle.getLocation());
     }
 
     @Override
     public @NotNull PoolBlock getFirstLiquidBlock() {
-        Block block = this.getHandle().getLocation().getBlock();
+        Block block = this.handle.getLocation().getBlock();
         while (block.getRelative(BlockFace.UP).isLiquid()) {
             block = block.getRelative(BlockFace.UP);
         }
@@ -69,14 +69,13 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
 
     @Override
     public boolean teleport(@NotNull Location location) {
-        return this.getHandle().teleport(this.platform.asPlatform(location));
+        return this.handle.teleport(this.platform.asPlatform(location));
     }
 
     @Override
     public @NotNull CompletableFuture<Boolean> teleportAsync(@NotNull Location location) {
         if (TELEPORT_ASYNC) {
-            org.bukkit.Location bukkitLoc = this.platform.asPlatform(location);
-            return this.getHandle().teleportAsync(bukkitLoc);
+            return this.handle.teleportAsync(this.platform.asPlatform(location));
         }
         return CompletableFuture.completedFuture(this.teleport(location));
     }
@@ -84,35 +83,37 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     @Override
     public boolean isInWater() {
         if (IN_WATER_METHOD) {
-            return this.getHandle().isInWater();
+            return this.handle.isInWater();
         }
-        return isWater(this.getHandle().getLocation().getBlock().getType());
+        return isWater(this.handle.getLocation().getBlock().getType());
     }
 
     @Override
     public void setMiniGameMode() {
-        this.getHandle().getInventory().clear();
-        this.getHandle().setGameMode(GameMode.ADVENTURE);
+        this.handle.getInventory().clear();
+        this.handle.setGameMode(GameMode.ADVENTURE);
+        this.handle.setHealth(20D);
+        this.handle.setFoodLevel(20);
     }
 
     @Override
     public void spectate() {
-        this.getHandle().setGameMode(GameMode.SPECTATOR);
+        this.handle.setGameMode(GameMode.SPECTATOR);
     }
 
     @Override
     public void sendExperienceChange(float percent, int level) {
         if (SEND_EXPERIENCE_CHANGE) {
-            this.getHandle().sendExperienceChange(percent, level);
+            this.handle.sendExperienceChange(percent, level);
             return;
         }
-        this.getHandle().setLevel(level);
-        this.getHandle().setExp(percent);
+        this.handle.setLevel(level);
+        this.handle.setExp(percent);
     }
 
     @Override
     public boolean isVanished() {
-        return isVanished(this.getHandle());
+        return isVanished(this.handle);
     }
 
     public static boolean isVanished(@NotNull Player player) {
@@ -126,16 +127,16 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
 
     @Override
     public @NotNull String name() {
-        return this.getHandle().getName();
+        return this.handle.getName();
     }
 
     @Override
     public @NotNull UUID uuid() {
-        return this.getHandle().getUniqueId();
+        return this.handle.getUniqueId();
     }
 
     @Override
     public boolean hasPermission(@NotNull String permission) {
-        return this.getHandle().hasPermission(permission);
+        return this.handle.hasPermission(permission);
     }
 }

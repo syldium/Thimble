@@ -32,12 +32,12 @@ public class SpongePlayer extends AbstractPlayer<Player> {
 
     @Override
     public @NotNull me.syldium.thimble.api.Location getLocation() {
-        return this.platform.asAbstractLocation(this.getHandle().getLocation(), this.getHandle().getHeadRotation());
+        return this.platform.asAbstractLocation(this.handle.getLocation(), this.handle.getHeadRotation());
     }
 
     @Override
     public boolean teleport(me.syldium.thimble.api.@NotNull Location location) {
-        return this.getHandle().setLocationAndRotation(this.platform.asPlatform(location), this.platform.asHeadRotation(location));
+        return this.handle.setLocationAndRotation(this.platform.asPlatform(location), this.platform.asHeadRotation(location));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class SpongePlayer extends AbstractPlayer<Player> {
 
     @Override
     public @NotNull PoolBlock getFirstLiquidBlock() {
-        Location<World> location = this.getHandle().getLocation();
+        Location<World> location = this.handle.getLocation();
         while (this.isLiquid(location.getBlockRelative(Direction.UP).getBlock())) {
             location = location.getBlockRelative(Direction.UP);
         }
@@ -61,18 +61,18 @@ public class SpongePlayer extends AbstractPlayer<Player> {
 
     @Override
     public boolean isInWater() {
-        return this.getHandle().getLocation().getBlock().getType().equals(BlockTypes.WATER);
+        return this.handle.getLocation().getBlock().getType().equals(BlockTypes.WATER);
     }
 
     @Override
     public void setMiniGameMode() {
-        this.getHandle().offer(Keys.GAME_MODE, GameModes.ADVENTURE);
-        //this.getHandle().getInventory().clear();
+        this.handle.offer(Keys.GAME_MODE, GameModes.ADVENTURE);
+        //this.handle.getInventory().clear();
     }
 
     @Override
     public void spectate() {
-        this.getHandle().offer(Keys.GAME_MODE, GameModes.SPECTATOR);
+        this.handle.offer(Keys.GAME_MODE, GameModes.SPECTATOR);
     }
 
     @Override
@@ -82,26 +82,26 @@ public class SpongePlayer extends AbstractPlayer<Player> {
 
     @Override
     public void sendExperienceChange(float percent, int level) {
-        Optional<ExperienceHolderData> optional = this.getHandle().get(ExperienceHolderData.class);
+        Optional<ExperienceHolderData> optional = this.handle.get(ExperienceHolderData.class);
         if (optional.isPresent()) {
             ExperienceHolderData expHolder = optional.get();
             expHolder.set(Keys.EXPERIENCE_LEVEL, level);
-            this.getHandle().offer(expHolder);
+            this.handle.offer(expHolder);
         }
     }
 
     @Override
     public boolean hasPermission(@NotNull String permission) {
-        return this.getHandle().hasPermission(permission);
+        return this.handle.hasPermission(permission);
     }
 
     @Override
     public @NotNull String name() {
-        return this.getHandle().getName();
+        return this.handle.getName();
     }
 
     @Override
     public @NotNull UUID uuid() {
-        return this.getHandle().getUniqueId();
+        return this.handle.getUniqueId();
     }
 }

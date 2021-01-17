@@ -14,6 +14,6 @@ public class SpongeSender extends AbstractSender<CommandSource> {
 
     @Override
     public boolean hasPermission(@NotNull String permission) {
-        return this.getHandle().hasPermission(permission);
+        return this.handle.hasPermission(permission);
     }
 }
