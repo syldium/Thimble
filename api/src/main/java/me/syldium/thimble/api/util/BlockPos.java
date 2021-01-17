@@ -24,7 +24,7 @@ public class BlockPos extends BlockVector {
      */
     public BlockPos(@NotNull Key worldKey, int x, int y, int z) {
         super(x, y, z);
-        this.worldKey = worldKey;
+        this.worldKey = requireNonNull(worldKey, "world resource key");
     }
 
     /**

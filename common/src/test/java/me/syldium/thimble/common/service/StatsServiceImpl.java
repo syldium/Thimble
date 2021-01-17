@@ -22,7 +22,7 @@ import java.util.concurrent.Executor;
  */
 public class StatsServiceImpl implements StatsService {
 
-    private final Map<Ranking, Leaderboard<ThimblePlayerStats>> leaderboard = new EnumMap<>(Ranking.class);
+    private final Map<Ranking, Leaderboard> leaderboard = new EnumMap<>(Ranking.class);
     private final Map<UUID, ThimblePlayerStats> statistics = new HashMap<>();
 
     public StatsServiceImpl(@NotNull DataService dataService, @NotNull Executor executor) {
@@ -51,12 +51,12 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public @NotNull Leaderboard<@NotNull ThimblePlayerStats> getLeaderboard(@NotNull Ranking criteria) {
-        return this.leaderboard.computeIfAbsent(criteria, s -> Leaderboard.of(criteria));
+    public @NotNull Leaderboard getLeaderboard(@NotNull Ranking criteria) {
+        return this.leaderboard.computeIfAbsent(criteria, Leaderboard::of);
     }
 
     public void updateLeaderboard(@NotNull ThimblePlayerStats stats) {
-        for (Leaderboard<ThimblePlayerStats> leaderboard : this.leaderboard.values()) {
+        for (Leaderboard leaderboard : this.leaderboard.values()) {
             leaderboard.add(stats);
         }
     }

@@ -18,7 +18,7 @@ import java.util.concurrent.Executor;
 
 public class StatsServiceImpl implements StatsService {
 
-    private final Map<Ranking, Leaderboard<ThimblePlayerStats>> leaderboard = new EnumMap<>(Ranking.class);
+    private final Map<Ranking, Leaderboard> leaderboard = new EnumMap<>(Ranking.class);
 
     private final DataService dataService;
     private final Executor executor;
@@ -47,11 +47,13 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public @NotNull Leaderboard<@NotNull ThimblePlayerStats> getLeaderboard(@NotNull Ranking criteria) {
-        return this.leaderboard.computeIfAbsent(criteria, s ->
-                // SqlDataService is not currently thread-safe and the return could be used as a placeholder.
-                CompletableFuture.supplyAsync(() -> this.dataService.getLeaderboard(criteria), this.executor).join()
-        );
+    public @NotNull Leaderboard getLeaderboard(@NotNull Ranking criteria) {
+        return this.leaderboard.computeIfAbsent(criteria, this::fetchLeaderboard);
+    }
+
+    private @NotNull Leaderboard fetchLeaderboard(@NotNull Ranking criteria) {
+        // SqlDataService is not currently thread-safe and the return could be used as a placeholder.
+        return CompletableFuture.supplyAsync(() -> this.dataService.getLeaderboard(criteria), this.executor).join();
     }
 
     /**
@@ -60,7 +62,7 @@ public class StatsServiceImpl implements StatsService {
      * @param stats The updated statistics.
      */
     public void updateLeaderboard(@NotNull ThimblePlayerStats stats) {
-        for (Leaderboard<ThimblePlayerStats> leaderboard : this.leaderboard.values()) {
+        for (Leaderboard leaderboard : this.leaderboard.values()) {
             leaderboard.add(stats);
         }
     }

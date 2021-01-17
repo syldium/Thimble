@@ -28,10 +28,10 @@ import static java.util.Objects.requireNonNull;
  *
  * <p>Sample usage:
  * <pre>
- * Bukkit.getServicesManager().load(GameService.class).getArena("demo").ifPresent(arena -&gt; {
+ * Bukkit.getServicesManager().load(GameService.class).arena("demo").ifPresent(arena -&gt; {
  *     arena.setJumpLocation(BukkitAdapter.get().asAbstractLoc(player));
- *     if (arena.getPoolCenterPoint() != null) {
- *         Block block = BukkitAdapter.get().asBukkit(arena.getPoolCenterPoint(), arena.getJumpLocation().getWorldKey());
+ *     if (arena.poolCenterPoint() != null) {
+ *         Block block = BukkitAdapter.get().asBukkit(arena.poolCenterPoint(), arena.jumpLocation().worldKey());
  *         block.setType(Material.EMERALD_BLOCK);
  *     }
  * });

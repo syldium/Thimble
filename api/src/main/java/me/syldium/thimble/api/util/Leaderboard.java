@@ -18,10 +18,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * A leaderboard implementation relying on a {@link ArrayList}.
- *
- * @param <E> The list type.
  */
-public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
+public class Leaderboard implements SortedSet<ThimblePlayerStats> {
 
     /**
      * The maximum length of the leaderboard.
@@ -30,24 +28,24 @@ public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
      */
     public static final int MAX_LENGTH = 10;
 
-    private final Comparator<E> comparator;
-    private final Function<E, Integer> getter;
-    private List<E> list = new ArrayList<>(Leaderboard.MAX_LENGTH);
+    private final Comparator<ThimblePlayerStats> comparator;
+    private final Function<ThimblePlayerStats, Integer> getter;
+    private List<ThimblePlayerStats> list = new ArrayList<>(Leaderboard.MAX_LENGTH);
 
-    public static @NotNull Leaderboard<ThimblePlayerStats> of(@NotNull Ranking ranking) {
-        return new Leaderboard<>(ranking.getter());
+    public static @NotNull Leaderboard of(@NotNull Ranking ranking) {
+        return new Leaderboard(ranking.getter());
     }
 
-    private Leaderboard(@NotNull Function<E, Integer> getter) {
+    private Leaderboard(@NotNull Function<ThimblePlayerStats, Integer> getter) {
         this(Comparator.comparingInt(getter::apply).reversed(), getter);
     }
 
-    private Leaderboard(@NotNull Comparator<E> comparator, @NotNull Function<E, Integer> getter) {
+    private Leaderboard(@NotNull Comparator<ThimblePlayerStats> comparator, @NotNull Function<ThimblePlayerStats, Integer> getter) {
         this.comparator = comparator;
         this.getter = getter;
     }
 
-    public Leaderboard(@NotNull Leaderboard<E> leaderboard) {
+    public Leaderboard(@NotNull Leaderboard leaderboard) {
         this.comparator = leaderboard.comparator;
         this.getter = leaderboard.getter;
         this.list = new ArrayList<>(leaderboard.list);
@@ -60,7 +58,7 @@ public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
      * @return The element at the specified position in this leaderboard.
      * @throws IndexOutOfBoundsException If the index is out of range (index &lt; 0 || index &gt;= size())
      */
-    public E get(int index) throws IndexOutOfBoundsException {
+    public ThimblePlayerStats get(int index) throws IndexOutOfBoundsException {
         return this.list.get(index);
     }
 
@@ -71,7 +69,7 @@ public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
      * @return {@code true} if the item has been added.
      */
     @Override
-    public boolean add(@NotNull E e) {
+    public boolean add(@NotNull ThimblePlayerStats e) {
         requireNonNull(e, "player stats");
         int rank = -1;
         for (int i = 0; i < this.list.size(); i++) {
@@ -86,7 +84,7 @@ public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
             return true;
         }
 
-        E latest = this.last();
+        ThimblePlayerStats latest = this.last();
         if (this.comparator.compare(latest, e) > 0) {
             if (rank >= 0) {
                 this.list.remove(rank);
@@ -117,7 +115,7 @@ public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
      * @return If so.
      */
     public boolean containsScore(int score) {
-        for (E element : this) {
+        for (ThimblePlayerStats element : this) {
             if (this.getter.apply(element) == score) {
                 return true;
             }
@@ -126,18 +124,18 @@ public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
     }
 
     @Override
-    public @NotNull Comparator<? super E> comparator() {
+    public @NotNull Comparator<? super ThimblePlayerStats> comparator() {
         return this.comparator;
     }
 
     @Override @Deprecated
-    public @NotNull Leaderboard<E> subSet(E e, E e1) throws UnsupportedOperationException {
+    public @NotNull Leaderboard subSet(ThimblePlayerStats e, ThimblePlayerStats e1) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public @NotNull Leaderboard<E> headSet(E e) {
-        Leaderboard<E> set = new Leaderboard<>(this.comparator, this.getter);
+    public @NotNull Leaderboard headSet(ThimblePlayerStats e) {
+        Leaderboard set = new Leaderboard(this.comparator, this.getter);
         int index = this.list.indexOf(e);
         for (int i = 0; i <= index; i++) {
             set.add(this.list.get(i));
@@ -146,8 +144,8 @@ public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
     }
 
     @Override
-    public @NotNull Leaderboard<E> tailSet(E e) throws UnsupportedOperationException {
-        Leaderboard<E> set = new Leaderboard<>(this.comparator, this.getter);
+    public @NotNull Leaderboard tailSet(ThimblePlayerStats e) throws UnsupportedOperationException {
+        Leaderboard set = new Leaderboard(this.comparator, this.getter);
         int index = Math.max(0, this.list.indexOf(e));
         for (int i = index; i < this.size(); i++) {
             set.add(this.list.get(i));
@@ -156,12 +154,12 @@ public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
     }
 
     @Override
-    public @Nullable E first() {
+    public @Nullable ThimblePlayerStats first() {
         return this.isEmpty() ? null : this.list.get(0);
     }
 
     @Override
-    public @Nullable E last() {
+    public @Nullable ThimblePlayerStats last() {
         return this.isEmpty() ? null : this.list.get(this.list.size() - 1);
     }
 
@@ -181,7 +179,7 @@ public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
     }
 
     @Override
-    public @NotNull Iterator<E> iterator() {
+    public @NotNull Iterator<ThimblePlayerStats> iterator() {
         return this.list.iterator();
     }
 
@@ -206,9 +204,9 @@ public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
     }
 
     @Override
-    public boolean addAll(@NotNull Collection<? extends E> collection) {
+    public boolean addAll(@NotNull Collection<? extends ThimblePlayerStats> collection) {
         boolean modified = false;
-        for (E element : collection) {
+        for (ThimblePlayerStats element : collection) {
             if (this.add(element)) {
                 modified = true;
             }
@@ -235,7 +233,7 @@ public class Leaderboard<E extends ThimblePlayerStats> implements SortedSet<E> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Leaderboard<?> that = (Leaderboard<?>) o;
+        Leaderboard that = (Leaderboard) o;
         return this.list.equals(that.list);
     }
 

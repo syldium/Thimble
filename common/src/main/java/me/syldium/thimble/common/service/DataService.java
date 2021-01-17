@@ -20,7 +20,7 @@ public interface DataService {
 
     @NotNull Optional<@NotNull ThimblePlayerStats> getPlayerStatistics(@NotNull String name);
 
-    @NotNull Leaderboard<@NotNull ThimblePlayerStats> getLeaderboard(@NotNull Ranking ranking);
+    @NotNull Leaderboard getLeaderboard(@NotNull Ranking ranking);
 
     void savePlayerStatistics(@NotNull ThimblePlayerStats statistics);
 

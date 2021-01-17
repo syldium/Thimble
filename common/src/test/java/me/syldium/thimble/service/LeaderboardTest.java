@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class LeaderboardTest {
 
-    private final Leaderboard<ThimblePlayerStats> leaderboard;
+    private final Leaderboard leaderboard;
     private long uuids = 0;
 
     public LeaderboardTest() {
@@ -28,7 +28,7 @@ public class LeaderboardTest {
 
     @Test
     public void newEntryInEmptyLeaderboard() {
-        Leaderboard<ThimblePlayerStats> leaderboard = Leaderboard.of(Ranking.WINS);
+        Leaderboard leaderboard = Leaderboard.of(Ranking.WINS);
         PlayerStats stats = this.newPlayerStats(4);
         leaderboard.add(stats);
         assertEquals(stats, leaderboard.get(0));
@@ -37,7 +37,7 @@ public class LeaderboardTest {
 
     @Test
     public void limitLeaderboard() {
-        Leaderboard<ThimblePlayerStats> leaderboard = Leaderboard.of(Ranking.WINS);
+        Leaderboard leaderboard = Leaderboard.of(Ranking.WINS);
         for (int wins = 20; wins > 0; wins--) {
             leaderboard.add(this.newPlayerStats(wins));
         }
@@ -51,7 +51,7 @@ public class LeaderboardTest {
 
     @Test
     public void addInLeaderboard() {
-        Leaderboard<ThimblePlayerStats> leaderboard = new Leaderboard<>(this.leaderboard);
+        Leaderboard leaderboard = new Leaderboard(this.leaderboard);
         leaderboard.add(this.newPlayerStats(2));
         assertEquals(this.leaderboard, leaderboard);
 
@@ -67,7 +67,7 @@ public class LeaderboardTest {
     @Test
     public void sortLeaderboard() {
         // Should be inserted at index = 5
-        Leaderboard<ThimblePlayerStats> leaderboard = new Leaderboard<>(this.leaderboard);
+        Leaderboard leaderboard = new Leaderboard(this.leaderboard);
         PlayerStats stats = this.newPlayerStats(16);
         leaderboard.add(stats);
         assertNotEquals(this.leaderboard, leaderboard);
