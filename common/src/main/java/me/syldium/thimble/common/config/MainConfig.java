@@ -12,6 +12,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
+import static me.syldium.thimble.common.util.MinecraftVersion.isLegacy;
+
 public class MainConfig {
 
     private final Locale locale;
@@ -38,10 +40,10 @@ public class MainConfig {
         this.integrations = config.getStringList("integrations");
 
         ConfigNode sound = config.getOrCreateNode("sound");
-        this.jumpFailedSound = sound.getSound("jump-failed", "block.basalt.break");
-        this.jumpSucceedSound = sound.getSound("jump-succeed", "block.note_block.xylophone");
+        this.jumpFailedSound = sound.getSound("jump-failed", "entity.player.hurt", 0.7f);
+        this.jumpSucceedSound = sound.getSound("jump-succeed", isLegacy() ? "block.note.xylophone" : "block.note_block.xylophone");
         this.thimbleSound = sound.getSound("thimble", "entity.experience_orb.pickup");
-        this.countdown = sound.getKey("countdown", "block.note_block.harp");
+        this.countdown = sound.getKey("countdown", isLegacy() ? "block.note.harp" : "block.note_block.harp");
     }
 
     public @NotNull DataService.Type getDataStorageMethod() {

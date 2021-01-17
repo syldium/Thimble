@@ -1,11 +1,15 @@
 package me.syldium.thimble.bukkit.util;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import me.syldium.thimble.api.util.PluginVersion;
 import me.syldium.thimble.common.util.EnumUtil;
+import me.syldium.thimble.common.util.MinecraftVersion;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
+import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static me.syldium.thimble.bukkit.world.BukkitBlockData.IS_FLAT;
@@ -173,5 +178,15 @@ public final class BukkitUtil {
      */
     public static boolean isWater(@NotNull Material material) {
         return WATER_TYPES.contains(material);
+    }
+
+    public static void setServerVersion() {
+        Pattern pattern = Pattern.compile("\\(MC: (\\d)\\.(\\d+)\\.?(\\d+?)?");
+        Matcher matcher = pattern.matcher(Bukkit.getVersion());
+        if (matcher.find()) {
+            @Subst("1.16.5")
+            String version = matcher.group().substring(5);
+            MinecraftVersion.setVersion(new PluginVersion(version));
+        }
     }
 }

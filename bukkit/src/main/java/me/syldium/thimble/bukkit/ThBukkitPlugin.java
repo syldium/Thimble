@@ -41,6 +41,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
+import static me.syldium.thimble.bukkit.util.BukkitUtil.setServerVersion;
+
 public class ThBukkitPlugin extends ThimblePlugin {
 
     private final ThBootstrap bootstrap;
@@ -53,6 +55,7 @@ public class ThBukkitPlugin extends ThimblePlugin {
     private final PluginHook hooks;
 
     public ThBukkitPlugin(@NotNull ThBootstrap bootstrap) {
+        setServerVersion();
         this.bootstrap = bootstrap;
         this.audiences = BukkitAudiences.create(bootstrap);
         this.configManager = new BukkitConfigManager(this);

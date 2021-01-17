@@ -55,7 +55,11 @@ public interface ConfigNode {
     }
 
     default @NotNull Sound getSound(@NotNull @NodePath String path, @NotNull String def) {
-        return Sound.sound(this.getKey(path, def), Sound.Source.PLAYER, 1f, 1f);
+        return this.getSound(path, def, 1f);
+    }
+
+    default @NotNull Sound getSound(@NotNull @NodePath String path, @NotNull String def, float volume) {
+        return Sound.sound(this.getKey(path, def), Sound.Source.PLAYER, volume, 1f);
     }
 
     default void setValue(@NotNull @NodePath String path, @NotNull Key key) {

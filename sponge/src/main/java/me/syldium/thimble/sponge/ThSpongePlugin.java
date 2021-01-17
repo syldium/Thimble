@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
+import me.syldium.thimble.api.util.PluginVersion;
 import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.CommandManager;
@@ -49,6 +50,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
+import static me.syldium.thimble.common.util.MinecraftVersion.setVersion;
+
 @Plugin(
         id = "thimble",
         name = "Thimble"
@@ -84,6 +87,7 @@ public class ThSpongePlugin extends ThimblePlugin {
     @Listener
     public void onEnable(GameInitializationEvent event) throws IOException {
         this.saveDefaultConfig();
+        setVersion(new PluginVersion(1, 12, 2));
         this.logger = new LoggerWrapper(this.container.getLogger());
         this.audiences = SpongeAudiences.create(this.container, this.game);
 
