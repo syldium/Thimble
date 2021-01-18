@@ -6,6 +6,12 @@ repositories {
 
 dependencies {
     api project(':api')
+    api ('net.kyori:adventure-api:4.4.0') {
+        exclude(module: 'checker-qual')
+    }
+    api ('net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT') {
+        exclude(module: 'checker-qual')
+    }
     compileOnly 'com.mojang:brigadier:1.0.17'
     compileOnly 'com.google.code.gson:gson:2.8.0'
 

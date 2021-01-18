@@ -1,6 +1,7 @@
 name: Thimble
 version: ${pluginVersion}
 description: ${properties.description}
+website: https://github.com/syldium/Thimble
 author: syldium
 
 main: me.syldium.thimble.bukkit.ThBootstrap
