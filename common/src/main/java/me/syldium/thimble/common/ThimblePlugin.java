@@ -124,6 +124,8 @@ public abstract class ThimblePlugin {
 
     public abstract @NotNull SavedPlayersManager<?> getSavedPlayersManager();
 
+    public abstract boolean isLoaded(@NotNull Location location);
+
     public abstract void runSync(@NotNull Runnable runnable);
 
     public abstract <T> @NotNull CompletableFuture<T> runSync(@NotNull Supplier<T> supplier);

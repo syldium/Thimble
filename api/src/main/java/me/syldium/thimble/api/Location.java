@@ -74,6 +74,29 @@ public class Location implements Serializable {
     }
 
     /**
+     * Creates a non-constrained key.
+     *
+     * @param string The string.
+     * @return A resource key.
+     * @throws IllegalArgumentException If empty.
+     */
+    public static @NotNull Key resourceKey(@NotNull String string) {
+        return new ResourceKey(string);
+    }
+
+    /**
+     * Creates a non-constrained key.
+     *
+     * @param namespace The namespace.
+     * @param value The value.
+     * @return A resource key.
+     * @throws IllegalArgumentException If empty.
+     */
+    public static @NotNull Key resourceKey(@NotNull String namespace, @NotNull String value) {
+        return new ResourceKey(namespace, value);
+    }
+
+    /**
      * Gets the x-coordinate.
      *
      * @return x-coordinate

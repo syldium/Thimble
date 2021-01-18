@@ -126,6 +126,11 @@ public class PluginMock extends ThimblePlugin {
     }
 
     @Override
+    public boolean isLoaded(@NotNull Location location) {
+        return true;
+    }
+
+    @Override
     public void runSync(@NotNull Runnable runnable) {
         runnable.run();
     }

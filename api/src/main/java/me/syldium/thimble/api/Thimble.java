@@ -62,6 +62,11 @@ public final class Thimble {
         return Thimble.class.getPackage().getImplementationVersion();
     }
 
+    /**
+     * Gets the currently used version of the plugin.
+     *
+     * @return The plugin version instance.
+     */
     public static @NotNull PluginVersion pluginVersion() {
         return PLUGIN_VERSION;
     }

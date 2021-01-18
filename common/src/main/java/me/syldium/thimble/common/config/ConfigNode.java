@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
+import static me.syldium.thimble.api.Location.resourceKey;
 
 public interface ConfigNode {
 
@@ -44,14 +45,13 @@ public interface ConfigNode {
 
     @NotNull Iterable<@NotNull NodeEntry> getChildren();
 
-    default @Nullable Key getKey(@NotNull @NodePath String path) {
+    default @Nullable Key getResourceKey(@NotNull @NodePath String path) {
         String raw = this.getString(path, null);
-        return raw == null ? null : Key.key(raw);
+        return raw == null ? null : resourceKey(raw);
     }
 
     default @NotNull Key getKey(@NotNull @NodePath String path, @NotNull String def) {
-        Key key = this.getKey(path);
-        return key == null ? Key.key(def) : key;
+        return Key.key(this.getString(path, def));
     }
 
     default @NotNull Sound getSound(@NotNull @NodePath String path, @NotNull String def) {
@@ -70,7 +70,7 @@ public interface ConfigNode {
         ConfigNode node = this.getNode(path);
         if (node == null) return;
         consumer.accept(new Location(
-                requireNonNull(node.getKey("world"), "world"),
+                requireNonNull(node.getResourceKey("world"), "world"),
                 node.getDouble("x", 0),
                 node.getDouble("y", 0),
                 node.getDouble("z", 0),
@@ -115,7 +115,7 @@ public interface ConfigNode {
 
     default @Nullable BlockPos asBlockPos() {
         return new BlockPos(
-                requireNonNull(this.getKey("world"), "world"),
+                requireNonNull(this.getResourceKey("world"), "world"),
                 this.getInt("x", 0),
                 this.getInt("y", 0),
                 this.getInt("z", 0)

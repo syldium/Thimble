@@ -29,6 +29,9 @@ public class JoinCommand extends ChildCommand.One<Arena> {
             throw new CommandException(MessageKey.FEEDBACK_ARENA_NOT_CONFIGURED);
         }
         Optional<ThimbleGame> game = arena.game();
+        if (!game.isPresent() && !arena.isLoaded()) {
+            throw new CommandException(MessageKey.FEEDBACK_ARENA_NOT_LOADED);
+        }
         if (game.isPresent()) {
             if (game.get().state().isStarted()) {
                 throw new CommandException(MessageKey.FEEDBACK_GAME_STARTED_GAME);

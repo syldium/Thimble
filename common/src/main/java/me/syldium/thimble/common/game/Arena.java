@@ -192,6 +192,12 @@ public class Arena implements ThimbleArena {
         return this.centerPoint;
     }
 
+    public boolean isLoaded() {
+        return this.plugin.isLoaded(this.spawnLocation)
+                && this.plugin.isLoaded(this.waitLocation)
+                && this.plugin.isLoaded(this.jumpLocation);
+    }
+
     private @NotNull ThimbleArena updatePoolCenter() {
         if (this.minimumPoint != null && this.maximumPoint != null) {
             this.centerPoint = new BlockVector(

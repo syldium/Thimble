@@ -32,6 +32,7 @@ public enum MessageKey {
     FEEDBACK_ARENA_ALREADY_EXISTS("feedback.arena.already-exists"),
     FEEDBACK_ARENA_CREATED("feedback.arena.created"),
     FEEDBACK_ARENA_NOT_CONFIGURED("feedback.arena.not-configured"),
+    FEEDBACK_ARENA_NOT_LOADED("feedback.arena.not-loaded"),
     FEEDBACK_ARENA_REMOVE("feedback.arena.remove"),
     FEEDBACK_ARENA_SET_GAME_MODE("feedback.arena.set-game-mode"),
     FEEDBACK_ARENA_SET_GAME_MODE_UNKNOWN("feedback.arena.set-game-mode.unknown"),

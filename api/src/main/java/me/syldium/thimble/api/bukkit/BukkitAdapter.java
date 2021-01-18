@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus;
@@ -22,6 +23,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
+import static me.syldium.thimble.api.Location.resourceKey;
 
 /**
  * Location adapter for Bukkit.
@@ -42,8 +44,8 @@ public final class BukkitAdapter implements Listener {
     private static BukkitAdapter INSTANCE;
     private final Map<World, Key> worldKeys = new HashMap<>();
     private final Map<Key, World> keysToWorld = new HashMap<>();
-    private final Function<World, Key> worldKeyFunction = world -> Key.key(world.getName());
-    private final Function<Key, World> keyWorldFunction = key -> Bukkit.getWorld(Key.MINECRAFT_NAMESPACE.equals(key.namespace()) ? key.value(): key.asString());
+    private final Function<World, Key> worldKeyFunction = world -> resourceKey(world.getName());
+    private final Function<Key, World> keyWorldFunction = key -> Bukkit.getWorld(Key.MINECRAFT_NAMESPACE.equals(key.namespace()) ? key.value() : key.asString());
 
     /**
      * Internal! Creates a new global instance.
@@ -214,9 +216,18 @@ public final class BukkitAdapter implements Listener {
         return this.worldKeys.computeIfAbsent(world, this.worldKeyFunction);
     }
 
-    @ApiStatus.Internal @EventHandler
-    void onWorldUnload(WorldUnloadEvent event) {
-        Key key = this.worldKeys.remove(event.getWorld());
+    @EventHandler
+    private void onWorldLoad(WorldLoadEvent event) {
+        this.removeWorldKey(event.getWorld());
+    }
+
+    @EventHandler
+    private void onWorldUnload(WorldUnloadEvent event) {
+        this.removeWorldKey(event.getWorld());
+    }
+
+    private void removeWorldKey(@NotNull World world) {
+        Key key = this.worldKeys.remove(world);
         if (key != null) {
             this.keysToWorld.remove(key);
         }

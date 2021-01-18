@@ -185,6 +185,11 @@ public class ThSpongePlugin extends ThimblePlugin {
     }
 
     @Override
+    public boolean isLoaded(@NotNull Location location) {
+        return true;
+    }
+
+    @Override
     public void runSync(@NotNull Runnable runnable) {
         this.game.getScheduler().createTaskBuilder().execute(runnable).submit(this);
     }

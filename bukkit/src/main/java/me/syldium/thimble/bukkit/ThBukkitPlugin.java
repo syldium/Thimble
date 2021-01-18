@@ -1,6 +1,7 @@
 package me.syldium.thimble.bukkit;
 
 import me.syldium.thimble.api.Location;
+import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
 import me.syldium.thimble.common.util.ServerType;
@@ -143,6 +144,11 @@ public class ThBukkitPlugin extends ThimblePlugin {
     @Override
     public @NotNull BukkitSavedPlayersManager getSavedPlayersManager() {
         return this.savedPlayersManager;
+    }
+
+    @Override
+    public boolean isLoaded(@NotNull Location location) {
+        return BukkitAdapter.get().getWorldFromKey(location.worldKey()) != null;
     }
 
     @Override
