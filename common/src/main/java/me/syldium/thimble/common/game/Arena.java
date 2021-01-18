@@ -192,6 +192,7 @@ public class Arena implements ThimbleArena {
         return this.centerPoint;
     }
 
+    @Override
     public boolean isLoaded() {
         return this.plugin.isLoaded(this.spawnLocation)
                 && this.plugin.isLoaded(this.waitLocation)

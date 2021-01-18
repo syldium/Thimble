@@ -41,6 +41,9 @@ public interface ThimbleGame {
     /**
      * Tests if a new player can join the game.
      *
+     * <p>This method verifies that the game has not started and that the maximum number of players will not be exceeded
+     * if a new player joins.</p>
+     *
      * @return If so.
      */
     @Contract(pure = true)
@@ -87,13 +90,20 @@ public interface ThimbleGame {
      *
      * <p>The player limit ({@link ThimbleArena#maxPlayers()}) can be exceeded.</p>
      *
+     * <p>Example to safely add a player:</p>
+     * <pre>
+     * if (game.acceptPlayer()) {
+     *     game.addPlayer(player);
+     * }
+     * </pre>
+     *
      * @param player The online player who want to play.
      * @return If the player has successfully joined the arena.
      */
     @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID player);
 
     /**
-     * Adds an {@link Identified} player to the game.
+     * Adds an {@link Identified} player to the game. {@link #addPlayer(UUID)}
      *
      * <p>The player limit ({@link ThimbleArena#maxPlayers()}) can be exceeded.</p>
      *

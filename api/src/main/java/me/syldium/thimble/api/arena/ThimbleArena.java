@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Represents an arena that players can join to play Dé À Coudre.
+ * Represents an arena that players can join to play Thimble.
  */
 public interface ThimbleArena extends ComponentLike {
 
@@ -41,8 +41,8 @@ public interface ThimbleArena extends ComponentLike {
      * Sets the spawn location. {@link #spawnLocation()}
      *
      * @param location The new spawn location.
-     * @throws IllegalStateException If the argument is {@code null} and a game exists.
      * @return This arena.
+     * @throws IllegalStateException If the argument is {@code null} and a game exists.
      */
     @Contract("_ -> this")
     ThimbleArena setSpawnLocation(@Nullable Location location);
@@ -59,8 +59,8 @@ public interface ThimbleArena extends ComponentLike {
      * Sets the jump location. {@link #jumpLocation()}
      *
      * @param location The new jump location.
-     * @throws IllegalStateException If the argument is {@code null} and a game exists.
      * @return This arena.
+     * @throws IllegalStateException If the argument is {@code null} and a game exists.
      */
     @Contract("_ -> this")
     ThimbleArena setJumpLocation(@Nullable Location location);
@@ -68,7 +68,8 @@ public interface ThimbleArena extends ComponentLike {
     /**
      * Gets the location where the players wait their turn when the game has started.
      *
-     * <p>When creating the arena using the commands, the wait location will first be identical to the spawn's position.</p>
+     * <p>When creating the arena using the commands, the wait location will first be identical to the spawn's
+     * position.</p>
      *
      * @return The wait location.
      */
@@ -79,8 +80,8 @@ public interface ThimbleArena extends ComponentLike {
      * Sets the wait location. {@link #waitLocation()}
      *
      * @param location The new wait location.
-     * @throws IllegalStateException If the argument is {@code null} and a game exists.
      * @return This arena.
+     * @throws IllegalStateException If the argument is {@code null} and a game exists.
      */
     @Contract("_ -> this")
     ThimbleArena setWaitLocation(@Nullable Location location);
@@ -91,14 +92,14 @@ public interface ThimbleArena extends ComponentLike {
      * @return The minimum number.
      */
     @Contract(pure = true)
-    @Range(from=1, to=Integer.MAX_VALUE) int minPlayers();
+    @Range(from = 1, to = Integer.MAX_VALUE) int minPlayers();
 
     /**
      * Sets the minimum number of players the pool can host.
      *
      * @param minimum The minimum players.
-     * @throws IllegalArgumentException If negative or more than the maximum.
      * @return This arena.
+     * @throws IllegalArgumentException If negative or more than the maximum.
      */
     @Contract("_ -> this")
     ThimbleArena setMinPlayers(int minimum) throws IllegalArgumentException;
@@ -109,14 +110,14 @@ public interface ThimbleArena extends ComponentLike {
      * @return The maximum number.
      */
     @Contract(pure = true)
-    @Range(from=1, to=Integer.MAX_VALUE) int maxPlayers();
+    @Range(from = 1, to = Integer.MAX_VALUE) int maxPlayers();
 
     /**
      * Sets the maximum number of players the arena can host.
      *
      * @param maximum The maximum players.
-     * @throws IllegalArgumentException If negative or less than the minimum.
      * @return This arena.
+     * @throws IllegalArgumentException If negative or less than the minimum.
      */
     @Contract("_ -> this")
     ThimbleArena setMaxPlayers(int maximum) throws IllegalArgumentException;
@@ -149,6 +150,22 @@ public interface ThimbleArena extends ComponentLike {
     /**
      * Adds the player in the pool by creating a game if needed.
      *
+     * <p>No checks are made, either with {@link #maxPlayers()}, or if the game has already started.</p>
+     *
+     * <p>Example to safely add a player:</p>
+     * <pre>
+     * if (!arena.isLoaded() || !arena.isSetup()) {
+     *     return false;
+     * }
+     *
+     * Optional&lt;ThimbleGame&gt; gameOpt = arena.game();
+     * if (gameOpt.isPresent() &amp;&amp; !gameOpt.get().acceptPlayer()) {
+     *     return false;
+     * }
+     *
+     * arena.addPlayer(player);
+     * </pre>
+     *
      * @param player The online player who want to play.
      * @return If the player has successfully joined the arena.
      * @throws IllegalStateException If the arena is not properly configured. {@link #isSetup()}
@@ -156,7 +173,7 @@ public interface ThimbleArena extends ComponentLike {
     @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID player);
 
     /**
-     * Adds the {@link Identified} player in the pool by creating a game if needed.
+     * Adds the {@link Identified} player in the pool by creating a game if needed. {@link #addPlayer(UUID)}
      *
      * @param identified The {@link Identified} player.
      * @return If the player has successfully joined the arena.
@@ -195,6 +212,14 @@ public interface ThimbleArena extends ComponentLike {
     default boolean isSetup() {
         return this.jumpLocation() != null && this.spawnLocation() != null && this.waitLocation() != null;
     }
+
+    /**
+     * Checks that the {@link Location}s are in a loaded world.
+     *
+     * @return If loaded.
+     */
+    @Contract(pure = true)
+    boolean isLoaded();
 
     /**
      * Gets the lower point of the pool.
