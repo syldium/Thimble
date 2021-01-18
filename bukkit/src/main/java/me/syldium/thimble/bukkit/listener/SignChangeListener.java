@@ -35,10 +35,12 @@ public class SignChangeListener implements Listener {
 
     private final ThBukkitPlugin plugin;
     private final Set<Material> clickable;
+    private final boolean updateSigns;
 
     public SignChangeListener(@NotNull ThBukkitPlugin plugin, @NotNull Set<@NotNull Material> clickable) {
         this.plugin = plugin;
         this.clickable = clickable;
+        this.updateSigns = plugin.getConfig().getBoolean("update-signs", true);
         plugin.registerEvents(this);
     }
 
@@ -78,6 +80,10 @@ public class SignChangeListener implements Listener {
     }
 
     private void updateSigns(@NotNull ThimbleArena arena, @NotNull ThimbleState state) {
+        if (!this.updateSigns) {
+            return;
+        }
+
         Key worldKey = requireNonNull(arena.spawnLocation(), "arena spawn location").worldKey();
         World world = requireNonNull(BukkitAdapter.get().getWorldFromKey(worldKey), "arena spawn world");
 
