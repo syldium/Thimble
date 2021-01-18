@@ -2,6 +2,9 @@ package me.syldium.thimble.common;
 
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.Thimble;
+import me.syldium.thimble.common.dependency.Dependency;
+import me.syldium.thimble.common.dependency.DependencyInjection;
+import me.syldium.thimble.common.dependency.DependencyResolver;
 import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.common.adapter.EventAdapter;
 import me.syldium.thimble.common.adapter.PlayerAdapter;
@@ -45,6 +48,10 @@ public abstract class ThimblePlugin {
     private UpdateChecker updateChecker;
 
     public void enable() {
+        if (!classExists("com.google.gson.JsonElement")) {
+            Path gson = new DependencyResolver(this).downloadDependency(Dependency.GSON);
+            DependencyInjection.addJarToClasspath(gson, this);
+        }
         this.dataService = DataService.fromConfig(this, this.getMainConfig());
         this.gameService = new GameServiceImpl(this);
         this.messageService = new MessageServiceImpl(this);

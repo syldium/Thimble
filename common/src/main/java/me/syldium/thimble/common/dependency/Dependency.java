@@ -12,6 +12,12 @@ import java.util.logging.Logger;
 
 public enum Dependency {
 
+    GSON(
+            "com.google.code.gson",
+            "gson",
+            "2.8.6",
+            "yPtIOQVNKAswM/gA0fWpfeLwKOuLoutFitKH5Tbz8l8="
+    ),
     H2_ENGINE(
             "com.h2database",
             "h2",
