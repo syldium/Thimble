@@ -38,6 +38,7 @@ public final class ThBootstrap extends JavaPlugin {
     @Override
     public void onDisable() {
         this.plugin.disable();
+        this.plugin = null;
         BukkitAdapter.unregister();
     }
 

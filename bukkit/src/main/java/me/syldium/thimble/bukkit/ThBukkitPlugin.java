@@ -88,6 +88,12 @@ public class ThBukkitPlugin extends ThimblePlugin {
     }
 
     @Override
+    public void disable() {
+        super.disable();
+        this.audiences.close();
+    }
+
+    @Override
     public @NotNull Logger getLogger() {
         return this.bootstrap.getLogger();
     }
