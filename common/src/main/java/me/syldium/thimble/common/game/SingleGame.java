@@ -105,7 +105,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             if (verdict == JumpVerdict.THIMBLE) {
                 inGamePlayer.incrementPoints();
                 inGamePlayer.incrementThimbles();
-                this.players.sendMessage(MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
+                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
             }
         }
 
@@ -121,7 +121,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
 
         this.jumper = null;
         if (inGamePlayer.isSpectator()) {
-            this.players.sendMessage(MessageKey.CHAT_ELIMINATED, Template.of("player", inGamePlayer.name()));
+            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, Template.of("player", inGamePlayer.name()));
             if (this.queue.size() < 2) {
                 this.end(inGamePlayer);
             }

@@ -6,8 +6,8 @@ import me.syldium.thimble.common.player.PlayerAudience;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.player.media.TimedMedia;
-import me.syldium.thimble.common.service.MessageService;
 import net.kyori.adventure.audience.ForwardingAudience;
+import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
@@ -79,23 +79,31 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
     }
 
     public void sendMessage(@NotNull MessageKey messageKey, @NotNull Template... templates) {
-        MessageService messageService = this.plugin.getMessageService();
-        Component component = messageService.prefix().append(messageService.formatMessage(messageKey, templates));
-        for (Player player : this.audiences()) player.sendMessage(component);
+        this.sendMessage(Identity.nil(), messageKey, templates);
     }
 
-    public void sendMessage(@NotNull MessageKey messageKey, @NotNull E from, @NotNull Template... templates) {
-        MessageService messageService = this.plugin.getMessageService();
-        Component component = messageService.prefix().append(messageService.formatMessage(messageKey, templates));
+    public void sendMessage(@NotNull Identity source, @NotNull MessageKey messageKey, @NotNull Template... templates) {
+        Component component = this.plugin.getMessageService().formatMessageWithPrefix(messageKey, templates);
+        for (Player player : this.audiences()) player.sendMessage(source, component);
+    }
+
+    public void sendMessage(@NotNull E source, @NotNull MessageKey messageKey, @NotNull Template... templates) {
+        if (!source.isVanished()) {
+            this.sendMessage((Identity) source, messageKey, templates);
+        }
+    }
+
+    public void sendMessageExclude(@NotNull E source, @NotNull MessageKey messageKey, @NotNull Template... templates) {
+        Component component = this.plugin.getMessageService().formatMessageWithPrefix(messageKey, templates);
         for (E identity : this) {
             // The player who sent the message should not see the message, and a vanished player should not be visible in the message.
-            if (identity.uuid().equals(from.uuid()) || (from.isVanished() && !identity.isVanished())) {
+            if (identity.uuid().equals(source.uuid()) || (source.isVanished() && !identity.isVanished())) {
                 continue;
             }
 
             Player player = this.plugin.getPlayer(identity.uuid());
             if (player != null) {
-                player.sendMessage(component);
+                player.sendMessage(source, component);
             }
         }
     }

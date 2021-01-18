@@ -32,6 +32,17 @@ public interface MessageService {
         return this.formatMessage(key, null, templates);
     }
 
+    /**
+     * Gets the translated string from a {@link MessageKey}, and formats it.
+     *
+     * @param key The message key.
+     * @param templates Some placeholders.
+     * @return The formatted message component.
+     */
+    default @NotNull Component formatMessageWithPrefix(@NotNull MessageKey key, @NotNull Template... templates) {
+        return this.prefix().append(this.formatMessage(key, templates));
+    }
+
     default @NotNull Component formatMessage(@NotNull CommandResult feedback) {
         Objects.requireNonNull(feedback.getMessageKey(), "Message key");
         return this.formatMessage(feedback.getMessageKey(), feedback.getTextColor(), feedback.getTemplates());

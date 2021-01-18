@@ -4,6 +4,7 @@ import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.MessageKey;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 public interface Sender extends Audience {
 
-    UUID CONSOLE_UUID = new UUID(0, 0);
+    UUID CONSOLE_UUID = Identity.nil().uuid();
     String CONSOLE_NAME = "Console";
 
     /**
@@ -49,7 +50,7 @@ public interface Sender extends Audience {
      * @param key The message key.
      * @param templates Some placeholders.
      */
-    void sendMessage(@NotNull MessageKey key, Template ...templates);
+    void sendMessage(@NotNull MessageKey key, Template... templates);
 
     /**
      * Sends a message to the player's action bar from its {@link MessageKey}.
@@ -57,7 +58,7 @@ public interface Sender extends Audience {
      * @param key The message key.
      * @param templates Some placeholders.
      */
-    void sendActionBar(@NotNull MessageKey key, Template ...templates);
+    void sendActionBar(@NotNull MessageKey key, Template... templates);
 
     /**
      * Gets the plugin instance.

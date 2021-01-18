@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     api 'org.jetbrains:annotations:20.1.0'
+    api 'net.kyori:adventure-api:4.4.0'
     api 'net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT'
 
     compileOnly ('com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT') {

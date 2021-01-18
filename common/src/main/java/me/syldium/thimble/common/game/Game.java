@@ -203,7 +203,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         }
 
         if ((!this.ignoreStatsIfSolo || this.playersWhoJumped.size() > 1) && latest != null) {
-            this.players.sendMessage(MessageKey.CHAT_WIN, Template.of("player", latest.name()));
+            this.players.sendMessage(latest, MessageKey.CHAT_WIN, Template.of("player", latest.name()));
         }
 
         for (InGamePlayer player : this.players) {
@@ -366,10 +366,10 @@ public abstract class Game implements ThimbleGame, Runnable {
         if (this.players.add(inGamePlayer)) {
             this.plugin.getGameService().setPlayerGame(player.uuid(), this);
 
-            this.players.sendMessage(
-                MessageKey.CHAT_JOINED,
-                inGamePlayer,
-                Template.of("player", player.name())
+            this.players.sendMessageExclude(
+                    inGamePlayer,
+                    MessageKey.CHAT_JOINED,
+                    Template.of("player", player.name())
             );
 
             if (!player.isVanished()) {
@@ -397,9 +397,9 @@ public abstract class Game implements ThimbleGame, Runnable {
         }
 
         this.plugin.getGameService().setPlayerGame(player, null);
+        this.players.sendMessage(inGamePlayer, MessageKey.CHAT_LEFT, Template.of("player", inGamePlayer.name()));
         Player p = this.plugin.getPlayer(player);
         if (p != null) {
-            this.players.sendMessage(MessageKey.CHAT_LEFT, Template.of("player", p.name()));
             this.plugin.getSavedPlayersManager().restore(p, teleport && !this.teleportSpawnAtEnd);
             if (teleport && this.teleportSpawnAtEnd) {
                 p.teleport(this.arena.spawnLocation());
