@@ -2,6 +2,7 @@ package me.syldium.thimble.bukkit.adapter;
 
 import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.util.BlockVector;
+import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.bukkit.ThBootstrap;
 import me.syldium.thimble.bukkit.command.BukkitSender;
@@ -83,7 +84,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     }
 
     @Override
-    public void clearPool(@NotNull Key worldKey, @NotNull Map<BlockVector, BlockData> blocks) {
+    public void clearPool(@NotNull WorldKey worldKey, @NotNull Map<BlockVector, BlockData> blocks) {
         World world = requireNonNull(this.locationAdapter.getWorldFromKey(worldKey), "world");
         for (Map.Entry<BlockVector, BlockData> entry : blocks.entrySet()) {
             BlockVector pos = entry.getKey();
@@ -124,7 +125,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     }
 
     @Override
-    public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull Key worldKey, @NotNull BlockVector minPoint, @NotNull BlockVector maxPoint) {
+    public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull WorldKey worldKey, @NotNull BlockVector minPoint, @NotNull BlockVector maxPoint) {
         World world = requireNonNull(this.locationAdapter.getWorldFromKey(worldKey), "world");
         Set<BlockVector> set = new HashSet<>();
         for (int x = minPoint.x(); x <= maxPoint.x(); x++) {

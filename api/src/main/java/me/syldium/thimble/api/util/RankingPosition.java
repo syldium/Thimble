@@ -12,6 +12,12 @@ public class RankingPosition {
     private final Ranking ranking;
     private final int position;
 
+    /**
+     * Constructs a new position in a leaderboard.
+     *
+     * @param ranking The ranking value.
+     * @param position The position in this leaderboard.
+     */
     public RankingPosition(@NotNull Ranking ranking, @Range(from = 0, to = Leaderboard.MAX_LENGTH - 1) int position) {
         // noinspection ConstantConditions
         if (position < 0 || position >= Leaderboard.MAX_LENGTH) {

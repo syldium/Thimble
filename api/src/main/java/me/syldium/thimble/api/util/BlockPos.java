@@ -1,6 +1,5 @@
 package me.syldium.thimble.api.util;
 
-import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -12,7 +11,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class BlockPos extends BlockVector {
 
-    private final Key worldKey;
+    /** The world's resource key. */
+    private final WorldKey worldKey;
 
     /**
      * Constructs a new block position with the given coordinates.
@@ -22,7 +22,7 @@ public class BlockPos extends BlockVector {
      * @param y The y-coordinate.
      * @param z The z-coordinate.
      */
-    public BlockPos(@NotNull Key worldKey, int x, int y, int z) {
+    public BlockPos(@NotNull WorldKey worldKey, int x, int y, int z) {
         super(x, y, z);
         this.worldKey = requireNonNull(worldKey, "world resource key");
     }
@@ -33,7 +33,7 @@ public class BlockPos extends BlockVector {
      * @param vector The block vector.
      * @param worldKey The world's resource key.
      */
-    public BlockPos(@NotNull BlockVector vector, @NotNull Key worldKey) {
+    public BlockPos(@NotNull BlockVector vector, @NotNull WorldKey worldKey) {
         super(vector.x(), vector.y(), vector.z());
         this.worldKey = requireNonNull(worldKey, "world resource key");
     }
@@ -41,9 +41,9 @@ public class BlockPos extends BlockVector {
     /**
      * Gets the resource key of the world.
      *
-     * @return The {@link Key}.
+     * @return The {@link WorldKey}.
      */
-    public @NotNull Key worldKey() {
+    public @NotNull WorldKey worldKey() {
         return this.worldKey;
     }
 

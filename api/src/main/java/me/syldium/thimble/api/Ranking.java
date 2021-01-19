@@ -51,6 +51,11 @@ public enum Ranking {
         return this.getter.apply(stats);
     }
 
+    /**
+     * Gets the integer value from stats.
+     *
+     * @return A function.
+     */
     public @NotNull Function<ThimblePlayerStats, Integer> getter() {
         return this.getter;
     }

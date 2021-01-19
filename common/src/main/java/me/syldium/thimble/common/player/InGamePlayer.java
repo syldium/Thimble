@@ -3,12 +3,12 @@ package me.syldium.thimble.common.player;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
+import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.common.game.Game;
 import me.syldium.thimble.common.world.BlockData;
 
 import java.util.UUID;
 
-import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
@@ -42,7 +42,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
         super(uuid, name);
         this.block = block;
         this.game = game;
-        this.lastLocation = new Location(Key.key(UUID.randomUUID().toString().substring(0, 16)), 0, 0, 0);
+        this.lastLocation = new Location(new WorldKey(UUID.randomUUID().toString().substring(0, 16)), 0, 0, 0);
         this.vanished = false;
     }
 

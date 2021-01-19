@@ -1,13 +1,16 @@
 package me.syldium.thimble.api.bukkit;
 
 import me.syldium.thimble.api.Location;
+import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
+import me.syldium.thimble.api.util.WorldKey;
 import net.kyori.adventure.key.Key;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
@@ -19,11 +22,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
-import static me.syldium.thimble.api.Location.resourceKey;
 
 /**
  * Location adapter for Bukkit.
@@ -42,10 +47,10 @@ import static me.syldium.thimble.api.Location.resourceKey;
 public final class BukkitAdapter implements Listener {
 
     private static BukkitAdapter INSTANCE;
-    private final Map<World, Key> worldKeys = new HashMap<>();
-    private final Map<Key, World> keysToWorld = new HashMap<>();
-    private final Function<World, Key> worldKeyFunction = world -> resourceKey(world.getName());
-    private final Function<Key, World> keyWorldFunction = key -> Bukkit.getWorld(Key.MINECRAFT_NAMESPACE.equals(key.namespace()) ? key.value() : key.asString());
+    private final Map<World, WorldKey> worldKeys = new HashMap<>();
+    private final Map<WorldKey, World> keysToWorld = new HashMap<>();
+    private final Function<World, WorldKey> worldKeyFunction = world -> new WorldKey(world.getName());
+    private final Function<WorldKey, World> keyWorldFunction = key -> Bukkit.getWorld(Key.MINECRAFT_NAMESPACE.equals(key.namespace()) ? key.value() : key.asString());
 
     /**
      * Internal! Creates a new global instance.
@@ -160,7 +165,7 @@ public final class BukkitAdapter implements Listener {
      * @return The relevant block.
      * @throws IllegalArgumentException When the world is not found.
      */
-    public @NotNull Block asBukkit(@NotNull BlockVector abstractVector, @NotNull Key worldKey) {
+    public @NotNull Block asBukkit(@NotNull BlockVector abstractVector, @NotNull WorldKey worldKey) {
         requireNonNull(abstractVector, "block vector");
         return this.asBukkit(new BlockPos(abstractVector, worldKey));
     }
@@ -178,12 +183,12 @@ public final class BukkitAdapter implements Listener {
     }
 
     /**
-     * Gets a {@link World} from a resource {@link Key}.
+     * Gets a {@link World} from a resource {@link WorldKey}.
      *
      * @param key The resource key.
      * @return The world if it exists.
      */
-    public @Nullable World getWorldFromKey(@NotNull Key key) {
+    public @Nullable World getWorldFromKey(@NotNull WorldKey key) {
         return this.keysToWorld.computeIfAbsent(key, this.keyWorldFunction);
     }
 
@@ -207,13 +212,40 @@ public final class BukkitAdapter implements Listener {
     }
 
     /**
-     * Gets the resource {@link Key} for a {@link World}.
+     * Gets the resource {@link WorldKey} for a {@link World}.
      *
      * @param world The world.
      * @return The resource key.
      */
-    public @NotNull Key getWorldKey(@NotNull World world) {
+    public @NotNull WorldKey getWorldKey(@NotNull World world) {
         return this.worldKeys.computeIfAbsent(world, this.worldKeyFunction);
+    }
+
+    /**
+     * Returns online players from their uuid.
+     *
+     * @param playerUniqueIds Players' unique identifiers.
+     * @return A new list of online players.
+     */
+    public @NotNull List<@NotNull Player> asPlayers(@NotNull Iterable<UUID> playerUniqueIds) {
+        List<Player> players = new LinkedList<>();
+        for (UUID uuid : playerUniqueIds) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                players.add(player);
+            }
+        }
+        return players;
+    }
+
+    /**
+     * Returns a new list of online players in this arena.
+     *
+     * @param game A thimble game.
+     * @return A new list of online players.
+     */
+    public @NotNull List<@NotNull Player> asPlayers(@NotNull ThimbleGame game) {
+        return this.asPlayers(game.uuidSet());
     }
 
     @EventHandler

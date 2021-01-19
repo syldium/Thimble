@@ -20,7 +20,7 @@ import java.util.List;
 public class VersionCommand extends ChildCommand.One<String> {
 
     private static final Permission PERMISSION = Permission.version("update");
-    private static final Template VERSION = Template.of("version", Thimble.pluginVersion().asComponent());
+    private static final Template VERSION = Template.of("version", Thimble.pluginVersion().toString());
     private static final Template RELEASES_URL = Template.of("releases", "https://github.com/syldium/Thimble/releases");
 
     public VersionCommand() {

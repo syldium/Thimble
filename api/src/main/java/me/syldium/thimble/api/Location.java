@@ -2,6 +2,7 @@ package me.syldium.thimble.api;
 
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
+import me.syldium.thimble.api.util.WorldKey;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
@@ -16,11 +17,22 @@ import static java.util.Objects.requireNonNull;
  */
 public class Location implements Serializable {
 
-    private final Key worldKey;
+    /** The world's resource key. */
+    private final WorldKey worldKey;
+
+    /** x-coordinate. */
     private final double x;
+
+    /** y-coordinate. */
     private final double y;
+
+    /** z-coordinate. */
     private final double z;
+
+    /** A rotation on the y-plane, in degrees. */
     private final float pitch;
+
+    /** A rotation on the x-plane, in degrees. */
     private final float yaw;
 
     /**
@@ -33,7 +45,7 @@ public class Location implements Serializable {
      * @param pitch The absolute rotation on the y-plane, in degrees.
      * @param yaw The absolute rotation on the x-plane, in degrees.
      */
-    public Location(@NotNull Key worldKey, double x, double y, double z, float pitch, float yaw) {
+    public Location(@NotNull WorldKey worldKey, double x, double y, double z, float pitch, float yaw) {
         this.worldKey = requireNonNull(worldKey, "world resource key");
         this.x = x;
         this.y = y;
@@ -50,7 +62,7 @@ public class Location implements Serializable {
      * @param y The y-coordinate.
      * @param z The z-coordinate.
      */
-    public Location(@NotNull Key worldKey, double x, double y, double z) {
+    public Location(@NotNull WorldKey worldKey, double x, double y, double z) {
         this(worldKey, x, y, z, 0, 0);
     }
 
@@ -60,7 +72,7 @@ public class Location implements Serializable {
      * @param worldKey The world's resource key.
      * @param position The position.
      */
-    public Location(@NotNull Key worldKey, @NotNull BlockVector position) {
+    public Location(@NotNull WorldKey worldKey, @NotNull BlockVector position) {
         this(worldKey, position.x(), position.y(), position.z());
     }
 
@@ -71,29 +83,6 @@ public class Location implements Serializable {
      */
     public Location(@NotNull BlockPos position) {
         this(position.worldKey(), position.x(), position.y(), position.z());
-    }
-
-    /**
-     * Creates a non-constrained key.
-     *
-     * @param string The string.
-     * @return A resource key.
-     * @throws IllegalArgumentException If empty.
-     */
-    public static @NotNull Key resourceKey(@NotNull String string) {
-        return new ResourceKey(string);
-    }
-
-    /**
-     * Creates a non-constrained key.
-     *
-     * @param namespace The namespace.
-     * @param value The value.
-     * @return A resource key.
-     * @throws IllegalArgumentException If empty.
-     */
-    public static @NotNull Key resourceKey(@NotNull String namespace, @NotNull String value) {
-        return new ResourceKey(namespace, value);
     }
 
     /**
@@ -146,7 +135,7 @@ public class Location implements Serializable {
      *
      * @return The {@link Key}.
      */
-    public @NotNull Key worldKey() {
+    public @NotNull WorldKey worldKey() {
         return this.worldKey;
     }
 

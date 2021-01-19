@@ -1,6 +1,6 @@
 package me.syldium.thimble.mock.util;
 
-import net.kyori.adventure.key.Key;
+import me.syldium.thimble.api.util.WorldKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -11,7 +11,7 @@ public final class MockUtil {
         throw new IllegalAccessException(this.getClass().getSimpleName() + " cannot be instantiated.");
     }
 
-    public static @NotNull Key randomKey() {
-        return Key.key(UUID.randomUUID().toString().substring(0, 16));
+    public static @NotNull WorldKey randomKey() {
+        return new WorldKey(UUID.randomUUID().toString().substring(0, 16));
     }
 }

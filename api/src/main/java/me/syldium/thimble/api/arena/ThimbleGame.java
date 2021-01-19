@@ -3,8 +3,6 @@ package me.syldium.thimble.api.arena;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.api.util.BlockVector;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.identity.Identified;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -102,7 +100,7 @@ public interface ThimbleGame {
      */
     @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID player);
 
-    /**
+    /*/**
      * Adds an {@link Identified} player to the game. {@link #addPlayer(UUID)}
      *
      * <p>The player limit ({@link ThimbleArena#maxPlayers()}) can be exceeded.</p>
@@ -110,9 +108,9 @@ public interface ThimbleGame {
      * @param identified A player.
      * @return If the player has successfully joined the arena.
      */
-    default @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull Identified identified) {
+    /*default @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull Identified identified) {
         return this.addPlayer(identified.identity().uuid());
-    }
+    }*/
 
     /**
      * Removes a player from the game.
@@ -133,16 +131,16 @@ public interface ThimbleGame {
      */
     boolean removePlayer(@NotNull UUID player, boolean teleport);
 
-    /**
+    /*/**
      * Removes an {@link Identified} player from the game.
      *
      * @param identified A player.
      * @param teleport {@code true} if the player has to be teleported depending on the arena configuration.
      * @return If the player has left the game.
      */
-    default boolean removePlayer(@NotNull Identified identified, boolean teleport) {
+    /*default boolean removePlayer(@NotNull Identified identified, boolean teleport) {
         return this.removePlayer(identified.identity().uuid(), teleport);
-    }
+    }*/
 
     /**
      * Defines the jump result of the current jumper.
@@ -184,7 +182,7 @@ public interface ThimbleGame {
      *
      * @return The audience.
      */
-    @NotNull Audience audience();
+    @NotNull Set<UUID> uuidSet();
 
     /**
      * Returns {@code true} if the player is jumping.

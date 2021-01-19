@@ -3,6 +3,7 @@ package me.syldium.thimble.common.config;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
+import me.syldium.thimble.api.util.WorldKey;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.util.Index;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
-import static me.syldium.thimble.api.Location.resourceKey;
 
 public interface ConfigNode {
 
@@ -45,9 +45,9 @@ public interface ConfigNode {
 
     @NotNull Iterable<@NotNull NodeEntry> getChildren();
 
-    default @Nullable Key getResourceKey(@NotNull @NodePath String path) {
+    default @Nullable WorldKey getResourceKey(@NotNull @NodePath String path) {
         String raw = this.getString(path, null);
-        return raw == null ? null : resourceKey(raw);
+        return raw == null ? null : new WorldKey(raw);
     }
 
     default @NotNull Key getKey(@NotNull @NodePath String path, @NotNull String def) {

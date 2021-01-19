@@ -3,8 +3,6 @@ package me.syldium.thimble.api.arena;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
-import net.kyori.adventure.identity.Identified;
-import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Represents an arena that players can join to play Thimble.
  */
-public interface ThimbleArena extends ComponentLike {
+public interface ThimbleArena {
 
     /**
      * Gets the arena name.
@@ -172,16 +170,16 @@ public interface ThimbleArena extends ComponentLike {
      */
     @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull UUID player);
 
-    /**
+    /*/**
      * Adds the {@link Identified} player in the pool by creating a game if needed. {@link #addPlayer(UUID)}
      *
      * @param identified The {@link Identified} player.
      * @return If the player has successfully joined the arena.
      * @throws IllegalStateException If the arena is not properly configured. {@link #isSetup()}
      */
-    default @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull Identified identified) {
+    /*default @NotNull CompletableFuture<@NotNull Boolean> addPlayer(@NotNull Identified identified) {
         return this.addPlayer(identified.identity().uuid());
-    }
+    }*/
 
     /**
      * Removes a player from the arena.
@@ -192,16 +190,16 @@ public interface ThimbleArena extends ComponentLike {
      */
     boolean removePlayer(@NotNull UUID player, boolean teleport);
 
-    /**
+    /*/**
      * Removes an {@link Identified} player from the game.
      *
      * @param identified A player.
      * @param teleport {@code true} if the player has to be teleported depending on the arena configuration.
      * @return If the player has left the game.
      */
-    default boolean removePlayer(@NotNull Identified identified, boolean teleport) {
+    /*default boolean removePlayer(@NotNull Identified identified, boolean teleport) {
         return this.removePlayer(identified.identity().uuid(), teleport);
-    }
+    }*/
 
     /**
      * Returns whether the arena is properly configured.

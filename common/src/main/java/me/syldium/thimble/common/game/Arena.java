@@ -9,6 +9,7 @@ import me.syldium.thimble.api.arena.ThimbleGameMode;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.Player;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class Arena implements ThimbleArena {
+public class Arena implements ThimbleArena, ComponentLike {
 
     private static final String UNSET_LOCATION_IN_GAME = "Cannot unset the %s location on a game that has already been started.";
 

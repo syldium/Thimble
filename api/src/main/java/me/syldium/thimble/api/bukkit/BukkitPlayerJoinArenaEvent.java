@@ -45,6 +45,11 @@ public class BukkitPlayerJoinArenaEvent extends PlayerEvent implements Cancellab
         return handlers;
     }
 
+    /**
+     * An list of static handlers.
+     *
+     * @return Static handlers.
+     */
     public static HandlerList getHandlerList() {
         return handlers;
     }

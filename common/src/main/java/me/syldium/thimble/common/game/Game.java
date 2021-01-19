@@ -17,7 +17,6 @@ import me.syldium.thimble.common.player.media.TimedMedia;
 import me.syldium.thimble.common.util.PlayerMap;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.common.world.BlockData;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
@@ -425,8 +424,8 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     @Override
-    public @NotNull Audience audience() {
-        return this.players;
+    public @NotNull Set<UUID> uuidSet() {
+        return this.players.uuidSet();
     }
 
     @Override

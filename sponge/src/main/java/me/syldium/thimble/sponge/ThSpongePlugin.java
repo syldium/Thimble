@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
+import me.syldium.thimble.api.sponge.SpongeAdapter;
 import me.syldium.thimble.api.util.PluginVersion;
 import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.common.ThimblePlugin;
@@ -120,6 +121,8 @@ public class ThSpongePlugin extends ThimblePlugin {
     @Listener
     public void onDisable(final GameStoppingEvent event) {
         this.disable();
+        this.audiences.close();
+        SpongeAdapter.unregister();
     }
 
     @Override

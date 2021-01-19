@@ -14,8 +14,13 @@ import java.util.stream.Stream;
  */
 public class BlockVector implements Examinable, Serializable, Cloneable {
 
+    /** x-coordinate. */
     protected final int x;
+
+    /** y-coordinate. */
     protected final int y;
+
+    /** z-coordinate. */
     protected final int z;
 
     /**

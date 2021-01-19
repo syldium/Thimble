@@ -6,12 +6,12 @@ import me.syldium.thimble.api.arena.ThimbleArena;
 import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.api.bukkit.BukkitGameChangeStateEvent;
 import me.syldium.thimble.api.bukkit.BukkitGameEndEvent;
+import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.util.SignAction;
 import me.syldium.thimble.common.util.EnumUtil;
-import net.kyori.adventure.key.Key;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -84,7 +84,7 @@ public class SignChangeListener implements Listener {
             return;
         }
 
-        Key worldKey = requireNonNull(arena.spawnLocation(), "arena spawn location").worldKey();
+        WorldKey worldKey = requireNonNull(arena.spawnLocation(), "arena spawn location").worldKey();
         World world = requireNonNull(BukkitAdapter.get().getWorldFromKey(worldKey), "arena spawn world");
 
         List<BlockPos> removable = new LinkedList<>();

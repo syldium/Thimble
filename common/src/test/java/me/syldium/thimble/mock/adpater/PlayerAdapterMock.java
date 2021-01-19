@@ -1,6 +1,7 @@
 package me.syldium.thimble.mock.adpater;
 
 import me.syldium.thimble.PluginMock;
+import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.mock.player.PlayerMock;
 import me.syldium.thimble.mock.util.BlockDataMock;
@@ -10,7 +11,6 @@ import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.world.PoolBlock;
-import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,12 +43,12 @@ public class PlayerAdapterMock implements PlayerAdapter<PlayerMock, Location> {
     }
 
     @Override
-    public void clearPool(@NotNull Key worldKey, @NotNull Map<BlockVector, BlockData> blocks) {
+    public void clearPool(@NotNull WorldKey worldKey, @NotNull Map<BlockVector, BlockData> blocks) {
         this.plugin.getWorld().clear();
     }
 
     @Override
-    public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull Key worldKey, @NotNull BlockVector minimumPoint, @NotNull BlockVector maximumPoint) {
+    public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull WorldKey worldKey, @NotNull BlockVector minimumPoint, @NotNull BlockVector maximumPoint) {
         return Collections.emptySet();
     }
 

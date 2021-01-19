@@ -1,7 +1,5 @@
 package me.syldium.thimble.api.util;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -11,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * A comparable plugin version.
  */
-public class PluginVersion implements Comparable<PluginVersion>, ComponentLike {
+public class PluginVersion implements Comparable<PluginVersion> {
 
     private static final int VERSION_MASK = 0XFF;
     private static final Pattern VERSION_SEPARATOR = Pattern.compile("\\.");
@@ -111,10 +109,5 @@ public class PluginVersion implements Comparable<PluginVersion>, ComponentLike {
                 .mapToObj(String::valueOf)
                 .collect(Collectors.joining("."));
         return this.release ? result : result + "-SNAPSHOT";
-    }
-
-    @Override
-    public @NotNull Component asComponent() {
-        return Component.text(this.toString());
     }
 }

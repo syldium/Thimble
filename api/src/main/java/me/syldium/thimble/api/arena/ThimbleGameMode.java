@@ -18,7 +18,11 @@ public enum ThimbleGameMode {
      */
     CONCURRENT("concurrent");
 
+    /**
+     * The name map.
+     */
     public static final Index<String, ThimbleGameMode> NAMES = Index.create(ThimbleGameMode.class, mode -> mode.name);
+
     private final String name;
 
     ThimbleGameMode(@NotNull String name) {

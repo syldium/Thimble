@@ -2,6 +2,7 @@ package me.syldium.thimble.bukkit.hook;
 
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.util.BlockVector;
+import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.command.abstraction.ChildCommand;
@@ -13,7 +14,6 @@ import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.PlayerStats;
 import me.syldium.thimble.common.util.ComponentUtil;
-import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -133,7 +133,7 @@ class DeACoudreMigration extends ChildCommand {
     private void setLoc(@Nullable ConfigurationSection section, @NotNull Consumer<Location> consumer) {
         if (section == null) return;
         consumer.accept(new Location(
-                Key.key(requireNonNull(section.getString("world"), "world")),
+                new WorldKey(requireNonNull(section.getString("world"), "world")),
                 section.getDouble("x"),
                 section.getDouble("y"),
                 section.getDouble("z"),

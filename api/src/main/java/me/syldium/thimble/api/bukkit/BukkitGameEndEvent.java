@@ -44,6 +44,11 @@ public class BukkitGameEndEvent extends Event implements GameEvent {
         return handlers;
     }
 
+    /**
+     * An list of static handlers.
+     *
+     * @return Static handlers.
+     */
     public static HandlerList getHandlerList() {
         return handlers;
     }

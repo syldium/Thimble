@@ -32,6 +32,12 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
     private final Function<ThimblePlayerStats, Integer> getter;
     private List<ThimblePlayerStats> list = new ArrayList<>(Leaderboard.MAX_LENGTH);
 
+    /**
+     * Constructs a new leaderboard using this criterion.
+     *
+     * @param ranking The criterion.
+     * @return A new leaderboard.
+     */
     public static @NotNull Leaderboard of(@NotNull Ranking ranking) {
         return new Leaderboard(ranking.getter());
     }
@@ -45,6 +51,11 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
         this.getter = getter;
     }
 
+    /**
+     * Copy a existing leaderboard.
+     *
+     * @param leaderboard The leaderboard to copy.
+     */
     public Leaderboard(@NotNull Leaderboard leaderboard) {
         this.comparator = leaderboard.comparator;
         this.getter = leaderboard.getter;

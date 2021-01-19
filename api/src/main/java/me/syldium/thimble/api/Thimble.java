@@ -107,11 +107,21 @@ public final class Thimble {
         return isVersion(version) ? Optional.of(supplier.get()) : Optional.empty();
     }
 
+    /**
+     * Internal! Sets the game service.
+     *
+     * @param service The game service.
+     */
     @ApiStatus.Internal
     public static void setGameService(@Nullable GameService service) {
         GAME_SERVICE = service;
     }
 
+    /**
+     * Internal! Sets the statistics service.
+     *
+     * @param service The stats service.
+     */
     @ApiStatus.Internal
     public static void setStatsService(@Nullable StatsService service) {
         STATS_SERVICE = service;

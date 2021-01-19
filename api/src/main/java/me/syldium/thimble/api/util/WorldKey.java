@@ -1,4 +1,4 @@
-package me.syldium.thimble.api;
+package me.syldium.thimble.api.util;
 
 import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.NotNull;
@@ -7,13 +7,22 @@ import java.util.Objects;
 
 /**
  * A key implementation without any constraints, used for world identifiers.
+ *
+ * <p>The adventure library is relocated, so using the Key type will not work.</p>
  */
-final class ResourceKey implements Key {
+public final class WorldKey implements Key {
 
     private final String namespace;
     private final String value;
 
-    ResourceKey(@NotNull String namespace, @NotNull String value) {
+    /**
+     * Creates a non-constrained key.
+     *
+     * @param namespace The namespace.
+     * @param value The value.
+     * @throws IllegalArgumentException If empty.
+     */
+    public WorldKey(@NotNull String namespace, @NotNull String value) {
         if (namespace.isEmpty() || value.isEmpty()) {
             throw new IllegalArgumentException("Empty key");
         }
@@ -21,7 +30,13 @@ final class ResourceKey implements Key {
         this.value = value;
     }
 
-    ResourceKey(@NotNull String string) {
+    /**
+     * Creates a non-constrained key.
+     *
+     * @param string The string.
+     * @throws IllegalArgumentException If empty.
+     */
+    public WorldKey(@NotNull String string) {
         int index = string.indexOf(':');
         if (index == 0 || index == string.length() - 1) {
             throw new IllegalArgumentException("Empty key");

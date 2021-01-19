@@ -2,12 +2,12 @@ package me.syldium.thimble.common.adapter;
 
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.util.BlockVector;
+import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.common.player.AbstractPlayer;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.PoolBlock;
-import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +29,7 @@ public interface PlayerAdapter<P, L> {
 
     @NotNull List<@NotNull ? extends BlockData> getAvailableBlocks();
 
-    void clearPool(@NotNull Key worldKey, @NotNull Map<BlockVector, BlockData> blocks);
+    void clearPool(@NotNull WorldKey worldKey, @NotNull Map<BlockVector, BlockData> blocks);
 
     default @NotNull BlockData getRandomBlock() {
         return this.getAvailableBlocks().get(new Random().nextInt(this.getAvailableBlocks().size()));
@@ -40,7 +40,7 @@ public interface PlayerAdapter<P, L> {
         return ((AbstractPlayer<P>) player).getHandle();
     }
 
-    @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull Key worldKey, @NotNull BlockVector minimumPoint, @NotNull BlockVector maximumPoint);
+    @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull WorldKey worldKey, @NotNull BlockVector minimumPoint, @NotNull BlockVector maximumPoint);
 
     @Nullable Player getPlayer(@NotNull UUID uuid);
 
