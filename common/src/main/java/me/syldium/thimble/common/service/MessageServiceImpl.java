@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -156,8 +157,8 @@ public class MessageServiceImpl implements MessageService {
                 stream = loader.getResourceAsStream(resourceName);
             }
             if (stream != null) {
-                try {
-                    bundle = new PropertyResourceBundle(new InputStreamReader(stream, StandardCharsets.UTF_8)); // UTF-8
+                try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) { // UTF-8
+                    bundle = new PropertyResourceBundle(reader);
                 } finally {
                     stream.close();
                 }

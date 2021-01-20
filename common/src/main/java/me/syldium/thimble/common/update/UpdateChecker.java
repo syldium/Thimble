@@ -9,7 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
@@ -44,11 +46,13 @@ public class UpdateChecker implements Runnable {
     public void run() {
         boolean isOwner = this.versionLock.tryLock();
         this.checkingVersion = true;
+        Reader reader = null;
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(RELEASES_URL).openConnection();
             connection.setRequestProperty("User-Agent", USER_AGENT);
 
-            JsonObject apiResponse = new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
+            reader = new InputStreamReader(connection.getInputStream());
+            JsonObject apiResponse = new JsonParser().parse(reader).getAsJsonObject();
             this.releaseInfo = new Gson().fromJson(apiResponse, GitHubReleaseInfo.class);
 
             for (GitHubAssetInfo assetInfo : this.releaseInfo.assets) {
@@ -77,6 +81,13 @@ public class UpdateChecker implements Runnable {
             this.lastCheck = System.currentTimeMillis();
             if (isOwner) {
                 this.versionLock.unlock();
+            }
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ex) {
+                    this.logger.log(Level.WARNING, "Unable to read the list of updates.", ex);
+                }
             }
         }
     }

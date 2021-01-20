@@ -25,6 +25,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
@@ -67,9 +68,9 @@ public class SqlDataService implements DataService {
         }
 
         this.type = type;
-        try {
-            String queryPath = String.format(TABLES, type.hasUniqueIdType() ? "postgre" : "mysql");
-            this.getConnection().createStatement().execute(ResourceReader.readResource(queryPath));
+        String queryPath = String.format(TABLES, type.hasUniqueIdType() ? "postgre" : "mysql");
+        try (Statement statement = this.getConnection().createStatement()) {
+            statement.execute(ResourceReader.readResource(queryPath));
         } catch (SQLException ex) {
             this.logger.log(Level.SEVERE, "Error during database setup. See the message below.", ex);
         }

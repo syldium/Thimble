@@ -9,6 +9,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 
 public class SpongeSavedPlayersManager extends SavedPlayersManager<Player> {
@@ -22,7 +23,8 @@ public class SpongeSavedPlayersManager extends SavedPlayersManager<Player> {
 
     @Override
     protected @Nullable SpongeSavedPlayer load(@NotNull File file) {
-        try (ObjectInputStream data = new ObjectInputStream(new FileInputStream(file))) {
+        try (InputStream stream = new FileInputStream(file);
+             ObjectInputStream data = new ObjectInputStream(stream)) {
             return (SpongeSavedPlayer) data.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

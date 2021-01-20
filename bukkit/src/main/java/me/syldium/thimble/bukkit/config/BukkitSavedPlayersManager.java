@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class BukkitSavedPlayersManager extends SavedPlayersManager<Player> {
 
@@ -19,7 +20,8 @@ public class BukkitSavedPlayersManager extends SavedPlayersManager<Player> {
 
     @Override
     protected @Nullable BukkitSavedPlayer load(@NotNull File file) {
-        try (BukkitObjectInputStream data = new BukkitObjectInputStream(new FileInputStream(file))) {
+        try (InputStream stream = new FileInputStream(file);
+             BukkitObjectInputStream data = new BukkitObjectInputStream(stream)) {
             return (BukkitSavedPlayer) data.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
