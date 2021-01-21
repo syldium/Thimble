@@ -19,7 +19,7 @@ public interface Arguments {
     }
 
     static @NotNull Argument<ThimbleGameMode> gameMode() {
-        return new GameModeArgument("gamemode");
+        return new EnumArgument<>(ThimbleGameMode.class, "gamemode");
     }
 
     static @NotNull Argument<Integer> integer(@NotNull String name) {

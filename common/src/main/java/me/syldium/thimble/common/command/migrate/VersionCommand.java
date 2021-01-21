@@ -43,9 +43,9 @@ public class VersionCommand extends ChildCommand.One<String> {
             return CommandResult.success(MessageKey.FEEDBACK_VERSION_ALREADY_LATEST);
         }
 
-        plugin.getUpdateChecker().getReleaseInfo().thenAccept(releaseInfo -> {
-            sender.sendFeedback(this.execute(plugin, sender, releaseInfo, update));
-        });
+        plugin.getUpdateChecker().getReleaseInfo().thenAccept(releaseInfo ->
+                sender.sendFeedback(this.execute(plugin, sender, releaseInfo, update))
+        );
         return CommandResult.success();
     }
 
