@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 
 public class SpongeSavedPlayer implements SavedPlayer<Player> {
 
@@ -35,7 +36,8 @@ public class SpongeSavedPlayer implements SavedPlayer<Player> {
 
     @Override
     public void save(@NotNull File file) {
-        try (ObjectOutputStream data = new ObjectOutputStream(new FileOutputStream(file))) {
+        try (OutputStream stream = new FileOutputStream(file);
+             ObjectOutputStream data = new ObjectOutputStream(stream)) {
             data.writeObject(this);
         } catch (IOException ex) {
             ex.printStackTrace();

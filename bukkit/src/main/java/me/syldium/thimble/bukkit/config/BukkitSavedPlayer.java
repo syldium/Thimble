@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -43,7 +44,8 @@ public class BukkitSavedPlayer implements SavedPlayer<Player> {
 
     @Override
     public void save(@NotNull File file) {
-        try (BukkitObjectOutputStream data = new BukkitObjectOutputStream(new FileOutputStream(file))) {
+        try (OutputStream stream = new FileOutputStream(file);
+             BukkitObjectOutputStream data = new BukkitObjectOutputStream(stream)) {
             data.writeObject(this);
         } catch (IOException ex) {
             ex.printStackTrace();
