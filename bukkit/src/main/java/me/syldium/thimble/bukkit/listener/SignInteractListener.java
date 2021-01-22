@@ -6,7 +6,6 @@ import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.common.command.CommandResult;
-import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.util.SignAction;
 import org.bukkit.Material;
@@ -53,7 +52,7 @@ public class SignInteractListener implements Listener {
             }
 
             Optional<ThimbleGame> game = arena.get().game();
-            if (!game.isPresent() && !((Arena) arena.get()).isLoaded()) {
+            if (!game.isPresent() && !arena.get().isLoaded()) {
                 this.plugin.sendFeedback(event.getPlayer(), CommandResult.error(MessageKey.FEEDBACK_ARENA_NOT_LOADED));
                 return;
             }

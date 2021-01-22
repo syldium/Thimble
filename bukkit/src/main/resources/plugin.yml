@@ -25,6 +25,8 @@ permissions:
       thimble.commands.arena.set.max.players: true
       thimble.commands.arena.set.min.players: true
       thimble.commands.arena.set.spawn: true
+      thimble.commands.arena.set.wait: true
+      thimble.commands.arena.remove: true
   thimble.commands.base:
     default: true
     description: Access to the main command.
