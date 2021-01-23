@@ -1,6 +1,6 @@
 name: Thimble
 version: ${pluginVersion}
-description: ${properties.description}
+description: ${description}
 website: https://github.com/syldium/Thimble
 author: syldium
 

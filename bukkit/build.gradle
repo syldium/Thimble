@@ -27,8 +27,10 @@ dependencies {
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
-        expand 'pluginVersion': project.ext.fullVersion
-        expand(project.properties)
+        expand(
+                'pluginVersion': project.ext.fullVersion,
+                'description': project.properties.description
+        )
         include 'plugin.yml'
     }
 }
