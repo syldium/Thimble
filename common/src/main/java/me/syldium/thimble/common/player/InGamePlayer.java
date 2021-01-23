@@ -20,6 +20,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
     private final Location lastLocation;
     private BlockData block;
     private int points = 1;
+    private int jumps = 0;
 
     public InGamePlayer(@NotNull Player player, @NotNull ThimblePlayerStats stats, @NotNull BlockData block, @NotNull Game game) {
         super(stats.uuid(), stats.name(), stats.wins(), stats.losses(), stats.jumps(), stats.failedJumps(), stats.thimbles());
@@ -52,6 +53,11 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
     }
 
     @Override
+    public int jumpsForGame() {
+        return this.jumps;
+    }
+
+    @Override
     public boolean isSpectator() {
         return this.spectator;
     }
@@ -74,6 +80,12 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
     @Override
     public @NotNull Game getGame() {
         return this.game;
+    }
+
+    @Override
+    public void incrementJumps() {
+        super.incrementJumps();
+        this.jumps++;
     }
 
     public void incrementPoints() {

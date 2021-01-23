@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -205,7 +207,10 @@ public abstract class Game implements ThimbleGame, Runnable {
         }
 
         if ((!this.ignoreStatsIfSolo || this.playersWhoJumped.size() > 1) && latest != null) {
-            this.players.sendMessage(latest, MessageKey.CHAT_WIN, Template.of("player", latest.name()));
+            List<Template> args = new LinkedList<>();
+            args.add(Template.of("player", latest.name()));
+            args.addAll(MessageKey.Unit.JUMPS.tl(latest.jumpsForGame(), this.plugin.getMessageService()));
+            this.players.sendMessage(latest, MessageKey.CHAT_WIN, args.toArray(new Template[0]));
         }
 
         for (InGamePlayer player : this.players) {
