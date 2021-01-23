@@ -27,7 +27,9 @@ sponge.plugin.meta.version = project.ext.fullVersion
 sponge.plugin.meta.url = 'https://github.com/syldium/Thimble'
 
 shadowJar {
-    archiveBaseName = "Thimble-Sponge-${project.ext.fullVersion}.jar"
+    archiveBaseName = "${project.parent.name}-Sponge"
+    archiveClassifier = ''
+    archiveVersion = project.ext.fullVersion
 
     dependencies {
         exclude(dependency('org.checkerframework:checker-qual'))

@@ -34,7 +34,9 @@ processResources {
 }
 
 shadowJar {
-    archiveBaseName = "Thimble-Bukkit-${project.ext.fullVersion}.jar"
+    archiveBaseName = "${project.parent.name}-Bukkit"
+    archiveClassifier = ''
+    archiveVersion = project.ext.fullVersion
 
     dependencies {
         exclude(dependency('org.checkerframework:checker-qual'))

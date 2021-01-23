@@ -13,9 +13,6 @@ repositories {
 
 dependencies {
     api 'org.jetbrains:annotations:20.1.0'
-    compileOnly ('net.kyori:adventure-api:4.4.0') {
-        exclude(module: 'checker-qual')
-    }
     compileOnly ('net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT') {
         exclude(module: 'checker-qual')
     }
