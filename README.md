@@ -45,6 +45,45 @@ Examples:
 
 Full list in the [plugin.yml](bukkit/src/main/resources/plugin.yml) file
 
+## API
+
+### Maven
+
+```xml
+<repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+</repository>
+```
+```xml
+<dependency>
+    <groupId>com.github.syldium</groupId>
+    <artifactId>Thimble</artifactId>
+    <version>1.0</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+### Usage
+
+Your plugin must be loaded after Thimble using the plugin.yml file:
+```yml
+depend: [Thimble] # If Thimble must be installed.
+soft-depend: [Thimble] # If Thimble is not required.
+```
+When the plugin is enabled on a Bukkit server, the instance of `GameService` and `StatsService` will be provided by the Bukkit ServiceManager.
+```java
+public final class ThimblePluginHook extends JavaPlugin {
+    @Override
+    public void onEnable() {
+        if (this.getServer().getPluginManager().isPluginEnabled("Thimble")) { // If it's a soft-depend
+            this.getServer().getServicesManager().load(GameService.class);
+        }
+    }
+}
+```
+You can view the methods using your IDE or [the javadoc](https://javadoc.jitpack.io/com/github/syldium/Thimble/1.0/javadoc/).
+
 ## Building
 
 This project uses Gradle. Use `./gradlew shadowJar` to get a .jar file (under Windows use `./gradle.bat` instead of `./gradlew`).
