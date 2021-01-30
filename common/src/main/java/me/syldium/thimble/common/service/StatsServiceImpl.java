@@ -9,6 +9,7 @@ import me.syldium.thimble.common.player.PlayerStats;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.SQLException;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -16,14 +17,14 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class StatsServiceImpl implements StatsService {
+public class StatsServiceImpl implements StatsService, AutoCloseable {
 
     private final Map<Ranking, Leaderboard> leaderboard = new EnumMap<>(Ranking.class);
 
-    private final DataService dataService;
+    private final SqlDataService dataService;
     private final Executor executor;
 
-    public StatsServiceImpl(@NotNull DataService dataService, @NotNull Executor executor) {
+    public StatsServiceImpl(@NotNull SqlDataService dataService, @NotNull Executor executor) {
         this.dataService = dataService;
         this.executor = executor;
     }
@@ -44,6 +45,20 @@ public class StatsServiceImpl implements StatsService {
             this.dataService.savePlayerStatistics(statistics);
             return null;
         }, this.executor);
+    }
+
+    public <S extends ThimblePlayerStats> void savePlayerStatistics(@NotNull Iterable<S> iterable) {
+        this.executor.execute(() -> {
+            try {
+                this.dataService.startBatch();
+                for (S statistics : iterable) {
+                    this.dataService.persist(statistics);
+                }
+                this.dataService.finishBatch();
+            } catch (SQLException ex) {
+                throw new RuntimeException("Unable to save statistics.", ex);
+            }
+        });
     }
 
     @Override
@@ -77,5 +92,10 @@ public class StatsServiceImpl implements StatsService {
                 player.failedJumps(),
                 player.thimbles()
         ));
+    }
+
+    @Override
+    public void close() {
+        this.dataService.close();
     }
 }

@@ -1,6 +1,8 @@
 package me.syldium.thimble;
 
 import me.syldium.thimble.api.util.BlockVector;
+import me.syldium.thimble.common.service.SqlDataService;
+import me.syldium.thimble.common.service.StatsServiceImpl;
 import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.mock.adpater.EventAdapterMock;
 import me.syldium.thimble.mock.adpater.PlayerAdapterMock;
@@ -14,6 +16,7 @@ import me.syldium.thimble.common.command.CommandManager;
 import me.syldium.thimble.common.util.Fireworks;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.mock.util.BlockDataMock;
+import me.syldium.thimble.mock.util.CurrentThreadExecutor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,6 +58,11 @@ public class PluginMock extends ThimblePlugin {
         this.getMainConfig().getGameNode().setValue("end-time", 1);
         this.getMainConfig().getGameNode().setValue("jump-time-single", 1);
         this.getMainConfig().getGameNode().setValue("jump-time-concurrent", 1);
+    }
+
+    @Override
+    protected @NotNull StatsServiceImpl constructStatsService() {
+        return new StatsServiceImpl(new SqlDataService(), new CurrentThreadExecutor());
     }
 
     @Override

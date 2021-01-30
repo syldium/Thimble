@@ -27,6 +27,7 @@ public class SqliteDataServiceTest {
         assertStatsEquals(stats, service.getPlayerStatistics(stats.name()));
         stats.incrementFailedJumps();
         assertStatsNotEquals(stats, service.getPlayerStatistics(stats.uuid()));
+        service.close();
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")

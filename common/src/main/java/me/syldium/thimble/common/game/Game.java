@@ -232,8 +232,10 @@ public abstract class Game implements ThimbleGame, Runnable {
                 player.incrementLosses();
             }
 
-            this.plugin.getStatsService().savePlayerStatistics(player);
             this.plugin.getStatsService().updateLeaderboard(player);
+        }
+        if (!this.ignoreStatsIfSolo || this.playersWhoJumped.size() > 1) {
+            this.plugin.getStatsService().savePlayerStatistics(this.players);
         }
 
         this.timer = this.plugin.getMainConfig().getGameNode().getInt("end-time", 5) * Ticks.TICKS_PER_SECOND;

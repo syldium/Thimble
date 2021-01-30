@@ -37,6 +37,9 @@ public class SqlDataService implements DataService {
     private static final String TABLES = "sql/tables-%s.sql";
 
     private Connection connection;
+    private PreparedStatement batch;
+    private final String batchQuery;
+
     private final String url;
     private final String username;
     private final String password;
@@ -74,6 +77,19 @@ public class SqlDataService implements DataService {
         } catch (SQLException ex) {
             this.logger.log(Level.SEVERE, "Error during database setup. See the message below.", ex);
         }
+
+        if (this.type == Type.MYSQL || this.type == Type.MARIADB) {
+            // language=MySQL
+            this.batchQuery = "INSERT INTO thimble_players (uuid, name, wins, losses, jumps, fails, thimbles) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                    + "ON DUPLICATE KEY UPDATE name = VALUES(name), wins = VALUES(wins), losses = VALUES(losses), jumps = VALUES(jumps), fails = VALUES(fails), thimbles = VALUES(thimbles)";
+        } else if (this.type == Type.H2) {
+            // language=H2
+            this.batchQuery = "MERGE INTO thimble_players KEY (uuid) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        } else {
+            // language=PostgreSQL
+            this.batchQuery = "INSERT INTO thimble_players (uuid, name, wins, losses, jumps, fails, thimbles) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                    + "ON CONFLICT (uuid) DO UPDATE SET name = excluded.name, wins = excluded.wins, losses = excluded.losses, jumps = excluded.jumps, fails = excluded.fails, thimbles = excluded.thimbles";
+        }
     }
 
     public SqlDataService(@NotNull File file, @NotNull DependencyResolver dependencyResolver, @NotNull Logger logger, @NotNull Type type) {
@@ -92,6 +108,32 @@ public class SqlDataService implements DataService {
             return new SqlDataService(plugin.getFile(config.getDatabaseFilename(type == Type.H2)), manager, plugin.getLogger(), type);
         }
         return new SqlDataService(config.getJdbcUrl(), config.getJdbcUsername(), config.getJdbcPassword(), manager, plugin.getLogger(), type);
+    }
+
+    protected void startBatch() throws SQLException {
+        this.batch = this.getConnection().prepareStatement(this.batchQuery);
+    }
+
+    protected void persist(@NotNull ThimblePlayerStats statistics) throws SQLException {
+        if (this.type.hasUniqueIdType()) {
+            this.batch.setObject(1, statistics.uuid());
+        } else {
+            this.batch.setString(1, statistics.uuid().toString());
+        }
+        this.batch.setString(2, statistics.name());
+        this.batch.setInt(3, statistics.wins());
+        this.batch.setInt(4, statistics.losses());
+        this.batch.setInt(5, statistics.jumps());
+        this.batch.setInt(6, statistics.failedJumps());
+        this.batch.setInt(7, statistics.thimbles());
+        this.batch.addBatch();
+    }
+
+    protected void finishBatch() throws SQLException {
+        if (this.batch != null) {
+            this.batch.executeBatch();
+        }
+        this.batch = null;
     }
 
     @Override
@@ -216,6 +258,7 @@ public class SqlDataService implements DataService {
     public void close() {
         if (this.connection != null) {
             try {
+                this.finishBatch();
                 this.connection.close();
             } catch (SQLException ex) {
                 this.logger.log(Level.SEVERE, "Error when closing the database connection.", ex);

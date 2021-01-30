@@ -14,7 +14,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface DataService {
+public interface DataService extends AutoCloseable {
 
     @NotNull Optional<@NotNull ThimblePlayerStats> getPlayerStatistics(@NotNull UUID uuid);
 
@@ -26,7 +26,7 @@ public interface DataService {
 
     void close();
 
-    static @NotNull DataService fromConfig(@NotNull ThimblePlugin plugin, @NotNull MainConfig config) {
+    static @NotNull SqlDataService fromConfig(@NotNull ThimblePlugin plugin, @NotNull MainConfig config) {
         return SqlDataService.fromConfig(plugin, config);
     }
 

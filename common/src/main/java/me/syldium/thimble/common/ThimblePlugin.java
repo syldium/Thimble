@@ -5,6 +5,7 @@ import me.syldium.thimble.api.Thimble;
 import me.syldium.thimble.common.dependency.Dependency;
 import me.syldium.thimble.common.dependency.DependencyInjection;
 import me.syldium.thimble.common.dependency.DependencyResolver;
+import me.syldium.thimble.common.service.SqlDataService;
 import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.common.adapter.EventAdapter;
 import me.syldium.thimble.common.adapter.PlayerAdapter;
@@ -41,7 +42,6 @@ import java.util.logging.Logger;
 
 public abstract class ThimblePlugin {
 
-    private DataService dataService;
     private GameServiceImpl gameService;
     private MessageService messageService;
     private StatsServiceImpl statsService;
@@ -52,10 +52,9 @@ public abstract class ThimblePlugin {
             Path gson = new DependencyResolver(this).downloadDependency(Dependency.GSON);
             DependencyInjection.addJarToClasspath(gson, this);
         }
-        this.dataService = DataService.fromConfig(this, this.getMainConfig());
         this.gameService = new GameServiceImpl(this);
         this.messageService = new MessageServiceImpl(this);
-        this.statsService = new StatsServiceImpl(this.dataService, Executors.newSingleThreadExecutor());
+        this.statsService = this.constructStatsService();
         this.updateChecker = new UpdateChecker(Thimble.pluginVersion(), this.getServerType(), this.getLogger());
         this.gameService.load();
         Thimble.setGameService(this.gameService);
@@ -66,7 +65,7 @@ public abstract class ThimblePlugin {
         Thimble.setGameService(null);
         Thimble.setStatsService(null);
         this.gameService.save();
-        this.dataService.close();
+        this.statsService.close();
     }
 
     public @NotNull File getFile(@NotNull String filename) {
@@ -91,6 +90,11 @@ public abstract class ThimblePlugin {
         } catch (ClassNotFoundException ex) {
             return false;
         }
+    }
+
+    protected @NotNull StatsServiceImpl constructStatsService() {
+        SqlDataService dataService = DataService.fromConfig(this, this.getMainConfig());
+        return new StatsServiceImpl(dataService, Executors.newSingleThreadExecutor(task -> new Thread(task, "Thimble-db")));
     }
 
     public abstract @NotNull Logger getLogger();
