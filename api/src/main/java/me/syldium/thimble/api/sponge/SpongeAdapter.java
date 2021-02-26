@@ -233,13 +233,13 @@ public final class SpongeAdapter {
         return this.worldKeys.computeIfAbsent(world, this.worldKeyFunction);
     }
 
-    @Listener
-    private void onWorldLoad(LoadWorldEvent event) {
+    @Listener @ApiStatus.Internal
+    public void onWorldLoad(LoadWorldEvent event) {
         this.removeWorldKey(event.getTargetWorld());
     }
 
-    @Listener
-    private void onWorldUnload(UnloadWorldEvent event) {
+    @Listener @ApiStatus.Internal
+    public void onWorldUnload(UnloadWorldEvent event) {
         this.removeWorldKey(event.getTargetWorld());
     }
 
