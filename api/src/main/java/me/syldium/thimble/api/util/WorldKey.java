@@ -3,6 +3,7 @@ package me.syldium.thimble.api.util;
 import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -10,7 +11,9 @@ import java.util.Objects;
  *
  * <p>The adventure library is relocated, so using the Key type will not work.</p>
  */
-public final class WorldKey implements Key {
+public final class WorldKey implements Key, Serializable {
+
+    private static final transient long serialVersionUID = -1681012206529286329L;
 
     private final String namespace;
     private final String value;
