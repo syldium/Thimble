@@ -9,11 +9,11 @@ import java.util.logging.Level;
 public abstract class ConfigManager<P extends ThimblePlugin> {
 
     protected final P plugin;
-    private final MainConfig config;
+    private MainConfig config;
 
     public ConfigManager(@NotNull P plugin) {
         this.plugin = plugin;
-        this.config = new MainConfig(this.getConfig("config"));
+        this.load();
     }
 
     protected abstract @NotNull ConfigFile getConfig(@NotNull File file);
@@ -35,5 +35,14 @@ public abstract class ConfigManager<P extends ThimblePlugin> {
     private @NotNull ConfigFile getConfig(@NotNull String filename) {
         File file = this.plugin.getFile(filename + "." + this.getFileExtension());
         return this.getConfig(file);
+    }
+
+    private void load() {
+        this.config = new MainConfig(this.getConfig("config"));
+    }
+
+    public void reload() {
+        this.plugin.getGameService().save();
+        this.load();
     }
 }

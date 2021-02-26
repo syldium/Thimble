@@ -21,6 +21,10 @@ public final class Permission {
         return new Permission("thimble.commands.player." + property);
     }
 
+    public static @NotNull Permission reload() {
+        return new Permission("thimble.commands.reload");
+    }
+
     public static @NotNull Permission stats(@NotNull String property) {
         return new Permission("thimble.commands.stats." + property);
     }

@@ -18,6 +18,7 @@ import me.syldium.thimble.sponge.command.SpongeCommandExecutor;
 import me.syldium.thimble.sponge.config.SpongeConfigManager;
 import me.syldium.thimble.sponge.config.SpongeSavedPlayersManager;
 import me.syldium.thimble.sponge.listener.DamageListener;
+import me.syldium.thimble.sponge.listener.ReloadListener;
 import me.syldium.thimble.sponge.listener.RestrictionListener;
 import me.syldium.thimble.sponge.listener.SpongeConnectionListener;
 import me.syldium.thimble.sponge.listener.SpongeMoveListener;
@@ -106,6 +107,7 @@ public class ThSpongePlugin extends ThimblePlugin {
         this.playerAdapter = new SpongePlayerAdapter(this, this.audiences);
 
         new DamageListener(this);
+        new ReloadListener(this);
         new RestrictionListener(this);
         new SpongeConnectionListener(this);
         new SpongeMoveListener(this);

@@ -149,7 +149,10 @@ public class GameServiceImpl implements GameService {
     }
 
     public void save() {
-        ArenaConfig config = this.plugin.getConfigManager().getArenaConfig();
+        this.save(this.plugin.getConfigManager().getArenaConfig());
+    }
+
+    public void save(@NotNull ArenaConfig config) {
         config.save(this.arenas);
         Map<SignAction, Set<BlockPos>> reversed = new HashMap<>();
         for (Map.Entry<BlockPos, SignAction> entry : this.signsToAction.entrySet()) {

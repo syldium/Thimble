@@ -26,4 +26,10 @@ public class BukkitConfigManager extends ConfigManager<ThBukkitPlugin> {
     protected final @NotNull String getFileExtension() {
         return "yml";
     }
+
+    @Override
+    public void reload() {
+        this.plugin.getBootstrap().reloadConfig();
+        super.reload();
+    }
 }

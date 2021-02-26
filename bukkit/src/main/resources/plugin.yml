@@ -51,6 +51,9 @@ permissions:
     description: Allows players to view statistics.
     children:
       thimble.commands.stats.others: true
+  thimble.commands.reload:
+    default: op
+    description: Reload config files.
   thimble.commands.version:
     default: op
     description: Allows to use the /th version command.
