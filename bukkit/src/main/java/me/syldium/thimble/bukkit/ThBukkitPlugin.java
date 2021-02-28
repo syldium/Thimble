@@ -36,6 +36,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -75,6 +77,12 @@ public class ThBukkitPlugin extends ThimblePlugin {
             this.commandExecutor = new PaperCommandExecutor<>(this, command);
         } else {
             this.commandExecutor = new BukkitCommandExecutor(this, command);
+        }
+        List<String> aliases = bootstrap.getConfig().isList("aliases") ?
+                bootstrap.getConfig().getStringList("aliases")
+                : Collections.singletonList("th");
+        for (String alias : aliases) {
+            bootstrap.getServer().getCommandMap().register(alias, bootstrap.getName(), command);
         }
 
         Set<Material> clickable = BukkitUtil.getAllBlocksMatching(this.getLogger(), this.getConfig().getStringList("clickable"));

@@ -93,7 +93,7 @@ public class CommandManager {
 
         CommandResult result;
         try {
-            result = main.execute(plugin, sender, arguments);
+            result = main.execute(plugin, sender, arguments, label);
         } catch (CommandException ex) {
             result = CommandResult.error(ex.getMessageKey());
         }

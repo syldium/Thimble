@@ -39,6 +39,13 @@ public abstract class ChildCommand extends AbstractCommand {
     }
 
     @Override
+    public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args, @NotNull String label) {
+        return this.execute(plugin, sender, args);
+    }
+
+    public abstract @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args);
+
+    @Override
     public @NotNull List<@NotNull String> tabComplete(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args) {
         if (args.size() < 1 || !sender.hasPermission(this.permission.get())) {
             return Collections.emptyList();

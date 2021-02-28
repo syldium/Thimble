@@ -27,7 +27,7 @@ public abstract class AbstractCommand {
 
     }
 
-    public abstract @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args) throws CommandException;
+    public abstract @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args, @NotNull String label);
 
     public abstract @NotNull List<@NotNull String> tabComplete(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args);
 

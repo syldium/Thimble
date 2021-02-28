@@ -28,12 +28,12 @@ public class ParentCommand extends AbstractCommand {
     }
 
     @Override
-    public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args) throws CommandException {
-        if (args.size() > 0 && !args.get(0).equalsIgnoreCase("help")) {
+    public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args, @NotNull String label) {
+        if (!args.isEmpty() && !args.get(0).equalsIgnoreCase("help")) {
             throw new CommandException(MessageKey.FEEDBACK_UNKNOWN_COMMAND);
         }
 
-        sendHelp(sender, "th " + this.getPath(), this.children);
+        sendHelp(sender, label + ' ' + this.getPath(), this.children);
         return CommandResult.success();
     }
 
