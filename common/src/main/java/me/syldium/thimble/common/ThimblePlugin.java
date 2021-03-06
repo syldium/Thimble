@@ -35,12 +35,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class ThimblePlugin {
+
+    private final Executor dbExecutor = Executors.newSingleThreadExecutor(task -> new Thread(task, "Thimble-db"));
 
     private GameServiceImpl gameService;
     private MessageService messageService;
@@ -54,7 +57,7 @@ public abstract class ThimblePlugin {
         }
         this.gameService = new GameServiceImpl(this);
         this.messageService = new MessageServiceImpl(this);
-        this.statsService = this.constructStatsService();
+        this.loadStatsService();
         this.updateChecker = new UpdateChecker(Thimble.pluginVersion(), this.getServerType(), this.getLogger());
         this.gameService.load();
         Thimble.setGameService(this.gameService);
@@ -94,7 +97,11 @@ public abstract class ThimblePlugin {
 
     protected @NotNull StatsServiceImpl constructStatsService() {
         SqlDataService dataService = DataService.fromConfig(this, this.getMainConfig());
-        return new StatsServiceImpl(dataService, Executors.newSingleThreadExecutor(task -> new Thread(task, "Thimble-db")));
+        return new StatsServiceImpl(dataService, this.dbExecutor);
+    }
+
+    public void loadStatsService() {
+        this.statsService = this.constructStatsService();
     }
 
     public abstract @NotNull Logger getLogger();

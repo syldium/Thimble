@@ -19,6 +19,7 @@ public class ReloadCommand extends ChildCommand {
     @Override
     public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<String> args) {
         plugin.getConfigManager().reload();
+        plugin.loadStatsService();
         return CommandResult.success(MessageKey.FEEDBACK_RELOAD);
     }
 }
