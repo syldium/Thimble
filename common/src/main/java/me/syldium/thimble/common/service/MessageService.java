@@ -22,6 +22,11 @@ public interface MessageService {
     @NotNull Component prefix();
 
     /**
+     * Load the language files into memory.
+     */
+    void updateLocale();
+
+    /**
      * Gets the translated string from a {@link MessageKey}, and formats it.
      *
      * @param key The message key.

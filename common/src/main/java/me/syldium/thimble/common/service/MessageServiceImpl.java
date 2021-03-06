@@ -52,6 +52,11 @@ public class MessageServiceImpl implements MessageService {
         this.updateLocale(plugin.getMainConfig().getLocale());
     }
 
+    @Override
+    public void updateLocale() {
+        this.updateLocale(this.plugin.getMainConfig().getLocale());
+    }
+
     public void updateLocale(@NotNull Locale userLocale) {
         ResourceBundle.clearCache();
 

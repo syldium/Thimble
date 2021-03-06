@@ -44,5 +44,6 @@ public abstract class ConfigManager<P extends ThimblePlugin> {
     public void reload() {
         this.plugin.getGameService().save();
         this.load();
+        this.plugin.getMessageService().updateLocale();
     }
 }
