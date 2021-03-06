@@ -59,7 +59,7 @@ Full list in the [plugin.yml](bukkit/src/main/resources/plugin.yml) file
 <dependency>
     <groupId>com.github.syldium</groupId>
     <artifactId>Thimble</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <scope>provided</scope>
 </dependency>
 ```
