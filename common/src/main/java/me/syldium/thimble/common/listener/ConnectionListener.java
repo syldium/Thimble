@@ -28,7 +28,7 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> {
     public final void onJoin(@NotNull UUID playerUniqueId) {
         Optional<ThimblePlayer> inGamePlayerOpt = this.plugin.getGameService().player(playerUniqueId);
         if (inGamePlayerOpt.isPresent()) {
-            ((Game) inGamePlayerOpt.get().getGame()).spectate(inGamePlayerOpt.get(), playerUniqueId);
+            ((Game) inGamePlayerOpt.get().game()).spectate(inGamePlayerOpt.get(), playerUniqueId);
             return;
         }
 

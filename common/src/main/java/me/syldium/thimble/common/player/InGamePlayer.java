@@ -78,7 +78,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
     }
 
     @Override
-    public @NotNull Game getGame() {
+    public @NotNull Game game() {
         return this.game;
     }
 

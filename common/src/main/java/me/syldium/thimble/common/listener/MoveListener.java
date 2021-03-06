@@ -35,9 +35,9 @@ public class MoveListener<P extends ThimblePlugin> {
         ThimblePlayer inGamePlayer = inGamePlayerOpt.get();
         if (inGamePlayer.isVanished() || inGamePlayer.isJumping()) return;
 
-        Location loc = inGamePlayer.getGame().state().isStarted() ?
-                inGamePlayer.getGame().arena().waitLocation()
-                : inGamePlayer.getGame().arena().spawnLocation();
+        Location loc = inGamePlayer.game().state().isStarted() ?
+                inGamePlayer.game().arena().waitLocation()
+                : inGamePlayer.game().arena().spawnLocation();
         if (loc == null) return;
 
         int distanceSquared = (int) loc.horizontalDistanceSquared(to);

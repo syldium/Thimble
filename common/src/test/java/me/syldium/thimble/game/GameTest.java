@@ -115,7 +115,7 @@ public class GameTest {
 
         // The first player fails.
         game.verdict(jumperUniqueId, JumpVerdict.MISSED);
-        assertFalse(game.getAlivePlayers().stream().anyMatch(p -> p.uuid().equals(jumperUniqueId)));
+        assertFalse(game.alivePlayers().stream().anyMatch(p -> p.uuid().equals(jumperUniqueId)));
         this.plugin.getScheduler().nextTick();
         List<UUID> playersWhoJumped = new LinkedList<>();
         playersWhoJumped.add(jumperUniqueId);
@@ -130,7 +130,7 @@ public class GameTest {
 
         // End of the game.
         this.plugin.getScheduler().nextTick();
-        assertEquals(2, game.getAlivePlayers().size());
+        assertEquals(2, game.alivePlayers().size());
         assertEquals(playersWhoJumped.get(1), game.currentJumper());
         game.verdict(playersWhoJumped.get(1), JumpVerdict.MISSED);
         assertEquals(ThimbleState.END, game.state());
@@ -235,7 +235,7 @@ public class GameTest {
         assertEquals(prevJumps + 1, inGamePlayer.jumps(), "The jump counter should be updated.");
         assertEquals(inGamePlayer.getChosenBlock(), this.plugin.getBlockData(pos), "The player's block should be placed.");
         assertFalse(inGamePlayer.isSpectator(), "The player must not be a spectator.");
-        assertTrue(game.getAlivePlayers().stream().anyMatch(p -> p.uuid().equals(jumperUniqueId)), "The player should be in the set of alive players.");
+        assertTrue(game.alivePlayers().stream().anyMatch(p -> p.uuid().equals(jumperUniqueId)), "The player should be in the set of alive players.");
         this.plugin.getScheduler().nextTick();
 
         return jumperUniqueId;

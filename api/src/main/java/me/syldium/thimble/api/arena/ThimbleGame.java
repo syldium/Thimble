@@ -71,7 +71,7 @@ public interface ThimbleGame {
      * @return An immutable set.
      */
     @Contract(pure = true)
-    @NotNull @UnmodifiableView Set<@NotNull ThimblePlayer> getAlivePlayers();
+    @NotNull @UnmodifiableView Set<@NotNull ThimblePlayer> alivePlayers();
 
     /**
      * Gets a set of players.
@@ -81,7 +81,7 @@ public interface ThimbleGame {
      * @return An immutable set.
      */
     @Contract(pure = true)
-    @NotNull @UnmodifiableView Set<@NotNull ThimblePlayer> getPlayers();
+    @NotNull @UnmodifiableView Set<@NotNull ThimblePlayer> players();
 
     /**
      * Adds a player to the game. {@link ThimbleArena#addPlayer(UUID)}
@@ -211,7 +211,7 @@ public interface ThimbleGame {
      * @throws IllegalStateException If the pool dimensions have not been defined.
      */
     @Contract(pure = true)
-    @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks();
+    @NotNull Set<@NotNull BlockVector> remainingWaterBlocks();
 
     /**
      * Returns {@code true} if the pool is full.
@@ -221,6 +221,6 @@ public interface ThimbleGame {
      */
     @Contract(pure = true)
     default boolean isPoolFull() {
-        return this.getRemainingWaterBlocks().size() < 1;
+        return this.remainingWaterBlocks().size() < 1;
     }
 }

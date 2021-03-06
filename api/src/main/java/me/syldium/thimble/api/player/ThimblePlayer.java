@@ -67,5 +67,5 @@ public interface ThimblePlayer extends ThimblePlayerStats {
      * @return The game.
      */
     @Contract(pure = true)
-    @NotNull ThimbleGame getGame();
+    @NotNull ThimbleGame game();
 }

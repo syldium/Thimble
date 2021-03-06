@@ -85,7 +85,7 @@ public final class BlockSelectionInventory implements Listener {
         }
 
         // Changes the player's block
-        if (!player.getGame().state().isNotStarted()) {
+        if (!player.game().state().isNotStarted()) {
             event.getWhoClicked().sendMessage(this.gameStarted);
             return;
         }
@@ -131,13 +131,13 @@ public final class BlockSelectionInventory implements Listener {
         for (BukkitBlockData blockData : wools.subList(start, end)) {
             ItemStack itemStack = blockData.itemStack();
 
-            Set<InGamePlayer> players = inGamePlayer.getGame().getPlayers(blockData);
+            Set<InGamePlayer> players = inGamePlayer.game().getPlayers(blockData);
             String displayName = players.isEmpty() ?
                     null
                     : ChatColor.AQUA + players.stream().map(InGamePlayer::name).collect(Collectors.joining(", "));
 
             BukkitBlockData chosenBlockData = (BukkitBlockData) inGamePlayer.getChosenBlock();
-            if (blockData.equals(chosenBlockData) || !players.isEmpty() && inGamePlayer.getGame().state().isStarted()) {
+            if (blockData.equals(chosenBlockData) || !players.isEmpty() && inGamePlayer.game().state().isStarted()) {
                 // Adds an enchantment glint
                 ItemMeta meta = itemStack.getItemMeta();
                 meta.setDisplayName(displayName);

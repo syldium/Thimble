@@ -77,7 +77,7 @@ public class BlockSelectionInventory {
             ItemStack itemStack = ItemStack.builder().fromBlockState(blockData.getHandle()).build();
             blockData.getHandle().get(Keys.DYE_COLOR).ifPresent(dyeColor -> itemStack.offer(Keys.DYE_COLOR, dyeColor));
 
-            Set<InGamePlayer> players = inGamePlayer.getGame().getPlayers(blockData);
+            Set<InGamePlayer> players = inGamePlayer.game().getPlayers(blockData);
             Text component = players.isEmpty() ?
                     Text.EMPTY
                     : Text.of(TextColors.RESET, TextColors.AQUA, players.stream().map(InGamePlayer::name).collect(Collectors.joining(", ")));
@@ -106,7 +106,7 @@ public class BlockSelectionInventory {
         if (!optional.isPresent()) return;
 
         InGamePlayer inGamePlayer = (InGamePlayer) optional.get();
-        if (!inGamePlayer.getGame().state().isNotStarted()) {
+        if (!inGamePlayer.game().state().isNotStarted()) {
             event.setCancelled(true);
             player.sendMessage(this.gameStarted);
             return;

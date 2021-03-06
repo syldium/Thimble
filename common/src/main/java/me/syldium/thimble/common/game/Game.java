@@ -297,7 +297,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     @Override
-    public @NotNull Set<ThimblePlayer> getAlivePlayers() {
+    public @NotNull Set<ThimblePlayer> alivePlayers() {
         Set<ThimblePlayer> players = new HashSet<>(Math.min(10, this.players.size()));
         for (ThimblePlayer player : this.players) {
             if (player.points() > 0 && !player.isSpectator() && !player.isVanished()) {
@@ -308,7 +308,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     @Override
-    public @NotNull Set<ThimblePlayer> getPlayers() {
+    public @NotNull Set<ThimblePlayer> players() {
         return Collections.unmodifiableSet(this.players.playerSet());
     }
 
@@ -439,7 +439,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     @Override
-    public @NotNull Set<BlockVector> getRemainingWaterBlocks() {
+    public @NotNull Set<BlockVector> remainingWaterBlocks() {
         if (this.arena.poolMinPoint() == null || this.arena.poolMaxPoint() == null) {
             throw new IllegalStateException("The pool dimensions have not been defined.");
         }
