@@ -84,6 +84,7 @@ public class ThBukkitPlugin extends ThimblePlugin {
         for (String alias : aliases) {
             bootstrap.getServer().getCommandMap().register(alias, bootstrap.getName(), command);
         }
+        command.getAliases().addAll(aliases);
 
         Set<Material> clickable = BukkitUtil.getAllBlocksMatching(this.getLogger(), this.getConfig().getStringList("clickable"));
         new DamageListener(this);
