@@ -73,18 +73,14 @@ public class ThBukkitPlugin extends ThimblePlugin {
         servicesManager.register(StatsService.class, this.getStatsService(), bootstrap, ServicePriority.High);
 
         PluginCommand command = Objects.requireNonNull(bootstrap.getCommand("thimble"), "Command not registered");
-        if (classExists("com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent")) {
-            this.commandExecutor = new PaperCommandExecutor<>(this, command);
-        } else {
-            this.commandExecutor = new BukkitCommandExecutor(this, command);
-        }
         List<String> aliases = bootstrap.getConfig().isList("aliases") ?
                 bootstrap.getConfig().getStringList("aliases")
                 : Collections.singletonList("th");
-        for (String alias : aliases) {
-            bootstrap.getServer().getCommandMap().register(alias, bootstrap.getName(), command);
+        if (classExists("com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent")) {
+            this.commandExecutor = new PaperCommandExecutor<>(this, command, aliases);
+        } else {
+            this.commandExecutor = new BukkitCommandExecutor(this, command, aliases);
         }
-        command.getAliases().addAll(aliases);
 
         Set<Material> clickable = BukkitUtil.getAllBlocksMatching(this.getLogger(), this.getConfig().getStringList("clickable"));
         new DamageListener(this);

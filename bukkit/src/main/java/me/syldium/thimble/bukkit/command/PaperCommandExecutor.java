@@ -23,8 +23,8 @@ public class PaperCommandExecutor<S extends BukkitBrigadierCommandSource> extend
     private final CommandMap commandMap;
     private LiteralCommandNode<S> node;
 
-    public PaperCommandExecutor(@NotNull ThBukkitPlugin plugin, @NotNull PluginCommand command) {
-        super(plugin, command);
+    public PaperCommandExecutor(@NotNull ThBukkitPlugin plugin, @NotNull PluginCommand command, @NotNull List<@NotNull String> aliases) {
+        super(plugin, command, aliases);
         this.brigadierMapper = new BrigadierMapper<>(this, (cmd, sender) -> sender.getBukkitSender().hasPermission(cmd.getPermission()));
         this.commandMap = plugin.getBootstrap().getServer().getCommandMap();
         plugin.registerEvents(this);
@@ -52,6 +52,7 @@ public class PaperCommandExecutor<S extends BukkitBrigadierCommandSource> extend
 
     @EventHandler @SuppressWarnings("deprecation")
     public void onCommandRegister(CommandRegisteredEvent<S> event) {
+        System.out.println(event.getCommandLabel() + "(" + this.pluginCommand.getAliases() + ")");
         if (event.getCommandLabel().equals(this.pluginCommand.getLabel())) {
             this.node = this.brigadierMapper.build(event.getLiteral(), event.getBrigadierCommand());
             event.setLiteral(this.node);
