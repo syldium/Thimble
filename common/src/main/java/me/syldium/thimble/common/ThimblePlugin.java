@@ -101,6 +101,9 @@ public abstract class ThimblePlugin {
     }
 
     public void loadStatsService() {
+        if (this.statsService != null) {
+            this.statsService.close();
+        }
         this.statsService = this.constructStatsService();
     }
 
