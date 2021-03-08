@@ -223,4 +223,22 @@ public interface ThimbleGame {
     default boolean isPoolFull() {
         return this.remainingWaterBlocks().size() < 1;
     }
+
+    /**
+     * Returns if the player's inventory should be cleared when joining the game.
+     *
+     * @return {@code true} if the inventory should be cleared.
+     * @since 1.0.2
+     */
+    @Contract(pure = true)
+    boolean shouldClearInventory();
+
+    /**
+     * Returns if players become spectators when they lose.
+     *
+     * @return {@code true} if the spectator mode is active.
+     * @since 1.0.2
+     */
+    @Contract(pure = true)
+    boolean hasSpectatorMode();
 }

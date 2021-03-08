@@ -65,9 +65,11 @@ public class SpongePlayer extends AbstractPlayer<Player> {
     }
 
     @Override
-    public void setMiniGameMode() {
+    public void setMiniGameMode(boolean clearInventory) {
+        if (clearInventory) {
+            this.handle.getInventory().clear();
+        }
         this.handle.offer(Keys.GAME_MODE, GameModes.ADVENTURE);
-        //this.handle.getInventory().clear();
     }
 
     @Override

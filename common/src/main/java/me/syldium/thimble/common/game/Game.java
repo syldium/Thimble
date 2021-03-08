@@ -61,7 +61,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     protected int timer, messageTimer;
     protected final int countdownTicks;
     protected final int fireworksThimble, fireworksEnd;
-    protected final boolean ignoreStatsIfSolo, spectatorMode, teleportSpawnAtEnd;
+    protected final boolean clearInventory, ignoreStatsIfSolo, spectatorMode, teleportSpawnAtEnd;
 
     public Game(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
         MainConfig config = plugin.getMainConfig();
@@ -74,6 +74,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.jumperMedia = TimedMedia.from(plugin.getMainConfig(), "jump");
 
         this.countdownTicks = this.timer;
+        this.clearInventory = config.getGameNode().getBool("clear-inventory", true);
         this.fireworksThimble = config.getGameNode().getInt("fireworks-thimble", 1);
         this.fireworksEnd = config.getGameNode().getInt("fireworks-end", 4);
         this.ignoreStatsIfSolo = config.getGameNode().getBool("ignore-stats-if-solo", true);
@@ -383,7 +384,7 @@ public abstract class Game implements ThimbleGame, Runnable {
 
             if (!player.isVanished()) {
                 this.plugin.getSavedPlayersManager().save(player);
-                player.setMiniGameMode();
+                player.setMiniGameMode(this.clearInventory);
             }
             if (this.players.realSize() > 1) {
                 player.teleport(this.arena.spawnLocation());
@@ -447,6 +448,16 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.searchRemainingBlocks();
         }
         return this.remainingWaterBlocks;
+    }
+
+    @Override
+    public boolean shouldClearInventory() {
+        return this.clearInventory;
+    }
+
+    @Override
+    public boolean hasSpectatorMode() {
+        return this.spectatorMode;
     }
 
     public void spectate(@NotNull ThimblePlayer inGamePlayer, @NotNull UUID playerUniqueId) {

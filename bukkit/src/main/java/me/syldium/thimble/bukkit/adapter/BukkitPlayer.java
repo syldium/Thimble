@@ -89,11 +89,13 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     }
 
     @Override
-    public void setMiniGameMode() {
-        this.handle.getInventory().clear();
+    public void setMiniGameMode(boolean clearInventory) {
+        if (clearInventory) {
+            this.handle.setHealth(20D);
+            this.handle.setFoodLevel(20);
+            this.handle.getInventory().clear();
+        }
         this.handle.setGameMode(GameMode.ADVENTURE);
-        this.handle.setHealth(20D);
-        this.handle.setFoodLevel(20);
     }
 
     @Override

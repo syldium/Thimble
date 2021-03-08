@@ -52,8 +52,10 @@ public interface Player extends PlayerAudience, Identified, Identity, Sender {
 
     /**
      * Clears the inventory, sets the game mode to adventure...
+     *
+     * @param clearInventory If the inventory should be cleared.
      */
-    void setMiniGameMode();
+    void setMiniGameMode(boolean clearInventory);
 
     /**
      * Puts the player in spectator mode.

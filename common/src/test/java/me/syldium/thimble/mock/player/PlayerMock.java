@@ -96,9 +96,9 @@ public class PlayerMock implements Player {
     }
 
     @Override
-    public void setMiniGameMode() {
+    public void setMiniGameMode(boolean clearInventory) {
         this.spectator = false;
-        this.clearedInventory = true;
+        this.clearedInventory = clearInventory;
     }
 
     @Override

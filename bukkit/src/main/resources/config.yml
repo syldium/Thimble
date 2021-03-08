@@ -25,6 +25,10 @@ integrations:
  - WorldEdit
 
 game:
+  # If the player's inventory should be cleared when joining the arena.
+  # You might need to disable this if you have an inventory plugin - the inventory is restored at the end of the game.
+  clear-inventory: true
+
   # If players lose points in concurrent mode when the jump is failed.
   count-fails-concurrent: false
 
