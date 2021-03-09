@@ -52,7 +52,6 @@ public class PaperCommandExecutor<S extends BukkitBrigadierCommandSource> extend
 
     @EventHandler @SuppressWarnings("deprecation")
     public void onCommandRegister(CommandRegisteredEvent<S> event) {
-        System.out.println(event.getCommandLabel() + "(" + this.pluginCommand.getAliases() + ")");
         if (event.getCommandLabel().equals(this.pluginCommand.getLabel())) {
             this.node = this.brigadierMapper.build(event.getLiteral(), event.getBrigadierCommand());
             event.setLiteral(this.node);
