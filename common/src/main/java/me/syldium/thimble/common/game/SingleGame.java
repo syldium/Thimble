@@ -122,7 +122,9 @@ public class SingleGame extends Game implements ThimbleSingleGame {
         this.jumper = null;
         if (inGamePlayer.isSpectator()) {
             this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, Template.of("player", inGamePlayer.name()));
-            if (this.queue.size() < 2) {
+            if (this.queue.size() == 1) {
+                this.end(this.players.get(this.queue.poll()));
+            } else if (this.queue.isEmpty()) {
                 this.end(inGamePlayer);
             }
         } else {
