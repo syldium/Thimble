@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -90,6 +91,7 @@ public class ThBukkitPlugin extends ThimblePlugin {
         new BukkitConnectionListener(this);
         new BukkitMoveListener(this);
         this.hooks = new PluginHook(this, bootstrap);
+        this.getMessageService().setExternalPlaceholderService(this.hooks);
     }
 
     @Override
@@ -131,6 +133,12 @@ public class ThBukkitPlugin extends ThimblePlugin {
     @Override
     public @NotNull BukkitCommandExecutor getCommandManager() {
         return this.commandExecutor;
+    }
+
+    @Override
+    public @NotNull String getPlayerName(@NotNull UUID uuid) {
+        String name = this.bootstrap.getServer().getOfflinePlayer(uuid).getName();
+        return name == null ? uuid.toString() : name;
     }
 
     public void sendFeedback(@NotNull org.bukkit.entity.Player bukkitPlayer, @NotNull CommandResult result) {

@@ -12,6 +12,7 @@ import me.syldium.thimble.common.adapter.BlockBalancer;
 import me.syldium.thimble.common.config.MainConfig;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
+import me.syldium.thimble.common.player.Placeholder;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.player.media.TimedMedia;
 import me.syldium.thimble.common.util.PlayerMap;
@@ -105,6 +106,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                         if (this.remainingWaterBlocks == null) {
                             this.searchRemainingBlocks();
                         }
+                        this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.JUMPER, Placeholder.STATE);
                     }
                 }
                 return;
@@ -202,6 +204,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.plugin.getEventAdapter().callGameEndEvent(this, latest);
         this.state = ThimbleState.END;
         this.jumperMedia.hide(this.players);
+        this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.STATE);
         Location fireworksLocation = this.getFireworkLocation(latest == null ? null : this.plugin.getPlayer(latest.uuid()));
         if (fireworksLocation != null) {
             this.plugin.spawnFireworks(fireworksLocation).spawn(this.fireworksEnd);
@@ -255,6 +258,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             } else {
                 this.plugin.getSavedPlayersManager().getPending().add(player.uuid());
             }
+            this.plugin.getScoreboardService().hideScoreboard(player, p);
         }
 
         this.players.sendActionBar(MessageKey.ACTIONBAR_ENDED);
@@ -391,6 +395,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             } else {
                 player.teleportAsync(this.arena.spawnLocation());
             }
+            this.plugin.getScoreboardService().showScoreboard(inGamePlayer, player);
             if (this.remainingWaterBlocks == null && this.players.size() >= this.arena.minPlayers()) {
                 this.searchRemainingBlocks();
             }
@@ -415,6 +420,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                 p.teleport(this.arena.spawnLocation());
             }
         }
+        this.plugin.getScoreboardService().hideScoreboard(inGamePlayer, p);
         this.arena.checkGame();
         return true;
     }

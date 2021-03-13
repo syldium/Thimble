@@ -28,6 +28,10 @@ public abstract class ConfigManager<P extends ThimblePlugin> {
         return new ArenaConfig(this.plugin, this.getConfig("arenas"));
     }
 
+    public @NotNull ConfigFile getScoreboardConfig() {
+        return this.getConfig("scoreboard");
+    }
+
     public @NotNull MainConfig getMainConfig() {
         return this.config;
     }

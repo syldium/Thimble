@@ -44,11 +44,13 @@ public class MessageServiceImpl implements MessageService {
     private final ThimblePlugin plugin;
     private ResourceBundle localeBundle;
     private ResourceBundle customBundle;
+    private PlaceholderService placeholders;
     private Component prefix;
 
     public MessageServiceImpl(@NotNull ThimblePlugin plugin) {
         this.defaultBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, Locale.ENGLISH, new UTF8PropertiesControl());
         this.plugin = plugin;
+        this.placeholders = PlaceholderService.EMPTY;
         this.updateLocale(plugin.getMainConfig().getLocale());
     }
 
@@ -88,6 +90,11 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public @NotNull String get(@NotNull MessageKey key) {
         return this.translate(key.getAccessor());
+    }
+
+    @Override
+    public void setExternalPlaceholderService(@NotNull PlaceholderService service) {
+        this.placeholders = service;
     }
 
     private @NotNull String translate(@NotNull String string) {

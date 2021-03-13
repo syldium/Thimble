@@ -1,6 +1,9 @@
 package me.syldium.thimble.sponge;
 
 import com.google.inject.Inject;
+
+import java.util.Optional;
+import java.util.UUID;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
@@ -36,6 +39,8 @@ import org.spongepowered.api.GameRegistry;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
@@ -43,6 +48,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 import org.spongepowered.api.service.ServiceManager;
+import org.spongepowered.api.service.user.UserStorageService;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +56,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static me.syldium.thimble.common.util.MinecraftVersion.setVersion;
@@ -86,6 +93,8 @@ public class ThSpongePlugin extends ThimblePlugin {
 
     private SpongeCommandExecutor commandManager;
 
+    private Function<UUID, Optional<String>> playerNameFunction;
+
     @Listener
     public void onEnable(GameInitializationEvent event) throws IOException {
         this.saveDefaultConfig();
@@ -106,6 +115,14 @@ public class ThSpongePlugin extends ThimblePlugin {
         this.eventAdapter = new SpongeEventAdapter(this.container);
         this.playerAdapter = new SpongePlayerAdapter(this, this.audiences);
 
+        Optional<UserStorageService> userServiceOpt = this.game.getServiceManager().provide(UserStorageService.class);
+        // noinspection OptionalIsPresent
+        if (userServiceOpt.isPresent()) {
+            this.playerNameFunction = (uuid) -> userServiceOpt.get().get(uuid).map(User::getName);
+        } else {
+            this.playerNameFunction = (uuid) -> this.game.getServer().getPlayer(uuid).map(Player::getName);
+        }
+
         new DamageListener(this);
         new ReloadListener(this);
         new RestrictionListener(this);
@@ -118,6 +135,11 @@ public class ThSpongePlugin extends ThimblePlugin {
                     .execute(this.getUpdateChecker())
                     .submit(this);
         }
+    }
+
+    @Override
+    public @NotNull String getPlayerName(@NotNull UUID uuid) {
+        return this.playerNameFunction.apply(uuid).orElse("invalid-player");
     }
 
     @Listener

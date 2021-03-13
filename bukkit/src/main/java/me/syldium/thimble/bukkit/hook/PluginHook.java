@@ -5,6 +5,8 @@ import me.syldium.thimble.bukkit.ThBootstrap;
 import me.syldium.thimble.common.command.arena.ArenaCommand;
 import me.syldium.thimble.common.command.migrate.MigrateCommand;
 import me.syldium.thimble.common.config.MainConfig;
+import me.syldium.thimble.common.player.Player;
+import me.syldium.thimble.common.service.PlaceholderService;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,11 +19,12 @@ import java.util.List;
  *
  * <p>The hooks are implemented in the {@code :bukkit:integration} submodule.</p>
  */
-public final class PluginHook {
+public final class PluginHook implements PlaceholderService {
 
     private final ThBukkitPlugin plugin;
     private final ThBootstrap bootstrap;
     private final List<String> integrations;
+    private PlaceholderService placeholders = PlaceholderService.EMPTY;
 
     public PluginHook(@NotNull ThBukkitPlugin plugin, @NotNull ThBootstrap bootstrap) {
         this.plugin = plugin;
@@ -33,7 +36,7 @@ public final class PluginHook {
             new LuckPermsContext(bootstrap.getServer().getServicesManager(), plugin.getGameService());
         }
         if (this.isEnabled("PlaceholderAPI")) {
-            new ThimbleExpansion(plugin.getStatsService());
+            new ThimbleExpansion(plugin.getStatsService(), this::setPlaceholderService);
         }
         if (this.isEnabled("Parties")) {
             new PartiesArenaListener(bootstrap);
@@ -49,6 +52,11 @@ public final class PluginHook {
         }
     }
 
+    @Override
+    public @NotNull String setPlaceholders(@NotNull Player player, @NotNull String text) {
+        return this.placeholders.setPlaceholders(player, text);
+    }
+
     private boolean isEnabled(@NotNull String pluginName) {
         if (!this.integrations.contains(pluginName)) {
             return false;
@@ -60,5 +68,9 @@ public final class PluginHook {
 
     private @Nullable Plugin getPlugin(@NotNull String pluginName) {
         return this.bootstrap.getServer().getPluginManager().getPlugin(pluginName);
+    }
+
+    private void setPlaceholderService(@NotNull PlaceholderService service) {
+        this.placeholders = service;
     }
 }

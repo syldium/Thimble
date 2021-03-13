@@ -6,6 +6,7 @@ import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
+import me.syldium.thimble.common.player.Placeholder;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.world.PoolBlock;
 import net.kyori.adventure.text.minimessage.Template;
@@ -117,7 +118,9 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             } else {
                 player.teleport(this.arena.waitLocation());
             }
+            this.plugin.getScoreboardService().updateScoreboard(inGamePlayer, Placeholder.JUMPS, Placeholder.POINTS);
         }
+        this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.JUMPER);
 
         this.jumper = null;
         if (inGamePlayer.isSpectator()) {
@@ -128,6 +131,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
                 this.end(inGamePlayer);
             }
         } else {
+            this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.JUMPER);
             this.queue.offer(inGamePlayer.uuid());
         }
     }

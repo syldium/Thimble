@@ -5,12 +5,14 @@ import me.syldium.thimble.api.Location;
 import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
+import me.syldium.thimble.common.player.media.Scoreboard;
 import me.syldium.thimble.mock.util.BlockDataMock;
 import me.syldium.thimble.mock.util.BlockMock;
 import me.syldium.thimble.mock.util.MockUtil;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -132,5 +134,15 @@ public class PlayerMock implements Player {
     @Override
     public @NotNull UUID uuid() {
         return this.uniqueId;
+    }
+
+    @Override
+    public void setScoreboard(@Nullable Scoreboard scoreboard) {
+
+    }
+
+    @Override
+    public void hideScoreboard(@NotNull Scoreboard scoreboard) {
+
     }
 }

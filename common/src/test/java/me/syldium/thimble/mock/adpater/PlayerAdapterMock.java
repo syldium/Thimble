@@ -2,6 +2,7 @@ package me.syldium.thimble.mock.adpater;
 
 import me.syldium.thimble.PluginMock;
 import me.syldium.thimble.api.util.WorldKey;
+import me.syldium.thimble.common.player.media.Scoreboard;
 import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.mock.player.PlayerMock;
 import me.syldium.thimble.mock.util.BlockDataMock;
@@ -89,6 +90,16 @@ public class PlayerAdapterMock implements PlayerAdapter<PlayerMock, Location> {
 
     @Override
     public void openBlockSelectionInventory(@NotNull PlayerMock player, @NotNull InGamePlayer inGamePlayer) {
+
+    }
+
+    @Override
+    public void setScoreboard(@Nullable Scoreboard scoreboard, @NotNull Player player) {
+
+    }
+
+    @Override
+    public void hideScoreboard(@NotNull Scoreboard scoreboard, @NotNull Player player) {
 
     }
 

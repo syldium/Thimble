@@ -64,4 +64,6 @@ public interface MessageService {
     @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Template... templates);
 
     @NotNull String get(@NotNull MessageKey key);
+
+    void setExternalPlaceholderService(@NotNull PlaceholderService service);
 }

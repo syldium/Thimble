@@ -7,6 +7,7 @@ import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.player.InGamePlayer;
+import me.syldium.thimble.common.player.media.Scoreboard;
 import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.PoolBlock;
 import me.syldium.thimble.sponge.ThSpongePlugin;
@@ -156,6 +157,16 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     @Override
     public void openBlockSelectionInventory(@NotNull Player player, @NotNull InGamePlayer inGamePlayer) {
         this.inventory.open(player, inGamePlayer);
+    }
+
+    @Override
+    public void setScoreboard(@Nullable Scoreboard scoreboard, me.syldium.thimble.common.player.@NotNull Player player) {
+
+    }
+
+    @Override
+    public void hideScoreboard(@NotNull Scoreboard scoreboard, me.syldium.thimble.common.player.@NotNull Player player) {
+
     }
 
     public me.syldium.thimble.api.@NotNull Location asAbstractLocation(@NotNull Location<World> location, @NotNull Vector3d headRotation) {

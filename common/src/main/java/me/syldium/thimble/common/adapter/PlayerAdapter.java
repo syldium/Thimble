@@ -6,6 +6,7 @@ import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.common.player.AbstractPlayer;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.Player;
+import me.syldium.thimble.common.player.media.Scoreboard;
 import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.PoolBlock;
 import org.jetbrains.annotations.NotNull;
@@ -55,4 +56,8 @@ public interface PlayerAdapter<P, L> {
     }
 
     void openBlockSelectionInventory(@NotNull P player, @NotNull InGamePlayer inGamePlayer);
+
+    void setScoreboard(@Nullable Scoreboard scoreboard, @NotNull Player player);
+
+    void hideScoreboard(@NotNull Scoreboard scoreboard, @NotNull Player player);
 }

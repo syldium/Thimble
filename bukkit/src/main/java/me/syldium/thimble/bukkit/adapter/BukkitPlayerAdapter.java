@@ -8,10 +8,12 @@ import me.syldium.thimble.bukkit.ThBootstrap;
 import me.syldium.thimble.bukkit.command.BukkitSender;
 import me.syldium.thimble.bukkit.util.BlockSelectionInventory;
 import me.syldium.thimble.bukkit.util.BukkitUtil;
+import me.syldium.thimble.bukkit.util.CraftBukkitFacet;
 import me.syldium.thimble.bukkit.world.BukkitBlockData;
 import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.player.InGamePlayer;
+import me.syldium.thimble.common.player.media.Scoreboard;
 import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.PoolBlock;
 import me.syldium.thimble.bukkit.world.BukkitPoolBlock;
@@ -49,6 +51,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     private final List<BukkitBlockData> blockDatas;
     private final BlockSelectionInventory inventory;
     private final BukkitAdapter locationAdapter;
+    private final CraftBukkitFacet facet = new CraftBukkitFacet();
 
     public BukkitPlayerAdapter(@NotNull ThBukkitPlugin plugin, @NotNull ThBootstrap bootstrap, @NotNull BukkitAudiences audiences) {
         this.bootstrap = bootstrap;
@@ -175,8 +178,18 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     }
 
     @Override
-    public void openBlockSelectionInventory(@NotNull org.bukkit.entity.Player player, @NotNull InGamePlayer inGamePlayer) {
+    public void openBlockSelectionInventory(@NotNull Player player, @NotNull InGamePlayer inGamePlayer) {
         this.inventory.open(player, inGamePlayer);
+    }
+
+    @Override
+    public void setScoreboard(@NotNull Scoreboard scoreboard, me.syldium.thimble.common.player.@NotNull Player player) {
+        this.facet.setScoreboard(this.asPlatform(player), scoreboard);
+    }
+
+    @Override
+    public void hideScoreboard(@NotNull Scoreboard scoreboard, me.syldium.thimble.common.player.@NotNull Player player) {
+        this.facet.removeScoreboard(scoreboard);
     }
 
     public @NotNull Sender asAbstractSender(@NotNull CommandSender sender) {

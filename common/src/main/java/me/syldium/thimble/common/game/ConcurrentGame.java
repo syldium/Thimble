@@ -6,6 +6,7 @@ import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
+import me.syldium.thimble.common.player.Placeholder;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.world.PoolBlock;
 import net.kyori.adventure.text.minimessage.Template;
@@ -110,6 +111,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             } else {
                 player.teleport(this.arena.jumpLocation());
             }
+            this.plugin.getScoreboardService().updateScoreboard(inGamePlayer, Placeholder.JUMPS, Placeholder.POINTS);
         }
     }
 

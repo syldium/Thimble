@@ -1,10 +1,14 @@
 package me.syldium.thimble.bukkit.hook;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.syldium.thimble.api.Ranking;
 import me.syldium.thimble.api.util.RankingPosition;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
 import me.syldium.thimble.api.service.StatsService;
+import me.syldium.thimble.common.player.AbstractPlayer;
+import me.syldium.thimble.common.player.Player;
+import me.syldium.thimble.common.service.PlaceholderService;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /**
@@ -19,14 +24,14 @@ import java.util.regex.Pattern;
  *
  * <p>Registers placeholders for the leaderboard, see the README.</p>
  */
-class ThimbleExpansion extends PlaceholderExpansion {
+class ThimbleExpansion extends PlaceholderExpansion implements PlaceholderService {
 
     private static final Pattern DELIMITER = Pattern.compile("_");
 
     private final StatsService service;
     private final List<String> placeholders;
 
-    ThimbleExpansion(@NotNull StatsService service) {
+    ThimbleExpansion(@NotNull StatsService service, @NotNull Consumer<@NotNull PlaceholderService> consumer) {
         this.service = service;
         this.register();
         this.placeholders = new ArrayList<>(Ranking.values().length * 2);
@@ -35,6 +40,7 @@ class ThimbleExpansion extends PlaceholderExpansion {
             this.placeholders.add(placeholder);
             this.placeholders.add(placeholder + "_name");
         }
+        consumer.accept(this);
     }
 
     @Override
@@ -100,5 +106,10 @@ class ThimbleExpansion extends PlaceholderExpansion {
     @Override
     public @NotNull String getVersion() {
         return "1.0.0";
+    }
+
+    @SuppressWarnings("unchecked")
+    public @NotNull String setPlaceholders(@NotNull Player player, @NotNull String text) {
+        return PlaceholderAPI.setPlaceholders(((AbstractPlayer<org.bukkit.entity.Player>) player).getHandle(), text);
     }
 }

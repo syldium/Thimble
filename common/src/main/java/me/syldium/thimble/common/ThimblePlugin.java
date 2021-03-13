@@ -5,6 +5,8 @@ import me.syldium.thimble.api.Thimble;
 import me.syldium.thimble.common.dependency.Dependency;
 import me.syldium.thimble.common.dependency.DependencyInjection;
 import me.syldium.thimble.common.dependency.DependencyResolver;
+import me.syldium.thimble.common.service.ScoreboardService;
+import me.syldium.thimble.common.service.ScoreboardServiceImpl;
 import me.syldium.thimble.common.service.SqlDataService;
 import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.common.adapter.EventAdapter;
@@ -47,6 +49,7 @@ public abstract class ThimblePlugin {
 
     private GameServiceImpl gameService;
     private MessageService messageService;
+    private ScoreboardService scoreboardService;
     private StatsServiceImpl statsService;
     private UpdateChecker updateChecker;
 
@@ -57,7 +60,7 @@ public abstract class ThimblePlugin {
         }
         this.gameService = new GameServiceImpl(this);
         this.messageService = new MessageServiceImpl(this);
-        this.loadStatsService();
+        this.loadServices();
         this.updateChecker = new UpdateChecker(Thimble.pluginVersion(), this.getServerType(), this.getLogger());
         this.gameService.load();
         Thimble.setGameService(this.gameService);
@@ -95,16 +98,21 @@ public abstract class ThimblePlugin {
         }
     }
 
+    protected @NotNull ScoreboardService constructScoreboardService() {
+        return new ScoreboardServiceImpl(this, this.getConfigManager().getScoreboardConfig());
+    }
+
     protected @NotNull StatsServiceImpl constructStatsService() {
         SqlDataService dataService = DataService.fromConfig(this, this.getMainConfig());
         return new StatsServiceImpl(dataService, this.dbExecutor);
     }
 
-    public void loadStatsService() {
+    public void loadServices() {
         if (this.statsService != null) {
             this.statsService.close();
         }
         this.statsService = this.constructStatsService();
+        this.scoreboardService = this.constructScoreboardService();
     }
 
     public abstract @NotNull Logger getLogger();
@@ -129,6 +137,10 @@ public abstract class ThimblePlugin {
         return this.messageService;
     }
 
+    public @NotNull ScoreboardService getScoreboardService() {
+        return this.scoreboardService;
+    }
+
     public @NotNull StatsServiceImpl getStatsService() {
         return this.statsService;
     }
@@ -136,6 +148,8 @@ public abstract class ThimblePlugin {
     public @Nullable Player getPlayer(@NotNull UUID uuid) {
         return this.getPlayerAdapter().getPlayer(uuid);
     }
+
+    public abstract @NotNull String getPlayerName(@NotNull UUID uuid);
 
     public abstract @NotNull EventAdapter<?> getEventAdapter();
 
