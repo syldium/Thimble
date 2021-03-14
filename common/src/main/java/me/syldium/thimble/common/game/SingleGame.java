@@ -67,6 +67,8 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             } else {
                 player.teleport(this.arena.jumpLocation());
             }
+
+            this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.JUMPER, Placeholder.NEXT_JUMPER);
             return;
         }
 
@@ -120,7 +122,6 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             }
             this.plugin.getScoreboardService().updateScoreboard(inGamePlayer, Placeholder.JUMPS, Placeholder.POINTS);
         }
-        this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.JUMPER);
 
         this.jumper = null;
         if (inGamePlayer.isSpectator()) {
@@ -131,7 +132,6 @@ public class SingleGame extends Game implements ThimbleSingleGame {
                 this.end(inGamePlayer);
             }
         } else {
-            this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.JUMPER);
             this.queue.offer(inGamePlayer.uuid());
         }
     }
@@ -144,6 +144,11 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     @Override
     public @Nullable UUID peekNextJumper() {
         return this.queue.peek();
+    }
+
+    @Override
+    public @NotNull Queue<@NotNull UUID> jumperQueue() {
+        return this.queue;
     }
 
     @Override

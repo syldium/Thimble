@@ -3,6 +3,7 @@ package me.syldium.thimble.common.player;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.util.PlaceholderUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.UUID;
@@ -12,6 +13,7 @@ public enum Placeholder {
 
     ARENA(player -> player.game().arena().name()),
     JUMPER(PlaceholderUtil::currentJumper),
+    NEXT_JUMPER(PlaceholderUtil::nextJumper),
     JUMPS(ThimblePlayer::jumpsForGame),
     POINTS(ThimblePlayer::points),
     STATE(player -> player.game().state());
@@ -43,6 +45,6 @@ public enum Placeholder {
     @FunctionalInterface
     interface ValueReplacer {
 
-        @NotNull Object apply(@NotNull ThimblePlayer player, int usageIndex);
+        @Nullable Object apply(@NotNull ThimblePlayer player, int usageIndex);
     }
 }

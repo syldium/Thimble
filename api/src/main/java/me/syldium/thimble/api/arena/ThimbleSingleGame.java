@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Queue;
 import java.util.UUID;
 
 /**
@@ -41,4 +42,12 @@ public interface ThimbleSingleGame extends ThimbleGame {
      */
     @Contract(pure = true)
     @Nullable UUID peekNextJumper();
+
+    /**
+     * Returns the queue of the next players who will jump.
+     *
+     * @return The jumper queue.
+     * @since 1.1.0
+     */
+    @NotNull Queue<@NotNull UUID> jumperQueue();
 }
