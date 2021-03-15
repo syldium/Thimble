@@ -252,7 +252,7 @@ public class CraftBukkitFacet {
                 Object packet = NEW_TEAM_PACKET.invoke();
 
                 setField(packet, String.class, this.id + ':' + score); // Team name
-                setField(packet, int.class, mode.ordinal(), 0); // Update mode
+                setField(packet, int.class, mode.ordinal(), 1); // Update mode
 
                 if (mode == TeamMode.CREATE || mode == TeamMode.UPDATE) {
                     String legacy = legacy().serialize(line);
