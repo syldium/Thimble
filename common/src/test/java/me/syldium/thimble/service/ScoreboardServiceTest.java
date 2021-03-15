@@ -20,7 +20,7 @@ public class ScoreboardServiceTest {
     @Test
     public void render() {
         List<String> lines = List.of("Points: <points>", "<points>");
-        ScoreboardService service = new ScoreboardServiceImpl(UUID::toString, "Thimble", lines);
+        ScoreboardService service = new ScoreboardServiceImpl(UUID::toString, "Thimble", lines, null);
 
         InGamePlayer player = new InGamePlayer(UUID.randomUUID(), "playerName", null, null);
         assertComponentsEquals(List.of("Points: " + player.points(), String.valueOf(player.points())), service.render(player));
@@ -32,7 +32,7 @@ public class ScoreboardServiceTest {
     @Test
     public void noPlaceholder() {
         List<String> lines = List.of("Stuff to read");
-        ScoreboardService service = new ScoreboardServiceImpl(UUID::toString, "Thimble", lines);
+        ScoreboardService service = new ScoreboardServiceImpl(UUID::toString, "Thimble", lines, null);
         assertComponentsEquals(List.of("Stuff to read"), service.render(null));
     }
 

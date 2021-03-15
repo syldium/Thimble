@@ -118,9 +118,9 @@ public class ThSpongePlugin extends ThimblePlugin {
         Optional<UserStorageService> userServiceOpt = this.game.getServiceManager().provide(UserStorageService.class);
         // noinspection OptionalIsPresent
         if (userServiceOpt.isPresent()) {
-            this.playerNameFunction = (uuid) -> userServiceOpt.get().get(uuid).map(User::getName);
+            this.playerNameFunction = uuid -> userServiceOpt.get().get(uuid).map(User::getName);
         } else {
-            this.playerNameFunction = (uuid) -> this.game.getServer().getPlayer(uuid).map(Player::getName);
+            this.playerNameFunction = uuid -> this.game.getServer().getPlayer(uuid).map(Player::getName);
         }
 
         new DamageListener(this);

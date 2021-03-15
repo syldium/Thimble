@@ -3,6 +3,7 @@ package me.syldium.thimble.common.service;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.config.ConfigFile;
+import me.syldium.thimble.common.config.ConfigNode;
 import me.syldium.thimble.common.player.Placeholder;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.player.media.Scoreboard;
@@ -25,17 +26,26 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
+import static net.kyori.adventure.text.minimessage.Tokens.TAG_END;
+import static net.kyori.adventure.text.minimessage.Tokens.TAG_START;
+
 public class ScoreboardServiceImpl implements ScoreboardService {
 
     private final List<Set<Placeholder>> indexes;
     private final Map<Placeholder, List<Integer>> placeholders;
+    private final Map<Placeholder, Component> emptyTexts;
     private final Map<UUID, Scoreboard> scoreboards;
     private final Function<UUID, String> uuidToString;
     private final Component title;
     private final List<String> lines;
 
     @VisibleForTesting
-    public ScoreboardServiceImpl(@NotNull Function<UUID, String> uuidToString, @NotNull String title, @NotNull List<@NotNull String> lines) {
+    public ScoreboardServiceImpl(
+            @NotNull Function<UUID, String> uuidToString,
+            @NotNull String title,
+            @NotNull List<@NotNull String> lines,
+            @Nullable ConfigNode emptyTexts
+    ) {
         this.uuidToString = uuidToString;
         this.title = MiniMessage.get().parse(title);
         this.lines = lines;
@@ -43,27 +53,36 @@ public class ScoreboardServiceImpl implements ScoreboardService {
         if (lines.isEmpty()) {
             this.indexes = Collections.emptyList();
             this.placeholders = Collections.emptyMap();
+            this.emptyTexts = Collections.emptyMap();
             this.scoreboards = Collections.emptyMap();
             return;
         }
 
+        Placeholder[] placeholders = Placeholder.values();
         this.indexes = new ArrayList<>(lines.size());
         this.placeholders = new EnumMap<>(Placeholder.class);
+        this.emptyTexts = new EnumMap<>(Placeholder.class);
         this.scoreboards = new IdentityHashMap<>();
         for (int i = 0; i < lines.size(); i++) {
             Set<Placeholder> set = EnumSet.noneOf(Placeholder.class);
-            for (Placeholder placeholder : Placeholder.values()) {
-                if (lines.get(i).contains('<' + placeholder.asString() + '>')) {
+            for (Placeholder placeholder : placeholders) {
+                if (lines.get(i).contains(TAG_START + placeholder.asString() + TAG_END)) {
                     set.add(placeholder);
                     this.placeholders.computeIfAbsent(placeholder, s -> new ArrayList<>(2)).add(i);
                 }
             }
             this.indexes.add(set);
         }
+
+        Component defNullText = MiniMessage.get().parse(emptyTexts == null ? "null" : emptyTexts.getString("default", "null"));
+        for (Placeholder placeholder : placeholders) {
+            String defText = emptyTexts == null ? null : emptyTexts.getString(placeholder.asString());
+            this.emptyTexts.put(placeholder, defText == null ? defNullText : MiniMessage.get().parse(defText));
+        }
     }
 
     public ScoreboardServiceImpl(@NotNull ThimblePlugin plugin, @NotNull ConfigFile config) {
-        this(plugin::getPlayerName, config.getString("title", "<blue>Thimble</blue>"), config.getStringList("lines"));
+        this(plugin::getPlayerName, config.getString("title", "<blue>Thimble</blue>"), config.getStringList("lines"), config.getNode("empty"));
     }
 
     @Override
@@ -124,7 +143,10 @@ public class ScoreboardServiceImpl implements ScoreboardService {
         Template[] templates = new Template[placeholders.size()];
         int p = 0;
         for (Placeholder placeholder : placeholders) {
-            templates[p++] = Template.of(placeholder.asString(), placeholder.apply(this.uuidToString, player, this.placeholders.get(placeholder).indexOf(line)));
+            Object result = placeholder.apply(this.uuidToString, player, this.placeholders.get(placeholder).indexOf(line));
+            templates[p++] = result == null ?
+                    Template.of(placeholder.asString(), this.emptyTexts.get(placeholder))
+                    : Template.of(placeholder.asString(), String.valueOf(result));
         }
         return MiniMessage.get().parse(this.lines.get(line), templates);
     }
@@ -156,6 +178,9 @@ public class ScoreboardServiceImpl implements ScoreboardService {
         }
 
         Scoreboard scoreboard = this.scoreboards.get(player.uuid());
+        if (scoreboard == null) {
+            return;
+        }
         for (int line : linesToUpdate) {
             scoreboard.updateLine(line, this.render(player, line));
         }

@@ -1,6 +1,7 @@
 package me.syldium.thimble.common.player;
 
 import me.syldium.thimble.api.player.ThimblePlayer;
+import me.syldium.thimble.common.config.NodePath;
 import me.syldium.thimble.common.util.PlaceholderUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,15 +31,15 @@ public enum Placeholder {
         this.key = this.name().toLowerCase(Locale.ROOT);
     }
 
-    public @NotNull String apply(@NotNull Function<UUID, String> uuidToString, @NotNull ThimblePlayer player, int usageIndex) {
+    public @Nullable Object apply(@NotNull Function<UUID, String> uuidToString, @NotNull ThimblePlayer player, int usageIndex) {
         Object value = this.function.apply(player, usageIndex);
         if (value instanceof UUID) {
             return uuidToString.apply((UUID) value);
         }
-        return String.valueOf(value);
+        return value;
     }
 
-    public @NotNull String asString() {
+    public @NotNull @NodePath String asString() {
         return this.key;
     }
 
