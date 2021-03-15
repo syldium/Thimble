@@ -25,7 +25,7 @@ public interface ScoreboardService {
     /**
      * Updates the lines containing these placeholders.
      *
-     * @param inGamePlayers The players.
+     * @param inGamePlayers The players in the same arena.
      * @param placeholders Placeholders to update.
      */
     void updateScoreboard(@NotNull Iterable<@NotNull ? extends ThimblePlayer> inGamePlayers, @NotNull Placeholder... placeholders);

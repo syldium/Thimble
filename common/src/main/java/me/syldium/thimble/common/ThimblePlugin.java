@@ -5,8 +5,8 @@ import me.syldium.thimble.api.Thimble;
 import me.syldium.thimble.common.dependency.Dependency;
 import me.syldium.thimble.common.dependency.DependencyInjection;
 import me.syldium.thimble.common.dependency.DependencyResolver;
+import me.syldium.thimble.common.service.ScoreboardHolderService;
 import me.syldium.thimble.common.service.ScoreboardService;
-import me.syldium.thimble.common.service.ScoreboardServiceImpl;
 import me.syldium.thimble.common.service.SqlDataService;
 import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.common.adapter.EventAdapter;
@@ -49,7 +49,7 @@ public abstract class ThimblePlugin {
 
     private GameServiceImpl gameService;
     private MessageService messageService;
-    private ScoreboardService scoreboardService;
+    private ScoreboardHolderService scoreboardService;
     private StatsServiceImpl statsService;
     private UpdateChecker updateChecker;
 
@@ -74,10 +74,10 @@ public abstract class ThimblePlugin {
         this.statsService.close();
     }
 
-    public @NotNull File getFile(@NotNull String filename) {
+    public @NotNull File getFile(@NotNull String filename, boolean createIfNotExist) {
         File file = new File(this.getDataFolder(), filename);
         try {
-            if (!file.exists()) {
+            if (createIfNotExist && !file.exists()) {
                 file.getParentFile().mkdirs();
                 if (!file.createNewFile()) {
                     this.getLogger().severe(String.format("Unable to create the %s file.", filename));
@@ -98,8 +98,8 @@ public abstract class ThimblePlugin {
         }
     }
 
-    protected @NotNull ScoreboardService constructScoreboardService() {
-        return new ScoreboardServiceImpl(this, this.getConfigManager().getScoreboardConfig());
+    protected @NotNull ScoreboardHolderService constructScoreboardService() {
+        return new ScoreboardHolderService(this);
     }
 
     protected @NotNull StatsServiceImpl constructStatsService() {

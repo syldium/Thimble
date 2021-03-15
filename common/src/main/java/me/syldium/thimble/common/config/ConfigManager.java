@@ -1,7 +1,9 @@
 package me.syldium.thimble.common.config;
 
 import me.syldium.thimble.common.ThimblePlugin;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -28,8 +30,8 @@ public abstract class ConfigManager<P extends ThimblePlugin> {
         return new ArenaConfig(this.plugin, this.getConfig("arenas"));
     }
 
-    public @NotNull ConfigFile getScoreboardConfig() {
-        return this.getConfig("scoreboard");
+    public @Nullable ConfigFile getScoreboardConfig() {
+        return this.getConfig("scoreboard", false);
     }
 
     public @NotNull MainConfig getMainConfig() {
@@ -37,7 +39,15 @@ public abstract class ConfigManager<P extends ThimblePlugin> {
     }
 
     private @NotNull ConfigFile getConfig(@NotNull String filename) {
-        File file = this.plugin.getFile(filename + "." + this.getFileExtension());
+        return this.getConfig(filename, true);
+    }
+
+    @Contract("_, true -> !null")
+    private @Nullable ConfigFile getConfig(@NotNull String filename, boolean createIfNotExist) {
+        File file = this.plugin.getFile(filename + "." + this.getFileExtension(), createIfNotExist);
+        if (!file.exists()) {
+            return null;
+        }
         return this.getConfig(file);
     }
 

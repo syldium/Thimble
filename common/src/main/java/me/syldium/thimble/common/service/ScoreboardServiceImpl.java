@@ -2,7 +2,6 @@ package me.syldium.thimble.common.service;
 
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.ThimblePlugin;
-import me.syldium.thimble.common.config.ConfigFile;
 import me.syldium.thimble.common.config.ConfigNode;
 import me.syldium.thimble.common.player.Placeholder;
 import me.syldium.thimble.common.player.Player;
@@ -81,7 +80,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
         }
     }
 
-    public ScoreboardServiceImpl(@NotNull ThimblePlugin plugin, @NotNull ConfigFile config) {
+    public ScoreboardServiceImpl(@NotNull ThimblePlugin plugin, @NotNull ConfigNode config) {
         this(plugin::getPlayerName, config.getString("title", "<blue>Thimble</blue>"), config.getStringList("lines"), config.getNode("empty"));
     }
 

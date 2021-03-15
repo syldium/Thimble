@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## [Unreleased]
+### Added
+- The *scoreboard.yml* file defines the scoreboards to be displayed for each arena.
+
+### Fixed
+- When there were two players left, the one who failed won the game.
+- Two messages have been changed to use "jumps" instead of "times".
+
 ## [1.0.2] - 2020-03-09
 ### Added
 - The `game.clear-inventory` option determines if the player's inventory should be cleared when joining.

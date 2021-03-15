@@ -105,7 +105,7 @@ public class SqlDataService implements DataService {
         Type type = config.getDataStorageMethod();
         DependencyResolver manager = new DependencyResolver(plugin);
         if (type == Type.H2 || type == Type.SQLITE) {
-            return new SqlDataService(plugin.getFile(config.getDatabaseFilename(type == Type.H2)), manager, plugin.getLogger(), type);
+            return new SqlDataService(plugin.getFile(config.getDatabaseFilename(type == Type.H2), true), manager, plugin.getLogger(), type);
         }
         return new SqlDataService(config.getJdbcUrl(), config.getJdbcUsername(), config.getJdbcPassword(), manager, plugin.getLogger(), type);
     }
