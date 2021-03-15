@@ -30,7 +30,9 @@ public interface TimedMedia {
      * @param total The total number of ticks.
      */
     default void progress(@NotNull PlayerAudience audience, int ticks, int total) {
-        this.progress(audience, (float) ticks / total, (int) Math.ceil((float) ticks / Ticks.TICKS_PER_SECOND));
+        if ((ticks & 0b1) == 0) {
+            this.progress(audience, (float) ticks / total, (int) Math.ceil((float) ticks / Ticks.TICKS_PER_SECOND));
+        }
     }
 
     /**

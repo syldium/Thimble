@@ -130,10 +130,6 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
         return this.values().iterator();
     }
 
-    public void progress(float progress, int time) {
-        this.media.progress(this, progress, time);
-    }
-
     public void progress(int ticks, int total) {
         this.media.progress(this, ticks, total);
     }
