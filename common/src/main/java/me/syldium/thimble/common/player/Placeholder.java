@@ -19,15 +19,15 @@ public enum Placeholder {
     POINTS(ThimblePlayer::points),
     STATE(player -> player.game().state());
 
-    private final ValueReplacer function;
+    private final ValueFunction function;
     private final String key;
 
     Placeholder(@NotNull Function<@NotNull ThimblePlayer, @NotNull Object> function) {
         this((player, usageIndex) -> function.apply(player));
     }
 
-    Placeholder(@NotNull ValueReplacer replacer) {
-        this.function = replacer;
+    Placeholder(@NotNull ValueFunction function) {
+        this.function = function;
         this.key = this.name().toLowerCase(Locale.ROOT);
     }
 
@@ -44,7 +44,7 @@ public enum Placeholder {
     }
 
     @FunctionalInterface
-    interface ValueReplacer {
+    interface ValueFunction {
 
         @Nullable Object apply(@NotNull ThimblePlayer player, int usageIndex);
     }
