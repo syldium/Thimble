@@ -89,6 +89,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             case WAITING:
                 if (this.canStart() && !this.plugin.getEventAdapter().callGameChangeState(this, ThimbleState.STARTING)) {
                     this.state = ThimbleState.STARTING;
+                    this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.STATE);
                 } else if ((this.messageTimer++ & 0xF) == 0) {
                     this.players.sendActionBar(MessageKey.ACTIONBAR_WAITING);
                 }
@@ -100,13 +101,12 @@ public abstract class Game implements ThimbleGame, Runnable {
                         this.timer = 0;
                     } else {
                         this.players.hide();
+                        this.state = ThimbleState.PLAYING;
                         this.onCountdownEnd();
                         new BlockBalancer(this.players).balance(this.plugin.getPlayerAdapter().getAvailableBlocks());
-                        this.state = ThimbleState.PLAYING;
                         if (this.remainingWaterBlocks == null) {
                             this.searchRemainingBlocks();
                         }
-                        this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.JUMPER, Placeholder.STATE);
                     }
                 }
                 return;

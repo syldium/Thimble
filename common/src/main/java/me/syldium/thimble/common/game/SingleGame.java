@@ -44,6 +44,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
                 }
             }
         }
+        this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.JUMPER, Placeholder.NEXT_JUMPER, Placeholder.STATE);
     }
 
     @Override
