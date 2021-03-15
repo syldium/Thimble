@@ -44,7 +44,6 @@ public class SingleGame extends Game implements ThimbleSingleGame {
                 }
             }
         }
-        this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.JUMPER, Placeholder.NEXT_JUMPER, Placeholder.STATE);
     }
 
     @Override
@@ -110,6 +109,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
                 inGamePlayer.incrementPoints();
                 inGamePlayer.incrementThimbles();
                 this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
+                this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.THIMBLE);
             }
         }
 

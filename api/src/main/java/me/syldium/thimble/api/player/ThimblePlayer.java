@@ -27,6 +27,15 @@ public interface ThimblePlayer extends ThimblePlayerStats {
     @Range(from=0, to=Integer.MAX_VALUE) int jumpsForGame();
 
     /**
+     * Gets the number of thimbles in this game.
+     *
+     * @return The number of thimbles.
+     * @since 1.1.0
+     */
+    @Contract(pure = true)
+    @Range(from=0, to=Integer.MAX_VALUE) int thimbleForGame();
+
+    /**
      * Returns {@code true} if the player is a game spectator.
      *
      * @return If so.

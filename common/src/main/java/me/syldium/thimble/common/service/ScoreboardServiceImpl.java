@@ -31,6 +31,7 @@ import static net.kyori.adventure.text.minimessage.Tokens.TAG_START;
 @VisibleForTesting
 public class ScoreboardServiceImpl implements ScoreboardService {
 
+    private final PlaceholderService.Thimble placeholderService;
     private final List<Set<Placeholder>> indexes;
     private final Map<Placeholder, List<Integer>> placeholders;
     private final Map<Placeholder, Component> emptyTexts;
@@ -41,11 +42,13 @@ public class ScoreboardServiceImpl implements ScoreboardService {
 
     public ScoreboardServiceImpl(
             @NotNull Function<UUID, String> uuidToString,
+            @NotNull PlaceholderService.Thimble placeholderService,
             @NotNull String title,
             @NotNull List<@NotNull String> lines,
             @Nullable ConfigNode emptyTexts
     ) {
         this.uuidToString = uuidToString;
+        this.placeholderService = placeholderService;
         this.title = MiniMessage.get().parse(title);
         this.lines = lines;
 
@@ -81,7 +84,11 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     }
 
     public ScoreboardServiceImpl(@NotNull ThimblePlugin plugin, @NotNull ConfigNode config) {
-        this(plugin::getPlayerName, config.getString("title", "<blue>Thimble</blue>"), config.getStringList("lines"), config.getNode("empty"));
+        this(plugin::getPlayerName, plugin.getMessageService(), config.getString("title", "<blue>Thimble</blue>"), config.getStringList("lines"), config.getNode("empty"));
+    }
+
+    public ScoreboardServiceImpl(@NotNull String title, @NotNull List<@NotNull String> lines) {
+        this(UUID::toString, (player, text) -> text, title, lines, null);
     }
 
     @Override
@@ -147,7 +154,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
                     Template.of(placeholder.asString(), this.emptyTexts.get(placeholder))
                     : Template.of(placeholder.asString(), String.valueOf(result));
         }
-        return MiniMessage.get().parse(this.lines.get(line), templates);
+        return MiniMessage.get().parse(this.placeholderService.setPlaceholders(player, this.lines.get(line)), templates);
     }
 
     /**

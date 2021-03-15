@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public interface MessageService {
+public interface MessageService extends PlaceholderService, PlaceholderService.Thimble {
 
     String MESSAGES_BUNDLE = "messages";
 

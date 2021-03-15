@@ -14,10 +14,11 @@ public enum Placeholder {
 
     ARENA(player -> player.game().arena().name()),
     JUMPER(PlaceholderUtil::currentJumper),
-    NEXT_JUMPER(PlaceholderUtil::nextJumper),
     JUMPS(ThimblePlayer::jumpsForGame),
+    NEXT_JUMPER(PlaceholderUtil::nextJumper),
     POINTS(ThimblePlayer::points),
-    STATE(player -> player.game().state());
+    STATE(player -> player.game().state()),
+    THIMBLE(ThimblePlayer::thimbleForGame);
 
     private final ValueFunction function;
     private final String key;

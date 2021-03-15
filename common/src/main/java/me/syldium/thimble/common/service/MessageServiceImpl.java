@@ -1,7 +1,9 @@
 package me.syldium.thimble.common.service;
 
+import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.MessageKey;
+import me.syldium.thimble.common.player.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -108,6 +110,23 @@ public class MessageServiceImpl implements MessageService {
             this.plugin.getLogger().log(Level.WARNING, String.format("Missing translation key \"%s\" in translation file %s", ex.getKey(), this.localeBundle.getLocale().toString()), ex);
             return this.defaultBundle.getString(string);
         }
+    }
+
+    @Override
+    public @NotNull String setPlaceholders(@NotNull ThimblePlayer player0, @NotNull String text) {
+        if (this.placeholders == PlaceholderService.EMPTY) {
+            return text;
+        }
+        Player player = this.plugin.getPlayer(player0.uuid());
+        if (player == null) {
+            return text;
+        }
+        return this.placeholders.setPlaceholders(player, text);
+    }
+
+    @Override
+    public @NotNull String setPlaceholders(@NotNull Player player, @NotNull String text) {
+        return this.placeholders.setPlaceholders(player, text);
     }
 
     /**

@@ -101,9 +101,10 @@ public abstract class Game implements ThimbleGame, Runnable {
                         this.timer = 0;
                     } else {
                         this.players.hide();
-                        this.state = ThimbleState.PLAYING;
                         this.onCountdownEnd();
                         new BlockBalancer(this.players).balance(this.plugin.getPlayerAdapter().getAvailableBlocks());
+                        this.state = ThimbleState.PLAYING;
+                        this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.STATE);
                         if (this.remainingWaterBlocks == null) {
                             this.searchRemainingBlocks();
                         }

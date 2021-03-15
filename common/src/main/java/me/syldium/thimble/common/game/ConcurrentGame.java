@@ -37,7 +37,6 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             if (player == null) continue;
             player.teleport(this.arena.jumpLocation());
         }
-        this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.STATE);
     }
 
     @Override
@@ -83,6 +82,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
                 inGamePlayer.incrementPoints(this.thimblePoints);
                 inGamePlayer.incrementThimbles();
                 this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
+                this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.THIMBLE);
             }
         }
 
