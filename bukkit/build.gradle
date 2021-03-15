@@ -22,7 +22,7 @@ dependencies {
         exclude(module: 'checker-qual')
         exclude(module: 'guava')
     }
-    implementation 'org.bstats:bstats-bukkit:1.8'
+    implementation 'org.bstats:bstats-bukkit:2.2.1'
 }
 
 processResources {
@@ -47,7 +47,7 @@ shadowJar {
 
     relocate 'net.kyori.adventure', 'me.syldium.thimble.lib.adventure'
     relocate 'net.kyori.examination', 'me.syldium.thimble.lib.examination'
-    relocate 'org.bstats.bukkit', 'me.syldium.thimble.lib.metrics'
+    relocate 'org.bstats', 'me.syldium.thimble.lib.metrics'
     minimize()
 }
 

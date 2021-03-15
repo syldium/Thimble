@@ -2,6 +2,7 @@ package me.syldium.thimble.bukkit;
 
 import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,8 +25,8 @@ public final class ThBootstrap extends JavaPlugin {
 
         try {
             Metrics metrics = new Metrics(this, PLUGIN_ID);
-            metrics.addCustomChart(new Metrics.SimplePie("arena_count", this.plugin.getGameService()::arenaCount));
-            metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> this.plugin.getMainConfig().getLocale().toLanguageTag()));
+            metrics.addCustomChart(new SimplePie("arena_count", this.plugin.getGameService()::arenaCount));
+            metrics.addCustomChart(new SimplePie("locale_used", () -> this.plugin.getMainConfig().getLocale().toLanguageTag()));
         } catch (ExceptionInInitializerError ex) {
             this.getLogger().severe(ex.getCause().getMessage());
         }
