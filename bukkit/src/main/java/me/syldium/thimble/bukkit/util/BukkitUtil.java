@@ -117,7 +117,7 @@ public final class BukkitUtil {
         if (logger == null) return set;
         for (int i = 0; i < matched.length; i++) {
             if (matched[i] < 1) {
-                logger.warning(patterns[i].toString() + " does not match any material!");
+                logger.warning(patterns[i] + " does not match any material!");
             }
         }
         return set;

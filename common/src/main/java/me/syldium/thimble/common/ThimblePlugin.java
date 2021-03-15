@@ -49,7 +49,7 @@ public abstract class ThimblePlugin {
 
     private GameServiceImpl gameService;
     private MessageService messageService;
-    private ScoreboardHolderService scoreboardService;
+    private ScoreboardService scoreboardService;
     private StatsServiceImpl statsService;
     private UpdateChecker updateChecker;
 
@@ -98,7 +98,7 @@ public abstract class ThimblePlugin {
         }
     }
 
-    protected @NotNull ScoreboardHolderService constructScoreboardService() {
+    protected @NotNull ScoreboardService constructScoreboardService() {
         return new ScoreboardHolderService(this);
     }
 

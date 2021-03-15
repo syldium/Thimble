@@ -145,6 +145,6 @@ public abstract class SavedPlayersManager<P> {
     }
 
     private @NotNull File getPlayerFile(@NotNull UUID uuid) {
-        return new File(this.saveDirectory, uuid.toString() + ".dat");
+        return new File(this.saveDirectory, uuid + ".dat");
     }
 }

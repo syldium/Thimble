@@ -28,6 +28,7 @@ import java.util.function.Function;
 import static net.kyori.adventure.text.minimessage.Tokens.TAG_END;
 import static net.kyori.adventure.text.minimessage.Tokens.TAG_START;
 
+@VisibleForTesting
 public class ScoreboardServiceImpl implements ScoreboardService {
 
     private final List<Set<Placeholder>> indexes;
@@ -38,7 +39,6 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     private final Component title;
     private final List<String> lines;
 
-    @VisibleForTesting
     public ScoreboardServiceImpl(
             @NotNull Function<UUID, String> uuidToString,
             @NotNull String title,

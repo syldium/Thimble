@@ -29,7 +29,7 @@ public class SpongeCommandExecutor extends CommandManager implements CommandCall
     @Override
     public @NotNull CommandResult process(@NotNull CommandSource source, @NotNull String arguments) throws CommandException {
         Sender sender = this.plugin.getPlayerAdapter().asAbstractSender(source);
-        me.syldium.thimble.common.command.CommandResult result = this.executeCommand(this.plugin, sender, "dac", arguments);
+        me.syldium.thimble.common.command.CommandResult result = this.executeCommand(this.plugin, sender, "th", arguments);
         if (result.isSuccess()) {
             sender.sendFeedback(result);
             return CommandResult.success();

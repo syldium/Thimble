@@ -21,7 +21,7 @@ Every player who has the relevant permissions can create clickable signs as an a
 Place a sign and write on the first line *[Thimble]* or *[DéÀCoudre]* (case-insensitive). On the next line:
 
 - the name of an arena to join
-- *block* to op the block selection inventory
+- *block* to open the block selection inventory
 - *leave* to leave any arena
 
 Note: once the sign is created, its content is no longer used, you can replace it with commands such as `/setblock` and keep the original behavior!

@@ -79,7 +79,7 @@ public class ScoreboardHolderService implements ScoreboardService {
 
     @Override
     public @NotNull List<@NotNull Component> render(@NotNull ThimblePlayer player) {
-        return Collections.emptyList();
+        return this.defaultScoreboard == null ? Collections.emptyList() : this.defaultScoreboard.render(player);
     }
 
     private @Nullable ScoreboardService scoreboard(@NotNull ThimblePlayer player) {
