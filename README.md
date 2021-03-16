@@ -45,6 +45,37 @@ Examples:
 
 Full list in the [plugin.yml](bukkit/src/main/resources/plugin.yml) file
 
+### Language files
+
+By default, the system language is used. You can change it in the configuration file with the `locale` option.
+You can also customize the messages by creating your own locale file.
+To do this, create a new file `plugins/Thimble/messages_en.properties` (replace `en` with the same value as in `locale`) and add the messages you want to modify. [Here is the default language file](common/src/main/resources/messages.properties).
+The messages use the [MiniMessage formatting](https://docs.adventure.kyori.net/minimessage.html#format).
+
+### Scoreboards
+
+As of version 1.1.0, the plugin allows you to create a custom scoreboard for each arena. Here's an example:
+```yml
+# plugins/Thimble/scoreboard.yml
+default:
+  # The default scoreboard for all arenas
+  title: "<blue>Thimble</blue>"
+  lines:
+    - "Arena: <yellow><arena></yellow>"
+    - ""
+    - "Current: <dark_green><jumper></dark_green>"
+    - "Next players:"
+    - "1. <#d003d0><next_jumper></#d003d0>"
+    - "2. <light_purple><next_jumper></light_purple>"
+    - ""
+    - "Jumps: <gold><jumps></gold>"
+    - "Thimbles: <gold><thimble></gold>"
+  empty:
+    # When these placeholders return null values, use the following replacements
+    jumper: "<gray>none</gray>"
+    next_jumper: "<gray>none</gray>"
+```
+
 ## API
 
 ### Maven
