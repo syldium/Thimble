@@ -6,7 +6,7 @@ author: syldium
 
 main: me.syldium.thimble.bukkit.ThBootstrap
 api-version: 1.13
-softdepend: [LuckPerms, Parties, PlaceholderAPI, ViaVersion, WorldEdit]
+softdepend: [Essentials, LuckPerms, Parties, PlaceholderAPI, Vault, ViaVersion, WorldEdit]
 
 commands:
   thimble:

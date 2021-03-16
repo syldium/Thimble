@@ -50,6 +50,15 @@ public final class PluginHook implements PlaceholderService {
             plugin.getCommandManager().lookup(MigrateCommand.class).getChildren()
                     .add(new DeACoudreMigration(this.getPlugin("DeACoudre"), file));
         }
+
+        if (this.integrations.contains("Vault")) {
+            try {
+                new VaultIntegration(bootstrap);
+                plugin.getLogger().fine("Vault hooked.");
+            } catch (Throwable ignored) {
+
+            }
+        }
     }
 
     @Override

@@ -22,6 +22,7 @@ integrations:
  - LuckPerms
  - Parties
  - PlaceholderAPI
+ - Vault
  - WorldEdit
 
 game:
@@ -123,3 +124,9 @@ allowed-commands-in-game:
 # Defines whether the plugin checks at server startup if it is up-to-date.
 # You can also use '/th version' to check the version and update.
 update-checker: true
+
+# Configure the Vault integration here:
+economy:
+  winner-deposit: 0 # How much should the winning player receive?
+  participant-deposit: 0 # How much should the other players receive?
+  multiply-by-jump-ratio: true # Should the amount be divided proportionally to the player with the most jumps?
