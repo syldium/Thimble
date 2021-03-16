@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## [Unreleased]
+## [1.1.0] - 2020-03-16
 ### Added
 - The *scoreboard.yml* file defines the scoreboards to be displayed for each arena.
 - The `commands-at-end` option lets you execute commands at the end of a game.
