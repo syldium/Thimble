@@ -27,8 +27,8 @@ public class SpongeEventAdapter implements EventAdapter<Player> {
     }
 
     @Override
-    public void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player) {
-        SpongeGameEndEvent event = new SpongeGameEndEvent(game, player, Cause.of(this.eventContext, this.container));
+    public void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player, boolean isSolo) {
+        SpongeGameEndEvent event = new SpongeGameEndEvent(game, player, isSolo, Cause.of(this.eventContext, this.container));
         Sponge.getEventManager().post(event);
     }
 

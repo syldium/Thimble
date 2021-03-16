@@ -22,7 +22,7 @@ public class EventAdapterMock implements EventAdapter<PlayerMock> {
     }
 
     @Override
-    public void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player) {
+    public void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player, boolean isSolo) {
 
     }
 

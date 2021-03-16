@@ -23,6 +23,10 @@ class VaultIntegration implements Listener {
 
     @EventHandler
     public void onGameEnd(BukkitGameEndEvent event) {
+        if (event.isSolo()) {
+            return;
+        }
+
         final double winnerDeposit = this.plugin.getConfig().getDouble("economy.winner-deposit");
         final double participantDeposit = this.plugin.getConfig().getDouble("economy.participant-deposit");
         final boolean multiplyByJumpRatio = this.plugin.getConfig().getBoolean("economy.multiply-by-jump-ratio", true);

@@ -14,7 +14,7 @@ public interface EventAdapter<P> {
 
     boolean callGameChangeState(@NotNull ThimbleGame game, @NotNull ThimbleState newState);
 
-    void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player);
+    void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player, boolean isSolo);
 
     @SuppressWarnings("unchecked")
     default boolean callPlayerJoinArenaEvent(@NotNull ThimbleGame arena, @NotNull Player player) {

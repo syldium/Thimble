@@ -17,11 +17,13 @@ public class SpongeGameEndEvent extends AbstractEvent implements GameEvent {
 
     private final ThimbleGame game;
     private final ThimblePlayer latest;
+    private final boolean solo;
     private final Cause cause;
 
-    public SpongeGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer latest, @NotNull Cause cause) {
+    public SpongeGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer latest, boolean solo, @NotNull Cause cause) {
         this.game = game;
         this.latest = latest;
+        this.solo = solo;
         this.cause = cause;
     }
 
@@ -37,6 +39,16 @@ public class SpongeGameEndEvent extends AbstractEvent implements GameEvent {
      */
     public @Nullable ThimblePlayer getLatestPlayer() {
         return this.latest;
+    }
+
+    /**
+     * If it's a solo game as per the plugin configuration.
+     *
+     * @return {@code true} if it's considered as a solo game.
+     * @since 1.1.0
+     */
+    public boolean isSolo() {
+        return this.solo;
     }
 
     @Override

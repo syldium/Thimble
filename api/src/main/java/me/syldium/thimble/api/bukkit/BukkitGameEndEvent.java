@@ -19,10 +19,12 @@ public class BukkitGameEndEvent extends Event implements GameEvent {
 
     private final ThimbleGame game;
     private final ThimblePlayer latest;
+    private final boolean solo;
 
-    public BukkitGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer latest) {
+    public BukkitGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer latest, boolean solo) {
         this.game = game;
         this.latest = latest;
+        this.solo = solo;
     }
 
     @Override
@@ -37,6 +39,16 @@ public class BukkitGameEndEvent extends Event implements GameEvent {
      */
     public @Nullable ThimblePlayer getLatestPlayer() {
         return this.latest;
+    }
+
+    /**
+     * If it's a solo game as per the plugin configuration.
+     *
+     * @return {@code true} if it's considered as a solo game.
+     * @since 1.1.0
+     */
+    public boolean isSolo() {
+        return this.solo;
     }
 
     @Override

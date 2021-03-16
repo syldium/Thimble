@@ -113,7 +113,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                 return;
             case PLAYING:
                 if (this.players.isEmpty()) {
-                    this.plugin.getEventAdapter().callGameEndEvent(this, null);
+                    this.plugin.getEventAdapter().callGameEndEvent(this, null, true);
                     this.state = ThimbleState.END;
                     return;
                 }
@@ -202,7 +202,9 @@ public abstract class Game implements ThimbleGame, Runnable {
     }
 
     protected void end(@Nullable InGamePlayer latest) {
-        this.plugin.getEventAdapter().callGameEndEvent(this, latest);
+        boolean isSolo = this.ignoreStatsIfSolo && this.playersWhoJumped.size() < 2;
+        this.plugin.getEventAdapter().callGameEndEvent(this, latest, isSolo);
+
         this.state = ThimbleState.END;
         this.jumperMedia.hide(this.players);
         this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.STATE);
@@ -211,7 +213,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.plugin.spawnFireworks(fireworksLocation).spawn(this.fireworksEnd);
         }
 
-        if ((!this.ignoreStatsIfSolo || this.playersWhoJumped.size() > 1) && latest != null) {
+        if (!isSolo && latest != null) {
             List<Template> args = new LinkedList<>();
             args.add(Template.of("player", latest.name()));
             args.addAll(MessageKey.Unit.JUMPS.tl(latest.jumpsForGame(), this.plugin.getMessageService()));
@@ -229,7 +231,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                 }
             }
 
-            if (this.ignoreStatsIfSolo && this.playersWhoJumped.size() < 2) {
+            if (isSolo) {
                 continue;
             }
             if (player.equals(latest)) {

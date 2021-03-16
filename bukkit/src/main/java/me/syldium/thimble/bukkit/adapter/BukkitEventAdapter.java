@@ -35,8 +35,8 @@ public class BukkitEventAdapter implements EventAdapter<Player> {
     }
 
     @Override
-    public void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player) {
-        BukkitGameEndEvent event = new BukkitGameEndEvent(game, player);
+    public void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player, boolean isSolo) {
+        BukkitGameEndEvent event = new BukkitGameEndEvent(game, player, isSolo);
         this.pluginManager.callEvent(event);
     }
 }
