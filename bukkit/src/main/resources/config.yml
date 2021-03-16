@@ -74,6 +74,11 @@ game:
   # Set the maximum distance (x and z coordinates) that spectators can have from the waiting location.
   max-spectator-distance: 40
 
+# Commands to execute in console at the end of a game.
+# <winner> refers to the winning player.
+# This will not be executed if there is only one player and 'ignore-stats-if-solo' is set to true.
+commands-at-end: []
+
 # The countdown display.
 display:
   global:

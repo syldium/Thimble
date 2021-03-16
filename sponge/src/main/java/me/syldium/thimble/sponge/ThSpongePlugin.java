@@ -1,10 +1,12 @@
 package me.syldium.thimble.sponge;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 
 import java.util.Optional;
 import java.util.UUID;
 import me.syldium.thimble.api.Location;
+import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
 import me.syldium.thimble.api.sponge.SpongeAdapter;
@@ -32,6 +34,7 @@ import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
 import net.kyori.adventure.util.Ticks;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -140,6 +143,17 @@ public class ThSpongePlugin extends ThimblePlugin {
     @Override
     public @NotNull String getPlayerName(@NotNull UUID uuid) {
         return this.playerNameFunction.apply(uuid).orElse("invalid-player");
+    }
+
+    @Override
+    public void executeGameEndCommands(@NotNull ThimblePlayer winner) {
+        try {
+            for (String command : this.configManager.getConfig().getNode("commands-at-end").getList(TypeToken.of(String.class))) {
+                this.game.getCommandManager().process(this.getServer().getConsole(), command.replace(WINNER_TAG, winner.name()));
+            }
+        } catch (ObjectMappingException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Listener

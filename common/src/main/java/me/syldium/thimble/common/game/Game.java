@@ -216,6 +216,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             args.add(Template.of("player", latest.name()));
             args.addAll(MessageKey.Unit.JUMPS.tl(latest.jumpsForGame(), this.plugin.getMessageService()));
             this.players.sendMessage(latest, MessageKey.CHAT_WIN, args.toArray(new Template[0]));
+            this.plugin.executeGameEndCommands(latest);
         }
 
         for (InGamePlayer player : this.players) {

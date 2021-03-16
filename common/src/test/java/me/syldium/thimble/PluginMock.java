@@ -1,5 +1,6 @@
 package me.syldium.thimble;
 
+import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.common.service.SqlDataService;
 import me.syldium.thimble.common.service.StatsServiceImpl;
@@ -109,6 +110,11 @@ public class PluginMock extends ThimblePlugin {
     @Override
     public @NotNull String getPlayerName(@NotNull UUID uuid) {
         return uuid.toString().substring(0, 16);
+    }
+
+    @Override
+    public void executeGameEndCommands(@NotNull ThimblePlayer winner) {
+
     }
 
     public @NotNull PlayerMock addPlayer() {

@@ -4,6 +4,7 @@ Changelog
 ## [Unreleased]
 ### Added
 - The *scoreboard.yml* file defines the scoreboards to be displayed for each arena.
+- The `commands-at-end` option lets you execute commands at the end of a game.
 
 ### Fixed
 - When there were two players left, the one who failed won the game.

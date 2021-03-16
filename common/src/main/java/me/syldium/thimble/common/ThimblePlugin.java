@@ -2,6 +2,7 @@ package me.syldium.thimble.common;
 
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.Thimble;
+import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.dependency.Dependency;
 import me.syldium.thimble.common.dependency.DependencyInjection;
 import me.syldium.thimble.common.dependency.DependencyResolver;
@@ -43,7 +44,12 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static net.kyori.adventure.text.minimessage.Tokens.TAG_END;
+import static net.kyori.adventure.text.minimessage.Tokens.TAG_START;
+
 public abstract class ThimblePlugin {
+
+    protected static final String WINNER_TAG = TAG_START + "winner" + TAG_END;
 
     private final Executor dbExecutor = Executors.newSingleThreadExecutor(task -> new Thread(task, "Thimble-db"));
 
@@ -150,6 +156,8 @@ public abstract class ThimblePlugin {
     }
 
     public abstract @NotNull String getPlayerName(@NotNull UUID uuid);
+
+    public abstract void executeGameEndCommands(@NotNull ThimblePlayer winner);
 
     public abstract @NotNull EventAdapter<?> getEventAdapter();
 

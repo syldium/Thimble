@@ -2,6 +2,7 @@ package me.syldium.thimble.bukkit;
 
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.bukkit.BukkitAdapter;
+import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
 import me.syldium.thimble.common.util.ServerType;
@@ -27,6 +28,7 @@ import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.bukkit.util.BukkitTask;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
@@ -122,7 +124,7 @@ public class ThBukkitPlugin extends ThimblePlugin {
 
     @Override
     public @NotNull Task startGameTask(@NotNull Runnable runnable) {
-        return new BukkitTask(this.bootstrap.getServer().getScheduler().scheduleSyncRepeatingTask(this.bootstrap, runnable, 0L, 1L));
+        return new BukkitTask(this.getServer().getScheduler().scheduleSyncRepeatingTask(this.bootstrap, runnable, 0L, 1L));
     }
 
     @Override
@@ -137,8 +139,15 @@ public class ThBukkitPlugin extends ThimblePlugin {
 
     @Override
     public @NotNull String getPlayerName(@NotNull UUID uuid) {
-        String name = this.bootstrap.getServer().getOfflinePlayer(uuid).getName();
+        String name = this.getServer().getOfflinePlayer(uuid).getName();
         return name == null ? uuid.toString() : name;
+    }
+
+    @Override
+    public void executeGameEndCommands(@NotNull ThimblePlayer winner) {
+        for (String command : this.getConfig().getStringList("commands-at-end")) {
+            this.getServer().dispatchCommand(this.getServer().getConsoleSender(), command.replace(WINNER_TAG, winner.name()));
+        }
     }
 
     public void sendFeedback(@NotNull org.bukkit.entity.Player bukkitPlayer, @NotNull CommandResult result) {
@@ -172,18 +181,18 @@ public class ThBukkitPlugin extends ThimblePlugin {
 
     @Override
     public void runSync(@NotNull Runnable runnable) {
-        this.bootstrap.getServer().getScheduler().runTask(this.bootstrap, runnable);
+        this.getServer().getScheduler().runTask(this.bootstrap, runnable);
     }
 
     @Override
     public @NotNull <T> CompletableFuture<T> runSync(@NotNull Supplier<T> supplier) {
         CompletableFuture<T> future = new CompletableFuture<>();
-        this.bootstrap.getServer().getScheduler().runTask(this.bootstrap, () -> future.complete(supplier.get()));
+        this.getServer().getScheduler().runTask(this.bootstrap, () -> future.complete(supplier.get()));
         return future;
     }
 
     public void registerEvents(@NotNull Listener listener) {
-        this.bootstrap.getServer().getPluginManager().registerEvents(listener, this.bootstrap);
+        this.getServer().getPluginManager().registerEvents(listener, this.bootstrap);
     }
 
     public @NotNull ThBootstrap getBootstrap() {
@@ -192,5 +201,9 @@ public class ThBukkitPlugin extends ThimblePlugin {
 
     public @NotNull FileConfiguration getConfig() {
         return this.bootstrap.getConfig();
+    }
+
+    public @NotNull Server getServer() {
+        return this.bootstrap.getServer();
     }
 }
