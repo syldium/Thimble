@@ -71,7 +71,8 @@ default:
     - "Jumps: <gold><jumps></gold>"
     - "Thimbles: <gold><thimble></gold>"
   empty:
-    # When these placeholders return null values, use the following replacements
+    # When these placeholders return null values,
+    # use the following replacements:
     jumper: "<gray>none</gray>"
     next_jumper: "<gray>none</gray>"
 ```
@@ -90,7 +91,7 @@ default:
 <dependency>
     <groupId>com.github.syldium</groupId>
     <artifactId>Thimble</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -113,7 +114,7 @@ public final class ThimblePluginHook extends JavaPlugin {
     }
 }
 ```
-You can view the methods using your IDE or [the javadoc](https://javadoc.jitpack.io/com/github/syldium/Thimble/1.0/javadoc/).
+You can view the methods using your IDE or [the javadoc](https://javadoc.jitpack.io/com/github/syldium/Thimble/1.1.0/javadoc/).
 
 ## Building
 
