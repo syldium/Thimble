@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## [1.1.0] - 2020-03-16
+## [1.1.0] - 2021-03-16
 ### Added
 - The *scoreboard.yml* file defines the scoreboards to be displayed for each arena.
 - The `commands-at-end` option lets you execute commands at the end of a game.
@@ -11,7 +11,7 @@ Changelog
 - When there were two players left, the one who failed won the game.
 - Two messages have been changed to use "jumps" instead of "times".
 
-## [1.0.2] - 2020-03-09
+## [1.0.2] - 2021-03-09
 ### Added
 - The `game.clear-inventory` option determines if the player's inventory should be cleared when joining.
 
@@ -19,7 +19,7 @@ Changelog
 - Aliases were not registered for Brigadier (for supported servers).
 - Unable to register aliases in 1.8.
 
-## [1.0.1] - 2020-03-06
+## [1.0.1] - 2021-03-06
 ### Added
 - The `/thimble reload` command reloads the configuration and language files.
 
