@@ -164,9 +164,11 @@ public class SqlDataService implements DataService {
 
     @Override
     public @NotNull Leaderboard getLeaderboard(@NotNull Ranking ranking) {
-        try (PreparedStatement statement = this.getConnection().prepareStatement("SELECT * FROM thimble_players ORDER BY ? DESC LIMIT 10")) {
-            statement.setString(1, ranking.name().toLowerCase(Locale.ROOT));
-            ResultSet result = statement.executeQuery();
+        try (Statement statement = this.getConnection().createStatement()) {
+            ResultSet result = statement.executeQuery(String.format(
+                    "SELECT * FROM thimble_players ORDER BY %s DESC LIMIT 10",
+                    ranking.name().toLowerCase(Locale.ROOT)
+            ));
 
             Leaderboard leaderboard = Leaderboard.of(ranking);
             while (result.next()) {
