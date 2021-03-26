@@ -10,10 +10,10 @@ public interface SavedPlayer<P> extends Serializable {
 
     void save(@NotNull File file);
 
-    void restore(@NotNull P player, boolean withLocation);
+    void restore(@NotNull P player, boolean restoreInventory, boolean withLocation);
 
     @SuppressWarnings("unchecked")
-    default void restore(@NotNull Player player, boolean withLocation) {
-        this.restore((P) player.getPlugin().getPlayerAdapter().asPlatform(player), withLocation);
+    default void restore(@NotNull Player player, boolean restoreInventory, boolean withLocation) {
+        this.restore((P) player.getPlugin().getPlayerAdapter().asPlatform(player), restoreInventory, withLocation);
     }
 }

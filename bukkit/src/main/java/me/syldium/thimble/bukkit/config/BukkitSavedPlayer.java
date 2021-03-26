@@ -52,10 +52,11 @@ public class BukkitSavedPlayer implements SavedPlayer<Player> {
         }
     }
 
-    public void restore(@NotNull Player player, boolean withLocation) {
+    @Override
+    public void restore(@NotNull Player player, boolean restoreInventory, boolean withLocation) {
         player.setGameMode(this.gameMode);
         if (withLocation) player.teleport(this.location);
-        player.getInventory().setContents(this.inventory);
+        if (restoreInventory) player.getInventory().setContents(this.inventory);
         player.addPotionEffects(this.effects);
         player.setHealth(this.health);
         player.setFoodLevel(this.food);

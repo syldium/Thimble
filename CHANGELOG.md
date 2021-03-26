@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## [Unreleased]
+### Fixed
+- The leaderboard was disordered at initialization.
+- Inventory restoration now uses the `game.clear-inventory` option.
+
 ## [1.1.0] - 2021-03-16
 ### Added
 - The *scoreboard.yml* file defines the scoreboards to be displayed for each arena.

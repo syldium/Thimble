@@ -51,5 +51,9 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> {
         }
     }
 
+    protected boolean isInventoryCleared() {
+        return this.plugin.getMainConfig().getGameNode().getBool("clear-inventory", true);
+    }
+
     protected abstract void onSavedPlayerFound(@NotNull UUID playerUniqueId, @NotNull SavedPlayer<Player> savedPlayer);
 }

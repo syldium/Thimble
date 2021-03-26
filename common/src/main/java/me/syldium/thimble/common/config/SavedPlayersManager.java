@@ -92,12 +92,14 @@ public abstract class SavedPlayersManager<P> {
      * Restores the state of the player.
      *
      * @param player The player.
+     * @param restoreInventory If the inventory should be restored.
+     * @param withLocation If the location should be restored.
      */
-    public void restore(@NotNull Player player, boolean withLocation) {
+    public void restore(@NotNull Player player, boolean restoreInventory, boolean withLocation) {
         UUID uuid = player.uuid();
         SavedPlayer<P> saved = this.savedPlayers.get(uuid);
         if (saved != null) {
-            saved.restore(player, withLocation);
+            saved.restore(player, restoreInventory, withLocation);
             this.savedPlayers.remove(uuid);
             if (this.saveDirectory != null) {
                 this.delete(uuid);

@@ -45,7 +45,7 @@ public class SpongeSavedPlayer implements SavedPlayer<Player> {
     }
 
     @Override
-    public void restore(@NotNull Player player, boolean withLocation) {
+    public void restore(@NotNull Player player, boolean restoreInventory, boolean withLocation) {
         player.offer(Keys.GAME_MODE, this.gameMode);
         if (withLocation) {
             player.setLocation(new org.spongepowered.api.world.Location<>(
