@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## [Unreleased]
+## [1.1.1] - 2021-03-26
 ### Fixed
 - The leaderboard was disordered at initialization.
 - Inventory restoration now uses the `game.clear-inventory` option.

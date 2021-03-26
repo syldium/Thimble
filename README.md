@@ -91,7 +91,7 @@ default:
 <dependency>
     <groupId>com.github.syldium</groupId>
     <artifactId>Thimble</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -114,7 +114,7 @@ public final class ThimblePluginHook extends JavaPlugin {
     }
 }
 ```
-You can view the methods using your IDE or [the javadoc](https://javadoc.jitpack.io/com/github/syldium/Thimble/1.1.0/javadoc/).
+You can view the methods using your IDE or [the javadoc](https://javadoc.jitpack.io/com/github/syldium/Thimble/1.1.1/javadoc/).
 
 ## Building
 
