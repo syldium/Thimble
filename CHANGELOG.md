@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## [Unreleased]
+### Changed
+- The commands at the end of a game are executed after the inventory is restored.
+
+
 ## [1.1.1] - 2021-03-26
 ### Fixed
 - The leaderboard was disordered at initialization.

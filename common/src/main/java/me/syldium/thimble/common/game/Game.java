@@ -63,6 +63,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     protected final int countdownTicks;
     protected final int fireworksThimble, fireworksEnd;
     protected final boolean clearInventory, ignoreStatsIfSolo, spectatorMode, teleportSpawnAtEnd;
+    protected @Nullable ThimblePlayer latest;
 
     public Game(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
         MainConfig config = plugin.getMainConfig();
@@ -218,7 +219,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             args.add(Template.of("player", latest.name()));
             args.addAll(MessageKey.Unit.JUMPS.tl(latest.jumpsForGame(), this.plugin.getMessageService()));
             this.players.sendMessage(latest, MessageKey.CHAT_WIN, args.toArray(new Template[0]));
-            this.plugin.executeGameEndCommands(latest);
+            this.latest = latest;
         }
 
         for (InGamePlayer player : this.players) {
@@ -263,6 +264,10 @@ public abstract class Game implements ThimbleGame, Runnable {
                 this.plugin.getSavedPlayersManager().getPending().add(player.uuid());
             }
             this.plugin.getScoreboardService().hideScoreboard(player, p);
+        }
+
+        if (this.latest != null) {
+            this.plugin.executeGameEndCommands(this.latest);
         }
 
         this.players.sendActionBar(MessageKey.ACTIONBAR_ENDED);
