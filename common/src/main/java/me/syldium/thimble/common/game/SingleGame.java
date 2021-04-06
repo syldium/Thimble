@@ -15,6 +15,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.UUID;
@@ -33,7 +36,9 @@ public class SingleGame extends Game implements ThimbleSingleGame {
 
     @Override
     public void onCountdownEnd() {
-        for (InGamePlayer player : this.players) {
+        List<InGamePlayer> playersList = new ArrayList<>(this.players.values());
+        Collections.shuffle(playersList);
+        for (InGamePlayer player : playersList) {
             if (!player.isSpectator() && !player.isVanished()) {
                 this.queue.add(player.uuid());
             }

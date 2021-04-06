@@ -7,6 +7,7 @@ Changelog
 
 ### Fixed
 - Leaving a started game could lead to continuous NPEs.
+- The jump queue was far from being random.
 
 ## [1.1.1] - 2021-03-26
 ### Fixed
