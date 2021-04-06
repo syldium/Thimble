@@ -5,6 +5,8 @@ Changelog
 ### Changed
 - The commands at the end of a game are executed after the inventory is restored.
 
+### Fixed
+- Leaving a started game could lead to continuous NPEs.
 
 ## [1.1.1] - 2021-03-26
 ### Fixed

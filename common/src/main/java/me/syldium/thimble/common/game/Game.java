@@ -22,6 +22,7 @@ import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.Collections;
@@ -150,6 +151,11 @@ public abstract class Game implements ThimbleGame, Runnable {
         if (this.timer <= TIMER_SOUND_THRESHOLD && this.timer % Ticks.TICKS_PER_SECOND == 0) {
             this.players.playSound(this.plugin.getMainConfig().getTimerSound(this.timer));
         }
+    }
+
+    @TestOnly
+    public void setState(@NotNull ThimbleState state) {
+        this.state = state;
     }
 
     @VisibleForTesting

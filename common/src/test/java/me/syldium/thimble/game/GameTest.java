@@ -185,6 +185,31 @@ public class GameTest {
         this.plugin.getScheduler().assertNothingScheduled();
     }
 
+    @Test
+    public void leaveArena_shouldBeRemovedFromQueue() {
+        Arena arena = this.newArena(ThimbleGameMode.SINGLE);
+        List<PlayerMock> players = this.joinThreePlayers(arena);
+        SingleGame game = (SingleGame) arena.game().get();
+        game.onCountdownEnd();
+        game.setState(ThimbleState.PLAYING);
+        assertEquals(players.size(), game.jumperQueue().size());
+        this.plugin.getScheduler().nextTick();
+        assertEquals(players.size() - 1, game.jumperQueue().size());
+
+        // One player in the queue leave
+        PlayerMock leavingPlayer = players.get(0).uuid().equals(game.currentJumper()) ? players.get(1) : players.get(0);
+        assertTrue(game.jumperQueue().contains(leavingPlayer.uuid()));
+        game.removePlayer(leavingPlayer.uuid());
+        assertFalse(game.jumperQueue().contains(leavingPlayer.uuid()), "The player should no longer be in the queue");
+
+        // Simulate a few jumps to make sure nothing breaks
+        game.verdict(JumpVerdict.LANDED);
+        assertNotEquals(leavingPlayer.uuid(), game.currentJumper());
+        this.plugin.getScheduler().nextTick();
+        game.verdict(JumpVerdict.LANDED);
+        assertNotEquals(leavingPlayer.uuid(), game.currentJumper());
+    }
+
     private @NotNull Arena newArena(@NotNull ThimbleGameMode gameMode) {
         Arena arena = new Arena(this.plugin, "test");
         WorldKey world = MockUtil.randomKey();
