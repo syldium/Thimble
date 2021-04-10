@@ -214,11 +214,17 @@ public class GameTest {
     public void leaveArenaAtCountdown_shouldEndTask() {
         Arena arena = this.newArena(ThimbleGameMode.CONCURRENT);
         assertFalse(arena.game().isPresent(), "The game should not be initialized.");
-        UUID player = this.plugin.addPlayer().uuid();
-        arena.addPlayer(player);
+        UUID player1 = this.plugin.addPlayer().uuid();
+        UUID player2 = this.plugin.addPlayer().uuid();
+        arena.addPlayer(player1);
         assertTrue(arena.game().isPresent(), "The game should be initialized.");
+        arena.addPlayer(player2);
+        this.plugin.getScheduler().nextTick();
 
-        arena.removePlayer(player, false);
+        arena.removePlayer(player2, false);
+        assertTrue(arena.game().isPresent(), "The instance of the game should still exist.");
+        assertEquals(ThimbleState.STARTING, arena.game().get().state());
+        arena.removePlayer(player1, false);
         assertFalse(arena.game().isPresent(), "The game should no longer be referenced.");
         this.plugin.getScheduler().assertNothingScheduled();
     }
@@ -227,7 +233,9 @@ public class GameTest {
     public void leaveArena_shouldEnd() {
         Arena arena = this.newArena(ThimbleGameMode.SINGLE);
         List<PlayerMock> players = this.joinThreePlayers(arena);
-        ((Game) arena.game().get()).onCountdownEnd();
+        Game game = (Game) arena.game().get();
+        game.onCountdownEnd();
+        game.setState(ThimbleState.PLAYING);
         arena.removePlayer(players.get(0).uuid(), false);
         arena.removePlayer(players.get(1).uuid(), false);
         assertEquals(ThimbleState.END, arena.game().get().state());
