@@ -33,8 +33,11 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
     }
 
     public boolean add(@NotNull E player) {
-        if (!player.isVanished()) this.size++;
-        return this.put(player.uuid(), player) == null;
+        boolean added = this.put(player.uuid(), player) == null;
+        if (added && !player.isVanished()) {
+            this.size++;
+        }
+        return added;
     }
 
     public E get(@NotNull Player player) {
@@ -60,6 +63,21 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
 
     public int realSize() {
         return super.size();
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        this.size = 0;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.size == 0;
+    }
+
+    public boolean isReallyEmpty() {
+        return super.isEmpty();
     }
 
     public @NotNull Set<UUID> uuidSet() {

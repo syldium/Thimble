@@ -154,12 +154,21 @@ public interface ThimbleGame {
     boolean verdict(@NotNull UUID playerUUID, @NotNull JumpVerdict verdict);
 
     /**
-     * Returns {@code true} if no player is in the game.
+     * Returns {@code true} if no visible player is in the game.
      *
      * @return If empty.
      */
     @Contract(pure = true)
     boolean isEmpty();
+
+    /**
+     * Returns {@code true} if no player is in the game.
+     *
+     * @return If empty.
+     * @since 1.1.2
+     */
+    @Contract(pure = true)
+    boolean isReallyEmpty();
 
     /**
      * Returns the number of players in the game - vanished players are ignored.

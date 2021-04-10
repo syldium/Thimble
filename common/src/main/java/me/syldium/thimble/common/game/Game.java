@@ -436,13 +436,36 @@ public abstract class Game implements ThimbleGame, Runnable {
             }
         }
         this.plugin.getScoreboardService().hideScoreboard(inGamePlayer, p);
-        this.arena.checkGame();
+        this.checkPlayerCount();
         return true;
+    }
+
+    private void checkPlayerCount() {
+        if (this.players.isEmpty()) {
+            this.arena.checkGame();
+        } else {
+            int aliveCount = 0;
+            InGamePlayer latest = null;
+            for (InGamePlayer player : this.players) {
+                if (!player.isSpectator() && !player.isVanished()) {
+                    if (aliveCount++ > 0) {
+                        return;
+                    }
+                    latest = player;
+                }
+            }
+            this.end(latest);
+        }
     }
 
     @Override
     public boolean isEmpty() {
         return this.players.isEmpty();
+    }
+
+    @Override
+    public boolean isReallyEmpty() {
+        return this.players.isReallyEmpty();
     }
 
     @Override

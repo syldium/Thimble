@@ -210,6 +210,47 @@ public class GameTest {
         assertNotEquals(leavingPlayer.uuid(), game.currentJumper());
     }
 
+    @Test
+    public void leaveArenaAtCountdown_shouldEndTask() {
+        Arena arena = this.newArena(ThimbleGameMode.CONCURRENT);
+        assertFalse(arena.game().isPresent(), "The game should not be initialized.");
+        UUID player = this.plugin.addPlayer().uuid();
+        arena.addPlayer(player);
+        assertTrue(arena.game().isPresent(), "The game should be initialized.");
+
+        arena.removePlayer(player, false);
+        assertFalse(arena.game().isPresent(), "The game should no longer be referenced.");
+        this.plugin.getScheduler().assertNothingScheduled();
+    }
+
+    @Test
+    public void leaveArena_shouldEnd() {
+        Arena arena = this.newArena(ThimbleGameMode.SINGLE);
+        List<PlayerMock> players = this.joinThreePlayers(arena);
+        ((Game) arena.game().get()).onCountdownEnd();
+        arena.removePlayer(players.get(0).uuid(), false);
+        arena.removePlayer(players.get(1).uuid(), false);
+        assertEquals(ThimbleState.END, arena.game().get().state());
+    }
+
+    @Test
+    public void leaveArena_shouldEnd_oneSpectator() {
+        Arena arena = this.newArena(ThimbleGameMode.SINGLE);
+        List<PlayerMock> players = this.joinThreePlayers(arena);
+        SingleGame game = (SingleGame) arena.game().get();
+        game.onCountdownEnd();
+        game.setState(ThimbleState.PLAYING);
+        this.plugin.getScheduler().nextTick();
+
+        UUID jumper = game.currentJumper();
+        assertNotNull(jumper, "The game should start with one player jumping.");
+        game.verdict(jumper, JumpVerdict.MISSED);
+
+        // One of the players still alive leaves.
+        arena.removePlayer(players.get(0).uuid().equals(jumper) ? players.get(1).uuid() : players.get(0).uuid(), false);
+        assertEquals(ThimbleState.END, arena.game().get().state());
+    }
+
     private @NotNull Arena newArena(@NotNull ThimbleGameMode gameMode) {
         Arena arena = new Arena(this.plugin, "test");
         WorldKey world = MockUtil.randomKey();
