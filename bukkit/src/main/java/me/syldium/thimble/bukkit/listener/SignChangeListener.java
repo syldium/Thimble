@@ -82,7 +82,7 @@ public class SignChangeListener implements Listener {
 
     @EventHandler
     public void onGameAborted(BukkitGameAbortedEvent event) {
-        //System.out.println(event);
+        this.updateSigns(event.arena(), ThimbleState.WAITING);
     }
 
     private void updateSigns(@NotNull ThimbleArena arena, @NotNull ThimbleState state) {
