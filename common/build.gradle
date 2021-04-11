@@ -19,7 +19,7 @@ dependencies {
         exclude(module: 'guava')
     }
     testImplementation 'net.kyori:adventure-text-serializer-plain:4.7.0'
-    testRuntime 'org.xerial:sqlite-jdbc:3.34.0'
+    testRuntimeOnly 'org.xerial:sqlite-jdbc:3.34.0'
 }
 
 test {
