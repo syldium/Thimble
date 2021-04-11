@@ -23,7 +23,7 @@ public class BukkitConnectionListener extends ConnectionListener<ThBukkitPlugin,
     protected void onSavedPlayerFound(@NotNull UUID playerUniqueId, @NotNull SavedPlayer<Player> savedPlayer) {
         Player player = this.plugin.getBootstrap().getServer().getPlayer(playerUniqueId);
         if (player != null) {
-            savedPlayer.restore(player, this.isInventoryCleared(), true);
+            savedPlayer.restore(player, this.inventoryCleared, true);
             this.plugin.getSavedPlayersManager().delete(playerUniqueId);
         }
     }

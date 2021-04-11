@@ -90,8 +90,8 @@ public class ThBukkitPlugin extends ThimblePlugin {
         new SignInteractListener(this, clickable);
         new SignChangeListener(this, clickable);
         new RestrictionListener(this, clickable);
-        new BukkitConnectionListener(this);
-        new BukkitMoveListener(this);
+        this.reloadables.add(new BukkitConnectionListener(this));
+        this.reloadables.add(new BukkitMoveListener(this));
         this.hooks = new PluginHook(this, bootstrap);
         this.getMessageService().setExternalPlaceholderService(this.hooks);
     }

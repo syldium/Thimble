@@ -133,8 +133,8 @@ public class ThSpongePlugin extends ThimblePlugin {
         new DamageListener(this);
         new ReloadListener(this);
         new RestrictionListener(this);
-        new SpongeConnectionListener(this);
-        new SpongeMoveListener(this);
+        this.reloadables.add(new SpongeConnectionListener(this));
+        this.reloadables.add(new SpongeMoveListener(this));
 
         if (this.configManager.getConfig().getNode("update-checker").getBoolean(true)) {
             this.game.getScheduler().createTaskBuilder()

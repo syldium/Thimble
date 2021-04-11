@@ -443,15 +443,12 @@ public abstract class Game implements ThimbleGame, Runnable {
 
     private void checkPlayerCount() {
         if (this.players.isEmpty() || this.state != ThimbleState.PLAYING) {
-            System.out.println("A");
             this.arena.checkGame();
         } else {
-            System.out.println("B");
             int aliveCount = 0;
             InGamePlayer latest = null;
             for (InGamePlayer player : this.players) {
                 if (!player.isSpectator() && !player.isVanished()) {
-                    System.out.println(aliveCount);
                     if (aliveCount++ > 0) {
                         return;
                     }

@@ -6,6 +6,7 @@ import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.common.ThimblePlugin;
+import me.syldium.thimble.common.config.ConfigManager;
 import me.syldium.thimble.common.config.ConfigNode;
 import me.syldium.thimble.common.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -13,18 +14,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.UUID;
 
-public class MoveListener<P extends ThimblePlugin> {
+public class MoveListener<P extends ThimblePlugin> implements Reloadable {
 
     protected final P plugin;
-    protected final int maxDistanceSquared;
-    protected final boolean quitOnTp;
+    protected int maxDistanceSquared;
+    protected boolean quitOnTp;
 
     public MoveListener(@NotNull P plugin) {
         this.plugin = plugin;
-        ConfigNode node = plugin.getMainConfig().getGameNode();
-        int maxDistance = node.getInt("max-spectator-distance", 40);
-        this.maxDistanceSquared = maxDistance > 0 ? maxDistance * maxDistance : -1;
-        this.quitOnTp = node.getBool("leave-arena-when-tp", true);
+        this.reload(plugin.getConfigManager());
     }
 
     protected final void onMove(@NotNull UUID playerUniqueId, @NotNull BlockVector from, @NotNull BlockVector to) {
@@ -69,5 +67,13 @@ public class MoveListener<P extends ThimblePlugin> {
 
     private @NotNull Optional<@NotNull ThimbleGame> getGame(@NotNull UUID playerUniqueId) {
         return this.plugin.getGameService().playerGame(playerUniqueId);
+    }
+
+    @Override
+    public void reload(@NotNull ConfigManager<?> configManager) {
+        ConfigNode node = configManager.getMainConfig().getGameNode();
+        int maxDistance = node.getInt("max-spectator-distance", 40);
+        this.maxDistanceSquared = maxDistance > 0 ? maxDistance * maxDistance : -1;
+        this.quitOnTp = node.getBool("leave-arena-when-tp", true);
     }
 }

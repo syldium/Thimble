@@ -2,6 +2,9 @@ Changelog
 =========
 
 ## [Unreleased]
+### Added
+- API: GameAbortedEvent and JumpVerdictEvent have been added.
+
 ### Changed
 - The commands at the end of a game are executed after the inventory is restored.
 - If all except one of the players leave the game, the game ends with the remaining player as the winner.
@@ -9,6 +12,7 @@ Changelog
 ### Fixed
 - Leaving a started game could lead to continuous NPEs.
 - The jump queue was far from being random.
+- When the reload command is used, some changes were not reflected to the listeners.
 - The number of players could be incorrect when they were added with the API.
 
 ## [1.1.1] - 2021-03-26

@@ -23,7 +23,7 @@ public class SpongeConnectionListener extends ConnectionListener<ThSpongePlugin,
     protected void onSavedPlayerFound(@NotNull UUID playerUniqueId, @NotNull SavedPlayer<Player> savedPlayer) {
         Optional<Player> playerOpt = this.plugin.getServer().getPlayer(playerUniqueId);
         if (playerOpt.isPresent()) {
-            savedPlayer.restore(playerOpt.get(), this.isInventoryCleared(), true);
+            savedPlayer.restore(playerOpt.get(), this.inventoryCleared, true);
             this.plugin.getSavedPlayersManager().delete(playerUniqueId);
         }
     }

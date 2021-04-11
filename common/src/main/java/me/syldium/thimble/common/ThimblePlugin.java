@@ -6,6 +6,7 @@ import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.dependency.Dependency;
 import me.syldium.thimble.common.dependency.DependencyInjection;
 import me.syldium.thimble.common.dependency.DependencyResolver;
+import me.syldium.thimble.common.listener.Reloadable;
 import me.syldium.thimble.common.service.ScoreboardHolderService;
 import me.syldium.thimble.common.service.ScoreboardService;
 import me.syldium.thimble.common.service.SqlDataService;
@@ -36,6 +37,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -52,6 +55,7 @@ public abstract class ThimblePlugin {
     protected static final String WINNER_TAG = TAG_START + "winner" + TAG_END;
 
     private final Executor dbExecutor = Executors.newSingleThreadExecutor(task -> new Thread(task, "Thimble-db"));
+    protected final Collection<Reloadable> reloadables = new LinkedList<>();
 
     private GameServiceImpl gameService;
     private MessageService messageService;
@@ -78,6 +82,13 @@ public abstract class ThimblePlugin {
         Thimble.setStatsService(null);
         this.gameService.save();
         this.statsService.close();
+        this.reloadables.clear();
+    }
+
+    public void reload() {
+        for (Reloadable reloadable : this.reloadables) {
+            reloadable.reload(this.getConfigManager());
+        }
     }
 
     public @NotNull File getFile(@NotNull String filename, boolean createIfNotExist) {
