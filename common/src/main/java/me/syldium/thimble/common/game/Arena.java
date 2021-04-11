@@ -1,6 +1,7 @@
 package me.syldium.thimble.common.game;
 
 import me.syldium.thimble.api.Location;
+import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.arena.ThimbleArena;
@@ -225,6 +226,9 @@ public class Arena implements ThimbleArena, ComponentLike {
 
     void checkGame() {
         if (this.game != null && this.game.isEmpty()) {
+            if (this.game.state.isNotStarted()) {
+                this.plugin.getEventAdapter().callGameAbortedEvent(this.game, this.game.state == ThimbleState.STARTING, true);
+            }
             this.game.cancel();
             this.game = null;
         }

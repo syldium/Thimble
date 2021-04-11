@@ -3,6 +3,7 @@ package me.syldium.thimble.sponge.adapter;
 import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.api.player.ThimblePlayer;
+import me.syldium.thimble.api.sponge.SpongeGameAbortedEvent;
 import me.syldium.thimble.api.sponge.SpongeGameChangeStateEvent;
 import me.syldium.thimble.api.sponge.SpongeGameEndEvent;
 import me.syldium.thimble.api.sponge.SpongePlayerJoinArenaEvent;
@@ -29,6 +30,12 @@ public class SpongeEventAdapter implements EventAdapter<Player> {
     @Override
     public void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player, boolean isSolo) {
         SpongeGameEndEvent event = new SpongeGameEndEvent(game, player, isSolo, Cause.of(this.eventContext, this.container));
+        Sponge.getEventManager().post(event);
+    }
+
+    @Override
+    public void callGameAbortedEvent(@NotNull ThimbleGame game, boolean startAborted, boolean willBeEmpty) {
+        SpongeGameAbortedEvent event = new SpongeGameAbortedEvent(game, startAborted, willBeEmpty, Cause.of(this.eventContext, this.container));
         Sponge.getEventManager().post(event);
     }
 

@@ -14,14 +14,14 @@ public interface GameEvent {
      *
      * @return The game.
      */
-    @NotNull ThimbleGame getGame();
+    @NotNull ThimbleGame game();
 
     /**
      * Gets the arena where the event was fired.
      *
      * @return The arena.
      */
-    default @NotNull ThimbleArena getArena() {
-        return this.getGame().arena();
+    default @NotNull ThimbleArena arena() {
+        return this.game().arena();
     }
 }

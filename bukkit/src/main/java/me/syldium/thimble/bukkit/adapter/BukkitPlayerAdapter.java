@@ -88,7 +88,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
 
     @Override
     public void clearPool(@NotNull WorldKey worldKey, @NotNull Map<BlockVector, BlockData> blocks) {
-        World world = requireNonNull(this.locationAdapter.getWorldFromKey(worldKey), "world");
+        World world = requireNonNull(this.locationAdapter.worldFromKey(worldKey), "world");
         for (Map.Entry<BlockVector, BlockData> entry : blocks.entrySet()) {
             BlockVector pos = entry.getKey();
             Block block = world.getBlockAt(pos.x(), pos.y(), pos.z());
@@ -129,7 +129,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
 
     @Override
     public @NotNull Set<@NotNull BlockVector> getRemainingWaterBlocks(@NotNull WorldKey worldKey, @NotNull BlockVector minPoint, @NotNull BlockVector maxPoint) {
-        World world = requireNonNull(this.locationAdapter.getWorldFromKey(worldKey), "world");
+        World world = requireNonNull(this.locationAdapter.worldFromKey(worldKey), "world");
         Set<BlockVector> set = new HashSet<>();
         for (int x = minPoint.x(); x <= maxPoint.x(); x++) {
             for (int z = minPoint.z(); z <= maxPoint.z(); z++) {

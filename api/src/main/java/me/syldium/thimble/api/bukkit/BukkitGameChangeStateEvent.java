@@ -28,7 +28,7 @@ public class BukkitGameChangeStateEvent extends Event implements Cancellable, Ga
     }
 
     @Override
-    public @NotNull ThimbleGame getGame() {
+    public @NotNull ThimbleGame game() {
         return this.game;
     }
 

@@ -27,6 +27,11 @@ public class EventAdapterMock implements EventAdapter<PlayerMock> {
     }
 
     @Override
+    public void callGameAbortedEvent(@NotNull ThimbleGame game, boolean startAborted, boolean willBeEmpty) {
+
+    }
+
+    @Override
     public boolean callPlayerJoinArenaEvent(@NotNull ThimbleGame arena, @NotNull Player player) {
         return false;
     }

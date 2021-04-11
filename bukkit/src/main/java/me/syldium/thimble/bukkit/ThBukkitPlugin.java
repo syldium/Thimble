@@ -176,7 +176,7 @@ public class ThBukkitPlugin extends ThimblePlugin {
 
     @Override
     public boolean isLoaded(@NotNull Location location) {
-        return BukkitAdapter.get().getWorldFromKey(location.worldKey()) != null;
+        return BukkitAdapter.get().worldFromKey(location.worldKey()) != null;
     }
 
     @Override

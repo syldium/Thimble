@@ -16,7 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,7 +57,7 @@ public final class BukkitAdapter implements Listener {
      *
      * @param plugin The Thimble plugin.
      */
-    @ApiStatus.Internal
+    @Internal
     public BukkitAdapter(@NotNull Plugin plugin) {
         if (INSTANCE != null) {
             throw new IllegalStateException("A BukkitAdapter instance already exists!");
@@ -86,7 +86,7 @@ public final class BukkitAdapter implements Listener {
         requireNonNull(bukkitLoc, "location");
         World world = requireNonNull(bukkitLoc.getWorld(), "world");
         return new Location(
-                this.getWorldKey(world),
+                this.worldKey(world),
                 bukkitLoc.getX(),
                 bukkitLoc.getY(),
                 bukkitLoc.getZ(),
@@ -106,7 +106,7 @@ public final class BukkitAdapter implements Listener {
         requireNonNull(bukkitLoc, "location");
         World world = requireNonNull(bukkitLoc.getWorld(), "world");
         return new BlockPos(
-                this.getWorldKey(world),
+                this.worldKey(world),
                 bukkitLoc.getBlockX(),
                 bukkitLoc.getBlockY(),
                 bukkitLoc.getBlockZ()
@@ -134,7 +134,7 @@ public final class BukkitAdapter implements Listener {
     public @NotNull BlockPos asAbstract(@NotNull Block bukkitBlock) {
         requireNonNull(bukkitBlock, "block");
         return new BlockPos(
-                this.getWorldKey(bukkitBlock.getWorld()),
+                this.worldKey(bukkitBlock.getWorld()),
                 bukkitBlock.getX(),
                 bukkitBlock.getY(),
                 bukkitBlock.getZ()
@@ -150,7 +150,7 @@ public final class BukkitAdapter implements Listener {
      */
     public @NotNull Block asBukkit(@NotNull BlockPos abstractPos) {
         requireNonNull(abstractPos, "block position");
-        World world = this.getWorldFromKey(abstractPos.worldKey());
+        World world = this.worldFromKey(abstractPos.worldKey());
         if (world == null) {
             throw new IllegalArgumentException(abstractPos.worldKey().asString() + " world does not exist!");
         }
@@ -188,7 +188,7 @@ public final class BukkitAdapter implements Listener {
      * @param key The resource key.
      * @return The world if it exists.
      */
-    public @Nullable World getWorldFromKey(@NotNull WorldKey key) {
+    public @Nullable World worldFromKey(@NotNull WorldKey key) {
         return this.keysToWorld.computeIfAbsent(key, this.keyWorldFunction);
     }
 
@@ -202,7 +202,7 @@ public final class BukkitAdapter implements Listener {
     public @NotNull org.bukkit.Location asBukkit(@NotNull Location abstractLoc) {
         requireNonNull(abstractLoc, "location");
         return new org.bukkit.Location(
-                this.getWorldFromKey(abstractLoc.worldKey()),
+                this.worldFromKey(abstractLoc.worldKey()),
                 abstractLoc.x(),
                 abstractLoc.y(),
                 abstractLoc.z(),
@@ -217,7 +217,7 @@ public final class BukkitAdapter implements Listener {
      * @param world The world.
      * @return The resource key.
      */
-    public @NotNull WorldKey getWorldKey(@NotNull World world) {
+    public @NotNull WorldKey worldKey(@NotNull World world) {
         return this.worldKeys.computeIfAbsent(world, this.worldKeyFunction);
     }
 
@@ -268,7 +268,7 @@ public final class BukkitAdapter implements Listener {
     /**
      * Internal! Removes the global instance.
      */
-    @ApiStatus.Internal
+    @Internal
     public static void unregister() {
         INSTANCE = null;
     }

@@ -28,7 +28,7 @@ public class BukkitGameEndEvent extends Event implements GameEvent {
     }
 
     @Override
-    public @NotNull ThimbleGame getGame() {
+    public @NotNull ThimbleGame game() {
         return this.game;
     }
 
@@ -37,7 +37,7 @@ public class BukkitGameEndEvent extends Event implements GameEvent {
      *
      * @return The latest player, if any.
      */
-    public @Nullable ThimblePlayer getLatestPlayer() {
+    public @Nullable ThimblePlayer latestPlayer() {
         return this.latest;
     }
 

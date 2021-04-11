@@ -28,7 +28,7 @@ public class SpongeGameChangeStateEvent extends AbstractEvent implements Cancell
     }
 
     @Override
-    public @NotNull ThimbleGame getGame() {
+    public @NotNull ThimbleGame game() {
         return this.game;
     }
 

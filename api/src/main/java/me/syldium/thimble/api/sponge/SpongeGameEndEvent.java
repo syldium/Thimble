@@ -28,7 +28,7 @@ public class SpongeGameEndEvent extends AbstractEvent implements GameEvent {
     }
 
     @Override
-    public @NotNull ThimbleGame getGame() {
+    public @NotNull ThimbleGame game() {
         return this.game;
     }
 

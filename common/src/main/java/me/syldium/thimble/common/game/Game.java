@@ -141,6 +141,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                 this.arena.checkGame();
                 return;
             }
+            this.plugin.getEventAdapter().callGameAbortedEvent(this, true, false);
             this.state = ThimbleState.WAITING;
             this.timer = this.countdownTicks;
             this.players.sendActionBar(MessageKey.ACTIONBAR_NOT_ENOUGH_PLAYERS);

@@ -26,7 +26,7 @@ public class BukkitPlayerJoinArenaEvent extends PlayerEvent implements Cancellab
     }
 
     @Override
-    public @NotNull ThimbleGame getGame() {
+    public @NotNull ThimbleGame game() {
         return this.game;
     }
 

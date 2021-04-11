@@ -31,14 +31,14 @@ class VaultIntegration implements Listener {
         final double participantDeposit = this.plugin.getConfig().getDouble("economy.participant-deposit");
         final boolean multiplyByJumpRatio = this.plugin.getConfig().getBoolean("economy.multiply-by-jump-ratio", true);
 
-        final int maxJumps = multiplyByJumpRatio ? this.maxJumps(event.getGame().players()) : 1;
-        for (ThimblePlayer player : event.getGame().players()) {
+        final int maxJumps = multiplyByJumpRatio ? this.maxJumps(event.game().players()) : 1;
+        for (ThimblePlayer player : event.game().players()) {
             if (player.isVanished()) {
                 continue;
             }
 
             OfflinePlayer offlinePlayer = this.plugin.getServer().getOfflinePlayer(player.uuid());
-            boolean isWinner = player.equals(event.getLatestPlayer());
+            boolean isWinner = player.equals(event.latestPlayer());
             double deposit = isWinner ? winnerDeposit : participantDeposit;
             if (multiplyByJumpRatio && !isWinner) {
                 deposit *= (double) player.jumpsForGame() / maxJumps;

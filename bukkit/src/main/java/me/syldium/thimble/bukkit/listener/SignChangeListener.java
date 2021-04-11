@@ -1,6 +1,7 @@
 package me.syldium.thimble.bukkit.listener;
 
 import me.syldium.thimble.api.bukkit.BukkitAdapter;
+import me.syldium.thimble.api.bukkit.BukkitGameAbortedEvent;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.arena.ThimbleArena;
 import me.syldium.thimble.api.arena.ThimbleState;
@@ -71,12 +72,17 @@ public class SignChangeListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onGameChange(BukkitGameChangeStateEvent event) {
-        this.updateSigns(event.getArena(), event.getNewState());
+        this.updateSigns(event.arena(), event.getNewState());
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onGameEnd(BukkitGameEndEvent event) {
-        this.updateSigns(event.getArena(), ThimbleState.WAITING);
+        this.updateSigns(event.arena(), ThimbleState.WAITING);
+    }
+
+    @EventHandler
+    public void onGameAborted(BukkitGameAbortedEvent event) {
+        //System.out.println(event);
     }
 
     private void updateSigns(@NotNull ThimbleArena arena, @NotNull ThimbleState state) {
@@ -85,7 +91,7 @@ public class SignChangeListener implements Listener {
         }
 
         WorldKey worldKey = requireNonNull(arena.spawnLocation(), "arena spawn location").worldKey();
-        World world = requireNonNull(BukkitAdapter.get().getWorldFromKey(worldKey), "arena spawn world");
+        World world = requireNonNull(BukkitAdapter.get().worldFromKey(worldKey), "arena spawn world");
 
         List<BlockPos> removable = new LinkedList<>();
         for (BlockPos pos : this.plugin.getGameService().arenaSigns(arena)) {

@@ -33,14 +33,14 @@ class PartiesArenaListener implements Listener {
         Party party = Parties.getApi().getParty(partyName);
         if (!uuid.equals(party.getLeader())) return;
 
-        int size = event.getGame().size();
-        if (!event.getGame().acceptPlayers(size)) return;
+        int size = event.game().size();
+        if (!event.game().acceptPlayers(size)) return;
 
         for (UUID member : party.getMembers()) {
             if (uuid.equals(member)) continue;
 
             if (this.plugin.getServer().getPlayer(member) != null) {
-                event.getArena().addPlayer(member);
+                event.arena().addPlayer(member);
             }
         }
     }

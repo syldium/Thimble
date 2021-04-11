@@ -16,6 +16,8 @@ public interface EventAdapter<P> {
 
     void callGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer player, boolean isSolo);
 
+    void callGameAbortedEvent(@NotNull ThimbleGame game, boolean startAborted, boolean willBeEmpty);
+
     @SuppressWarnings("unchecked")
     default boolean callPlayerJoinArenaEvent(@NotNull ThimbleGame arena, @NotNull Player player) {
         return this.callPlayerJoinArenaEvent(arena, ((AbstractPlayer<P>) player).getHandle());
