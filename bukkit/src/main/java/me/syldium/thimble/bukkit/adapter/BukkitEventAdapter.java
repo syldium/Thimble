@@ -5,7 +5,9 @@ import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.api.bukkit.BukkitGameAbortedEvent;
 import me.syldium.thimble.api.bukkit.BukkitGameChangeStateEvent;
 import me.syldium.thimble.api.bukkit.BukkitGameEndEvent;
+import me.syldium.thimble.api.bukkit.BukkitJumpVerdictEvent;
 import me.syldium.thimble.api.bukkit.BukkitPlayerJoinArenaEvent;
+import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.adapter.EventAdapter;
 import org.bukkit.entity.Player;
@@ -33,6 +35,13 @@ public class BukkitEventAdapter implements EventAdapter<Player> {
         BukkitGameChangeStateEvent event = new BukkitGameChangeStateEvent(game, newState);
         this.pluginManager.callEvent(event);
         return event.isCancelled();
+    }
+
+    @Override
+    public @NotNull JumpVerdict callJumpVerdictEvent(@NotNull ThimblePlayer player, @NotNull JumpVerdict verdict) {
+        BukkitJumpVerdictEvent event = new BukkitJumpVerdictEvent(player, verdict);
+        this.pluginManager.callEvent(event);
+        return event.verdict();
     }
 
     @Override

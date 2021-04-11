@@ -117,7 +117,7 @@ public class PlayerStats implements ThimblePlayerStats, Identity {
     @Override
     public String toString() {
         return "PlayerStats{" +
-                "uuid=" + this.uuid +
+                "name=" + this.name +
                 ", wins=" + this.wins +
                 ", losses=" + this.losses +
                 ", jumps=" + this.jumps +

@@ -1,5 +1,6 @@
 package me.syldium.thimble.mock.adpater;
 
+import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.mock.player.PlayerMock;
 import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.arena.ThimbleState;
@@ -19,6 +20,11 @@ public class EventAdapterMock implements EventAdapter<PlayerMock> {
     @Override
     public boolean callGameChangeState(@NotNull ThimbleGame game, @NotNull ThimbleState newState) {
         return false;
+    }
+
+    @Override
+    public @NotNull JumpVerdict callJumpVerdictEvent(@NotNull ThimblePlayer player, @NotNull JumpVerdict verdict) {
+        return verdict;
     }
 
     @Override

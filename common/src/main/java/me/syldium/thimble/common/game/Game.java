@@ -169,7 +169,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     public abstract void tickGame();
 
     @VisibleForTesting
-    public abstract void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict);
+    public abstract void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict0);
 
     protected @Nullable InGamePlayer getFirstPlayer() {
         Comparator<InGamePlayer> comparator = Comparator.comparingInt(InGamePlayer::points);
@@ -443,12 +443,15 @@ public abstract class Game implements ThimbleGame, Runnable {
 
     private void checkPlayerCount() {
         if (this.players.isEmpty() || this.state != ThimbleState.PLAYING) {
+            System.out.println("A");
             this.arena.checkGame();
         } else {
+            System.out.println("B");
             int aliveCount = 0;
             InGamePlayer latest = null;
             for (InGamePlayer player : this.players) {
                 if (!player.isSpectator() && !player.isVanished()) {
+                    System.out.println(aliveCount);
                     if (aliveCount++ > 0) {
                         return;
                     }

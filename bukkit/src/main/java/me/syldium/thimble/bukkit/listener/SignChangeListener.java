@@ -72,7 +72,7 @@ public class SignChangeListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onGameChange(BukkitGameChangeStateEvent event) {
-        this.updateSigns(event.arena(), event.getNewState());
+        this.updateSigns(event.arena(), event.newState());
     }
 
     @EventHandler

@@ -103,7 +103,8 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     }
 
     @Override
-    public void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
+    public void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict0) {
+        JumpVerdict verdict = this.plugin.getEventAdapter().callJumpVerdictEvent(inGamePlayer, verdict0);
         if (verdict == JumpVerdict.MISSED) {
             inGamePlayer.decrementPoints();
             inGamePlayer.incrementFailedJumps();

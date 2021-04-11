@@ -37,7 +37,7 @@ public class SpongeGameChangeStateEvent extends AbstractEvent implements Cancell
      *
      * @return The new state.
      */
-    public @NotNull ThimbleState getNewState() {
+    public @NotNull ThimbleState newState() {
         return this.newState;
     }
 

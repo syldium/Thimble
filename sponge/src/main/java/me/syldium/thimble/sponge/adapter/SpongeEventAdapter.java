@@ -2,10 +2,12 @@ package me.syldium.thimble.sponge.adapter;
 
 import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.arena.ThimbleState;
+import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.sponge.SpongeGameAbortedEvent;
 import me.syldium.thimble.api.sponge.SpongeGameChangeStateEvent;
 import me.syldium.thimble.api.sponge.SpongeGameEndEvent;
+import me.syldium.thimble.api.sponge.SpongeJumpVerdictEvent;
 import me.syldium.thimble.api.sponge.SpongePlayerJoinArenaEvent;
 import me.syldium.thimble.common.adapter.EventAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -55,5 +57,12 @@ public class SpongeEventAdapter implements EventAdapter<Player> {
         SpongeGameChangeStateEvent event = new SpongeGameChangeStateEvent(game, newState, Cause.of(this.eventContext, this.container));
         Sponge.getEventManager().post(event);
         return event.isCancelled();
+    }
+
+    @Override
+    public @NotNull JumpVerdict callJumpVerdictEvent(@NotNull ThimblePlayer player, @NotNull JumpVerdict verdict) {
+        SpongeJumpVerdictEvent event = new SpongeJumpVerdictEvent(player, verdict, Cause.of(this.eventContext, this.container));
+        Sponge.getEventManager().post(event);
+        return event.verdict();
     }
 }

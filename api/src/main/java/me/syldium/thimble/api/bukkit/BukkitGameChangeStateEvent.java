@@ -37,7 +37,7 @@ public class BukkitGameChangeStateEvent extends Event implements Cancellable, Ga
      *
      * @return The new state.
      */
-    public @NotNull ThimbleState getNewState() {
+    public @NotNull ThimbleState newState() {
         return this.newState;
     }
 

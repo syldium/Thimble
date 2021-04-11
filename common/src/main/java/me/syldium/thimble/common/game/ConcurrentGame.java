@@ -68,7 +68,8 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
     }
 
     @Override
-    public void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
+    public void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict0) {
+        JumpVerdict verdict = this.plugin.getEventAdapter().callJumpVerdictEvent(inGamePlayer, verdict0);
         if (verdict == JumpVerdict.MISSED) {
             if (this.countFails) {
                 inGamePlayer.decrementPoints();
