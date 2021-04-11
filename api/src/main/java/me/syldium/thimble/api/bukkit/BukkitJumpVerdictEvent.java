@@ -17,6 +17,8 @@ import static org.bukkit.Bukkit.getPlayer;
  * When the result of a jump (or not) is decided.
  *
  * <p>This event is specific to a Bukkit environment.</p>
+ *
+ * @since 1.1.2
  */
 public class BukkitJumpVerdictEvent extends Event implements GameEvent {
 
@@ -25,6 +27,12 @@ public class BukkitJumpVerdictEvent extends Event implements GameEvent {
     private final ThimblePlayer player;
     private JumpVerdict verdict;
 
+    /**
+     * Creates a new event.
+     *
+     * @param player The player.
+     * @param verdict The "normal" result.
+     */
     public BukkitJumpVerdictEvent(@NotNull ThimblePlayer player, @NotNull JumpVerdict verdict) {
         this.player = player;
         this.verdict = verdict;

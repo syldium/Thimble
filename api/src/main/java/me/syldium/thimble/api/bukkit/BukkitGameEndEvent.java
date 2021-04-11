@@ -21,6 +21,13 @@ public class BukkitGameEndEvent extends Event implements GameEvent {
     private final ThimblePlayer latest;
     private final boolean solo;
 
+    /**
+     * Creates a new event.
+     *
+     * @param game The game.
+     * @param latest The last player, if any.
+     * @param solo If it was a solo game.
+     */
     public BukkitGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer latest, boolean solo) {
         this.game = game;
         this.latest = latest;

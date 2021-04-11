@@ -20,6 +20,14 @@ public class SpongeGameEndEvent extends AbstractEvent implements GameEvent {
     private final boolean solo;
     private final Cause cause;
 
+    /**
+     * Creates a new event.
+     *
+     * @param game The game.
+     * @param latest The last player, if any.
+     * @param solo If it was a solo game.
+     * @param cause The cause.
+     */
     public SpongeGameEndEvent(@NotNull ThimbleGame game, @Nullable ThimblePlayer latest, boolean solo, @NotNull Cause cause) {
         this.game = game;
         this.latest = latest;

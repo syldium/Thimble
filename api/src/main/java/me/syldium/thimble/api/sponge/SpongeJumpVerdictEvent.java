@@ -18,6 +18,8 @@ import static org.spongepowered.api.Sponge.getServer;
  * When the result of a jump (or not) is decided.
  *
  * <p>This event is specific to a Sponge environment.</p>
+ *
+ * @since 1.1.2
  */
 public class SpongeJumpVerdictEvent extends AbstractEvent implements GameEvent {
 
@@ -25,6 +27,13 @@ public class SpongeJumpVerdictEvent extends AbstractEvent implements GameEvent {
     private JumpVerdict verdict;
     private final Cause cause;
 
+    /**
+     * Creates a new event.
+     *
+     * @param player The player.
+     * @param verdict The "normal" result.
+     * @param cause The cause.
+     */
     public SpongeJumpVerdictEvent(@NotNull ThimblePlayer player, @NotNull JumpVerdict verdict, @NotNull Cause cause) {
         this.player = player;
         this.verdict = verdict;

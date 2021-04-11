@@ -21,6 +21,13 @@ public class SpongeGameChangeStateEvent extends AbstractEvent implements Cancell
     private boolean cancelled = false;
     private final Cause cause;
 
+    /**
+     * Creates a new event.
+     *
+     * @param game The game.
+     * @param newState The new game state.
+     * @param cause The cause.
+     */
     public SpongeGameChangeStateEvent(@NotNull ThimbleGame game, @NotNull ThimbleState newState, @NotNull Cause cause) {
         this.game = game;
         this.newState = newState;
@@ -54,5 +61,15 @@ public class SpongeGameChangeStateEvent extends AbstractEvent implements Cancell
     @Override
     public @NotNull Cause getCause() {
         return this.cause;
+    }
+
+    @Override
+    public String toString() {
+        return "SpongeGameChangeStateEvent{" +
+                "playersSize=" + this.game.size() +
+                ", actualState=" + this.game.state() +
+                ", newState=" + this.newState +
+                ", cancelled=" + this.cancelled +
+                '}';
     }
 }

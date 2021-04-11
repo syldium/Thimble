@@ -21,6 +21,13 @@ public class SpongePlayerJoinArenaEvent extends AbstractEvent implements TargetP
     private boolean cancelled = false;
     private final Cause cause;
 
+    /**
+     * Creates a new event.
+     *
+     * @param game The game.
+     * @param player The player who will join the arena.
+     * @param cause The cause.
+     */
     public SpongePlayerJoinArenaEvent(@NotNull ThimbleGame game, @NotNull Player player, @NotNull Cause cause) {
         this.game = game;
         this.player = player;
@@ -50,5 +57,15 @@ public class SpongePlayerJoinArenaEvent extends AbstractEvent implements TargetP
     @Override
     public @NotNull Cause getCause() {
         return this.cause;
+    }
+
+    @Override
+    public String toString() {
+        return "SpongePlayerJoinArenaEvent{" +
+                "gameState=" + this.game.state() +
+                ", playersSize=" + this.game.size() +
+                ", player=" + this.player +
+                ", cancelled=" + this.cancelled +
+                '}';
     }
 }

@@ -22,6 +22,12 @@ public class BukkitGameChangeStateEvent extends Event implements Cancellable, Ga
     private final ThimbleState newState;
     private boolean cancelled = false;
 
+    /**
+     * Creates a new event.
+     *
+     * @param game The game.
+     * @param newState The new game state.
+     */
     public BukkitGameChangeStateEvent(@NotNull ThimbleGame game, @NotNull ThimbleState newState) {
         this.game = game;
         this.newState = newState;
@@ -63,5 +69,15 @@ public class BukkitGameChangeStateEvent extends Event implements Cancellable, Ga
      */
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    @Override
+    public String toString() {
+        return "BukkitGameChangeStateEvent{" +
+                "playersSize=" + this.game.size() +
+                ", actualState=" + this.game.state() +
+                ", newState=" + this.newState +
+                ", cancelled=" + this.cancelled +
+                '}';
     }
 }

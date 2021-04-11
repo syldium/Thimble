@@ -20,6 +20,12 @@ public class BukkitPlayerJoinArenaEvent extends PlayerEvent implements Cancellab
     private final ThimbleGame game;
     private boolean cancelled = false;
 
+    /**
+     * Creates a new event.
+     *
+     * @param game The game.
+     * @param who The player who will join the arena.
+     */
     public BukkitPlayerJoinArenaEvent(@NotNull ThimbleGame game, @NotNull Player who) {
         super(who);
         this.game = game;
@@ -52,5 +58,15 @@ public class BukkitPlayerJoinArenaEvent extends PlayerEvent implements Cancellab
      */
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    @Override
+    public String toString() {
+        return "BukkitPlayerJoinArenaEvent{" +
+                "gameState=" + this.game.state() +
+                ", playersSize=" + this.game.size() +
+                ", who=" + this.player +
+                ", cancelled=" + this.cancelled +
+                '}';
     }
 }

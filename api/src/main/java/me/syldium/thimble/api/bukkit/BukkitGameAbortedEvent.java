@@ -7,6 +7,8 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * When a game start is interrupted or when all players leave the arena.
+ *
  * <p>This event is specific to a Bukkit environment.</p>
  *
  * @since 1.1.2
@@ -19,6 +21,13 @@ public class BukkitGameAbortedEvent extends Event implements GameEvent {
     private final boolean startAborted;
     private final boolean willBeEmpty;
 
+    /**
+     * Creates a new event.
+     *
+     * @param game The part where the event happens.
+     * @param startAborted {@code true} if a countdown has been interrupted.
+     * @param willBeEmpty {@code true} if the game is or will be empty.
+     */
     public BukkitGameAbortedEvent(@NotNull ThimbleGame game, boolean startAborted, boolean willBeEmpty) {
         this.game = game;
         this.startAborted = startAborted;

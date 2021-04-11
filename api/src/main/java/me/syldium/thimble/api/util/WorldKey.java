@@ -15,7 +15,10 @@ public final class WorldKey implements Key, Serializable {
 
     private static final transient long serialVersionUID = -1681012206529286329L;
 
+    /** A name used to identify a group. */
     private final String namespace;
+
+    /** The key value. */
     private final String value;
 
     /**
