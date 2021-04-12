@@ -51,7 +51,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public @NotNull Optional<@NotNull ThimblePlayer> player(@NotNull UUID uuid) {
         Game game = this.games.get(uuid);
-        return game == null ? Optional.empty() : Optional.ofNullable(game.getPlayer(uuid));
+        return game == null ? Optional.empty() : Optional.ofNullable(game.player(uuid));
     }
 
     @Override

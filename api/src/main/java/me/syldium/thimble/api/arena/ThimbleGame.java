@@ -5,6 +5,7 @@ import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.api.util.BlockVector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -82,6 +83,15 @@ public interface ThimbleGame {
      */
     @Contract(pure = true)
     @NotNull @UnmodifiableView Set<@NotNull ThimblePlayer> players();
+
+    /**
+     * Gets the thimble player with this unique id.
+     *
+     * @param uuid The player's unique identifier.
+     * @return The player, if in the game.
+     * @since 1.1.2
+     */
+    @Nullable ThimblePlayer player(@NotNull UUID uuid);
 
     /**
      * Adds a player to the game. {@link ThimbleArena#addPlayer(UUID)}

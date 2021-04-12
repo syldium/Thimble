@@ -49,10 +49,6 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
         if (removed != null && !removed.isVanished()) {
             this.size--;
         }
-        Player player = this.plugin.getPlayer(uuid);
-        if (player != null) {
-            this.media.hide(player);
-        }
         return removed;
     }
 
@@ -159,6 +155,10 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
     @Override
     public void sendExperienceChange(float percent, int level) {
         for (PlayerAudience expHolder : this.audiences()) expHolder.sendExperienceChange(percent, level);
+    }
+
+    public void hideMedia(@NotNull PlayerAudience audience) {
+        this.media.hide(audience);
     }
 
     public @NotNull Stream<E> stream() {

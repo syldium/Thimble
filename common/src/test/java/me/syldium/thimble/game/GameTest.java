@@ -291,7 +291,7 @@ public class GameTest {
     private @NotNull UUID assertLanded(@NotNull SingleGame game, @Range(from = 1, to = Integer.MAX_VALUE) int down) {
         UUID jumperUniqueId = game.currentJumper();
         assertNotNull(jumperUniqueId, "A player must jump.");
-        InGamePlayer inGamePlayer = game.getPlayer(jumperUniqueId);
+        InGamePlayer inGamePlayer = game.player(jumperUniqueId);
         assertNotNull(inGamePlayer, "The player who jumps must have an instance of InGamePlayer.");
         Player player = requireNonNull(this.plugin.getPlayer(jumperUniqueId), "player");
         int prevJumps = inGamePlayer.jumps();

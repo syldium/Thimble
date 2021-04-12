@@ -26,7 +26,6 @@ import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -70,12 +69,19 @@ public abstract class Game implements ThimbleGame, Runnable {
         MainConfig config = plugin.getMainConfig();
         this.plugin = plugin;
         this.arena = arena;
-        this.players = new PlayerMap<>(plugin);
+        this.players = new PlayerMap<>(plugin); // Initialize the player collection
+
+        // Init timers
         this.timer = config.getGameInt("countdown-time", 30) * Ticks.TICKS_PER_SECOND;
         this.messageTimer = 0;
+
+        // Start the game task
         this.task = plugin.startGameTask(this);
+
+        // Create a media that will be seen by the jumping player
         this.jumperMedia = TimedMedia.from(plugin.getMainConfig(), "jump");
 
+        // Read some values from the config
         this.countdownTicks = this.timer;
         this.clearInventory = config.getGameNode().getBool("clear-inventory", true);
         this.fireworksThimble = config.getGameNode().getInt("fireworks-thimble", 1);
@@ -90,18 +96,22 @@ public abstract class Game implements ThimbleGame, Runnable {
         switch (this.state) {
             case WAITING:
                 if (this.canStart() && !this.plugin.getEventAdapter().callGameChangeState(this, ThimbleState.STARTING)) {
+                    // The countdown starts
                     this.state = ThimbleState.STARTING;
                     this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.STATE);
                 } else if ((this.messageTimer++ & 0xF) == 0) {
+                    // Send the message in the action bar
                     this.players.sendActionBar(MessageKey.ACTIONBAR_WAITING);
                 }
                 return;
             case STARTING:
                 this.tickCountdown();
-                if (this.timer <= 0) {
+                if (this.timer <= 0) { // The countdown has ended
                     if (this.plugin.getEventAdapter().callGameChangeState(this, ThimbleState.PLAYING)) {
-                        this.timer = 0;
+                        // The event has been cancelled, do not let the timer go into the negative
+                        this.timer = 1;
                     } else {
+                        // Hide the countdown media
                         this.players.hide();
                         this.onCountdownEnd();
                         new BlockBalancer(this.players).balance(this.plugin.getPlayerAdapter().getAvailableBlocks());
@@ -144,6 +154,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.plugin.getEventAdapter().callGameAbortedEvent(this, true, false);
             this.state = ThimbleState.WAITING;
             this.timer = this.countdownTicks;
+            this.players.hide();
             this.players.sendActionBar(MessageKey.ACTIONBAR_NOT_ENOUGH_PLAYERS);
             return;
         }
@@ -171,12 +182,19 @@ public abstract class Game implements ThimbleGame, Runnable {
     @VisibleForTesting
     public abstract void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict0);
 
+    /**
+     * Gets the non vanished player with the most of points.
+     *
+     * @return The first player.
+     */
     protected @Nullable InGamePlayer getFirstPlayer() {
-        Comparator<InGamePlayer> comparator = Comparator.comparingInt(InGamePlayer::points);
-        return this.players.stream()
-                .filter(player -> !player.isVanished())
-                .max(comparator)
-                .orElse(null);
+        InGamePlayer latest = null;
+        for (InGamePlayer player : this.players) {
+            if (!player.isVanished() && (latest == null || latest.points() < player.points())) {
+                latest = player;
+            }
+        }
+        return latest;
     }
 
     @Override
@@ -190,6 +208,13 @@ public abstract class Game implements ThimbleGame, Runnable {
         return true;
     }
 
+    /**
+     * After {@link #onJump(Player, InGamePlayer, JumpVerdict)}, this method sends a feedback to the player, which can only be done when connected.
+     *
+     * @param player The online player.
+     * @param inGamePlayer The relevant thimble player.
+     * @param verdict The jump result.
+     */
     protected void sendJumpMessage(@NotNull Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
             Template lifesTemplate = Template.of("lifes", String.valueOf(inGamePlayer.points()));
@@ -209,18 +234,27 @@ public abstract class Game implements ThimbleGame, Runnable {
         }
     }
 
+    /**
+     * End the game considering that a potential player has won.
+     *
+     * @param latest The player who wins, if any.
+     */
     protected void end(@Nullable InGamePlayer latest) {
         boolean isSolo = this.ignoreStatsIfSolo && this.playersWhoJumped.size() < 2;
         this.plugin.getEventAdapter().callGameEndEvent(this, latest, isSolo);
 
+        // Change the state
         this.state = ThimbleState.END;
         this.jumperMedia.hide(this.players);
         this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.STATE);
+
+        // Summon some fireworks
         Location fireworksLocation = this.getFireworkLocation(latest == null ? null : this.plugin.getPlayer(latest.uuid()));
         if (fireworksLocation != null) {
             this.plugin.spawnFireworks(fireworksLocation).spawn(this.fireworksEnd);
         }
 
+        // Send the winning message
         if (!isSolo && latest != null) {
             List<Template> args = new LinkedList<>();
             args.add(Template.of("player", latest.name()));
@@ -229,6 +263,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.latest = latest;
         }
 
+        // Loop for all players, put in spectator mode and update statistics
         for (InGamePlayer player : this.players) {
             if (player.isVanished()) continue;
 
@@ -254,22 +289,32 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.plugin.getStatsService().savePlayerStatistics(this.players);
         }
 
+        // Countdown to kick all players
         this.timer = this.plugin.getMainConfig().getGameNode().getInt("end-time", 5) * Ticks.TICKS_PER_SECOND;
     }
 
+    /**
+     * Closes the arena by kicking players and restoring inventories.
+     */
     private void closeArena() {
         for (InGamePlayer player : this.players) {
+            // Update the game service
             this.plugin.getGameService().setPlayerGame(player.uuid(), null);
 
+            // Let's try to restore the inventory
             Player p = this.plugin.getPlayer(player.uuid());
             if (p != null) {
+                // Immediately...
                 this.plugin.getSavedPlayersManager().restore(p, this.clearInventory, !this.teleportSpawnAtEnd);
                 if (this.teleportSpawnAtEnd) {
                     p.teleport(this.arena.spawnLocation());
                 }
             } else {
+                // ...or when the player reconnects
                 this.plugin.getSavedPlayersManager().getPending().add(player.uuid());
             }
+
+            // Hide the scoreboard
             this.plugin.getScoreboardService().hideScoreboard(player, p);
         }
 
@@ -282,6 +327,12 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.arena.checkGame();
     }
 
+    /**
+     * Determines a position to spawn the fireworks.
+     *
+     * @param player The position of a player can be used.
+     * @return A location, if any.
+     */
     private @Nullable Location getFireworkLocation(@Nullable Player player) {
         if (this.arena.poolCenterPoint() != null) {
             return new Location(this.arena.jumpLocation().worldKey(), this.arena.poolCenterPoint());
@@ -333,6 +384,12 @@ public abstract class Game implements ThimbleGame, Runnable {
         return Collections.unmodifiableSet(this.players.playerSet());
     }
 
+    /**
+     * Lists all the players who have chosen this block.
+     *
+     * @param blockData The block data.
+     * @return A set of players.
+     */
     public @NotNull Set<InGamePlayer> getPlayers(@NotNull BlockData blockData) {
         Set<InGamePlayer> set = new HashSet<>(Math.min(this.players.realSize(), 4));
         for (InGamePlayer player : this.players) {
@@ -343,7 +400,8 @@ public abstract class Game implements ThimbleGame, Runnable {
         return set;
     }
 
-    public @Nullable InGamePlayer getPlayer(@NotNull UUID uuid) {
+    @Override
+    public @Nullable InGamePlayer player(@NotNull UUID uuid) {
         return this.players.get(uuid);
     }
 
@@ -383,19 +441,23 @@ public abstract class Game implements ThimbleGame, Runnable {
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private boolean addPlayer(@NotNull UUID uuid, @NotNull Optional<ThimblePlayerStats> statsOpt) {
+        // Check that the player is still connected
         Player player = this.plugin.getPlayer(uuid);
         if (player == null) {
             return false;
         }
 
+        // Initialize player data in game
         BlockData block = this.plugin.getPlayerAdapter().getRandomBlock();
         InGamePlayer inGamePlayer = statsOpt
                 .map(stats -> new InGamePlayer(player, stats, block, this))
                 .orElseGet(() -> new InGamePlayer(player, block, this));
 
         if (this.players.add(inGamePlayer)) {
+            // Update the game service
             this.plugin.getGameService().setPlayerGame(player.uuid(), this);
 
+            // Send the message to all players except the one who joins
             this.players.sendMessageExclude(
                     inGamePlayer,
                     MessageKey.CHAT_JOINED,
@@ -403,6 +465,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             );
 
             if (!player.isVanished()) {
+                // Save the inventory and put the adventure mode
                 this.plugin.getSavedPlayersManager().save(player);
                 player.setMiniGameMode(this.clearInventory);
             }
@@ -411,7 +474,11 @@ public abstract class Game implements ThimbleGame, Runnable {
             } else {
                 player.teleportAsync(this.arena.spawnLocation());
             }
+
+            // Show the scoreboard
             this.plugin.getScoreboardService().showScoreboard(inGamePlayer, player);
+
+            // Initialize the set of water block positions if necessary
             if (this.remainingWaterBlocks == null && this.players.size() >= this.arena.minPlayers()) {
                 this.searchRemainingBlocks();
             }
@@ -427,34 +494,63 @@ public abstract class Game implements ThimbleGame, Runnable {
             return false;
         }
 
-        this.plugin.getGameService().setPlayerGame(player, null);
-        this.players.sendMessage(inGamePlayer, MessageKey.CHAT_LEFT, Template.of("player", inGamePlayer.name()));
-        Player p = this.plugin.getPlayer(player);
+        this.cleanPlayerDisplay(inGamePlayer, teleport);
+
+        if (!inGamePlayer.isVanished()) {
+            // Send the message
+            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_LEFT, Template.of("player", inGamePlayer.name()));
+        }
+
+        // Check the player count
+        if (!inGamePlayer.isVanished() || this.players.isEmpty()) {
+            this.checkPlayerCount();
+        }
+        return true;
+    }
+
+    private void cleanPlayerDisplay(@NotNull ThimblePlayer player, boolean teleport) {
+        // Update the game service
+        this.plugin.getGameService().setPlayerGame(player.uuid(), null);
+
+        // Restore the inventory if possible
+        Player p = this.plugin.getPlayer(player.uuid());
         if (p != null) {
             this.plugin.getSavedPlayersManager().restore(p, this.clearInventory, teleport && !this.teleportSpawnAtEnd);
             if (teleport && this.teleportSpawnAtEnd) {
                 p.teleport(this.arena.spawnLocation());
             }
+
+            // Hide the media
+            if (this.state.isNotStarted()) {
+                this.players.hideMedia(p);
+            }
         }
-        this.plugin.getScoreboardService().hideScoreboard(inGamePlayer, p);
-        this.checkPlayerCount();
-        return true;
+
+        // Hide the scoreboard
+        this.plugin.getScoreboardService().hideScoreboard(player, p);
     }
 
+    /**
+     * Checks the number of players to determine if the game should end.
+     */
     private void checkPlayerCount() {
         if (this.players.isEmpty() || this.state != ThimbleState.PLAYING) {
-            this.arena.checkGame();
+            this.arena.checkGame(); // Empty game
         } else {
+            // Determine the number of players still alive
             int aliveCount = 0;
             InGamePlayer latest = null;
             for (InGamePlayer player : this.players) {
                 if (!player.isSpectator() && !player.isVanished()) {
                     if (aliveCount++ > 0) {
+                        // If there are two or more, the game continues
                         return;
                     }
                     latest = player;
                 }
             }
+
+            // There is only one or no player left: the game ends
             this.end(latest);
         }
     }
@@ -505,8 +601,13 @@ public abstract class Game implements ThimbleGame, Runnable {
         return this.spectatorMode;
     }
 
-    public void spectate(@NotNull ThimblePlayer inGamePlayer, @NotNull UUID playerUniqueId) {
-        Player player = this.plugin.getPlayer(playerUniqueId);
+    /**
+     * Changes the player's game mode to spectator mode.
+     *
+     * @param inGamePlayer The thimble player.
+     */
+    public void spectate(@NotNull ThimblePlayer inGamePlayer) {
+        Player player = this.plugin.getPlayer(inGamePlayer.uuid());
         if (player == null) {
             return;
         }
@@ -517,6 +618,9 @@ public abstract class Game implements ThimbleGame, Runnable {
         player.teleport(this.arena.waitLocation());
     }
 
+    /**
+     * Find the positions of the water blocks between the two edges of the pool.
+     */
     private void searchRemainingBlocks() {
         this.remainingWaterBlocks = this.arena.poolMinPoint() == null || this.arena.poolMaxPoint() == null ?
                 Collections.emptySet()
@@ -527,7 +631,20 @@ public abstract class Game implements ThimbleGame, Runnable {
         );
     }
 
+    /**
+     * Reverts the world's changes and cancels the scheduled task.
+     */
     void cancel() {
+        if (!this.isEmpty()) {
+            throw new IllegalStateException("Cannot cancel the game since there are " + this.size() + " players left.");
+        }
+
+        // Remove vanished players
+        for (InGamePlayer player : this.players) {
+            this.cleanPlayerDisplay(player, true);
+        }
+        this.players.clear();
+
         this.plugin.getPlayerAdapter().clearPool(this.arena.jumpLocation().worldKey(), this.blocks);
         this.blocks.clear();
         this.task.cancel();
