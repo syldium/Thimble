@@ -57,7 +57,7 @@ public class BlockBalancer {
             }
 
             // One player will keep his block.
-            int index = new Random().nextInt(players.size());
+            int index = random.nextInt(players.size());
             Iterator<InGamePlayer> iter = players.iterator();
             for (int i = 0; i < index; i++) {
                 this.affectsANewBlock(random, iter.next(), available, allBlocks);
