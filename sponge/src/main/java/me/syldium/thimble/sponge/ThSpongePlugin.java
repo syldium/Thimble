@@ -197,7 +197,7 @@ public class ThSpongePlugin extends ThimblePlugin {
 
     @Override
     public @NotNull Task startGameTask(@NotNull Runnable runnable) {
-        return new SpongeTask(this.game.getScheduler().createTaskBuilder().execute(runnable).interval(Ticks.SINGLE_TICK_DURATION_MS, TimeUnit.MILLISECONDS).submit(this));
+        return new SpongeTask(this.game.getScheduler().createTaskBuilder().execute(runnable).interval(Ticks.SINGLE_TICK_DURATION_MS * 2, TimeUnit.MILLISECONDS).submit(this));
     }
 
     @Override

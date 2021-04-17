@@ -8,9 +8,9 @@ import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Placeholder;
 import me.syldium.thimble.common.player.Player;
+import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.common.world.PoolBlock;
 import net.kyori.adventure.text.minimessage.Template;
-import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
 
     public SingleGame(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
         super(plugin, arena);
-        this.jumpTicks = plugin.getMainConfig().getGameInt("jump-time-single", 15) * Ticks.TICKS_PER_SECOND;
+        this.jumpTicks = plugin.getMainConfig().getGameInt("jump-time-single", 15) * Task.GAME_TICKS_PER_SECOND;
     }
 
     @Override

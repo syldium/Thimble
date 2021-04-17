@@ -124,7 +124,7 @@ public class ThBukkitPlugin extends ThimblePlugin {
 
     @Override
     public @NotNull Task startGameTask(@NotNull Runnable runnable) {
-        return new BukkitTask(this.getServer().getScheduler().scheduleSyncRepeatingTask(this.bootstrap, runnable, 0L, 1L));
+        return new BukkitTask(this.getServer().getScheduler().scheduleSyncRepeatingTask(this.bootstrap, runnable, 0L, 2L));
     }
 
     @Override

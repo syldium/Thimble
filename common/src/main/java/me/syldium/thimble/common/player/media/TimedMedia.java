@@ -2,10 +2,10 @@ package me.syldium.thimble.common.player.media;
 
 import me.syldium.thimble.common.config.MainConfig;
 import me.syldium.thimble.common.player.PlayerAudience;
+import me.syldium.thimble.common.util.Task;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.util.Index;
-import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -30,9 +30,7 @@ public interface TimedMedia {
      * @param total The total number of ticks.
      */
     default void progress(@NotNull PlayerAudience audience, int ticks, int total) {
-        if ((ticks & 0b1) == 0) {
-            this.progress(audience, (float) ticks / total, (int) Math.ceil((float) ticks / Ticks.TICKS_PER_SECOND));
-        }
+        this.progress(audience, (float) ticks / total, (int) Math.ceil((float) ticks / Task.GAME_TICKS_PER_SECOND));
     }
 
     /**

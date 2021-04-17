@@ -1,7 +1,6 @@
 package me.syldium.thimble.mock;
 
 import me.syldium.thimble.common.util.Task;
-import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +37,7 @@ public class TickScheduler {
     }
 
     public void nextSecond() {
-        this.nextTicks(Ticks.TICKS_PER_SECOND);
+        this.nextTicks(Task.GAME_TICKS_PER_SECOND);
     }
 
     void cancel(@NotNull TaskMock task) {

@@ -9,13 +9,13 @@ import me.syldium.thimble.common.game.Game;
 import me.syldium.thimble.common.game.SingleGame;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.Player;
+import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.mock.player.PlayerMock;
 import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.mock.util.BlockDataMock;
 import me.syldium.thimble.mock.util.MockUtil;
-import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.junit.jupiter.api.AfterEach;
@@ -109,7 +109,7 @@ public class GameTest {
         Arena arena = this.newArena(ThimbleGameMode.SINGLE);
         this.joinThreePlayers(arena);
         SingleGame game = (SingleGame) arena.game().get();
-        this.plugin.getScheduler().nextTicks(Ticks.TICKS_PER_SECOND + 2);
+        this.plugin.getScheduler().nextTicks(Task.GAME_TICKS_PER_SECOND + 2);
         UUID jumperUniqueId = game.currentJumper();
         assertNotNull(jumperUniqueId);
 
@@ -162,7 +162,7 @@ public class GameTest {
         assertEquals(3, game.realSize());
 
         // The vanished player is teleported, but must not be in the queue...
-        this.plugin.getScheduler().nextTicks(Ticks.TICKS_PER_SECOND + 2);
+        this.plugin.getScheduler().nextTicks(Task.GAME_TICKS_PER_SECOND + 2);
         Set<Location> locations = Set.of(arena.jumpLocation(), arena.waitLocation());
         for (PlayerMock player : this.plugin.getPlayers()) {
             if (player.equals(vanishedPlayer)) {

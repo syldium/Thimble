@@ -19,7 +19,6 @@ import me.syldium.thimble.common.util.PlayerMap;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.common.world.BlockData;
 import net.kyori.adventure.text.minimessage.Template;
-import net.kyori.adventure.util.Ticks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -45,7 +44,7 @@ import java.util.logging.Level;
  */
 public abstract class Game implements ThimbleGame, Runnable {
 
-    private static final int TIMER_SOUND_THRESHOLD = Ticks.TICKS_PER_SECOND * 5;
+    private static final int TIMER_SOUND_THRESHOLD = Task.GAME_TICKS_PER_SECOND * 5;
 
     protected final ThimblePlugin plugin;
     protected final Arena arena;
@@ -72,7 +71,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         this.players = new PlayerMap<>(plugin); // Initialize the player collection
 
         // Init timers
-        this.timer = config.getGameInt("countdown-time", 30) * Ticks.TICKS_PER_SECOND;
+        this.timer = config.getGameInt("countdown-time", 30) * Task.GAME_TICKS_PER_SECOND;
         this.messageTimer = 0;
 
         // Start the game task
@@ -160,7 +159,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         }
         this.players.progress(this.timer, this.countdownTicks);
         this.timer--;
-        if (this.timer <= TIMER_SOUND_THRESHOLD && this.timer % Ticks.TICKS_PER_SECOND == 0) {
+        if (this.timer <= TIMER_SOUND_THRESHOLD && this.timer % Task.GAME_TICKS_PER_SECOND == 0) {
             this.players.playSound(this.plugin.getMainConfig().getTimerSound(this.timer));
         }
     }
@@ -290,7 +289,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         }
 
         // Countdown to kick all players
-        this.timer = this.plugin.getMainConfig().getGameNode().getInt("end-time", 5) * Ticks.TICKS_PER_SECOND;
+        this.timer = this.plugin.getMainConfig().getGameNode().getInt("end-time", 5) * Task.GAME_TICKS_PER_SECOND;
     }
 
     /**

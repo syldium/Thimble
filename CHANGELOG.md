@@ -8,6 +8,7 @@ Changelog
 ### Changed
 - The commands at the end of a game are executed after the inventory is restored.
 - If all except one of the players leave the game, the game ends with the remaining player as the winner.
+- The game task is now run every two ticks instead of every tick.
 
 ### Fixed
 - Leaving a started game could lead to continuous NPEs.
