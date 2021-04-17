@@ -21,7 +21,7 @@ subprojects {
     }
 
     project.description = 'Plugin for the thimble mini game (dé à coudre)'
-    project.ext.fullVersion = '1.1.2-SNAPSHOT'
+    project.ext.fullVersion = '1.2.0-SNAPSHOT'
 
     jar {
         manifest {

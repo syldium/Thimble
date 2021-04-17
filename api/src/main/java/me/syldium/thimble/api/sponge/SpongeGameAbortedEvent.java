@@ -11,7 +11,7 @@ import org.spongepowered.api.event.impl.AbstractEvent;
  *
  * <p>This event is specific to a Sponge environment.</p>
  * 
- * @since 1.1.2
+ * @since 1.2.0
  */
 public class SpongeGameAbortedEvent extends AbstractEvent implements GameEvent {
 

@@ -19,7 +19,7 @@ import static org.spongepowered.api.Sponge.getServer;
  *
  * <p>This event is specific to a Sponge environment.</p>
  *
- * @since 1.1.2
+ * @since 1.2.0
  */
 public class SpongeJumpVerdictEvent extends AbstractEvent implements GameEvent {
 

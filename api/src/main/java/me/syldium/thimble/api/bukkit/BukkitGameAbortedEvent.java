@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * <p>This event is specific to a Bukkit environment.</p>
  *
- * @since 1.1.2
+ * @since 1.2.0
  */
 public class BukkitGameAbortedEvent extends Event implements GameEvent {
 
@@ -24,7 +24,7 @@ public class BukkitGameAbortedEvent extends Event implements GameEvent {
     /**
      * Creates a new event.
      *
-     * @param game The part where the event happens.
+     * @param game The arena where the event happens.
      * @param startAborted {@code true} if a countdown has been interrupted.
      * @param willBeEmpty {@code true} if the game is or will be empty.
      */

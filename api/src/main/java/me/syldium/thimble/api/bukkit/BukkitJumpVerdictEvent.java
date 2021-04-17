@@ -18,7 +18,7 @@ import static org.bukkit.Bukkit.getPlayer;
  *
  * <p>This event is specific to a Bukkit environment.</p>
  *
- * @since 1.1.2
+ * @since 1.2.0
  */
 public class BukkitJumpVerdictEvent extends Event implements GameEvent {
 

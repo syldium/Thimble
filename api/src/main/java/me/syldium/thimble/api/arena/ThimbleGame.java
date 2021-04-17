@@ -89,8 +89,9 @@ public interface ThimbleGame {
      *
      * @param uuid The player's unique identifier.
      * @return The player, if in the game.
-     * @since 1.1.2
+     * @since 1.2.0
      */
+    @Contract(pure = true)
     @Nullable ThimblePlayer player(@NotNull UUID uuid);
 
     /**
@@ -174,8 +175,10 @@ public interface ThimbleGame {
     /**
      * Returns {@code true} if no player is in the game.
      *
+     * <p>This method also counts the vanished players.</p>
+     *
      * @return If empty.
-     * @since 1.1.2
+     * @since 1.2.0
      */
     @Contract(pure = true)
     boolean isReallyEmpty();
