@@ -7,6 +7,7 @@ import me.syldium.thimble.common.dependency.Dependency;
 import me.syldium.thimble.common.dependency.DependencyInjection;
 import me.syldium.thimble.common.dependency.DependencyResolver;
 import me.syldium.thimble.common.listener.Reloadable;
+import me.syldium.thimble.common.service.ExternalPlaceholderProvider;
 import me.syldium.thimble.common.service.ScoreboardHolderService;
 import me.syldium.thimble.common.service.ScoreboardService;
 import me.syldium.thimble.common.service.SqlDataService;
@@ -160,6 +161,10 @@ public abstract class ThimblePlugin {
 
     public @NotNull StatsServiceImpl getStatsService() {
         return this.statsService;
+    }
+
+    public @NotNull ExternalPlaceholderProvider placeholderProvider() {
+        return new ExternalPlaceholderProvider(this::getStatsService);
     }
 
     public @Nullable Player getPlayer(@NotNull UUID uuid) {

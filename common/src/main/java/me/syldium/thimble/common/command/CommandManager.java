@@ -13,21 +13,18 @@ import me.syldium.thimble.common.command.migrate.MigrateCommand;
 import me.syldium.thimble.common.command.migrate.ReloadCommand;
 import me.syldium.thimble.common.command.migrate.VersionCommand;
 import me.syldium.thimble.common.player.MessageKey;
+import me.syldium.thimble.common.util.StringUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CommandManager {
-
-    private static final Pattern DELIMITER = Pattern.compile(" ");
 
     private final List<? extends AbstractCommand> mainCommands;
 
@@ -111,7 +108,7 @@ public class CommandManager {
      * @return Not handled command result.
      */
     protected @NotNull CommandResult executeCommand(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull String label, @NotNull String arguments) {
-        return this.executeCommand(plugin, sender, label, this.getArgumentsList(arguments, 0));
+        return this.executeCommand(plugin, sender, label, this.getArgumentsList(arguments));
     }
 
     /**
@@ -139,7 +136,7 @@ public class CommandManager {
      * @return Result of the command execution.
      */
     protected @NotNull CommandResult runCommand(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull String label, @NotNull String arguments) {
-        return this.runCommand(plugin, sender, label, this.getArgumentsList(arguments, 0));
+        return this.runCommand(plugin, sender, label, this.getArgumentsList(arguments));
     }
 
     protected @NotNull List<@NotNull String> tabCompleteCommand(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull List<@NotNull String> arguments) {
@@ -167,7 +164,7 @@ public class CommandManager {
     }
 
     protected @NotNull List<@NotNull String> tabCompleteCommand(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull String arguments) {
-        return this.tabCompleteCommand(plugin, sender, this.getArgumentsList(arguments, -1));
+        return this.tabCompleteCommand(plugin, sender, this.getArgumentsList(arguments));
     }
 
     private void sendMainHelp(@NotNull Sender sender, @NotNull String label) {
@@ -187,15 +184,8 @@ public class CommandManager {
         return this.mainCommands;
     }
 
-    public @NotNull String[] getArgumentsArray(@NotNull String arguments, int limit) {
-        return arguments.isEmpty() ? new String[0] : DELIMITER.split(arguments, limit);
-    }
-
-    public @NotNull List<@NotNull String> getArgumentsList(@NotNull String arguments, int limit) {
-        if (arguments.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return new ArrayList<>(Arrays.asList(DELIMITER.split(arguments, limit)));
+    public @NotNull List<@NotNull String> getArgumentsList(@NotNull String arguments) {
+        return StringUtil.split(arguments, ' ');
     }
 
     public <T extends AbstractCommand> @NotNull T lookup(@NotNull Class<T> clazz) {

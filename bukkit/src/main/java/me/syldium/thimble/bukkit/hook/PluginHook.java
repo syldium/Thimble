@@ -36,7 +36,7 @@ public final class PluginHook implements PlaceholderService {
             new LuckPermsContext(bootstrap.getServer().getServicesManager(), plugin.getGameService());
         }
         if (this.isEnabled("PlaceholderAPI")) {
-            new ThimbleExpansion(plugin.getStatsService(), this::setPlaceholderService);
+            new ThimbleExpansion(plugin.placeholderProvider(), this::setPlaceholderService);
         }
         if (this.isEnabled("Parties")) {
             new PartiesArenaListener(bootstrap);

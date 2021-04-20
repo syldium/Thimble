@@ -9,8 +9,10 @@ import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import static me.syldium.thimble.common.util.MinecraftVersion.is18;
 import static me.syldium.thimble.common.util.MinecraftVersion.isLegacy;
@@ -22,6 +24,7 @@ public class MainConfig {
     private final ConfigNode game;
     private final ConfigNode storage;
     private final List<String> integrations;
+    private final Set<String> allowedCommands;
     private final Sound jumpFailedSound, jumpSucceedSound, thimbleSound;
     private final Key countdown;
 
@@ -39,6 +42,7 @@ public class MainConfig {
         this.game = config.getNode("game");
         this.storage = config.getNode("storage");
         this.integrations = config.getStringList("integrations");
+        this.allowedCommands = new HashSet<>(config.getStringList("allowed-commands-in-game"));
 
         ConfigNode sound = config.getOrCreateNode("sound");
         this.jumpFailedSound = sound.getSound("jump-failed", is18() ? "game.player.hurt" : "entity.player.hurt", 0.7f);
@@ -120,5 +124,9 @@ public class MainConfig {
 
     public @NotNull List<@NotNull String> getEnabledIntegrations() {
         return this.integrations;
+    }
+
+    public Set<String> getAllowedCommands() {
+        return this.allowedCommands;
     }
 }

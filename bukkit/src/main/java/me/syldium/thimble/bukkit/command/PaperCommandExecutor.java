@@ -13,8 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PaperCommandExecutor<S extends BukkitBrigadierCommandSource> extends BukkitCommandExecutor implements Listener {
@@ -36,17 +35,16 @@ public class PaperCommandExecutor<S extends BukkitBrigadierCommandSource> extend
             return;
         }
 
-        String[] args = this.getArgumentsArray(event.getBuffer(), -1);
-        String label = event.getBuffer().charAt(0) == '/' ? args[0].substring(1) : args[0];
+        List<String> args = this.getArgumentsList(event.getBuffer());
+        String label = event.getBuffer().charAt(0) == '/' ? args.get(0).substring(1) : args.get(0);
 
         if (this.commandMap.getCommand(label) != this.pluginCommand) {
             return;
         }
 
-        args = args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[]{""};
+        args = args.size() > 1 ? args.subList(1, args.size()) : Collections.emptyList();
         Sender sender = this.plugin.getPlayerAdapter().asAbstractSender(event.getSender());
-        List<String> arguments = new ArrayList<>(Arrays.asList(args));
-        event.setCompletions(this.tabCompleteCommand(this.plugin, sender, arguments));
+        event.setCompletions(this.tabCompleteCommand(this.plugin, sender, args));
         event.setHandled(true);
     }
 

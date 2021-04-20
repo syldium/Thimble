@@ -4,6 +4,7 @@ import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.MessageKey;
+import me.syldium.thimble.common.util.StringUtil;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,19 +17,16 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class RestrictionListener implements Listener {
 
     private final ThBukkitPlugin plugin;
     private final Set<Material> clickable;
-    private final Set<String> allowedCommands;
 
     public RestrictionListener(@NotNull ThBukkitPlugin plugin, @NotNull Set<@NotNull Material> clickable) {
         this.plugin = plugin;
         this.clickable = clickable;
-        this.allowedCommands = new HashSet<>(plugin.getConfig().getStringList("allowed-commands-in-game"));
         plugin.registerEvents(this);
     }
 
@@ -60,9 +58,12 @@ public class RestrictionListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         if (this.isRestricted(event.getPlayer())) {
-            String[] arguments = this.plugin.getCommandManager().getArgumentsArray(event.getMessage(), -1);
-            String label = arguments[0].charAt(0) == '/' ? arguments[0].substring(1) : arguments[0];
-            if (!this.allowedCommands.contains(label)) {
+            String literal = event.getMessage();
+            if (literal.isEmpty()) return;
+
+            String command = literal.charAt(0) == '/' ? literal.substring(1) : literal;
+            String label = StringUtil.firstToken(command, ' ');
+            if (!this.plugin.getMainConfig().getAllowedCommands().contains(label)) {
                 event.setCancelled(true);
                 this.plugin.sendFeedback(event.getPlayer(), CommandResult.error(MessageKey.FEEDBACK_GAME_COMMAND));
             }
