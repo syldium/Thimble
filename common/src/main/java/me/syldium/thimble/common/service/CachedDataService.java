@@ -12,12 +12,20 @@ import java.util.concurrent.TimeUnit;
 
 class CachedDataService implements DataService {
 
-    private final CacheService<UUID, Optional<ThimblePlayerStats>> uuidCache = CacheService.create(2, TimeUnit.MINUTES);
-    private final CacheService<String, Optional<ThimblePlayerStats>> stringCache = CacheService.create(2, TimeUnit.MINUTES);
+    private final CacheService<UUID, Optional<ThimblePlayerStats>> uuidCache;
+    private final CacheService<String, Optional<ThimblePlayerStats>> stringCache;
     private final DataService dataService;
 
     CachedDataService(@NotNull DataService dataService) {
         this.dataService = dataService;
+        this.uuidCache = CacheService.dummy();
+        this.stringCache = CacheService.dummy();
+    }
+
+    CachedDataService(@NotNull SqlDataService dataService, int nameCacheDuration, int uuidCacheDuration) {
+        this.dataService = dataService;
+        this.stringCache = CacheService.create(nameCacheDuration, TimeUnit.SECONDS);
+        this.uuidCache = CacheService.create(uuidCacheDuration, TimeUnit.SECONDS);
     }
 
     @Override

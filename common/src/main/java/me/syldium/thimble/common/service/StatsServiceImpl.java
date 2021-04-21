@@ -5,9 +5,11 @@ import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
 import me.syldium.thimble.api.service.StatsService;
 import me.syldium.thimble.api.util.Leaderboard;
+import me.syldium.thimble.common.config.ConfigNode;
 import me.syldium.thimble.common.player.PlayerStats;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 
 import java.sql.SQLException;
 import java.util.EnumMap;
@@ -25,8 +27,19 @@ public class StatsServiceImpl implements StatsService, AutoCloseable {
     private final SqlDataService dataService;
     private final Executor executor;
 
+    public StatsServiceImpl(@NotNull SqlDataService dataService, @NotNull Executor executor, @NotNull ConfigNode cacheNode) {
+        this(dataService, executor, cacheNode.getInt("name-duration", 60), cacheNode.getInt("uuid-duration", 120));
+    }
+
+    public StatsServiceImpl(@NotNull SqlDataService dataService, @NotNull Executor executor, int nameCacheDuration, int uuidCacheDuration) {
+        this.cachedDataService = new CachedDataService(dataService, nameCacheDuration, uuidCacheDuration);
+        this.dataService = dataService;
+        this.executor = executor;
+    }
+
+    @TestOnly
     public StatsServiceImpl(@NotNull SqlDataService dataService, @NotNull Executor executor) {
-        this.cachedDataService = new CachedDataService(dataService);
+        this.cachedDataService = dataService;
         this.dataService = dataService;
         this.executor = executor;
     }

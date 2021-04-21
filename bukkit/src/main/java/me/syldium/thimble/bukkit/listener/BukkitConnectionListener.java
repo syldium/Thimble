@@ -6,6 +6,7 @@ import me.syldium.thimble.common.listener.ConnectionListener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,11 @@ public class BukkitConnectionListener extends ConnectionListener<ThBukkitPlugin,
             savedPlayer.restore(player, this.inventoryCleared, true);
             this.plugin.getSavedPlayersManager().delete(playerUniqueId);
         }
+    }
+
+    @EventHandler
+    public void onPreLogin(AsyncPlayerPreLoginEvent event) {
+        this.onPreLogin(event.getUniqueId());
     }
 
     @EventHandler

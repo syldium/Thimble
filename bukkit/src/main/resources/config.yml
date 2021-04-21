@@ -130,3 +130,15 @@ economy:
   winner-deposit: 0 # How much should the winning player receive?
   participant-deposit: 0 # How much should the other players receive?
   multiply-by-jump-ratio: true # Should the amount be divided proportionally to the player with the most jumps?
+
+# Cache configuration
+# The cache is used to store in memory the statistics from the database.
+cache:
+  # Cache by name duration in seconds.
+  name-duration: 60
+
+  # Cache by uuid duration in seconds.
+  uuid-duration: 120
+
+  # Load the player's statistics into the cache upon pre-login.
+  load-on-login: false

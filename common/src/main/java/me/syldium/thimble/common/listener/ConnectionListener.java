@@ -4,7 +4,7 @@ import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.config.ConfigManager;
-import me.syldium.thimble.common.config.ConfigNode;
+import me.syldium.thimble.common.config.MainConfig;
 import me.syldium.thimble.common.config.SavedPlayer;
 import me.syldium.thimble.common.game.Game;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +17,9 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> i
     protected final Plugin plugin;
     protected boolean quitOnDisconnect;
     protected boolean inventoryCleared;
+    protected boolean loadCacheOnLogin;
 
-    public ConnectionListener(@NotNull Plugin plugin) {
+    protected ConnectionListener(@NotNull Plugin plugin) {
         this.plugin = plugin;
         int savesSize = plugin.getSavedPlayersManager().getPending().size();
         if (savesSize > 0) {
@@ -27,8 +28,14 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> i
         this.reload(this.plugin.getConfigManager());
     }
 
+    protected final void onPreLogin(@NotNull UUID playerUniqueId) {
+        if (this.loadCacheOnLogin) {
+            this.plugin.getStatsService().getPlayerStatistics(playerUniqueId);
+        }
+    }
+
     @SuppressWarnings("unchecked")
-    public final void onJoin(@NotNull UUID playerUniqueId) {
+    protected final void onJoin(@NotNull UUID playerUniqueId) {
         Optional<ThimblePlayer> inGamePlayerOpt = this.plugin.getGameService().player(playerUniqueId);
         if (inGamePlayerOpt.isPresent()) {
             ((Game) inGamePlayerOpt.get().game()).spectate(inGamePlayerOpt.get());
@@ -56,9 +63,10 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> i
 
     @Override
     public void reload(@NotNull ConfigManager<?> configManager) {
-        ConfigNode node = configManager.getMainConfig().getGameNode();
-        this.quitOnDisconnect = node.getBool("quit-game-on-disconnect", false);
-        this.inventoryCleared = node.getBool("clear-inventory", true);
+        MainConfig config = configManager.getMainConfig();
+        this.quitOnDisconnect = config.getGameNode().getBool("quit-game-on-disconnect", false);
+        this.inventoryCleared = config.getGameNode().getBool("clear-inventory", true);
+        this.loadCacheOnLogin = config.getCacheNode().getBool("load-on-login", false);
     }
 
     protected abstract void onSavedPlayerFound(@NotNull UUID playerUniqueId, @NotNull SavedPlayer<Player> savedPlayer);

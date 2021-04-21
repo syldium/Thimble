@@ -16,4 +16,8 @@ public interface CacheService<K, V> {
     static <K, V> @NotNull CacheService<K, V> create(long duration, @NotNull TimeUnit unit) {
         return CacheProvider.INSTANCE.create(duration, unit);
     }
+
+    static <K, V> @NotNull CacheService<K, V> dummy() {
+        return new DummyCache<>();
+    }
 }

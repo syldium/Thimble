@@ -121,8 +121,9 @@ public abstract class ThimblePlugin {
     }
 
     protected @NotNull StatsServiceImpl constructStatsService() {
-        SqlDataService dataService = DataService.fromConfig(this, this.getMainConfig());
-        return new StatsServiceImpl(dataService, this.dbExecutor);
+        MainConfig config = this.getMainConfig();
+        SqlDataService dataService = DataService.fromConfig(this, config);
+        return new StatsServiceImpl(dataService, this.dbExecutor, config.getCacheNode());
     }
 
     public void loadServices() {

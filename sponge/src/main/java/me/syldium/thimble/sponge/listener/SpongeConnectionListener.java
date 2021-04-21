@@ -29,6 +29,11 @@ public class SpongeConnectionListener extends ConnectionListener<ThSpongePlugin,
     }
 
     @Listener
+    public void onAuth(ClientConnectionEvent.Auth event) {
+        this.onPreLogin(event.getProfile().getUniqueId());
+    }
+
+    @Listener
     public void onJoin(ClientConnectionEvent.Join event, @First Player player) {
         this.onJoin(player.getUniqueId());
     }

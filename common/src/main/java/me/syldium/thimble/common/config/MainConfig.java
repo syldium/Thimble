@@ -20,6 +20,7 @@ import static me.syldium.thimble.common.util.MinecraftVersion.isLegacy;
 public class MainConfig {
 
     private final Locale locale;
+    private final ConfigNode cache;
     private final ConfigNode display;
     private final ConfigNode game;
     private final ConfigNode storage;
@@ -38,6 +39,7 @@ public class MainConfig {
         } else {
             this.locale = parts.length > 0 ? new Locale(parts[0]) : Locale.getDefault();
         }
+        this.cache = config.getOrCreateNode("cache");
         this.display = config.getNode("display");
         this.game = config.getNode("game");
         this.storage = config.getNode("storage");
@@ -80,6 +82,10 @@ public class MainConfig {
 
     public @Nullable String getJdbcPassword() {
         return this.storage.getString("password");
+    }
+
+    public @NotNull ConfigNode getCacheNode() {
+        return this.cache;
     }
 
     public @NotNull ConfigNode getGameNode() {
