@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -26,11 +26,15 @@ public class ExternalPlaceholderProvider {
     }
 
     public @Nullable String provide(@NotNull UUID playerUniqueId, @NotNull List<String> tokens) {
-        if (tokens.size() < 2 || tokens.size() > 4) {
+        if (tokens.size() < 1 || tokens.size() > 4) {
             return null;
         }
 
         if ("lb".equals(tokens.get(0))) {
+            if (tokens.size() < 2) {
+                return null;
+            }
+
             RankingPosition rankingPosition = this.parseRankingPosition(tokens.get(1), tokens.size() > 2 ? tokens.get(2) : "0");
             if (rankingPosition == null) {
                 return null;
@@ -38,6 +42,14 @@ public class ExternalPlaceholderProvider {
 
             boolean requestUsername = tokens.size() > 3 && "name".equals(tokens.get(3));
             return this.formatPlayerStats(this.statsService.get().getLeaderboard(rankingPosition), rankingPosition.ranking(), requestUsername);
+        } else {
+            try {
+                Ranking ranking = Ranking.from(tokens.get(0));
+                Optional<ThimblePlayerStats> statsOpt = this.statsService.get().getPlayerStatistics(playerUniqueId).join();
+                if (statsOpt.isPresent()) {
+                    return String.valueOf(ranking.get(statsOpt.get()));
+                }
+            } catch (IllegalArgumentException ignored) { }
         }
 
         return null;
@@ -45,7 +57,7 @@ public class ExternalPlaceholderProvider {
 
     private @Nullable RankingPosition parseRankingPosition(@NotNull String ranking, @NotNull String position) {
         try {
-            return new RankingPosition(Ranking.valueOf(ranking.toUpperCase(Locale.ROOT)), Integer.parseInt(position));
+            return new RankingPosition(Ranking.from(ranking), Integer.parseInt(position));
         } catch (IllegalArgumentException ex) {
             return null;
         }

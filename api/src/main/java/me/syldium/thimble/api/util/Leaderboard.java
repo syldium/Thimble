@@ -11,8 +11,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
-import java.util.function.Function;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -29,7 +30,7 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
     public static final int MAX_LENGTH = 10;
 
     private final Comparator<ThimblePlayerStats> comparator;
-    private final Function<ThimblePlayerStats, Integer> getter;
+    private final ToIntFunction<ThimblePlayerStats> getter;
     private List<ThimblePlayerStats> list = new ArrayList<>(Leaderboard.MAX_LENGTH);
 
     /**
@@ -42,11 +43,11 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
         return new Leaderboard(ranking.getter());
     }
 
-    private Leaderboard(@NotNull Function<ThimblePlayerStats, Integer> getter) {
-        this(Comparator.comparingInt(getter::apply).reversed(), getter);
+    private Leaderboard(@NotNull ToIntFunction<ThimblePlayerStats> getter) {
+        this(Comparator.comparingInt(getter).reversed(), getter);
     }
 
-    private Leaderboard(@NotNull Comparator<ThimblePlayerStats> comparator, @NotNull Function<ThimblePlayerStats, Integer> getter) {
+    private Leaderboard(@NotNull Comparator<ThimblePlayerStats> comparator, @NotNull ToIntFunction<ThimblePlayerStats> getter) {
         this.comparator = comparator;
         this.getter = getter;
     }
@@ -116,7 +117,11 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
      * @return The score list.
      */
     public @NotNull List<@NotNull Integer> scores() {
-        return this.list.stream().map(this.getter).collect(Collectors.toList());
+        return this.list.stream().map(this.getter::applyAsInt).collect(Collectors.toList());
+    }
+
+    public @NotNull IntStream intStream() {
+        return this.list.stream().mapToInt(this.getter);
     }
 
     /**
@@ -127,7 +132,7 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
      */
     public boolean containsScore(int score) {
         for (ThimblePlayerStats element : this) {
-            if (this.getter.apply(element) == score) {
+            if (this.getter.applyAsInt(element) == score) {
                 return true;
             }
         }

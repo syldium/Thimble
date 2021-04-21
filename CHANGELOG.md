@@ -3,6 +3,7 @@ Changelog
 
 ## [Unreleased]
 ### Added
+- Player scores can now be displayed with placeholders.
 - API: GameAbortedEvent and JumpVerdictEvent have been added.
 
 ### Changed
@@ -12,7 +13,7 @@ Changelog
 
 ### Fixed
 - Leaving a started game could lead to continuous NPEs.
-- The jump queue was far from being random.
+- The initial order of the jump queue is more random.
 - When the reload command is used, some changes were not reflected to the listeners.
 - The number of players could be incorrect when they were added with the API.
 

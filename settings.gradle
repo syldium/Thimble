@@ -1,7 +1,7 @@
 rootProject.name = 'Thimble'
 include (
         'api',
-        'common',
+        'common', 'common:cache',
         'bukkit', 'bukkit:integration',
         'sponge'
 )

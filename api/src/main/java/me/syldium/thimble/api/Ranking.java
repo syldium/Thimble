@@ -3,7 +3,8 @@ package me.syldium.thimble.api;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
+import java.util.Locale;
+import java.util.function.ToIntFunction;
 
 /**
  * Various ranking criteria.
@@ -35,9 +36,9 @@ public enum Ranking {
      */
     THIMBLES(ThimblePlayerStats::thimbles);
 
-    private final Function<ThimblePlayerStats, Integer> getter;
+    private final ToIntFunction<ThimblePlayerStats> getter;
 
-    Ranking(@NotNull Function<ThimblePlayerStats, Integer> getter) {
+    Ranking(@NotNull ToIntFunction<ThimblePlayerStats> getter) {
         this.getter = getter;
     }
 
@@ -48,7 +49,7 @@ public enum Ranking {
      * @return A numeric value.
      */
     public int get(@NotNull ThimblePlayerStats stats) {
-        return this.getter.apply(stats);
+        return this.getter.applyAsInt(stats);
     }
 
     /**
@@ -56,7 +57,18 @@ public enum Ranking {
      *
      * @return A function.
      */
-    public @NotNull Function<ThimblePlayerStats, Integer> getter() {
+    public @NotNull ToIntFunction<ThimblePlayerStats> getter() {
         return this.getter;
+    }
+
+    /**
+     * Get the ranking from a string using {@link Ranking#valueOf(String)}.
+     * 
+     * @param string The name of the ranking constant to return.
+     * @return The enum constant.
+     * @throws IllegalArgumentException If no constant has this name.
+     */
+    public static @NotNull Ranking from(@NotNull String string) {
+        return Ranking.valueOf(string.toUpperCase(Locale.ROOT));
     }
 }

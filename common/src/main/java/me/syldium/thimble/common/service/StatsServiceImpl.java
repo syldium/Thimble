@@ -21,28 +21,30 @@ public class StatsServiceImpl implements StatsService, AutoCloseable {
 
     private final Map<Ranking, Leaderboard> leaderboard = new EnumMap<>(Ranking.class);
 
+    private final DataService cachedDataService;
     private final SqlDataService dataService;
     private final Executor executor;
 
     public StatsServiceImpl(@NotNull SqlDataService dataService, @NotNull Executor executor) {
+        this.cachedDataService = new CachedDataService(dataService);
         this.dataService = dataService;
         this.executor = executor;
     }
 
     @Override
     public @NotNull CompletableFuture<@NotNull Optional<ThimblePlayerStats>> getPlayerStatistics(@NotNull UUID uuid) {
-        return CompletableFuture.supplyAsync(() -> this.dataService.getPlayerStatistics(uuid), this.executor);
+        return CompletableFuture.supplyAsync(() -> this.cachedDataService.getPlayerStatistics(uuid), this.executor);
     }
 
     @Override
     public @NotNull CompletableFuture<@NotNull Optional<@NotNull ThimblePlayerStats>> getPlayerStatistics(@NotNull String name) {
-        return CompletableFuture.supplyAsync(() -> this.dataService.getPlayerStatistics(name), this.executor);
+        return CompletableFuture.supplyAsync(() -> this.cachedDataService.getPlayerStatistics(name), this.executor);
     }
 
     @Override
     public @NotNull CompletableFuture<@Nullable Void> savePlayerStatistics(@NotNull ThimblePlayerStats statistics) {
         return CompletableFuture.supplyAsync(() -> {
-            this.dataService.savePlayerStatistics(statistics);
+            this.cachedDataService.savePlayerStatistics(statistics);
             return null;
         }, this.executor);
     }
@@ -97,5 +99,6 @@ public class StatsServiceImpl implements StatsService, AutoCloseable {
     @Override
     public void close() {
         this.dataService.close();
+        this.cachedDataService.close();
     }
 }
