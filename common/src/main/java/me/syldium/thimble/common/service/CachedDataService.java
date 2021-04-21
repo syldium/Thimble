@@ -24,8 +24,8 @@ class CachedDataService implements DataService {
 
     CachedDataService(@NotNull SqlDataService dataService, int nameCacheDuration, int uuidCacheDuration) {
         this.dataService = dataService;
-        this.stringCache = CacheService.create(nameCacheDuration, TimeUnit.SECONDS);
-        this.uuidCache = CacheService.create(uuidCacheDuration, TimeUnit.SECONDS);
+        this.stringCache = nameCacheDuration > 0 ? CacheService.create(nameCacheDuration, TimeUnit.SECONDS) : CacheService.dummy();
+        this.uuidCache = uuidCacheDuration > 0 ? CacheService.create(uuidCacheDuration, TimeUnit.SECONDS) : CacheService.dummy();
     }
 
     @Override
