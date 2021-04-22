@@ -4,6 +4,7 @@ import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +34,7 @@ public class DamageListener implements Listener {
         ThimbleGame game = optional.get();
 
         if (game.isJumping(player.getUniqueId()) && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            if (!BukkitAdapter.get().asAbstractLoc(player).asBlockPosition().equals(game.arena().jumpLocation().asBlockPosition())) {
+            if (BukkitAdapter.get().asAbstractLoc(player).distanceSquared(game.arena().jumpLocation()) > 10) {
                 game.verdict(player.getUniqueId(), JumpVerdict.MISSED);
             }
         }
@@ -42,10 +43,9 @@ public class DamageListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
         if (!this.plugin.getGameService().playerGame(event.getEntity().getUniqueId()).isPresent()) return;
 
-        Player player = (Player) event.getEntity();
+        HumanEntity player = event.getEntity();
         if (player.getFoodLevel() > event.getFoodLevel()) {
             event.setCancelled(true);
         }
