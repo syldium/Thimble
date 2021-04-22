@@ -41,8 +41,8 @@ public class BukkitConnectionListener extends ConnectionListener<ThBukkitPlugin,
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        UUID uuid = event.getPlayer().getUniqueId();
-        this.onQuit(uuid);
-        this.plugin.getPlayerAdapter().unregisterPlayer(uuid);
+        Player player = event.getPlayer();
+        this.onQuit(player.getName(), player.getUniqueId());
+        this.plugin.getPlayerAdapter().unregisterPlayer(player.getUniqueId());
     }
 }

@@ -142,3 +142,6 @@ cache:
 
   # Load the player's statistics into the cache upon pre-login.
   load-on-login: false
+
+  # Remove cached data when the player leaves the server.
+  invalidate-on-quit: true

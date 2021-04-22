@@ -23,7 +23,7 @@ public class StatsServiceImpl implements StatsService, AutoCloseable {
 
     private final Map<Ranking, Leaderboard> leaderboard = new EnumMap<>(Ranking.class);
 
-    private final DataService cachedDataService;
+    private final CachedDataService cachedDataService;
     private final SqlDataService dataService;
     private final Executor executor;
 
@@ -39,9 +39,7 @@ public class StatsServiceImpl implements StatsService, AutoCloseable {
 
     @TestOnly
     public StatsServiceImpl(@NotNull SqlDataService dataService, @NotNull Executor executor) {
-        this.cachedDataService = dataService;
-        this.dataService = dataService;
-        this.executor = executor;
+        this(dataService, executor, 0, 0);
     }
 
     @Override
@@ -113,5 +111,9 @@ public class StatsServiceImpl implements StatsService, AutoCloseable {
     public void close() {
         this.dataService.close();
         this.cachedDataService.close();
+    }
+
+    public void invalidateCache(String playerName, UUID playerUniqueId) {
+        this.cachedDataService.invalidate(playerName, playerUniqueId);
     }
 }

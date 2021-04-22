@@ -18,6 +18,7 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> i
     protected boolean quitOnDisconnect;
     protected boolean inventoryCleared;
     protected boolean loadCacheOnLogin;
+    protected boolean invalidateOnDisconnect;
 
     protected ConnectionListener(@NotNull Plugin plugin) {
         this.plugin = plugin;
@@ -51,9 +52,14 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> i
         );
     }
 
-    public final void onQuit(@NotNull UUID playerUniqueId) {
+    public final void onQuit(@NotNull String playerName, @NotNull UUID playerUniqueId) {
         Optional<ThimbleGame> optional = this.plugin.getGameService().playerGame(playerUniqueId);
-        if (!optional.isPresent()) return;
+        if (!optional.isPresent()) {
+            if (this.invalidateOnDisconnect) {
+                this.plugin.getStatsService().invalidateCache(playerName, playerUniqueId);
+            }
+            return;
+        }
         ThimbleGame game = optional.get();
 
         if (this.quitOnDisconnect || game.state().isNotStarted()) {
@@ -67,6 +73,7 @@ public abstract class ConnectionListener<Plugin extends ThimblePlugin, Player> i
         this.quitOnDisconnect = config.getGameNode().getBool("quit-game-on-disconnect", false);
         this.inventoryCleared = config.getGameNode().getBool("clear-inventory", true);
         this.loadCacheOnLogin = config.getCacheNode().getBool("load-on-login", false);
+        this.invalidateOnDisconnect = config.getCacheNode().getBool("invalidate-on-quit", true);
     }
 
     protected abstract void onSavedPlayerFound(@NotNull UUID playerUniqueId, @NotNull SavedPlayer<Player> savedPlayer);
