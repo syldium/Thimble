@@ -13,8 +13,8 @@ dependencies {
     compileOnly 'com.mojang:brigadier:1.0.17'
     compileOnly 'com.google.code.gson:gson:2.8.0'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
     testImplementation('org.spongepowered:configurate-gson:4.0.0') {
         exclude(module: 'checker-qual')
         exclude(module: 'guava')
