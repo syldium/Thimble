@@ -1,9 +1,11 @@
 package me.syldium.thimble.common.service;
 
 import me.syldium.thimble.api.Ranking;
+import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
 import me.syldium.thimble.api.util.Leaderboard;
 import me.syldium.thimble.common.cache.CacheService;
+import me.syldium.thimble.common.player.PlayerStats;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -46,9 +48,7 @@ class CachedDataService implements DataService {
     @Override
     public void savePlayerStatistics(@NotNull ThimblePlayerStats statistics) {
         this.dataService.savePlayerStatistics(statistics);
-        Optional<ThimblePlayerStats> optional = Optional.of(statistics);
-        this.stringCache.put(statistics.name(), optional);
-        this.uuidCache.put(statistics.uuid(), optional);
+        this.cache(statistics);
     }
 
     @Override
@@ -56,7 +56,13 @@ class CachedDataService implements DataService {
         this.dataService.close();
     }
 
-    public void invalidate(@NotNull String playerName, @NotNull UUID playerUniqueId) {
+    void cache(@NotNull ThimblePlayerStats stats) {
+        Optional<ThimblePlayerStats> optional = Optional.of(stats instanceof ThimblePlayer ? new PlayerStats(stats) : stats);
+        this.stringCache.put(stats.name(), optional);
+        this.uuidCache.put(stats.uuid(), optional);
+    }
+
+    void invalidate(@NotNull String playerName, @NotNull UUID playerUniqueId) {
         this.stringCache.invalidate(playerName);
         this.uuidCache.invalidate(playerUniqueId);
     }

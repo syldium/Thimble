@@ -31,6 +31,10 @@ public class PlayerStats implements ThimblePlayerStats, Identity {
         this.thimbles = thimbles;
     }
 
+    public PlayerStats(@NotNull ThimblePlayerStats stats) {
+        this(stats.uuid(), stats.name(), stats.wins(), stats.losses(), stats.jumps(), stats.failedJumps(), stats.thimbles());
+    }
+
     @Override
     public @NotNull UUID uuid() {
         return this.uuid;

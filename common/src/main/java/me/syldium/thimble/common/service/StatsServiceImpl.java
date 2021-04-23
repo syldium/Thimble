@@ -66,6 +66,7 @@ public class StatsServiceImpl implements StatsService, AutoCloseable {
                 this.dataService.startBatch();
                 for (S statistics : iterable) {
                     this.dataService.persist(statistics);
+                    this.cachedDataService.cache(statistics);
                 }
                 this.dataService.finishBatch();
             } catch (SQLException ex) {
@@ -96,15 +97,7 @@ public class StatsServiceImpl implements StatsService, AutoCloseable {
     }
 
     public void updateLeaderboard(@NotNull ThimblePlayer player) {
-        this.updateLeaderboard(new PlayerStats(
-                player.uuid(),
-                player.name(),
-                player.wins(),
-                player.losses(),
-                player.jumps(),
-                player.failedJumps(),
-                player.thimbles()
-        ));
+        this.updateLeaderboard(new PlayerStats(player));
     }
 
     @Override
