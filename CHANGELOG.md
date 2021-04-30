@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## [Unreleased]
+## ## [1.2.0] - 2021-04-30
 ### Added
 - Player scores can now be displayed with placeholders.
 - API: GameAbortedEvent and JumpVerdictEvent have been added.
