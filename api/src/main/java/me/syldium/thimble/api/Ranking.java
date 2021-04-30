@@ -62,6 +62,15 @@ public enum Ranking {
     }
 
     /**
+     * Gets the {@link #name() name} in lower case.
+     *
+     * @return The name.
+     */
+    public @NotNull String asString() {
+        return this.name().toLowerCase(Locale.ROOT);
+    }
+
+    /**
      * Get the ranking from a string using {@link Ranking#valueOf(String)}.
      * 
      * @param string The name of the ranking constant to return.

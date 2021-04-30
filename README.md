@@ -29,12 +29,18 @@ Note: once the sign is created, its content is no longer used, you can replace i
 ### PlaceholderAPI
 
 This plugin automatically registers placeholders if PlaceholderAPI is installed.
-Currently, only the leaderboard is accessible with the syntax: `%thimble_lb_<table>[_<pos>][_name]%` where `table` is `wins`, `losses`, `jumps` or `thimbles` and `pos` a number from 0 to 9.
+The leaderboard is accessible with the syntax: `%thimble_lb_<table>[_<pos>][_name]%` where `table` is `wins`, `losses`, `jumps`, `fails` or `thimbles` and `pos` a number from 0 to 9.
 Examples:
 - `%thimble_lb_wins%`
 - `%thimble_lb_losses_3_name%`
 - `%thimble_lb_jumps_6_name%`
 - `%thimble_lb_thimbles_9%`
+
+You can display the player's statistics:
+- `%thimble_wins%`
+- `%thimble_jumps%`
+- `%thimble_fails%`
+- `%thimble_thimbles%`
 
 ### Permissions
 
