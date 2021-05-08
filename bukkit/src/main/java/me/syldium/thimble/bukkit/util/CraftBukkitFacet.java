@@ -6,56 +6,131 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.invoke.MethodHandle;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 
 import static net.kyori.adventure.text.serializer.craftbukkit.BukkitComponentSerializer.legacy;
 import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findConstructor;
 import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findEnum;
 import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findNmsClass;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.needNmsClass;
+import static org.bukkit.Bukkit.getScoreboardManager;
 
 // Adapted for adventure from https://github.com/MrMicky-FR/FastBoard
 public class CraftBukkitFacet {
 
-    private static final BiFunction<Player, Scoreboard, ScoreboardPacket> FACET;
+    private static final BiFunction<Player, Scoreboard, ScoreboardFacet> FACET;
 
-    private final Map<Scoreboard, ScoreboardPacket> scoreboards = Collections.synchronizedMap(new IdentityHashMap<>(4));
+    private final Map<Scoreboard, ScoreboardFacet> scoreboards = Collections.synchronizedMap(new IdentityHashMap<>(4));
 
     static {
-        if (MinecraftVersion.isLegacy()) {
-            FACET = ScoreboardPacket1_12::new;
+        if (ScoreboardPacket.isSupported()) {
+            if (MinecraftVersion.isLegacy()) {
+                FACET = ScoreboardPacket1_12::new;
+            } else {
+                FACET = ScoreboardPacket1_13::new;
+            }
         } else {
-            FACET = ScoreboardPacket1_13::new;
+            FACET = ScoreboardApi::new;
         }
     }
 
     public void setScoreboard(@NotNull Player player, @NotNull Scoreboard scoreboard) {
-        ScoreboardPacket facet = FACET.apply(player, scoreboard);
+        ScoreboardFacet facet = FACET.apply(player, scoreboard);
         scoreboard.addListener(facet);
-        ScoreboardPacket prev = this.scoreboards.put(scoreboard, facet);
+        ScoreboardFacet prev = this.scoreboards.put(scoreboard, facet);
         if (prev != null) {
-            prev.remove(scoreboard);
+            prev.remove(player, scoreboard);
         }
     }
 
-    public void removeScoreboard(@NotNull Scoreboard scoreboard) {
-        ScoreboardPacket facet = this.scoreboards.remove(scoreboard);
+    public void removeScoreboard(@NotNull Player player, @NotNull Scoreboard scoreboard) {
+        ScoreboardFacet facet = this.scoreboards.remove(scoreboard);
         if (facet != null) {
-            facet.remove(scoreboard);
+            facet.remove(player, scoreboard);
+        }
+    }
+
+    private interface ScoreboardFacet extends Scoreboard.Listener {
+
+        void remove(@NotNull Player player, @NotNull Scoreboard scoreboard);
+    }
+
+    @SuppressWarnings("deprecation")
+    private static class ScoreboardApi implements ScoreboardFacet {
+
+        private final WeakReference<org.bukkit.scoreboard.Scoreboard> lastScoreboard;
+        private final org.bukkit.scoreboard.Scoreboard scoreboard;
+        private final Objective objective;
+        private final String id = "th-" + Integer.toHexString(ThreadLocalRandom.current().nextInt());
+
+        ScoreboardApi(@NotNull Player player, @NotNull Scoreboard scoreboard) {
+            this.scoreboard = getScoreboardManager().getNewScoreboard();
+            this.objective = this.scoreboard.registerNewObjective(this.id, "dummy", legacy().serialize(scoreboard.title()));
+            this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+            for (int score = 0; score < scoreboard.size(); score++) {
+                this.lineAdded(scoreboard, scoreboard.lineByScore(score), score);
+            }
+            this.lastScoreboard = new WeakReference<>(player.getScoreboard());
+            player.setScoreboard(this.scoreboard);
+        }
+
+        @Override
+        public void titleChanged(@NotNull Scoreboard scoreboard, @NotNull Component oldTitle, @NotNull Component newTitle) {
+            this.objective.setDisplayName(legacy().serialize(newTitle));
+        }
+
+        @Override
+        public void lineAdded(@NotNull Scoreboard scoreboard, @NotNull Component content, int line) {
+            final int score = scoreboard.reverseIndex(line);
+            final String colorCode = getColorCode(score);
+            final String legacy = legacy().serialize(scoreboard.line(line));
+            this.objective.getScore(colorCode).setScore(score);
+            final Team team = this.scoreboard.registerNewTeam(this.id + score);
+            team.setPrefix(legacy);
+            team.addEntry(colorCode);
+        }
+
+        @Override
+        public void lineUpdated(@NotNull Scoreboard scoreboard, @NotNull Component oldLine, @NotNull Component newLine, int line) {
+            final int score = scoreboard.reverseIndex(line);
+            final Team team = this.scoreboard.getTeam(this.id + score);
+            if (team != null) {
+                team.setPrefix(legacy().serialize(scoreboard.line(line)));
+            }
+        }
+
+        @Override
+        public void lineRemoved(@NotNull Scoreboard scoreboard, @NotNull Component content, int line) {
+            final int score = scoreboard.reverseIndex(line);
+            this.scoreboard.resetScores(getColorCode(score));
+            final Team team = this.scoreboard.getTeam(this.id + score);
+            if (team != null) {
+                team.unregister();
+            }
+        }
+
+        @Override
+        public void remove(@NotNull Player player, @NotNull Scoreboard scoreboard) {
+            final org.bukkit.scoreboard.Scoreboard lastScoreboard = this.lastScoreboard.get();
+            player.setScoreboard(lastScoreboard == null ? getScoreboardManager().getMainScoreboard() : lastScoreboard);
         }
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    private abstract static class ScoreboardPacket implements Scoreboard.Listener {
+    private abstract static class ScoreboardPacket implements ScoreboardFacet {
 
         protected static final Class<?> CLASS_CHAT_COMPONENT = findNmsClass("IChatBaseComponent");
 
@@ -68,27 +143,27 @@ public class CraftBukkitFacet {
         protected static final Class<?> CLASS_TEAM_PACKET = findNmsClass("PacketPlayOutScoreboardTeam");
         protected static final MethodHandle NEW_TEAM_PACKET = findConstructor(CLASS_TEAM_PACKET);
 
-        private static final Class<?> ENUM_SB_HEALTH_DISPLAY = needNmsClass("IScoreboardCriteria$EnumScoreboardHealthDisplay");
-        private static final Class<?> ENUM_SB_ACTION = needNmsClass(MinecraftVersion.isLegacy() ? "PacketPlayOutScoreboardScore$EnumScoreboardAction" : "ScoreboardServer$Action");
+        private static final Class<?> ENUM_SB_HEALTH_DISPLAY = findNmsClass("IScoreboardCriteria$EnumScoreboardHealthDisplay");
+        private static final Class<?> ENUM_SB_ACTION = findNmsClass(MinecraftVersion.isLegacy() ? "PacketPlayOutScoreboardScore$EnumScoreboardAction" : "ScoreboardServer$Action");
         private static final Object ENUM_SB_HEALTH_DISPLAY_INTEGER = findEnum(ENUM_SB_HEALTH_DISPLAY, "INTEGER", 0);
         private static final Object ENUM_SB_ACTION_CHANGE = findEnum(ENUM_SB_ACTION, "CHANGE", 0);
         private static final Object ENUM_SB_ACTION_REMOVE = findEnum(ENUM_SB_ACTION, "REMOVE", 1);
 
         private final Object connection;
-        protected final String id = "th-" + Double.toString(Math.random()).substring(2, 10);
+        protected final String id = "th-" + Integer.toHexString(ThreadLocalRandom.current().nextInt());
 
         ScoreboardPacket(@NotNull Player player, @NotNull Scoreboard scoreboard) {
             this.connection = PacketUtil.getPlayerConnection(player);
             this.sendObjectivePacket(ObjectiveMode.CREATE, scoreboard.title());
             this.sendDisplaySlotPacket();
-            List<Component> lines = scoreboard.lines();
-            for (int score = 0; score < lines.size(); score++) {
+            for (int score = 0; score < scoreboard.size(); score++) {
                 this.sendScorePacket(score, ScoreboardAction.CHANGE);
                 this.sendTeamPacket(scoreboard.lineByScore(score), score, TeamMode.CREATE);
             }
         }
 
-        public void remove(@NotNull Scoreboard scoreboard) {
+        @Override
+        public void remove(@NotNull Player player, @NotNull Scoreboard scoreboard) {
             List<Component> lines = scoreboard.lines();
             for (int score = 0; score < lines.size(); score++) {
                 this.sendTeamPacket(scoreboard.lineByScore(score), score, TeamMode.REMOVE);
@@ -150,7 +225,7 @@ public class CraftBukkitFacet {
         public void sendScorePacket(int score, ScoreboardAction action) {
             try {
                 Object packet = NEW_SCORE_PACKET.invoke();
-                this.setField(packet, String.class, this.getColorCode(score), 0);
+                this.setField(packet, String.class, getColorCode(score), 0);
                 this.setField(packet, ENUM_SB_ACTION, action == ScoreboardAction.REMOVE ? ENUM_SB_ACTION_REMOVE : ENUM_SB_ACTION_CHANGE);
 
                 if (action == ScoreboardAction.CHANGE) {
@@ -187,8 +262,8 @@ public class CraftBukkitFacet {
 
         protected abstract void setComponentField(@NotNull Object object, @NotNull Component component, int count) throws ReflectiveOperationException;
 
-        protected @NotNull String getColorCode(int score) {
-            return ChatColor.values()[score].toString();
+        public static boolean isSupported() {
+            return PacketUtil.isSupported() && MinecraftComponentSerializer.isSupported() && NEW_OBJECTIVE_PACKET != null && NEW_DISPLAY_OBJECTIVE_PACKET != null && NEW_SCORE_PACKET != null && NEW_TEAM_PACKET != null && ENUM_SB_ACTION != null;
         }
     }
 
@@ -215,7 +290,7 @@ public class CraftBukkitFacet {
                 }
 
                 if (mode == TeamMode.CREATE) {
-                    setField(packet, Collection.class, Collections.singletonList(this.getColorCode(score))); // Players in the team
+                    setField(packet, Collection.class, Collections.singletonList(getColorCode(score))); // Players in the team
                 }
 
                 this.sendPacket(packet);
@@ -306,6 +381,10 @@ public class CraftBukkitFacet {
         protected void setComponentField(@NotNull Object object, @NotNull Component component, int count) throws ReflectiveOperationException {
             this.setField(object, String.class, legacy().serialize(component), count);
         }
+    }
+
+    protected static @NotNull String getColorCode(int score) {
+        return ChatColor.values()[score].toString();
     }
 
     enum ObjectiveMode {

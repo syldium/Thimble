@@ -189,7 +189,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
 
     @Override
     public void hideScoreboard(@NotNull Scoreboard scoreboard, me.syldium.thimble.common.player.@NotNull Player player) {
-        this.facet.removeScoreboard(scoreboard);
+        this.facet.removeScoreboard(this.asPlatform(player), scoreboard);
     }
 
     public @NotNull Sender asAbstractSender(@NotNull CommandSender sender) {
