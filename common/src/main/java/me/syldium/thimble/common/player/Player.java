@@ -6,11 +6,12 @@ import me.syldium.thimble.common.player.media.Scoreboard;
 import me.syldium.thimble.common.world.PoolBlock;
 import net.kyori.adventure.identity.Identified;
 import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public interface Player extends PlayerAudience, Identified, Identity, Sender, Scoreboard.Holder {
+public interface Player extends PlayerAudience, Identified, Identity, Sender, Sound.Emitter, Scoreboard.Holder {
 
     /**
      * Gets the player's current position.

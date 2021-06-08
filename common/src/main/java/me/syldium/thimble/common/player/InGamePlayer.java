@@ -44,7 +44,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
         super(uuid, name);
         this.block = block;
         this.game = game;
-        this.lastLocation = new Location(new WorldKey(UUID.randomUUID().toString().substring(0, 16)), 0, 0, 0);
+        this.lastLocation = new Location(new WorldKey(java.util.UUID.randomUUID().toString().substring(0, 16)), 0, 0, 0);
         this.vanished = false;
     }
 

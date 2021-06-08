@@ -12,12 +12,15 @@ repositories {
 }
 
 dependencies {
-    api 'org.jetbrains:annotations:20.1.0'
+    api 'org.jetbrains:annotations:21.0.0'
+    compileOnly "net.kyori:adventure-api:${project.parent.adventure_version}"
     compileOnly ('net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT') {
+        exclude(module: 'adventure-api')
         exclude(module: 'checker-qual')
     }
 
     compileOnly ('com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT') {
+        exclude(module: 'adventure-api')
         exclude(module: 'bungeecord-chat')
         exclude(module: 'guava')
         exclude(module: 'json-simple')

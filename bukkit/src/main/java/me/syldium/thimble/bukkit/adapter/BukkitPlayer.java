@@ -6,6 +6,7 @@ import me.syldium.thimble.common.player.AbstractPlayer;
 import me.syldium.thimble.common.world.PoolBlock;
 import me.syldium.thimble.bukkit.world.BukkitPoolBlock;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.sound.Sound;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static me.syldium.thimble.bukkit.util.BukkitUtil.isWater;
+import static me.syldium.thimble.bukkit.world.BukkitBlockData.IS_FLAT;
 
 public class BukkitPlayer extends AbstractPlayer<Player> {
 
@@ -140,5 +142,15 @@ public class BukkitPlayer extends AbstractPlayer<Player> {
     @Override
     public boolean hasPermission(@NotNull String permission) {
         return this.handle.hasPermission(permission);
+    }
+
+    @Override
+    public void playSound(@NotNull Sound sound, Sound.@NotNull Emitter emitter) {
+        // Currently not supported by the platform package
+        if (IS_FLAT) {
+            this.handle.playSound(((BukkitPlayer) emitter).handle.getLocation(), sound.name().asString(), sound.volume(), sound.pitch());
+        } else {
+            super.playSound(sound);
+        }
     }
 }

@@ -6,8 +6,12 @@ import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.service.MessageService;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
+import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.permission.PermissionChecker;
+import net.kyori.adventure.pointer.Pointers;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.util.TriState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -17,6 +21,7 @@ public abstract class AbstractSender<S> implements Sender, ForwardingAudience.Si
     private final ThimblePlugin plugin;
     private final Audience audience;
     protected final S handle;
+    private Pointers pointers;
 
     public AbstractSender(@NotNull ThimblePlugin plugin, @NotNull S handle, @NotNull Audience audience) {
         this.plugin = plugin;
@@ -69,6 +74,18 @@ public abstract class AbstractSender<S> implements Sender, ForwardingAudience.Si
 
     private @NotNull MessageService getMessageService() {
         return this.plugin.getMessageService();
+    }
+
+    @Override
+    public @NotNull Pointers pointers() {
+        if (this.pointers == null) {
+            this.pointers = Pointers.builder()
+                    .withStatic(Identity.UUID, this.uuid())
+                    .withStatic(Identity.NAME, this.name())
+                    .withStatic(PermissionChecker.POINTER, permission -> TriState.byBoolean(this.hasPermission(permission)))
+                    .build();
+        }
+        return this.pointers;
     }
 
     @Override
