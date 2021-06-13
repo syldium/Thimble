@@ -60,7 +60,7 @@ public class BukkitCommandExecutor extends CommandManager implements TabExecutor
         try {
             return server.getCommandMap();
         } catch (NoSuchMethodError err) {
-            Field field = findField(server.getClass(), "commandMap", CommandMap.class);
+            Field field = findField(server.getClass(), CommandMap.class, "commandMap");
             try {
                 return field == null ? null : (CommandMap) field.get(server);
             } catch (IllegalAccessException ex) {

@@ -8,9 +8,12 @@ import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import static java.lang.invoke.MethodType.methodType;
+import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findClass;
 import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findCraftClass;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findNmsClass;
+import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findField;
+import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findMcClassName;
+import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findMethod;
+import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findNmsClassName;
 import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.lookup;
 
 public final class PacketUtil {
@@ -22,7 +25,10 @@ public final class PacketUtil {
 
     static {
         Class<?> craftPlayerClass = findCraftClass("entity.CraftPlayer", Player.class);
-        Class<?> packetClass = findNmsClass("Packet");
+        Class<?> packetClass = findClass(
+                findNmsClassName("Packet"),
+                findMcClassName("network.protocol.Packet")
+        );
 
         MethodHandle craftPlayerGetHandle = null;
         MethodHandle entityPlayerGetConnection = null;
@@ -32,10 +38,25 @@ public final class PacketUtil {
                 Method getHandleMethod = craftPlayerClass.getMethod("getHandle");
                 Class<?> entityPlayerClass = getHandleMethod.getReturnType();
                 craftPlayerGetHandle = lookup().unreflect(getHandleMethod);
-                Field playerConnectionField = entityPlayerClass.getField("playerConnection");
-                entityPlayerGetConnection = lookup().unreflectGetter(playerConnectionField);
-                Class<?> playerConnectionClass = playerConnectionField.getType();
-                playerConnectionSendPacket = lookup().findVirtual(playerConnectionClass, "sendPacket", methodType(void.class, packetClass));
+                Field playerConnectionField = findField(entityPlayerClass, "playerConnection", "connection");
+                Class<?> playerConnectionClass;
+                if (playerConnectionField != null) { // named fields
+                    entityPlayerGetConnection = lookup().unreflectGetter(playerConnectionField);
+                    playerConnectionClass = playerConnectionField.getType();
+                } else { // obfuscated fields
+                    playerConnectionClass = findClass(
+                            findNmsClassName("PlayerConnection"),
+                            findMcClassName("server.network.PlayerConnection"),
+                            findMcClassName("server.network.ServerGamePacketListenerImpl")
+                    );
+                    for (Field field : entityPlayerClass.getDeclaredFields()) {
+                        if (field.getType().equals(playerConnectionClass)) {
+                            entityPlayerGetConnection = lookup().unreflectGetter(field);
+                            break;
+                        }
+                    }
+                }
+                playerConnectionSendPacket = findMethod(playerConnectionClass, new String[]{"sendPacket", "send"}, void.class, packetClass);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }

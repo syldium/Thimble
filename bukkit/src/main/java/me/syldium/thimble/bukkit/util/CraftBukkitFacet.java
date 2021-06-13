@@ -4,6 +4,7 @@ import me.syldium.thimble.common.player.media.Scoreboard;
 import me.syldium.thimble.common.util.MinecraftVersion;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
+import net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -11,36 +12,46 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.invoke.MethodHandle;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 
 import static net.kyori.adventure.text.serializer.craftbukkit.BukkitComponentSerializer.legacy;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findConstructor;
+import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findClass;
 import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findEnum;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findNmsClass;
+import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findMcClassName;
+import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findNmsClassName;
 import static org.bukkit.Bukkit.getScoreboardManager;
 
 // Adapted for adventure from https://github.com/MrMicky-FR/FastBoard
 public class CraftBukkitFacet {
 
+    private static final boolean LEGACY_PACKETS = MinecraftVersion.isLegacy();
+    private static final boolean SINGLE_PACKAGE = MinecraftReflection.hasClass(findNmsClassName("Packet"));
     private static final BiFunction<Player, Scoreboard, ScoreboardFacet> FACET;
 
     private final Map<Scoreboard, ScoreboardFacet> scoreboards = Collections.synchronizedMap(new IdentityHashMap<>(4));
 
     static {
         if (ScoreboardPacket.isSupported()) {
-            if (MinecraftVersion.isLegacy()) {
+            if (LEGACY_PACKETS) {
                 FACET = ScoreboardPacket1_12::new;
             } else {
-                FACET = ScoreboardPacket1_13::new;
+                if (SINGLE_PACKAGE) {
+                    FACET = ScoreboardPacket1_13::new;
+                } else {
+                    FACET = ScoreboardPacket1_17::new;
+                }
             }
         } else {
             FACET = ScoreboardApi::new;
@@ -132,22 +143,87 @@ public class CraftBukkitFacet {
     @SuppressWarnings("UnstableApiUsage")
     private abstract static class ScoreboardPacket implements ScoreboardFacet {
 
-        protected static final Class<?> CLASS_CHAT_COMPONENT = findNmsClass("IChatBaseComponent");
+        protected static final Map<Class<?>, Field[]> PACKETS = new HashMap<>(6);
+        protected static final Class<?> CLASS_CHAT_COMPONENT = findClass(
+                findNmsClassName("IChatBaseComponent"),
+                findMcClassName("network.chat.IChatBaseComponent"),
+                findMcClassName("network.chat.Component")
+        );
+        protected static final Class<?> ENUM_CHAT_FORMAT = findClass(
+                findNmsClassName("EnumChatFormat"),
+                findMcClassName("EnumChatFormat"),
+                findMcClassName("ChatFormatting")
+        );
+        protected static final Object RESET_FORMATTING = findEnum(ENUM_CHAT_FORMAT, "RESET", 21);
+        protected static final Object EMPTY_COMPONENT = MinecraftComponentSerializer.isSupported() ? MinecraftComponentSerializer.get().serialize(Component.empty()) : null;
 
-        protected static final Class<?> CLASS_OBJECTIVE_PACKET = findNmsClass("PacketPlayOutScoreboardObjective");
-        protected static final MethodHandle NEW_OBJECTIVE_PACKET = findConstructor(CLASS_OBJECTIVE_PACKET);
-        protected static final Class<?> CLASS_DISPLAY_OBJECTIVE_PACKET = findNmsClass("PacketPlayOutScoreboardDisplayObjective");
-        protected static final MethodHandle NEW_DISPLAY_OBJECTIVE_PACKET = findConstructor(CLASS_DISPLAY_OBJECTIVE_PACKET);
-        protected static final Class<?> CLASS_SCORE_PACKET = findNmsClass("PacketPlayOutScoreboardScore");
-        protected static final MethodHandle NEW_SCORE_PACKET = findConstructor(CLASS_SCORE_PACKET);
-        protected static final Class<?> CLASS_TEAM_PACKET = findNmsClass("PacketPlayOutScoreboardTeam");
-        protected static final MethodHandle NEW_TEAM_PACKET = findConstructor(CLASS_TEAM_PACKET);
+        protected static final Class<?> CLASS_OBJECTIVE_PACKET = findClass(
+                findNmsClassName("PacketPlayOutScoreboardObjective"),
+                findMcClassName("network.protocol.game.PacketPlayOutScoreboardObjective"),
+                findMcClassName("network.protocol.game.ClientboundSetObjectivePacket")
+        );
+        protected static final PacketInvoker NEW_OBJECTIVE_PACKET = PacketInvoker.find(CLASS_OBJECTIVE_PACKET);
+        protected static final Class<?> CLASS_DISPLAY_OBJECTIVE_PACKET = findClass(
+                findNmsClassName("PacketPlayOutScoreboardDisplayObjective"),
+                findMcClassName("network.protocol.game.PacketPlayOutScoreboardDisplayObjective"),
+                findMcClassName("network.protocol.game.ClientboundSetDisplayObjectivePacket")
+        );
+        protected static final PacketInvoker NEW_DISPLAY_OBJECTIVE_PACKET = PacketInvoker.find(CLASS_DISPLAY_OBJECTIVE_PACKET);
+        protected static final Class<?> CLASS_SCORE_PACKET = findClass(
+                findNmsClassName("PacketPlayOutScoreboardScore"),
+                findMcClassName("network.protocol.game.PacketPlayOutScoreboardScore"),
+                findMcClassName("network.protocol.game.ClientboundSetScorePacket")
+        );
+        protected static final PacketInvoker NEW_SCORE_PACKET = PacketInvoker.find(CLASS_SCORE_PACKET);
+        protected static final Class<?> CLASS_TEAM_PACKET = findClass(
+                findNmsClassName("PacketPlayOutScoreboardTeam"),
+                findMcClassName("network.protocol.game.PacketPlayOutScoreboardTeam"),
+                findMcClassName("network.protocol.game.ClientboundSetPlayerTeamPacket")
+        );
+        protected static final PacketInvoker NEW_TEAM_PACKET = PacketInvoker.find(CLASS_TEAM_PACKET);
+        protected static final Class<?> CLASS_SERIALIZABLE_TEAM;
+        protected static final PacketInvoker NEW_SERIALIZABLE_TEAM;
 
-        private static final Class<?> ENUM_SB_HEALTH_DISPLAY = findNmsClass("IScoreboardCriteria$EnumScoreboardHealthDisplay");
-        private static final Class<?> ENUM_SB_ACTION = findNmsClass(MinecraftVersion.isLegacy() ? "PacketPlayOutScoreboardScore$EnumScoreboardAction" : "ScoreboardServer$Action");
+        private static final Class<?> ENUM_SB_HEALTH_DISPLAY = findClass(
+                findNmsClassName("IScoreboardCriteria$EnumScoreboardHealthDisplay"),
+                findMcClassName("world.scores.criteria.IScoreboardCriteria$EnumScoreboardHealthDisplay"),
+                findMcClassName("world.scores.criteria.ObjectiveCriteria$RenderType")
+        );
+        private static final Class<?> ENUM_SB_ACTION = findClass(
+                findNmsClassName("PacketPlayOutScoreboardScore$EnumScoreboardAction"),
+                findNmsClassName("ScoreboardServer$Action"),
+                findMcClassName("server.ScoreboardServer$Action"),
+                findMcClassName("server.ServerScoreboard$Method")
+        );
         private static final Object ENUM_SB_HEALTH_DISPLAY_INTEGER = findEnum(ENUM_SB_HEALTH_DISPLAY, "INTEGER", 0);
         private static final Object ENUM_SB_ACTION_CHANGE = findEnum(ENUM_SB_ACTION, "CHANGE", 0);
         private static final Object ENUM_SB_ACTION_REMOVE = findEnum(ENUM_SB_ACTION, "REMOVE", 1);
+
+        static {
+            Class<?> serializableTeamClass = null;
+            PacketInvoker newSerializableTeam = null;
+            if (CLASS_TEAM_PACKET != null) {
+                for (Class<?> innerClass : CLASS_TEAM_PACKET.getDeclaredClasses()) {
+                    if (!innerClass.isEnum()) {
+                        serializableTeamClass = innerClass;
+                        newSerializableTeam = PacketInvoker.find(innerClass);
+                    }
+                }
+            }
+            CLASS_SERIALIZABLE_TEAM = serializableTeamClass;
+            NEW_SERIALIZABLE_TEAM = newSerializableTeam;
+
+            for (Class<?> clazz : Arrays.asList(CLASS_OBJECTIVE_PACKET, CLASS_DISPLAY_OBJECTIVE_PACKET, CLASS_SCORE_PACKET, CLASS_TEAM_PACKET, CLASS_SERIALIZABLE_TEAM)) {
+                if (clazz == null) continue;
+                Field[] fields = Arrays.stream(clazz.getDeclaredFields())
+                        .filter(field -> !Modifier.isStatic(field.getModifiers()))
+                        .toArray(Field[]::new);
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                }
+                PACKETS.put(clazz, fields);
+            }
+        }
 
         private final Object connection;
         protected final String id = "th-" + Integer.toHexString(ThreadLocalRandom.current().nextInt());
@@ -252,9 +328,8 @@ public class CraftBukkitFacet {
         protected void setField(@NotNull Object object, @NotNull Class<?> fieldType, @NotNull Object value, int count) throws ReflectiveOperationException {
             int i = 0;
 
-            for (Field f : object.getClass().getDeclaredFields()) {
+            for (Field f : PACKETS.get(object.getClass())) {
                 if (f.getType() == fieldType && i++ == count) {
-                    f.setAccessible(true);
                     f.set(object, value);
                 }
             }
@@ -263,7 +338,51 @@ public class CraftBukkitFacet {
         protected abstract void setComponentField(@NotNull Object object, @NotNull Component component, int count) throws ReflectiveOperationException;
 
         public static boolean isSupported() {
-            return PacketUtil.isSupported() && MinecraftComponentSerializer.isSupported() && NEW_OBJECTIVE_PACKET != null && NEW_DISPLAY_OBJECTIVE_PACKET != null && NEW_SCORE_PACKET != null && NEW_TEAM_PACKET != null && ENUM_SB_ACTION != null;
+            if (!(PacketUtil.isSupported() && MinecraftComponentSerializer.isSupported() && NEW_OBJECTIVE_PACKET != null && NEW_DISPLAY_OBJECTIVE_PACKET != null && NEW_SCORE_PACKET != null && NEW_TEAM_PACKET != null && ENUM_SB_ACTION != null)) {
+                return false;
+            }
+            return SINGLE_PACKAGE || (RESET_FORMATTING != null && NEW_SERIALIZABLE_TEAM != null);
+        }
+    }
+
+    private static class ScoreboardPacket1_17 extends ScoreboardPacket1_13 {
+
+        ScoreboardPacket1_17(@NotNull Player player, @NotNull Scoreboard scoreboard) {
+            super(player, scoreboard);
+        }
+
+        @Override
+        public void sendTeamPacket(@NotNull Component line, int score, @NotNull TeamMode mode) {
+            if (mode == TeamMode.ADD_PLAYERS || mode == TeamMode.REMOVE_PLAYERS) {
+                throw new UnsupportedOperationException();
+            }
+
+            try {
+                Object packet = NEW_TEAM_PACKET.invoke();
+
+                this.setField(packet, String.class, this.id + ':' + score); // Team name
+                this.setField(packet, int.class, mode.ordinal(), 0); // Update mode
+
+                if (mode == TeamMode.CREATE || mode == TeamMode.UPDATE) {
+                    Object team = NEW_SERIALIZABLE_TEAM.invoke();
+
+                    this.setComponentField(team, Component.empty(), 0); // Display name
+                    this.setField(team, ENUM_CHAT_FORMAT, RESET_FORMATTING); // Formatting
+                    this.setComponentField(team, line, 1); // Prefix
+                    this.setComponentField(team, Component.empty(), 2); // Suffix
+                    setField(team, String.class, "always", 0); // Visibility
+                    setField(team, String.class, "always", 1); // Collisions
+                    this.setField(packet, Optional.class, Optional.of(team));
+                }
+
+                if (mode == TeamMode.CREATE) {
+                    setField(packet, Collection.class, Collections.singletonList(getColorCode(score))); // Players in the team
+                }
+
+                this.sendPacket(packet);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
     }
 
@@ -302,10 +421,9 @@ public class CraftBukkitFacet {
         @Override
         protected void setComponentField(@NotNull Object object, @NotNull Component component, int count) throws ReflectiveOperationException {
             int i = 0;
-            for (Field f : object.getClass().getDeclaredFields()) {
+            for (Field f : PACKETS.get(object.getClass())) {
                 if ((f.getType() == String.class || f.getType() == CLASS_CHAT_COMPONENT) && i++ == count) {
-                    f.setAccessible(true);
-                    f.set(object, MinecraftComponentSerializer.get().serialize(component));
+                    f.set(object, component == Component.empty() ? EMPTY_COMPONENT : MinecraftComponentSerializer.get().serialize(component));
                 }
             }
         }
