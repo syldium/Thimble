@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly 'org.jetbrains:annotations:20.1.0'
+    compileOnly(libs.annotations)
     compileOnly 'com.google.guava:guava:30.1.1-jre'
     compileOnly 'com.github.ben-manes.caffeine:caffeine:3.0.1'
 }

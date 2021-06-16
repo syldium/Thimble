@@ -1,3 +1,7 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.0.0' apply false
+}
+
 defaultTasks 'build'
 
 subprojects {
@@ -9,6 +13,25 @@ subprojects {
         maven {
             name = 'sonatype-oss'
             url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        maven {
+            url 'https://libraries.minecraft.net'
+            content {
+                includeGroup 'com.mojang'
+            }
+        }
+        maven {
+            url 'https://papermc.io/repo/repository/maven-public/'
+            content {
+                includeGroup 'com.destroystokyo.paper'
+                includeGroup 'io.papermc'
+            }
+        }
+        maven {
+            url 'https://repo.spongepowered.org/repository/maven-public/'
+            content {
+                includeGroup 'org.spongepowered'
+            }
         }
     }
 
@@ -28,5 +51,15 @@ subprojects {
             attributes 'Implementation-Title': 'Thimble',
                     'Implementation-Version': project.ext.fullVersion
         }
+    }
+
+    configurations.all {
+        exclude group: "org.ow2.asm", module: "asm"
+        exclude group: "org.ow2.asm", module: "asm-commons"
+        exclude group: "org.bukkit", module: "bukkit"
+        exclude group: "org.checkerframework", module: "checker-qual"
+        exclude group: "com.googlecode.json-simple", module: "json-simple"
+        exclude group: "com.google.code.findbugs", module: "jsr305"
+        exclude group: "org.spigotmc", module: "spigot-api"
     }
 }

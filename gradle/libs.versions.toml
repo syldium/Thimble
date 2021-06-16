@@ -1,0 +1,22 @@
+[versions]
+adventure = "4.8.1"
+adventurePlatform = "4.0.0-SNAPSHOT"
+annotations = "21.0.1"
+jupiter = "5.7.1"
+minimessage = "4.1.0-SNAPSHOT"
+paper = "1.16.5-R0.1-SNAPSHOT"
+sponge = "7.3.0"
+
+[libraries]
+adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
+adventurePlainSerializer = { module = "net.kyori:adventure-text-serializer-plain", version.ref = "adventure" }
+annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+junitJupiter = { module="org.junit.jupiter:junit-jupiter-api", version.ref="jupiter" }
+junitEngine = { module="org.junit.jupiter:junit-jupiter-engine" }
+minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "minimessage" }
+paper = { module = "com.destroystokyo.paper:paper-api", version.ref = "paper" }
+paperBrigadier = { module = "com.destroystokyo.paper:paper-mojangapi", version.ref = "paper" }
+sponge = { module = "org.spongepowered:spongeapi", version.ref = "sponge" }
+
+[bundles]
+testDependencies = ["junitJupiter", "junitEngine"]
