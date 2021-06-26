@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## ## [1.2.1] - 2021-06-26
+### Added
+- Full compatibility with 1.17 servers.
+
 ## ## [1.2.0] - 2021-04-30
 ### Added
 - Player scores can now be displayed with placeholders.
