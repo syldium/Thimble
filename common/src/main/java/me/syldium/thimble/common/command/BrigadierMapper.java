@@ -1,5 +1,6 @@
 package me.syldium.thimble.common.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
@@ -13,6 +14,7 @@ import me.syldium.thimble.common.command.abstraction.spec.Argument;
 import me.syldium.thimble.common.command.abstraction.spec.BrigadierArgumentMapper;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.function.BiPredicate;
 
 public class BrigadierMapper<S> {
@@ -31,35 +33,40 @@ public class BrigadierMapper<S> {
 
         for (AbstractCommand command : this.commandManager.getMainCommands()) {
             if (command.shouldDisplay()) {
-                builder.then(this.buildCommandNode(command, suggestionProvider));
+                builder.then(this.buildCommandNode(command, node.getCommand(), suggestionProvider));
             }
         }
         return builder.build();
     }
 
-    protected @NotNull CommandNode<S> buildCommandNode(@NotNull AbstractCommand command, @NotNull SuggestionProvider<S> suggestionProvider) {
+    protected @NotNull CommandNode<S> buildCommandNode(@NotNull AbstractCommand command, @NotNull Command<S> executor, @NotNull SuggestionProvider<S> suggestionProvider) {
         LiteralArgumentBuilder<S> builder = LiteralArgumentBuilder.<S>literal(command.getName())
                 .requires(sender -> this.permissionPredicate.test(command, sender));
         if (command instanceof ParentCommand) {
-            builder.then(LiteralArgumentBuilder.literal("help"));
+            builder.then(LiteralArgumentBuilder.<S>literal("help").executes(executor));
             for (AbstractCommand subCommand : ((ParentCommand) command).getChildren()) {
                 if (subCommand.shouldDisplay()) {
-                    builder.then(this.buildCommandNode(subCommand, suggestionProvider));
+                    builder.then(this.buildCommandNode(subCommand, executor, suggestionProvider));
                 }
             }
             return builder.build();
         }
 
         ChildCommand cmd = (ChildCommand) command;
+        List<Argument<?>> arguments = cmd.getArguments();
+        if (arguments.isEmpty() || !arguments.get(0).isRequired()) {
+            builder.executes(executor);
+        }
+
         CommandNode<S> node = builder.build();
         CommandNode<S> prevNode = node;
-        for (int i = 0; i < cmd.getArguments().size(); i++) {
-            RequiredArgumentBuilder<S, ?> arg = this.getFromArg(cmd.getArguments().get(i));
+        for (int i = 0; i < arguments.size(); i++) {
+            RequiredArgumentBuilder<S, ?> arg = this.getFromArg(arguments.get(i));
             if (!(arg.getType() instanceof IntegerArgumentType)) {
                 arg.suggests(suggestionProvider);
             }
-            if (i < cmd.getArguments().size() - 1 && !cmd.getArguments().get(i + 1).isRequired()) {
-                arg.executes(s -> 0);
+            if (i == arguments.size() - 1 || !arguments.get(i + 1).isRequired()) {
+                arg.executes(executor);
             }
             prevNode.addChild(prevNode = arg.build());
         }
