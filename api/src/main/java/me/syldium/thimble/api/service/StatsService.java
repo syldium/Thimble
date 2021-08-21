@@ -5,6 +5,7 @@ import me.syldium.thimble.api.util.RankingPosition;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
 import me.syldium.thimble.api.util.Leaderboard;
 import net.kyori.adventure.identity.Identified;
+import org.jetbrains.annotations.NonBlocking;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +28,7 @@ public interface StatsService {
      * @param uuid The player's unique identifier.
      * @return Statistics, if the player has already played.
      */
-    @NotNull CompletableFuture<@NotNull Optional<@NotNull ThimblePlayerStats>> getPlayerStatistics(@NotNull UUID uuid);
+    @NonBlocking @NotNull CompletableFuture<@NotNull Optional<@NotNull ThimblePlayerStats>> getPlayerStatistics(@NotNull UUID uuid);
 
     /**
      * Fetch the player's stats from a username.
@@ -35,7 +36,7 @@ public interface StatsService {
      * @param name The player's name.
      * @return Statistics, if the player has already played.
      */
-    @NotNull CompletableFuture<@NotNull Optional<@NotNull ThimblePlayerStats>> getPlayerStatistics(@NotNull String name);
+    @NonBlocking @NotNull CompletableFuture<@NotNull Optional<@NotNull ThimblePlayerStats>> getPlayerStatistics(@NotNull String name);
 
     /**
      * Fetch the player's stats from an {@link net.kyori.adventure.identity.Identity}.
@@ -43,7 +44,7 @@ public interface StatsService {
      * @param identified The player.
      * @return Statistics, if the player has already played.
      */
-    default @NotNull CompletableFuture<@NotNull Optional<@NotNull ThimblePlayerStats>> getPlayerStatistics(@NotNull Identified identified) {
+    default @NonBlocking @NotNull CompletableFuture<@NotNull Optional<@NotNull ThimblePlayerStats>> getPlayerStatistics(@NotNull Identified identified) {
         return this.getPlayerStatistics(identified.identity().uuid());
     }
 
@@ -53,7 +54,7 @@ public interface StatsService {
      * @param statistics Statistics.
      * @return When the save has been made.
      */
-    @NotNull CompletableFuture<@Nullable Void> savePlayerStatistics(@NotNull ThimblePlayerStats statistics);
+    @NonBlocking @NotNull CompletableFuture<@Nullable Void> savePlayerStatistics(@NotNull ThimblePlayerStats statistics);
 
     /**
      * Gets the leaderboard according to a ranking criterion.
