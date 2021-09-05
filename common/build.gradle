@@ -11,9 +11,9 @@ dependencies {
     compileOnly 'com.google.code.gson:gson:2.8.0'
 
     testImplementation(libs.bundles.testDependencies)
-    testImplementation 'org.spongepowered:configurate-gson:4.1.1'
+    testImplementation 'org.spongepowered:configurate-gson:4.1.2'
     testImplementation(libs.adventurePlainSerializer)
-    testRuntimeOnly 'org.xerial:sqlite-jdbc:3.34.0'
+    testRuntimeOnly 'org.xerial:sqlite-jdbc:3.36.0.2'
 }
 
 test {
