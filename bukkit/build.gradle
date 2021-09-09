@@ -1,3 +1,7 @@
+plugins {
+    id 'xyz.jpenilla.run-paper' version '1.0.4'
+}
+
 apply plugin: 'com.github.johnrengelman.shadow'
 
 repositories {
@@ -47,4 +51,14 @@ shadowJar {
 
 artifacts {
     archives shadowJar
+}
+
+runServer {
+    minecraftVersion('1.17.1')
+}
+
+tasks.withType(xyz.jpenilla.runpaper.RunPaper).configureEach {
+    javaCompiler = javaToolchains.compilerFor {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
 }
