@@ -6,7 +6,7 @@ import sun.misc.Unsafe;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
 
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findConstructor;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findConstructor;
 
 @FunctionalInterface
 interface PacketInvoker {

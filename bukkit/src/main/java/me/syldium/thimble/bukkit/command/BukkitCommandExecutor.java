@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findField;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findField;
 
 public class BukkitCommandExecutor extends CommandManager implements TabExecutor {
 

@@ -8,13 +8,13 @@ import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findClass;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findCraftClass;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findField;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findMcClassName;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findMethod;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findNmsClassName;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.lookup;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findClass;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findCraftClass;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findField;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findMcClassName;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findMethod;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findNmsClassName;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.lookup;
 
 public final class PacketUtil {
 

@@ -2,9 +2,8 @@ package me.syldium.thimble.bukkit.util;
 
 import me.syldium.thimble.common.player.media.Scoreboard;
 import me.syldium.thimble.common.util.MinecraftVersion;
+import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
-import net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -26,11 +25,11 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 
-import static net.kyori.adventure.text.serializer.craftbukkit.BukkitComponentSerializer.legacy;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findClass;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findEnum;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findMcClassName;
-import static net.kyori.adventure.text.serializer.craftbukkit.MinecraftReflection.findNmsClassName;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findClass;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findEnum;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findMcClassName;
+import static me.syldium.thimble.bukkit.util.MinecraftReflection.findNmsClassName;
+import static net.kyori.adventure.platform.bukkit.BukkitComponentSerializer.legacy;
 import static org.bukkit.Bukkit.getScoreboardManager;
 
 // Adapted for adventure from https://github.com/MrMicky-FR/FastBoard

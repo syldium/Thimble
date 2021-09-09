@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static net.kyori.adventure.text.serializer.plain.PlainComponentSerializer.plain;
+import static net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings("ConstantConditions")
@@ -37,6 +37,6 @@ public class ScoreboardServiceTest {
     }
 
     private static void assertComponentsEquals(@NotNull List<String> expected, @NotNull List<Component> actual) {
-        assertEquals(expected, actual.stream().map(component -> plain().serialize(component)).collect(Collectors.toList()));
+        assertEquals(expected, actual.stream().map(component -> plainText().serialize(component)).collect(Collectors.toList()));
     }
 }
