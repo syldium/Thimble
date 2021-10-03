@@ -7,7 +7,6 @@ import me.syldium.thimble.common.player.Placeholder;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.player.media.Scoreboard;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 import static net.kyori.adventure.text.minimessage.Tokens.TAG_END;
 import static net.kyori.adventure.text.minimessage.Tokens.TAG_START;
 
@@ -49,7 +49,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     ) {
         this.uuidToString = uuidToString;
         this.placeholderService = placeholderService;
-        this.title = MiniMessage.get().parse(title);
+        this.title = miniMessage().parse(title);
         this.lines = lines;
 
         if (lines.isEmpty()) {
@@ -76,10 +76,10 @@ public class ScoreboardServiceImpl implements ScoreboardService {
             this.indexes.add(set);
         }
 
-        Component defNullText = MiniMessage.get().parse(emptyTexts == null ? "null" : emptyTexts.getString("default", "null"));
+        Component defNullText = miniMessage().parse(emptyTexts == null ? "null" : emptyTexts.getString("default", "null"));
         for (Placeholder placeholder : placeholders) {
             String defText = emptyTexts == null ? null : emptyTexts.getString(placeholder.asString());
-            this.emptyTexts.put(placeholder, defText == null ? defNullText : MiniMessage.get().parse(defText));
+            this.emptyTexts.put(placeholder, defText == null ? defNullText : miniMessage().parse(defText));
         }
     }
 
@@ -154,7 +154,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
                     Template.of(placeholder.asString(), this.emptyTexts.get(placeholder))
                     : Template.of(placeholder.asString(), String.valueOf(result));
         }
-        return MiniMessage.get().parse(this.placeholderService.setPlaceholders(player, this.lines.get(line)), templates);
+        return miniMessage().parse(this.placeholderService.setPlaceholders(player, this.lines.get(line)), templates);
     }
 
     /**

@@ -6,7 +6,6 @@ import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +28,8 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
 public class MessageServiceImpl implements MessageService {
 
@@ -75,7 +76,7 @@ public class MessageServiceImpl implements MessageService {
         } catch (final MissingResourceException ex) {
             this.customBundle = NULL_BUNDLE;
         }
-        this.prefix = MiniMessage.get().parse(this.translate("prefix"));
+        this.prefix = miniMessage().parse(this.translate("prefix"));
     }
 
     @Override
@@ -86,7 +87,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Template ...templates) {
         String input = this.translate(key.getAccessor());
-        return MiniMessage.get().parse(input, templates).colorIfAbsent(color);
+        return miniMessage().parse(input, templates).colorIfAbsent(color);
     }
 
     @Override

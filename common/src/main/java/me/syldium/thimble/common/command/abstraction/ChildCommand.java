@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static net.kyori.adventure.text.JoinConfiguration.separator;
+
 public abstract class ChildCommand extends AbstractCommand {
 
     private final List<Argument<?>> arguments;
@@ -99,7 +101,7 @@ public abstract class ChildCommand extends AbstractCommand {
         if (arguments.length < 1) {
             return Component.text(name);
         }
-        return Component.text(name).append(Component.space().append(Component.join(Component.text(" "), this.arguments)));
+        return Component.text(name).append(Component.space().append(Component.join(separator(Component.space()), this.arguments)));
     }
 
     public List<Argument<?>> getArguments() {

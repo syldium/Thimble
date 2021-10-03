@@ -11,7 +11,6 @@ import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -21,6 +20,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
 public class Arena implements ThimbleArena, ComponentLike {
 
@@ -40,7 +41,7 @@ public class Arena implements ThimbleArena, ComponentLike {
     public Arena(@NotNull ThimblePlugin plugin, @NotNull String name) {
         this.plugin = plugin;
         this.rawName = name;
-        this.name = MiniMessage.get().parse(name);
+        this.name = miniMessage().parse(name);
     }
 
     @Override
