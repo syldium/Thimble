@@ -2,6 +2,7 @@ package me.syldium.thimble.common.player;
 
 import me.syldium.thimble.api.player.ThimblePlayerStats;
 import net.kyori.adventure.identity.Identity;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -75,22 +76,27 @@ public class PlayerStats implements ThimblePlayerStats, Identity {
         return this.uuid.equals(o.uuid());
     }
 
+    @MustBeInvokedByOverriders
     public void incrementWins() {
         this.wins++;
     }
 
+    @MustBeInvokedByOverriders
     public void incrementLosses() {
         this.losses++;
     }
 
+    @MustBeInvokedByOverriders
     public void incrementJumps() {
         this.jumps++;
     }
 
+    @MustBeInvokedByOverriders
     public void incrementFailedJumps() {
         this.fails++;
     }
 
+    @MustBeInvokedByOverriders
     public void incrementThimbles() {
         this.thimbles++;
     }
