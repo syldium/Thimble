@@ -10,7 +10,6 @@ import me.syldium.thimble.common.player.Placeholder;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.common.world.PoolBlock;
-import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +20,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.UUID;
+
+import static net.kyori.adventure.text.minimessage.Template.template;
 
 public class SingleGame extends Game implements ThimbleSingleGame {
 
@@ -114,7 +115,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             if (verdict == JumpVerdict.THIMBLE) {
                 inGamePlayer.incrementPoints();
                 inGamePlayer.incrementThimbles();
-                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
+                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, template("player", inGamePlayer.name()));
                 this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.THIMBLE);
             }
         }
@@ -132,7 +133,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
 
         this.jumper = null;
         if (inGamePlayer.isSpectator()) {
-            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, Template.of("player", inGamePlayer.name()));
+            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, template("player", inGamePlayer.name()));
             if (this.queue.size() == 1) {
                 this.end(this.players.get(this.queue.poll()));
             } else if (this.queue.isEmpty()) {

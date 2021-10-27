@@ -30,6 +30,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
+import static net.kyori.adventure.text.minimessage.template.TemplateResolver.templates;
 
 public class MessageServiceImpl implements MessageService {
 
@@ -87,7 +88,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Template ...templates) {
         String input = this.translate(key.getAccessor());
-        return miniMessage().parse(input, templates).colorIfAbsent(color);
+        return miniMessage().deserialize(input, templates(templates)).colorIfAbsent(color);
     }
 
     @Override

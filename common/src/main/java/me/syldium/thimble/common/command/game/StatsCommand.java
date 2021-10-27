@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.kyori.adventure.text.minimessage.Template.template;
+
 public class StatsCommand extends ChildCommand.One<String> {
 
     public StatsCommand() {
@@ -35,14 +37,14 @@ public class StatsCommand extends ChildCommand.One<String> {
                 ThimblePlayerStats stats = optional.get();
                 List<Template> args = new ArrayList<>();
                 MessageService service = plugin.getMessageService();
-                args.add(Template.of("player", stats.name()));
+                args.add(template("player", stats.name()));
                 args.addAll(MessageKey.Unit.WINS.tl(stats.wins(), service));
                 args.addAll(MessageKey.Unit.LOSSES.tl(stats.losses(), service));
                 args.addAll(MessageKey.Unit.JUMPS.tl(stats.jumps(), service));
                 args.addAll(MessageKey.Unit.THIMBLES.tl(stats.thimbles(), service));
                 sender.sendFeedback(CommandResult.success(MessageKey.FEEDBACK_GAME_STATS, args.toArray(new Template[0])));
             } else {
-                sender.sendFeedback(CommandResult.error(MessageKey.FEEDBACK_GAME_STATS_UNKNOWN, Template.of("player", username)));
+                sender.sendFeedback(CommandResult.error(MessageKey.FEEDBACK_GAME_STATS_UNKNOWN, template("player", username)));
             }
         });
         return CommandResult.success();

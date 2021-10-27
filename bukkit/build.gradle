@@ -8,6 +8,10 @@ repositories {
     maven { url 'https://repo.codemc.org/repository/maven-public/' }
 }
 
+java {
+    disableAutoTargetJvm()
+}
+
 dependencies {
     implementation project(':api')
     implementation project(':common')

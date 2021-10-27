@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static me.syldium.thimble.common.service.MessageService.MESSAGES_BUNDLE;
+import static net.kyori.adventure.text.minimessage.Template.template;
 
 public enum MessageKey {
 
@@ -126,8 +127,8 @@ public enum MessageKey {
 
         public @NotNull List<Template> tl(int nb, @NotNull MessageService messageService) {
             return Arrays.asList(
-                    Template.of(this.key, String.valueOf(nb)),
-                    Template.of('u' + this.key, nb > 1 ? messageService.get(this.plural) : messageService.get(this.singular))
+                    template(this.key, String.valueOf(nb)),
+                    template('u' + this.key, nb > 1 ? messageService.get(this.plural) : messageService.get(this.singular))
             );
         }
     }

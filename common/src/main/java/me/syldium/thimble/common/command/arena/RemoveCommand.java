@@ -8,8 +8,9 @@ import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.command.abstraction.spec.Arguments;
 import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.common.player.MessageKey;
-import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
+
+import static net.kyori.adventure.text.minimessage.Template.template;
 
 class RemoveCommand extends ChildCommand.One<Arena> {
 
@@ -20,6 +21,6 @@ class RemoveCommand extends ChildCommand.One<Arena> {
     @Override
     public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @NotNull Arena arena) {
         plugin.getGameService().removeArena(arena);
-        return CommandResult.success(MessageKey.FEEDBACK_ARENA_REMOVE, Template.of("arena", arena.name()));
+        return CommandResult.success(MessageKey.FEEDBACK_ARENA_REMOVE, template("arena", arena.name()));
     }
 }

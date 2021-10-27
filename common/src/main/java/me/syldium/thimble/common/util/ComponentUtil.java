@@ -7,6 +7,8 @@ import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static net.kyori.adventure.text.minimessage.Template.template;
+
 public final class ComponentUtil {
 
     private ComponentUtil() throws IllegalAccessException {
@@ -22,6 +24,6 @@ public final class ComponentUtil {
     }
 
     public static @NotNull Template getPluginDescriptionTemplate(@NotNull String pluginName, @Nullable String pluginVersion) {
-        return Template.of("plugin", getPluginDescriptionComponent(pluginName, pluginVersion));
+        return template("plugin", getPluginDescriptionComponent(pluginName, pluginVersion));
     }
 }

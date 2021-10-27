@@ -10,11 +10,12 @@ import me.syldium.thimble.common.player.Placeholder;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.common.world.PoolBlock;
-import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+
+import static net.kyori.adventure.text.minimessage.Template.template;
 
 public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
 
@@ -82,7 +83,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             if (verdict == JumpVerdict.THIMBLE) {
                 inGamePlayer.incrementPoints(this.thimblePoints);
                 inGamePlayer.incrementThimbles();
-                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, Template.of("player", inGamePlayer.name()));
+                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, template("player", inGamePlayer.name()));
                 this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.THIMBLE);
             }
         }
@@ -104,7 +105,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
         if (player != null) {
             this.sendJumpMessage(player, inGamePlayer, verdict);
             if (inGamePlayer.isSpectator()) {
-                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, Template.of("player", inGamePlayer.name()));
+                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, template("player", inGamePlayer.name()));
                 if (this.spectatorMode) {
                     player.spectate();
                 } else {

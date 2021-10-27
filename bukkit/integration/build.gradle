@@ -5,6 +5,10 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
+java {
+    disableAutoTargetJvm()
+}
+
 dependencies {
     implementation project(':common')
 

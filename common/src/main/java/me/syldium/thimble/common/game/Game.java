@@ -36,6 +36,8 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
+import static net.kyori.adventure.text.minimessage.Template.template;
+
 /**
  * Common implementation for both game modes.
  *
@@ -216,7 +218,7 @@ public abstract class Game implements ThimbleGame, Runnable {
      */
     protected void sendJumpMessage(@NotNull Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
-            Template lifesTemplate = Template.of("lifes", String.valueOf(inGamePlayer.points()));
+            Template lifesTemplate = template("lifes", String.valueOf(inGamePlayer.points()));
             if (inGamePlayer.points() > 1) {
                 player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFES, lifesTemplate);
             } else {
@@ -256,7 +258,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         // Send the winning message
         if (!isSolo && latest != null) {
             List<Template> args = new LinkedList<>();
-            args.add(Template.of("player", latest.name()));
+            args.add(template("player", latest.name()));
             args.addAll(MessageKey.Unit.JUMPS.tl(latest.jumpsForGame(), this.plugin.getMessageService()));
             this.players.sendMessage(latest, MessageKey.CHAT_WIN, args.toArray(new Template[0]));
             this.latest = latest;
@@ -460,7 +462,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.players.sendMessageExclude(
                     inGamePlayer,
                     MessageKey.CHAT_JOINED,
-                    Template.of("player", player.name())
+                    template("player", player.name())
             );
 
             if (!player.isVanished()) {
@@ -497,7 +499,7 @@ public abstract class Game implements ThimbleGame, Runnable {
 
         if (!inGamePlayer.isVanished()) {
             // Send the message
-            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_LEFT, Template.of("player", inGamePlayer.name()));
+            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_LEFT, template("player", inGamePlayer.name()));
         }
 
         // Check the player count

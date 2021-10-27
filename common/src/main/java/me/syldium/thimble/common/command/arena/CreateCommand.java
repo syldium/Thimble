@@ -10,8 +10,9 @@ import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.command.abstraction.spec.Arguments;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
-import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
+
+import static net.kyori.adventure.text.minimessage.Template.template;
 
 class CreateCommand extends ChildCommand.One<String> {
 
@@ -26,8 +27,8 @@ class CreateCommand extends ChildCommand.One<String> {
             if (sender instanceof Player) {
                 arena.setSpawnLocation(((Player) sender).getLocation());
             }
-            return CommandResult.success(MessageKey.FEEDBACK_ARENA_CREATED, Template.of("arena", name));
+            return CommandResult.success(MessageKey.FEEDBACK_ARENA_CREATED, template("arena", name));
         }
-        return CommandResult.error(MessageKey.FEEDBACK_ARENA_ALREADY_EXISTS, Template.of("arena", name));
+        return CommandResult.error(MessageKey.FEEDBACK_ARENA_ALREADY_EXISTS, template("arena", name));
     }
 }

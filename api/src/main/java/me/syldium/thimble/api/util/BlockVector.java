@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
+import static net.kyori.adventure.text.minimessage.Template.template;
+
 /**
  * Defines an immutable block position relative to the current world.
  */
@@ -164,9 +166,9 @@ public class BlockVector implements Examinable, Serializable, Cloneable {
     public @NotNull Template[] asTemplates() {
         //CHECKSTYLE:OFF
         return new Template[]{
-                Template.of("x", Component.text(this.x)),
-                Template.of("y", Component.text(this.y)),
-                Template.of("z", Component.text(this.z))
+                template("x", Component.text(this.x)),
+                template("y", Component.text(this.y)),
+                template("z", Component.text(this.z))
         };
         //CHECKSTYLE:ON
     }

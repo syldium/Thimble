@@ -1,10 +1,10 @@
 [versions]
-adventure = "4.9.1"
-adventurePlatform = "4.0.0-SNAPSHOT"
+adventure = "4.9.2"
+adventurePlatform = "4.0.1-SNAPSHOT"
 annotations = "22.0.0"
-jupiter = "5.7.2"
+jupiter = "5.8.1"
 minimessage = "4.2.0-SNAPSHOT"
-paper = "1.16.5-R0.1-SNAPSHOT"
+paper = "1.17.1-R0.1-SNAPSHOT"
 sponge = "7.3.0"
 
 [libraries]
@@ -14,8 +14,8 @@ annotations = { module = "org.jetbrains:annotations", version.ref = "annotations
 junitJupiter = { module="org.junit.jupiter:junit-jupiter-api", version.ref="jupiter" }
 junitEngine = { module="org.junit.jupiter:junit-jupiter-engine" }
 minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "minimessage" }
-paper = { module = "com.destroystokyo.paper:paper-api", version.ref = "paper" }
-paperBrigadier = { module = "com.destroystokyo.paper:paper-mojangapi", version.ref = "paper" }
+paper = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
+paperBrigadier = { module = "io.papermc.paper:paper-mojangapi", version.ref = "paper" }
 sponge = { module = "org.spongepowered:spongeapi", version.ref = "sponge" }
 
 [bundles]

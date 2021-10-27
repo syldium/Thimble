@@ -25,8 +25,10 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
+import static net.kyori.adventure.text.minimessage.Template.template;
 import static net.kyori.adventure.text.minimessage.Tokens.TAG_END;
 import static net.kyori.adventure.text.minimessage.Tokens.TAG_START;
+import static net.kyori.adventure.text.minimessage.template.TemplateResolver.templates;
 
 @VisibleForTesting
 public class ScoreboardServiceImpl implements ScoreboardService {
@@ -151,10 +153,10 @@ public class ScoreboardServiceImpl implements ScoreboardService {
         for (Placeholder placeholder : placeholders) {
             Object result = placeholder.apply(this.uuidToString, player, this.placeholders.get(placeholder).indexOf(line));
             templates[p++] = result == null ?
-                    Template.of(placeholder.asString(), this.emptyTexts.get(placeholder))
-                    : Template.of(placeholder.asString(), String.valueOf(result));
+                    template(placeholder.asString(), this.emptyTexts.get(placeholder))
+                    : template(placeholder.asString(), String.valueOf(result));
         }
-        return miniMessage().parse(this.placeholderService.setPlaceholders(player, this.lines.get(line)), templates);
+        return miniMessage().deserialize(this.placeholderService.setPlaceholders(player, this.lines.get(line)), templates(templates));
     }
 
     /**

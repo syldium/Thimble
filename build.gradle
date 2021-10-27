@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.0.0' apply false
+    id 'com.github.johnrengelman.shadow' version '7.1.0' apply false
 }
 
 defaultTasks 'build'
@@ -24,7 +24,7 @@ subprojects {
             url 'https://papermc.io/repo/repository/maven-public/'
             content {
                 includeGroup 'com.destroystokyo.paper'
-                includeGroup 'io.papermc'
+                includeGroup 'io.papermc.paper'
             }
         }
         maven {

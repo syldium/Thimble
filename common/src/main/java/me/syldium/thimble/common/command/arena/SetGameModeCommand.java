@@ -10,10 +10,11 @@ import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.command.abstraction.spec.Arguments;
 import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.common.player.MessageKey;
-import net.kyori.adventure.text.minimessage.Template;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
+
+import static net.kyori.adventure.text.minimessage.Template.template;
 
 class SetGameModeCommand extends ChildCommand.Two<Arena, ThimbleGameMode> {
 
@@ -26,8 +27,8 @@ class SetGameModeCommand extends ChildCommand.Two<Arena, ThimbleGameMode> {
         arena.setGameMode(gameMode);
         return CommandResult.success(
                 MessageKey.FEEDBACK_ARENA_SET_GAME_MODE,
-                Template.of("arena", arena.asComponent()),
-                Template.of("gamemode", gameMode.name().toLowerCase(Locale.ROOT))
+                template("arena", arena.asComponent()),
+                template("gamemode", gameMode.name().toLowerCase(Locale.ROOT))
         );
     }
 }
