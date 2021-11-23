@@ -32,6 +32,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import static java.util.Objects.requireNonNull;
 
@@ -124,6 +125,23 @@ public final class MinecraftReflection {
             try {
                 return LOOKUP.findVirtual(holderClass, methodName, MethodType.methodType(returnClass, parameterClasses));
             } catch (final NoSuchMethodException | IllegalAccessException ignored) {
+            }
+        }
+        for (final Method method : holderClass.getMethods()) {
+            if (!method.getReturnType().isAssignableFrom(returnClass)) continue;
+            final Class<?>[] parametersTypes = method.getParameterTypes();
+            if (parametersTypes.length != parameterClasses.length) continue;
+            boolean assignable = true;
+            for (int i = 0; i < parametersTypes.length; i++) {
+                if (!parametersTypes[i].isAssignableFrom(parameterClasses[i])) {
+                    assignable = false;
+                    break;
+                }
+            }
+            if (!assignable) continue;
+            try {
+                return LOOKUP.unreflect(method);
+            } catch (final IllegalAccessException ignored) {
             }
         }
         return null;
