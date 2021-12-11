@@ -6,7 +6,7 @@ import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.template.TemplateResolver.templates;
+import static net.kyori.adventure.text.minimessage.placeholder.PlaceholderResolver.placeholders;
 
 public class MessageServiceImpl implements MessageService {
 
@@ -86,9 +86,9 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Template ...templates) {
+    public @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Placeholder... placeholders) {
         String input = this.translate(key.getAccessor());
-        return miniMessage().deserialize(input, templates(templates)).colorIfAbsent(color);
+        return miniMessage().deserialize(input, placeholders(placeholders)).colorIfAbsent(color);
     }
 
     @Override

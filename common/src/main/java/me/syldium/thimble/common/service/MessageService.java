@@ -4,7 +4,7 @@ import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.MessageKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,27 +30,27 @@ public interface MessageService extends PlaceholderService, PlaceholderService.T
      * Gets the translated string from a {@link MessageKey}, and formats it.
      *
      * @param key The message key.
-     * @param templates Some placeholders.
+     * @param placeholders Some placeholders.
      * @return The formatted message component.
      */
-    default @NotNull Component formatMessage(@NotNull MessageKey key, @NotNull Template... templates) {
-        return this.formatMessage(key, null, templates);
+    default @NotNull Component formatMessage(@NotNull MessageKey key, @NotNull Placeholder... placeholders) {
+        return this.formatMessage(key, null, placeholders);
     }
 
     /**
      * Gets the translated string from a {@link MessageKey}, and formats it.
      *
      * @param key The message key.
-     * @param templates Some placeholders.
+     * @param placeholders Some placeholders.
      * @return The formatted message component.
      */
-    default @NotNull Component formatMessageWithPrefix(@NotNull MessageKey key, @NotNull Template... templates) {
-        return this.prefix().append(this.formatMessage(key, templates));
+    default @NotNull Component formatMessageWithPrefix(@NotNull MessageKey key, @NotNull Placeholder... placeholders) {
+        return this.prefix().append(this.formatMessage(key, placeholders));
     }
 
     default @NotNull Component formatMessage(@NotNull CommandResult feedback) {
         Objects.requireNonNull(feedback.getMessageKey(), "Message key");
-        return this.formatMessage(feedback.getMessageKey(), feedback.getTextColor(), feedback.getTemplates());
+        return this.formatMessage(feedback.getMessageKey(), feedback.getTextColor(), feedback.getPlaceholders());
     }
 
     /**
@@ -58,10 +58,10 @@ public interface MessageService extends PlaceholderService, PlaceholderService.T
      *
      * @param key The message key.
      * @param color A default color.
-     * @param templates Some placeholders.
+     * @param placeholders Some placeholders.
      * @return The formatted message component.
      */
-    @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Template... templates);
+    @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Placeholder... placeholders);
 
     @NotNull String get(@NotNull MessageKey key);
 

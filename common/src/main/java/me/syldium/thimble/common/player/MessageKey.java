@@ -1,7 +1,7 @@
 package me.syldium.thimble.common.player;
 
 import me.syldium.thimble.common.service.MessageService;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static me.syldium.thimble.common.service.MessageService.MESSAGES_BUNDLE;
-import static net.kyori.adventure.text.minimessage.Template.template;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
 
 public enum MessageKey {
 
@@ -125,10 +125,10 @@ public enum MessageKey {
             this.plural = plural;
         }
 
-        public @NotNull List<Template> tl(int nb, @NotNull MessageService messageService) {
+        public @NotNull List<Placeholder> tl(int nb, @NotNull MessageService messageService) {
             return Arrays.asList(
-                    template(this.key, String.valueOf(nb)),
-                    template('u' + this.key, nb > 1 ? messageService.get(this.plural) : messageService.get(this.singular))
+                    placeholder(this.key, String.valueOf(nb)),
+                    placeholder('u' + this.key, nb > 1 ? messageService.get(this.plural) : messageService.get(this.singular))
             );
         }
     }

@@ -12,22 +12,22 @@ import me.syldium.thimble.common.adapter.BlockBalancer;
 import me.syldium.thimble.common.config.MainConfig;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
-import me.syldium.thimble.common.player.Placeholder;
+import me.syldium.thimble.common.player.ThimblePlaceholder;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.player.media.TimedMedia;
 import me.syldium.thimble.common.util.PlayerMap;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.common.world.BlockData;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,7 +36,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
-import static net.kyori.adventure.text.minimessage.Template.template;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
 
 /**
  * Common implementation for both game modes.
@@ -99,7 +99,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                 if (this.canStart() && !this.plugin.getEventAdapter().callGameChangeState(this, ThimbleState.STARTING)) {
                     // The countdown starts
                     this.state = ThimbleState.STARTING;
-                    this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.STATE);
+                    this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.STATE);
                 } else if ((this.messageTimer++ & 0xF) == 0) {
                     // Send the message in the action bar
                     this.players.sendActionBar(MessageKey.ACTIONBAR_WAITING);
@@ -117,7 +117,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                         this.onCountdownEnd();
                         new BlockBalancer(this.players).balance(this.plugin.getPlayerAdapter().getAvailableBlocks());
                         this.state = ThimbleState.PLAYING;
-                        this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.STATE);
+                        this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.STATE);
                         if (this.remainingWaterBlocks == null) {
                             this.searchRemainingBlocks();
                         }
@@ -218,11 +218,11 @@ public abstract class Game implements ThimbleGame, Runnable {
      */
     protected void sendJumpMessage(@NotNull Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
-            Template lifesTemplate = template("lifes", String.valueOf(inGamePlayer.points()));
+            Placeholder lifesPlaceholder = placeholder("lifes", String.valueOf(inGamePlayer.points()));
             if (inGamePlayer.points() > 1) {
-                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFES, lifesTemplate);
+                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFES, lifesPlaceholder);
             } else {
-                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFE, lifesTemplate);
+                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFE, lifesPlaceholder);
             }
             player.playSound(this.plugin.getMainConfig().getJumpFailedSound());
         } else if (verdict == JumpVerdict.THIMBLE) {
@@ -247,7 +247,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         // Change the state
         this.state = ThimbleState.END;
         this.jumperMedia.hide(this.players);
-        this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.STATE);
+        this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.STATE);
 
         // Summon some fireworks
         Location fireworksLocation = this.getFireworkLocation(latest == null ? null : this.plugin.getPlayer(latest.uuid()));
@@ -257,10 +257,10 @@ public abstract class Game implements ThimbleGame, Runnable {
 
         // Send the winning message
         if (!isSolo && latest != null) {
-            List<Template> args = new LinkedList<>();
-            args.add(template("player", latest.name()));
+            List<Placeholder> args = new ArrayList<>(4);
+            args.add(placeholder("player", latest.name()));
             args.addAll(MessageKey.Unit.JUMPS.tl(latest.jumpsForGame(), this.plugin.getMessageService()));
-            this.players.sendMessage(latest, MessageKey.CHAT_WIN, args.toArray(new Template[0]));
+            this.players.sendMessage(latest, MessageKey.CHAT_WIN, args.toArray(new Placeholder[0]));
             this.latest = latest;
         }
 
@@ -462,7 +462,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.players.sendMessageExclude(
                     inGamePlayer,
                     MessageKey.CHAT_JOINED,
-                    template("player", player.name())
+                    placeholder("player", player.name())
             );
 
             if (!player.isVanished()) {
@@ -499,7 +499,7 @@ public abstract class Game implements ThimbleGame, Runnable {
 
         if (!inGamePlayer.isVanished()) {
             // Send the message
-            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_LEFT, template("player", inGamePlayer.name()));
+            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_LEFT, placeholder("player", inGamePlayer.name()));
         }
 
         // Check the player count

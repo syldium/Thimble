@@ -4,7 +4,7 @@ import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.config.ConfigFile;
 import me.syldium.thimble.common.config.ConfigNode;
-import me.syldium.thimble.common.player.Placeholder;
+import me.syldium.thimble.common.player.ThimblePlaceholder;
 import me.syldium.thimble.common.player.Player;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +49,7 @@ public class ScoreboardHolderService implements ScoreboardService {
     }
 
     @Override
-    public void updateScoreboard(@NotNull Iterable<@NotNull ? extends ThimblePlayer> inGamePlayers, @NotNull Placeholder... placeholders) {
+    public void updateScoreboard(@NotNull Iterable<@NotNull ? extends ThimblePlayer> inGamePlayers, @NotNull ThimblePlaceholder... placeholders) {
         Iterator<? extends ThimblePlayer> iterator = inGamePlayers.iterator();
         if (!iterator.hasNext()) {
             return;
@@ -62,7 +62,7 @@ public class ScoreboardHolderService implements ScoreboardService {
     }
 
     @Override
-    public void updateScoreboard(@NotNull ThimblePlayer inGamePlayer, @NotNull Placeholder... placeholders) {
+    public void updateScoreboard(@NotNull ThimblePlayer inGamePlayer, @NotNull ThimblePlaceholder... placeholders) {
         ScoreboardService scoreboard = this.scoreboard(inGamePlayer);
         if (scoreboard != null) {
             scoreboard.updateScoreboard(inGamePlayer, placeholders);

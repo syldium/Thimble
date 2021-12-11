@@ -10,7 +10,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Function;
 
-public enum Placeholder {
+public enum ThimblePlaceholder {
 
     ARENA(player -> player.game().arena().name()),
     JUMPER(PlaceholderUtil::currentJumper),
@@ -23,11 +23,11 @@ public enum Placeholder {
     private final ValueFunction function;
     private final String key;
 
-    Placeholder(@NotNull Function<@NotNull ThimblePlayer, @NotNull Object> function) {
+    ThimblePlaceholder(@NotNull Function<@NotNull ThimblePlayer, @NotNull Object> function) {
         this((player, usageIndex) -> function.apply(player));
     }
 
-    Placeholder(@NotNull ValueFunction function) {
+    ThimblePlaceholder(@NotNull ValueFunction function) {
         this.function = function;
         this.key = this.name().toLowerCase(Locale.ROOT);
     }

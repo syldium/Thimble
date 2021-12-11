@@ -1,10 +1,10 @@
 [versions]
 adventure = "4.9.3"
-adventurePlatform = "4.0.1-SNAPSHOT"
-annotations = "22.0.0"
-jupiter = "5.8.1"
-minimessage = "4.2.0-SNAPSHOT"
-paper = "1.17.1-R0.1-SNAPSHOT"
+adventurePlatform = "4.0.2-SNAPSHOT"
+annotations = "23.0.0"
+jupiter = "5.8.2"
+minimessage = "4.10.0-SNAPSHOT"
+paper = "1.18.1-R0.1-SNAPSHOT"
 sponge = "7.3.0"
 
 [libraries]

@@ -6,7 +6,7 @@ import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
-import me.syldium.thimble.common.player.Placeholder;
+import me.syldium.thimble.common.player.ThimblePlaceholder;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.common.world.PoolBlock;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-import static net.kyori.adventure.text.minimessage.Template.template;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
 
 public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
 
@@ -83,8 +83,8 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             if (verdict == JumpVerdict.THIMBLE) {
                 inGamePlayer.incrementPoints(this.thimblePoints);
                 inGamePlayer.incrementThimbles();
-                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, template("player", inGamePlayer.name()));
-                this.plugin.getScoreboardService().updateScoreboard(this.players, Placeholder.THIMBLE);
+                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, placeholder("player", inGamePlayer.name()));
+                this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.THIMBLE);
             }
         }
 
@@ -105,7 +105,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
         if (player != null) {
             this.sendJumpMessage(player, inGamePlayer, verdict);
             if (inGamePlayer.isSpectator()) {
-                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, template("player", inGamePlayer.name()));
+                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, placeholder("player", inGamePlayer.name()));
                 if (this.spectatorMode) {
                     player.spectate();
                 } else {
@@ -114,7 +114,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             } else {
                 player.teleport(this.arena.jumpLocation());
             }
-            this.plugin.getScoreboardService().updateScoreboard(inGamePlayer, Placeholder.JUMPS, Placeholder.POINTS);
+            this.plugin.getScoreboardService().updateScoreboard(inGamePlayer, ThimblePlaceholder.JUMPS, ThimblePlaceholder.POINTS);
         }
     }
 

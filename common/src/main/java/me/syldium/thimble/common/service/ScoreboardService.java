@@ -1,7 +1,7 @@
 package me.syldium.thimble.common.service;
 
 import me.syldium.thimble.api.player.ThimblePlayer;
-import me.syldium.thimble.common.player.Placeholder;
+import me.syldium.thimble.common.player.ThimblePlaceholder;
 import me.syldium.thimble.common.player.Player;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ public interface ScoreboardService {
      * @param inGamePlayers The players in the same arena.
      * @param placeholders Placeholders to update.
      */
-    void updateScoreboard(@NotNull Iterable<@NotNull ? extends ThimblePlayer> inGamePlayers, @NotNull Placeholder... placeholders);
+    void updateScoreboard(@NotNull Iterable<@NotNull ? extends ThimblePlayer> inGamePlayers, @NotNull ThimblePlaceholder... placeholders);
 
     /**
      * Updates the lines containing these placeholders.
@@ -36,7 +36,7 @@ public interface ScoreboardService {
      * @param inGamePlayer The player in a thimble game.
      * @param placeholders Placeholders to update.
      */
-    void updateScoreboard(@NotNull ThimblePlayer inGamePlayer, @NotNull Placeholder... placeholders);
+    void updateScoreboard(@NotNull ThimblePlayer inGamePlayer, @NotNull ThimblePlaceholder... placeholders);
 
     void hideScoreboard(@NotNull ThimblePlayer inGamePlayer, @Nullable Player player);
 

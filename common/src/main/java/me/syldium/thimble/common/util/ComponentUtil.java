@@ -3,11 +3,11 @@ package me.syldium.thimble.common.util;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static net.kyori.adventure.text.minimessage.Template.template;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
 
 public final class ComponentUtil {
 
@@ -23,7 +23,7 @@ public final class ComponentUtil {
         return component.hoverEvent(HoverEvent.showText(Component.text("Version: ").append(Component.text(pluginVersion, NamedTextColor.GREEN))));
     }
 
-    public static @NotNull Template getPluginDescriptionTemplate(@NotNull String pluginName, @Nullable String pluginVersion) {
-        return template("plugin", getPluginDescriptionComponent(pluginName, pluginVersion));
+    public static @NotNull Placeholder getPluginDescriptionTemplate(@NotNull String pluginName, @Nullable String pluginVersion) {
+        return placeholder("plugin", getPluginDescriptionComponent(pluginName, pluginVersion));
     }
 }

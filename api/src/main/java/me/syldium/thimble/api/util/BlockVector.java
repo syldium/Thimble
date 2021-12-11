@@ -1,7 +1,7 @@
 package me.syldium.thimble.api.util;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import net.kyori.examination.Examinable;
 import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
-import static net.kyori.adventure.text.minimessage.Template.template;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
 
 /**
  * Defines an immutable block position relative to the current world.
@@ -159,16 +159,16 @@ public class BlockVector implements Examinable, Serializable, Cloneable {
     }
 
     /**
-     * Returns a template array from the block vector.
+     * Returns a placeholder array from the block vector.
      *
-     * @return A template array.
+     * @return A placeholder array.
      */
-    public @NotNull Template[] asTemplates() {
+    public @NotNull Placeholder[] asPlaceholders() {
         //CHECKSTYLE:OFF
-        return new Template[]{
-                template("x", Component.text(this.x)),
-                template("y", Component.text(this.y)),
-                template("z", Component.text(this.z))
+        return new Placeholder[]{
+                placeholder("x", Component.text(this.x)),
+                placeholder("y", Component.text(this.y)),
+                placeholder("z", Component.text(this.z))
         };
         //CHECKSTYLE:ON
     }

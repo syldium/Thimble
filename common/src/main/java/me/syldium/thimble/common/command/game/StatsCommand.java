@@ -10,14 +10,14 @@ import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.command.abstraction.spec.Arguments;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.service.MessageService;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.kyori.adventure.text.minimessage.Template.template;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
 
 public class StatsCommand extends ChildCommand.One<String> {
 
@@ -35,16 +35,16 @@ public class StatsCommand extends ChildCommand.One<String> {
         plugin.getStatsService().getPlayerStatistics(username).thenAccept(optional -> {
             if (optional.isPresent()) {
                 ThimblePlayerStats stats = optional.get();
-                List<Template> args = new ArrayList<>();
+                List<Placeholder> args = new ArrayList<>();
                 MessageService service = plugin.getMessageService();
-                args.add(template("player", stats.name()));
+                args.add(placeholder("player", stats.name()));
                 args.addAll(MessageKey.Unit.WINS.tl(stats.wins(), service));
                 args.addAll(MessageKey.Unit.LOSSES.tl(stats.losses(), service));
                 args.addAll(MessageKey.Unit.JUMPS.tl(stats.jumps(), service));
                 args.addAll(MessageKey.Unit.THIMBLES.tl(stats.thimbles(), service));
-                sender.sendFeedback(CommandResult.success(MessageKey.FEEDBACK_GAME_STATS, args.toArray(new Template[0])));
+                sender.sendFeedback(CommandResult.success(MessageKey.FEEDBACK_GAME_STATS, args.toArray(new Placeholder[0])));
             } else {
-                sender.sendFeedback(CommandResult.error(MessageKey.FEEDBACK_GAME_STATS_UNKNOWN, template("player", username)));
+                sender.sendFeedback(CommandResult.error(MessageKey.FEEDBACK_GAME_STATS_UNKNOWN, placeholder("player", username)));
             }
         });
         return CommandResult.success();

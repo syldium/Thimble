@@ -3,11 +3,11 @@ package me.syldium.thimble.common.service;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.config.ConfigNode;
-import me.syldium.thimble.common.player.Placeholder;
+import me.syldium.thimble.common.player.ThimblePlaceholder;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.player.media.Scoreboard;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -25,18 +25,18 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.Template.template;
 import static net.kyori.adventure.text.minimessage.Tokens.TAG_END;
 import static net.kyori.adventure.text.minimessage.Tokens.TAG_START;
-import static net.kyori.adventure.text.minimessage.template.TemplateResolver.templates;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
+import static net.kyori.adventure.text.minimessage.placeholder.PlaceholderResolver.placeholders;
 
 @VisibleForTesting
 public class ScoreboardServiceImpl implements ScoreboardService {
 
     private final PlaceholderService.Thimble placeholderService;
-    private final List<Set<Placeholder>> indexes;
-    private final Map<Placeholder, List<Integer>> placeholders;
-    private final Map<Placeholder, Component> emptyTexts;
+    private final List<Set<ThimblePlaceholder>> indexes;
+    private final Map<ThimblePlaceholder, List<Integer>> placeholders;
+    private final Map<ThimblePlaceholder, Component> emptyTexts;
     private final Map<UUID, Scoreboard> scoreboards;
     private final Function<UUID, String> uuidToString;
     private final Component title;
@@ -62,14 +62,14 @@ public class ScoreboardServiceImpl implements ScoreboardService {
             return;
         }
 
-        Placeholder[] placeholders = Placeholder.values();
+        ThimblePlaceholder[] placeholders = ThimblePlaceholder.values();
         this.indexes = new ArrayList<>(lines.size());
-        this.placeholders = new EnumMap<>(Placeholder.class);
-        this.emptyTexts = new EnumMap<>(Placeholder.class);
+        this.placeholders = new EnumMap<>(ThimblePlaceholder.class);
+        this.emptyTexts = new EnumMap<>(ThimblePlaceholder.class);
         this.scoreboards = new IdentityHashMap<>();
         for (int i = 0; i < lines.size(); i++) {
-            Set<Placeholder> set = EnumSet.noneOf(Placeholder.class);
-            for (Placeholder placeholder : placeholders) {
+            Set<ThimblePlaceholder> set = EnumSet.noneOf(ThimblePlaceholder.class);
+            for (ThimblePlaceholder placeholder : placeholders) {
                 if (lines.get(i).contains(TAG_START + placeholder.asString() + TAG_END)) {
                     set.add(placeholder);
                     this.placeholders.computeIfAbsent(placeholder, s -> new ArrayList<>(2)).add(i);
@@ -79,7 +79,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
         }
 
         Component defNullText = miniMessage().parse(emptyTexts == null ? "null" : emptyTexts.getString("default", "null"));
-        for (Placeholder placeholder : placeholders) {
+        for (ThimblePlaceholder placeholder : placeholders) {
             String defText = emptyTexts == null ? null : emptyTexts.getString(placeholder.asString());
             this.emptyTexts.put(placeholder, defText == null ? defNullText : miniMessage().parse(defText));
         }
@@ -106,7 +106,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     }
 
     @Override
-    public void updateScoreboard(@NotNull Iterable<@NotNull ? extends ThimblePlayer> inGamePlayers, @NotNull Placeholder... placeholders) {
+    public void updateScoreboard(@NotNull Iterable<@NotNull ? extends ThimblePlayer> inGamePlayers, @NotNull ThimblePlaceholder... placeholders) {
         Set<Integer> linesToUpdate = this.linesWithPlaceholders(placeholders);
         if (linesToUpdate.isEmpty()) {
             return;
@@ -118,7 +118,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     }
 
     @Override
-    public void updateScoreboard(@NotNull ThimblePlayer player, @NotNull Placeholder... placeholders) {
+    public void updateScoreboard(@NotNull ThimblePlayer player, @NotNull ThimblePlaceholder... placeholders) {
         this.updateLines(player, this.linesWithPlaceholders(placeholders));
     }
 
@@ -147,16 +147,16 @@ public class ScoreboardServiceImpl implements ScoreboardService {
      * @return The rendered line.
      */
     private @NotNull Component render(@NotNull ThimblePlayer player, int line) {
-        Set<Placeholder> placeholders = this.indexes.get(line);
-        Template[] templates = new Template[placeholders.size()];
+        Set<ThimblePlaceholder> placeholders = this.indexes.get(line);
+        Placeholder[] placeholders1 = new Placeholder[placeholders.size()];
         int p = 0;
-        for (Placeholder placeholder : placeholders) {
+        for (ThimblePlaceholder placeholder : placeholders) {
             Object result = placeholder.apply(this.uuidToString, player, this.placeholders.get(placeholder).indexOf(line));
-            templates[p++] = result == null ?
-                    template(placeholder.asString(), this.emptyTexts.get(placeholder))
-                    : template(placeholder.asString(), String.valueOf(result));
+            placeholders1[p++] = result == null ?
+                    placeholder(placeholder.asString(), this.emptyTexts.get(placeholder))
+                    : placeholder(placeholder.asString(), String.valueOf(result));
         }
-        return miniMessage().deserialize(this.placeholderService.setPlaceholders(player, this.lines.get(line)), templates(templates));
+        return miniMessage().deserialize(this.placeholderService.setPlaceholders(player, this.lines.get(line)), placeholders(placeholders1));
     }
 
     /**
@@ -165,13 +165,13 @@ public class ScoreboardServiceImpl implements ScoreboardService {
      * @param placeholders The placeholders to look for.
      * @return The lines containing these placeholders.
      */
-    private @NotNull Set<@NotNull Integer> linesWithPlaceholders(@NotNull Placeholder... placeholders) {
+    private @NotNull Set<@NotNull Integer> linesWithPlaceholders(@NotNull ThimblePlaceholder... placeholders) {
         if (placeholders.length == 0) {
             return Collections.emptySet();
         }
 
         Set<Integer> linesToUpdate = new HashSet<>();
-        for (Placeholder placeholder : placeholders) {
+        for (ThimblePlaceholder placeholder : placeholders) {
             List<Integer> lines = this.placeholders.get(placeholder);
             if (lines != null) {
                 linesToUpdate.addAll(lines);

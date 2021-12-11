@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-import static net.kyori.adventure.text.minimessage.Template.template;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
 
 class SetGameModeCommand extends ChildCommand.Two<Arena, ThimbleGameMode> {
 
@@ -27,8 +27,8 @@ class SetGameModeCommand extends ChildCommand.Two<Arena, ThimbleGameMode> {
         arena.setGameMode(gameMode);
         return CommandResult.success(
                 MessageKey.FEEDBACK_ARENA_SET_GAME_MODE,
-                template("arena", arena.asComponent()),
-                template("gamemode", gameMode.name().toLowerCase(Locale.ROOT))
+                placeholder("arena", arena.asComponent()),
+                placeholder("gamemode", gameMode.name().toLowerCase(Locale.ROOT))
         );
     }
 }

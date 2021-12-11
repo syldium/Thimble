@@ -7,7 +7,7 @@ import me.syldium.thimble.common.service.MessageService;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -48,13 +48,13 @@ public abstract class AbstractSender<S> implements Sender, ForwardingAudience.Si
     }
 
     @Override
-    public void sendMessage(@NotNull MessageKey key, Template... templates) {
-        this.audience.sendMessage(this.getMessageService().formatMessage(key, templates));
+    public void sendMessage(@NotNull MessageKey key, Placeholder... placeholders) {
+        this.audience.sendMessage(this.getMessageService().formatMessage(key, placeholders));
     }
 
     @Override
-    public void sendActionBar(@NotNull MessageKey key, Template... templates) {
-        this.audience.sendActionBar(this.getMessageService().formatMessage(key, templates));
+    public void sendActionBar(@NotNull MessageKey key, Placeholder... placeholders) {
+        this.audience.sendActionBar(this.getMessageService().formatMessage(key, placeholders));
     }
 
     @Override
