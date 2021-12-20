@@ -5,6 +5,7 @@ import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.player.MessageKey;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +29,10 @@ public interface Sender extends Audience {
      * @return The name of the sender.
      */
     @NotNull String name();
+
+    default @NotNull Component displayName() {
+        return Component.text(this.name());
+    }
 
     /**
      * Checks whether this sender has the permission.

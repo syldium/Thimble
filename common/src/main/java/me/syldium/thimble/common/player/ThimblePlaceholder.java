@@ -20,6 +20,9 @@ public enum ThimblePlaceholder {
     STATE(player -> player.game().state()),
     THIMBLE(ThimblePlayer::thimbleForGame);
 
+    public static final char TAG_START = '<';
+    public static final char TAG_END = '>';
+
     private final ValueFunction function;
     private final String key;
 

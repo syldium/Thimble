@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.UUID;
 
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.miniMessage;
 
 public class SingleGame extends Game implements ThimbleSingleGame {
 
@@ -115,7 +115,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             if (verdict == JumpVerdict.THIMBLE) {
                 inGamePlayer.incrementPoints();
                 inGamePlayer.incrementThimbles();
-                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, placeholder("player", inGamePlayer.name()));
+                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, miniMessage("player", inGamePlayer.name()));
                 this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.THIMBLE);
             }
         }
@@ -133,7 +133,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
 
         this.jumper = null;
         if (inGamePlayer.isSpectator()) {
-            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, placeholder("player", inGamePlayer.name()));
+            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, miniMessage("player", inGamePlayer.name()));
             if (this.queue.size() == 1) {
                 this.end(this.players.get(this.queue.poll()));
             } else if (this.queue.isEmpty()) {

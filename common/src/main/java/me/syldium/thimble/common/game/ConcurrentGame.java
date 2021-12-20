@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
 
 public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
 
@@ -83,7 +83,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             if (verdict == JumpVerdict.THIMBLE) {
                 inGamePlayer.incrementPoints(this.thimblePoints);
                 inGamePlayer.incrementThimbles();
-                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, placeholder("player", inGamePlayer.name()));
+                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, component("player", inGamePlayer.displayName()));
                 this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.THIMBLE);
             }
         }
@@ -105,7 +105,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
         if (player != null) {
             this.sendJumpMessage(player, inGamePlayer, verdict);
             if (inGamePlayer.isSpectator()) {
-                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, placeholder("player", inGamePlayer.name()));
+                this.players.sendMessage(inGamePlayer, MessageKey.CHAT_ELIMINATED, component("player", inGamePlayer.displayName()));
                 if (this.spectatorMode) {
                     player.spectate();
                 } else {

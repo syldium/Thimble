@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static me.syldium.thimble.common.service.MessageService.MESSAGES_BUNDLE;
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.miniMessage;
 
 public enum MessageKey {
 
@@ -125,10 +125,10 @@ public enum MessageKey {
             this.plural = plural;
         }
 
-        public @NotNull List<Placeholder> tl(int nb, @NotNull MessageService messageService) {
+        public @NotNull List<Placeholder<String>> tl(int nb, @NotNull MessageService messageService) {
             return Arrays.asList(
-                    placeholder(this.key, String.valueOf(nb)),
-                    placeholder('u' + this.key, nb > 1 ? messageService.get(this.plural) : messageService.get(this.singular))
+                    miniMessage(this.key, String.valueOf(nb)),
+                    miniMessage('u' + this.key, nb > 1 ? messageService.get(this.plural) : messageService.get(this.singular))
             );
         }
     }

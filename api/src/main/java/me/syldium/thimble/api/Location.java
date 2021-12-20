@@ -4,6 +4,7 @@ import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.util.WorldKey;
 import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 
@@ -140,11 +141,11 @@ public class Location implements Serializable {
     }
 
     /**
-     * Returns a template array from the location.
+     * Returns a placeholder array from the location.
      *
-     * @return A template array (floored coordinates).
+     * @return A placeholder array (floored coordinates).
      */
-    public @NotNull Placeholder[] asTemplates() {
+    public @NotNull Placeholder<Component>[] asPlaceholders() {
         return this.asBlockPosition().asPlaceholders();
     }
 

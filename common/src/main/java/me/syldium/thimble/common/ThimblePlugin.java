@@ -48,8 +48,8 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static net.kyori.adventure.text.minimessage.Tokens.TAG_END;
-import static net.kyori.adventure.text.minimessage.Tokens.TAG_START;
+import static me.syldium.thimble.common.player.ThimblePlaceholder.TAG_END;
+import static me.syldium.thimble.common.player.ThimblePlaceholder.TAG_START;
 
 public abstract class ThimblePlugin {
 

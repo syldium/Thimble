@@ -17,7 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.miniMessage;
 
 public class StatsCommand extends ChildCommand.One<String> {
 
@@ -35,16 +36,16 @@ public class StatsCommand extends ChildCommand.One<String> {
         plugin.getStatsService().getPlayerStatistics(username).thenAccept(optional -> {
             if (optional.isPresent()) {
                 ThimblePlayerStats stats = optional.get();
-                List<Placeholder> args = new ArrayList<>();
+                List<Placeholder<?>> args = new ArrayList<>();
                 MessageService service = plugin.getMessageService();
-                args.add(placeholder("player", stats.name()));
+                args.add(component("player", stats.displayName()));
                 args.addAll(MessageKey.Unit.WINS.tl(stats.wins(), service));
                 args.addAll(MessageKey.Unit.LOSSES.tl(stats.losses(), service));
                 args.addAll(MessageKey.Unit.JUMPS.tl(stats.jumps(), service));
                 args.addAll(MessageKey.Unit.THIMBLES.tl(stats.thimbles(), service));
                 sender.sendFeedback(CommandResult.success(MessageKey.FEEDBACK_GAME_STATS, args.toArray(new Placeholder[0])));
             } else {
-                sender.sendFeedback(CommandResult.error(MessageKey.FEEDBACK_GAME_STATS_UNKNOWN, placeholder("player", username)));
+                sender.sendFeedback(CommandResult.error(MessageKey.FEEDBACK_GAME_STATS_UNKNOWN, miniMessage("player", username)));
             }
         });
         return CommandResult.success();

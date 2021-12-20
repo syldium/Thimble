@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
 
 /**
  * Defines an immutable block position relative to the current world.
@@ -163,12 +163,13 @@ public class BlockVector implements Examinable, Serializable, Cloneable {
      *
      * @return A placeholder array.
      */
-    public @NotNull Placeholder[] asPlaceholders() {
+    @SuppressWarnings("unchecked")
+    public @NotNull Placeholder<Component>[] asPlaceholders() {
         //CHECKSTYLE:OFF
         return new Placeholder[]{
-                placeholder("x", Component.text(this.x)),
-                placeholder("y", Component.text(this.y)),
-                placeholder("z", Component.text(this.z))
+                component("x", Component.text(this.x)),
+                component("y", Component.text(this.y)),
+                component("z", Component.text(this.z))
         };
         //CHECKSTYLE:ON
     }

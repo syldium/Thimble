@@ -1,6 +1,7 @@
 package me.syldium.thimble.api.player;
 
 import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -17,6 +18,10 @@ public interface ThimblePlayerStats extends Identity {
      */
     @Contract(pure = true)
     @NotNull String name();
+
+    default @NotNull Component displayName() {
+        return Component.text(this.name());
+    }
 
     /**
      * If the player has already won or lost a game.

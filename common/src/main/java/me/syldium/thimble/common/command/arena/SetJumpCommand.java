@@ -25,7 +25,7 @@ class SetJumpCommand extends ChildCommand.One<Arena> {
         arena.setJumpLocation(loc);
         return CommandResult.success(
                 MessageKey.FEEDBACK_ARENA_SET_JUMP,
-                loc.asTemplates()
+                loc.asPlaceholders()
         );
     }
 

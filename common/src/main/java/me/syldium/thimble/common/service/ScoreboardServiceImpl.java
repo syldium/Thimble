@@ -24,10 +24,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
+import static me.syldium.thimble.common.player.ThimblePlaceholder.TAG_END;
+import static me.syldium.thimble.common.player.ThimblePlaceholder.TAG_START;
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.Tokens.TAG_END;
-import static net.kyori.adventure.text.minimessage.Tokens.TAG_START;
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.miniMessage;
 import static net.kyori.adventure.text.minimessage.placeholder.PlaceholderResolver.placeholders;
 
 @VisibleForTesting
@@ -153,8 +154,8 @@ public class ScoreboardServiceImpl implements ScoreboardService {
         for (ThimblePlaceholder placeholder : placeholders) {
             Object result = placeholder.apply(this.uuidToString, player, this.placeholders.get(placeholder).indexOf(line));
             placeholders1[p++] = result == null ?
-                    placeholder(placeholder.asString(), this.emptyTexts.get(placeholder))
-                    : placeholder(placeholder.asString(), String.valueOf(result));
+                    component(placeholder.asString(), this.emptyTexts.get(placeholder))
+                    : miniMessage(placeholder.asString(), String.valueOf(result));
         }
         return miniMessage().deserialize(this.placeholderService.setPlaceholders(player, this.lines.get(line)), placeholders(placeholders1));
     }

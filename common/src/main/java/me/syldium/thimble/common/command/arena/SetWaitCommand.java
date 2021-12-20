@@ -28,7 +28,7 @@ class SetWaitCommand extends ChildCommand.One<Arena> {
         }
         return CommandResult.success(
                 MessageKey.FEEDBACK_ARENA_SET_WAIT,
-                loc.asTemplates()
+                loc.asPlaceholders()
         );
     }
 

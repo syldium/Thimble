@@ -1,12 +1,16 @@
 package me.syldium.thimble.api.arena;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.util.Index;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Locale;
 
 /**
  * List of game modes.
  */
-public enum ThimbleGameMode {
+public enum ThimbleGameMode implements ComponentLike {
 
     /**
      * A {@link ThimbleSingleGame}.
@@ -27,5 +31,10 @@ public enum ThimbleGameMode {
 
     ThimbleGameMode(@NotNull String name) {
         this.name = name;
+    }
+
+    @Override
+    public @NotNull Component asComponent() {
+        return Component.text(this.name().toLowerCase(Locale.ROOT));
     }
 }

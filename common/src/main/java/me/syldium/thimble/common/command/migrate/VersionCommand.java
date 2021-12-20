@@ -17,13 +17,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.miniMessage;
 
 public class VersionCommand extends ChildCommand.One<String> {
 
     private static final Permission PERMISSION = Permission.version("update");
-    private static final Placeholder VERSION = placeholder("version", Thimble.pluginVersion().toString());
-    private static final Placeholder RELEASES_URL = placeholder("releases", "https://github.com/syldium/Thimble/releases");
+    private static final Placeholder<String> VERSION = miniMessage("version", Thimble.pluginVersion().toString());
+    private static final Placeholder<String> RELEASES_URL = miniMessage("releases", "https://github.com/syldium/Thimble/releases");
 
     public VersionCommand() {
         super("version", new UpdateArgument().optional(), MessageKey.HELP_VERSION, Permission.version());
@@ -77,7 +78,7 @@ public class VersionCommand extends ChildCommand.One<String> {
             }
         }
 
-        return CommandResult.error(MessageKey.FEEDBACK_VERSION_OUTDATED, VERSION, placeholder("latest", releaseInfo.asComponent()));
+        return CommandResult.error(MessageKey.FEEDBACK_VERSION_OUTDATED, VERSION, component("latest", releaseInfo.asComponent()));
     }
 
     private static class UpdateArgument extends Argument<String> {

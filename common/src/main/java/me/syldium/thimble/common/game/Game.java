@@ -18,6 +18,7 @@ import me.syldium.thimble.common.player.media.TimedMedia;
 import me.syldium.thimble.common.util.PlayerMap;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.common.world.BlockData;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +37,8 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
 
 /**
  * Common implementation for both game modes.
@@ -218,7 +220,7 @@ public abstract class Game implements ThimbleGame, Runnable {
      */
     protected void sendJumpMessage(@NotNull Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
-            Placeholder lifesPlaceholder = placeholder("lifes", String.valueOf(inGamePlayer.points()));
+            Placeholder<Component> lifesPlaceholder = component("lifes", text(inGamePlayer.points()));
             if (inGamePlayer.points() > 1) {
                 player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFES, lifesPlaceholder);
             } else {
@@ -258,7 +260,7 @@ public abstract class Game implements ThimbleGame, Runnable {
         // Send the winning message
         if (!isSolo && latest != null) {
             List<Placeholder> args = new ArrayList<>(4);
-            args.add(placeholder("player", latest.name()));
+            args.add(component("player", latest.displayName()));
             args.addAll(MessageKey.Unit.JUMPS.tl(latest.jumpsForGame(), this.plugin.getMessageService()));
             this.players.sendMessage(latest, MessageKey.CHAT_WIN, args.toArray(new Placeholder[0]));
             this.latest = latest;
@@ -462,7 +464,7 @@ public abstract class Game implements ThimbleGame, Runnable {
             this.players.sendMessageExclude(
                     inGamePlayer,
                     MessageKey.CHAT_JOINED,
-                    placeholder("player", player.name())
+                    component("player", player.displayName())
             );
 
             if (!player.isVanished()) {
@@ -499,7 +501,7 @@ public abstract class Game implements ThimbleGame, Runnable {
 
         if (!inGamePlayer.isVanished()) {
             // Send the message
-            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_LEFT, placeholder("player", inGamePlayer.name()));
+            this.players.sendMessage(inGamePlayer, MessageKey.CHAT_LEFT, component("player", inGamePlayer.displayName()));
         }
 
         // Check the player count

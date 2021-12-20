@@ -7,7 +7,7 @@ import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
 
 public final class ComponentUtil {
 
@@ -23,7 +23,7 @@ public final class ComponentUtil {
         return component.hoverEvent(HoverEvent.showText(Component.text("Version: ").append(Component.text(pluginVersion, NamedTextColor.GREEN))));
     }
 
-    public static @NotNull Placeholder getPluginDescriptionTemplate(@NotNull String pluginName, @Nullable String pluginVersion) {
-        return placeholder("plugin", getPluginDescriptionComponent(pluginName, pluginVersion));
+    public static @NotNull Placeholder<Component> getPluginDescriptionTemplate(@NotNull String pluginName, @Nullable String pluginVersion) {
+        return component("plugin", getPluginDescriptionComponent(pluginName, pluginVersion));
     }
 }

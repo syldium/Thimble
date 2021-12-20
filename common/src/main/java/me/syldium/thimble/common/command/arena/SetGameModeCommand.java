@@ -12,9 +12,7 @@ import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.common.player.MessageKey;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
-
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.placeholder;
+import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
 
 class SetGameModeCommand extends ChildCommand.Two<Arena, ThimbleGameMode> {
 
@@ -27,8 +25,8 @@ class SetGameModeCommand extends ChildCommand.Two<Arena, ThimbleGameMode> {
         arena.setGameMode(gameMode);
         return CommandResult.success(
                 MessageKey.FEEDBACK_ARENA_SET_GAME_MODE,
-                placeholder("arena", arena.asComponent()),
-                placeholder("gamemode", gameMode.name().toLowerCase(Locale.ROOT))
+                component("arena", arena.asComponent()),
+                component("gamemode", gameMode)
         );
     }
 }

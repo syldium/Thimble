@@ -28,7 +28,7 @@ class SetSpawnCommand extends ChildCommand.One<Arena> {
         }
         return CommandResult.success(
                 MessageKey.FEEDBACK_ARENA_SET_SPAWN,
-                loc.asTemplates()
+                loc.asPlaceholders()
         );
     }
 
