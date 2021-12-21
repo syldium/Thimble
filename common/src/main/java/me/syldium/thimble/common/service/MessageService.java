@@ -33,7 +33,7 @@ public interface MessageService extends PlaceholderService, PlaceholderService.T
      * @param placeholders Some placeholders.
      * @return The formatted message component.
      */
-    default @NotNull Component formatMessage(@NotNull MessageKey key, @NotNull Placeholder... placeholders) {
+    default @NotNull Component formatMessage(@NotNull MessageKey key, @NotNull Placeholder<?>... placeholders) {
         return this.formatMessage(key, null, placeholders);
     }
 
@@ -44,7 +44,7 @@ public interface MessageService extends PlaceholderService, PlaceholderService.T
      * @param placeholders Some placeholders.
      * @return The formatted message component.
      */
-    default @NotNull Component formatMessageWithPrefix(@NotNull MessageKey key, @NotNull Placeholder... placeholders) {
+    default @NotNull Component formatMessageWithPrefix(@NotNull MessageKey key, @NotNull Placeholder<?>... placeholders) {
         return this.prefix().append(this.formatMessage(key, placeholders));
     }
 
@@ -61,7 +61,7 @@ public interface MessageService extends PlaceholderService, PlaceholderService.T
      * @param placeholders Some placeholders.
      * @return The formatted message component.
      */
-    @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Placeholder... placeholders);
+    @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Placeholder<?>... placeholders);
 
     @NotNull String get(@NotNull MessageKey key);
 

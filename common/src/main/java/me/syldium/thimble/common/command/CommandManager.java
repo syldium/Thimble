@@ -171,7 +171,7 @@ public class CommandManager {
         sendHelp(sender, label, this.mainCommands);
     }
 
-    public static void sendHelp(@NotNull Sender sender, @NotNull String label, @NotNull List<@NotNull ? extends AbstractCommand> commands) {
+    public static void sendHelp(@NotNull Sender sender, @NotNull String label, @NotNull List<? extends AbstractCommand> commands) {
         for (AbstractCommand cmd : commands) {
             if (!cmd.hasPermission(sender) || !cmd.shouldDisplay()) {
                 continue;
@@ -180,7 +180,7 @@ public class CommandManager {
         }
     }
 
-    protected @NotNull List<@NotNull ? extends AbstractCommand> getMainCommands() {
+    protected @NotNull List<? extends AbstractCommand> getMainCommands() {
         return this.mainCommands;
     }
 

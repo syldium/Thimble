@@ -85,7 +85,7 @@ public class BukkitJumpVerdictEvent extends Event implements GameEvent {
     }
 
     /**
-     * An list of static handlers.
+     * A list of static handlers.
      *
      * @return Static handlers.
      */

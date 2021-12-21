@@ -52,7 +52,7 @@ public class BukkitPlayerJoinArenaEvent extends PlayerEvent implements Cancellab
     }
 
     /**
-     * An list of static handlers.
+     * A list of static handlers.
      *
      * @return Static handlers.
      */

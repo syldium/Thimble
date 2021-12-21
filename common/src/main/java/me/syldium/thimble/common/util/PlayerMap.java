@@ -92,22 +92,22 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
         return this.containsValue(identity);
     }
 
-    public void sendMessage(@NotNull MessageKey messageKey, @NotNull Placeholder... placeholders) {
+    public void sendMessage(@NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
         this.sendMessage(Identity.nil(), messageKey, placeholders);
     }
 
-    public void sendMessage(@NotNull Identity source, @NotNull MessageKey messageKey, @NotNull Placeholder... placeholders) {
+    public void sendMessage(@NotNull Identity source, @NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
         Component component = this.plugin.getMessageService().formatMessageWithPrefix(messageKey, placeholders);
         for (Player player : this.audiences()) player.sendMessage(source, component);
     }
 
-    public void sendMessage(@NotNull E source, @NotNull MessageKey messageKey, @NotNull Placeholder... placeholders) {
+    public void sendMessage(@NotNull E source, @NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
         if (!source.isVanished()) {
             this.sendMessage((Identity) source, messageKey, placeholders);
         }
     }
 
-    public void sendMessageExclude(@NotNull E source, @NotNull MessageKey messageKey, @NotNull Placeholder... placeholders) {
+    public void sendMessageExclude(@NotNull E source, @NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
         Component component = this.plugin.getMessageService().formatMessageWithPrefix(messageKey, placeholders);
         for (E identity : this) {
             // The player who sent the message should not see the message, and a vanished player should not be visible in the message.
@@ -122,7 +122,7 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
         }
     }
 
-    public void sendActionBar(@NotNull MessageKey messageKey, @NotNull Placeholder... placeholders) {
+    public void sendActionBar(@NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
         Component component = this.plugin.getMessageService().formatMessage(messageKey, placeholders);
         for (Player player : this.audiences()) player.sendActionBar(component);
     }

@@ -53,7 +53,7 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
     }
 
     /**
-     * Copy a existing leaderboard.
+     * Copy an existing leaderboard.
      *
      * @param leaderboard The leaderboard to copy.
      */

@@ -149,7 +149,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
      */
     private @NotNull Component render(@NotNull ThimblePlayer player, int line) {
         Set<ThimblePlaceholder> placeholders = this.indexes.get(line);
-        Placeholder[] placeholders1 = new Placeholder[placeholders.size()];
+        Placeholder<?>[] placeholders1 = new Placeholder[placeholders.size()];
         int p = 0;
         for (ThimblePlaceholder placeholder : placeholders) {
             Object result = placeholder.apply(this.uuidToString, player, this.placeholders.get(placeholder).indexOf(line));

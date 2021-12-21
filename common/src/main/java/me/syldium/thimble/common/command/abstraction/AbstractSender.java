@@ -48,12 +48,12 @@ public abstract class AbstractSender<S> implements Sender, ForwardingAudience.Si
     }
 
     @Override
-    public void sendMessage(@NotNull MessageKey key, Placeholder... placeholders) {
+    public void sendMessage(@NotNull MessageKey key, Placeholder<?>... placeholders) {
         this.audience.sendMessage(this.getMessageService().formatMessage(key, placeholders));
     }
 
     @Override
-    public void sendActionBar(@NotNull MessageKey key, Placeholder... placeholders) {
+    public void sendActionBar(@NotNull MessageKey key, Placeholder<?>... placeholders) {
         this.audience.sendActionBar(this.getMessageService().formatMessage(key, placeholders));
     }
 

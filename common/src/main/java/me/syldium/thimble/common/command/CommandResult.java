@@ -11,35 +11,35 @@ public final class CommandResult {
 
     private final int type;
     private final MessageKey messageKey;
-    private final Placeholder[] placeholders;
+    private final Placeholder<?>[] placeholders;
 
-    CommandResult(boolean isSuccess, @Nullable MessageKey messageKey, @NotNull Placeholder... placeholders) {
+    CommandResult(boolean isSuccess, @Nullable MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
         this(isSuccess ? 1 : 0, messageKey, placeholders);
     }
 
-    CommandResult(int type, @Nullable MessageKey messageKey, @NotNull Placeholder... placeholders) {
+    CommandResult(int type, @Nullable MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
         this.type = type;
         this.messageKey = messageKey;
         this.placeholders = placeholders;
     }
 
-    public static @NotNull CommandResult info(@NotNull MessageKey messageKey, @NotNull Placeholder... placeholders) {
+    public static @NotNull CommandResult info(@NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
         return new CommandResult(2, messageKey, placeholders);
     }
 
-    public static @NotNull CommandResult success(@NotNull Placeholder... placeholders) {
+    public static @NotNull CommandResult success(@NotNull Placeholder<?>... placeholders) {
         return new CommandResult(true, null, placeholders);
     }
 
-    public static @NotNull CommandResult success(@NotNull MessageKey messageKey, @NotNull Placeholder... placeholders) {
+    public static @NotNull CommandResult success(@NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
         return new CommandResult(true, messageKey, placeholders);
     }
 
-    public static @NotNull CommandResult error(@NotNull Placeholder... placeholders) {
+    public static @NotNull CommandResult error(@NotNull Placeholder<?>... placeholders) {
         return new CommandResult(false, null, placeholders);
     }
 
-    public static @NotNull CommandResult error(@NotNull MessageKey messageKey, @NotNull Placeholder... placeholders) {
+    public static @NotNull CommandResult error(@NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
         return new CommandResult(false, messageKey, placeholders);
     }
 
@@ -54,7 +54,7 @@ public final class CommandResult {
         return this.isSuccess() ? NamedTextColor.GREEN : NamedTextColor.RED;
     }
 
-    public @NotNull Placeholder[] getPlaceholders() {
+    public @NotNull Placeholder<?>[] getPlaceholders() {
         return this.placeholders;
     }
 

@@ -34,7 +34,7 @@ public class BlockBalancer {
         this.needsBalance = needsBalance;
     }
 
-    public void balance(@NotNull Collection<@NotNull ? extends BlockData> allBlocks) {
+    public void balance(@NotNull Collection<? extends BlockData> allBlocks) {
         if (allBlocks.isEmpty()) {
             throw new IllegalArgumentException("The collection of blocks that can be used to balance is empty!");
         }
@@ -74,7 +74,7 @@ public class BlockBalancer {
             @NotNull Random random,
             @NotNull InGamePlayer player,
             @NotNull List<@NotNull BlockData> available,
-            @NotNull Collection<@NotNull ? extends BlockData> all
+            @NotNull Collection<? extends BlockData> all
     ) {
         if (available.isEmpty()) {
             available.addAll(all);

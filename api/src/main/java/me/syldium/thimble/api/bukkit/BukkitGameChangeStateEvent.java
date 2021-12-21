@@ -63,7 +63,7 @@ public class BukkitGameChangeStateEvent extends Event implements Cancellable, Ga
     }
 
     /**
-     * An list of static handlers.
+     * A list of static handlers.
      *
      * @return Static handlers.
      */

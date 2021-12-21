@@ -186,7 +186,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     public abstract void onJump(@Nullable Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict0);
 
     /**
-     * Gets the non vanished player with the most of points.
+     * Gets the non-vanished player with the most points.
      *
      * @return The first player.
      */
@@ -259,7 +259,7 @@ public abstract class Game implements ThimbleGame, Runnable {
 
         // Send the winning message
         if (!isSolo && latest != null) {
-            List<Placeholder> args = new ArrayList<>(4);
+            List<Placeholder<?>> args = new ArrayList<>(4);
             args.add(component("player", latest.displayName()));
             args.addAll(MessageKey.Unit.JUMPS.tl(latest.jumpsForGame(), this.plugin.getMessageService()));
             this.players.sendMessage(latest, MessageKey.CHAT_WIN, args.toArray(new Placeholder[0]));

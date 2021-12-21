@@ -86,7 +86,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Placeholder... placeholders) {
+    public @NotNull Component formatMessage(@NotNull MessageKey key, @Nullable TextColor color, @NotNull Placeholder<?>... placeholders) {
         String input = this.translate(key.getAccessor());
         return miniMessage().deserialize(input, placeholders(placeholders)).colorIfAbsent(color);
     }

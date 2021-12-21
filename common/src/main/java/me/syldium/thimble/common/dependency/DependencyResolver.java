@@ -48,7 +48,7 @@ public class DependencyResolver {
     }
 
     /**
-     * Gets all of the possible download URLs for this library. Entries are
+     * Gets all the possible download URLs for this library. Entries are
      * ordered by direct download URLs first and then repository download URLs.
      *
      * @param dependency The dependency to resolve.

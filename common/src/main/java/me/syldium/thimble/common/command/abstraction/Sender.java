@@ -55,7 +55,7 @@ public interface Sender extends Audience {
      * @param key The message key.
      * @param placeholders Some placeholders.
      */
-    void sendMessage(@NotNull MessageKey key, Placeholder... placeholders);
+    void sendMessage(@NotNull MessageKey key, Placeholder<?>... placeholders);
 
     /**
      * Sends a message to the player's action bar from its {@link MessageKey}.
@@ -63,7 +63,7 @@ public interface Sender extends Audience {
      * @param key The message key.
      * @param placeholders Some placeholders.
      */
-    void sendActionBar(@NotNull MessageKey key, Placeholder... placeholders);
+    void sendActionBar(@NotNull MessageKey key, Placeholder<?>... placeholders);
 
     /**
      * Gets the plugin instance.
