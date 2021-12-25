@@ -8,11 +8,13 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LeaderboardTest {
 
@@ -24,6 +26,11 @@ public class LeaderboardTest {
         for (int wins : new int[]{40, 37, 32, 25, 23, 11, 9, 8, 4, 3}) {
             this.leaderboard.add(this.newPlayerStats(wins));
         }
+    }
+
+    @Test
+    public void indexOf() {
+        testIndexOf(this.leaderboard);
     }
 
     @Test
@@ -94,6 +101,46 @@ public class LeaderboardTest {
         leaderboard.add(stats);
         assertEquals(stats, leaderboard.get(4));
         assertNotEquals(stats, leaderboard.get(5));
+    }
+
+    @Test
+    public void remove() {
+        Leaderboard leaderboard = new Leaderboard(this.leaderboard);
+        assertFalse(leaderboard.remove(this.newPlayerStats(1)));
+        ThimblePlayerStats removed = leaderboard.get(5);
+        assertTrue(leaderboard.remove(removed));
+        assertEquals(-1, leaderboard.indexOf(removed.uuid()));
+        assertFalse(leaderboard.containsScore(removed.wins()));
+        testIndexOf(leaderboard);
+    }
+
+    @Test
+    public void iterator() {
+        Leaderboard leaderboard = new Leaderboard(this.leaderboard);
+        ThimblePlayerStats initialThird = leaderboard.get(2);
+        ThimblePlayerStats initialFourth = leaderboard.get(3);
+        Iterator<ThimblePlayerStats> iterator = leaderboard.iterator();
+        assertEquals(leaderboard.get(0), iterator.next());
+        assertEquals(leaderboard.get(1), iterator.next());
+        iterator.remove();
+        assertEquals(leaderboard.get(1), iterator.next());
+        iterator.remove();
+        assertEquals(initialFourth, iterator.next());
+
+        assertEquals(-1, leaderboard.indexOf(initialThird.uuid()));
+
+        assertEquals(Arrays.asList(40, 25, 23, 11, 9, 8, 4, 3), leaderboard.scores());
+        testIndexOf(leaderboard);
+        assertFalse(leaderboard.containsScore(37));
+        assertFalse(leaderboard.containsScore(32));
+        assertTrue(leaderboard.containsScore(25));
+    }
+
+    private static void testIndexOf(@NotNull Leaderboard leaderboard) {
+        int i = 0;
+        for (ThimblePlayerStats stats : leaderboard) {
+            assertEquals(i++, leaderboard.indexOf(stats.uuid()));
+        }
     }
 
     public @NotNull PlayerStats newPlayerStats(int wins) {

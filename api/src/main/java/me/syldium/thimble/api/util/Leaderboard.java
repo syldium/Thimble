@@ -8,9 +8,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
+import java.util.UUID;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -31,7 +34,8 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
 
     private final Comparator<ThimblePlayerStats> comparator;
     private final ToIntFunction<ThimblePlayerStats> getter;
-    private List<ThimblePlayerStats> list = new ArrayList<>(Leaderboard.MAX_LENGTH);
+    private final Map<UUID, Integer> positions;
+    private final List<ThimblePlayerStats> list;
 
     /**
      * Constructs a new leaderboard using this criterion.
@@ -50,6 +54,8 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
     private Leaderboard(@NotNull Comparator<ThimblePlayerStats> comparator, @NotNull ToIntFunction<ThimblePlayerStats> getter) {
         this.comparator = comparator;
         this.getter = getter;
+        this.positions = new HashMap<>(Leaderboard.MAX_LENGTH);
+        this.list = new ArrayList<>(Leaderboard.MAX_LENGTH);
     }
 
     /**
@@ -60,6 +66,7 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
     public Leaderboard(@NotNull Leaderboard leaderboard) {
         this.comparator = leaderboard.comparator;
         this.getter = leaderboard.getter;
+        this.positions = new HashMap<>(leaderboard.positions);
         this.list = new ArrayList<>(leaderboard.list);
     }
 
@@ -83,32 +90,41 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
     @Override
     public boolean add(@NotNull ThimblePlayerStats e) {
         requireNonNull(e, "player stats");
-        int rank = -1;
-        for (int i = 0; i < this.list.size(); i++) {
-            if (this.list.get(i).equalsPlayer(e)) {
-                rank = i;
-                break;
-            }
-        }
-
-        if (rank < 0 && this.list.size() < Leaderboard.MAX_LENGTH) {
-            this.list.add(e);
+        int existing = this.indexOf(e.uuid());
+        int rank = this.insertionIndex(this.getter.applyAsInt(e));
+        if (existing == rank) {
+            // The ranking does not change, only the previous score must be updated.
+            this.list.set(rank, e);
             return true;
         }
 
-        ThimblePlayerStats latest = this.last();
-        if (this.comparator.compare(latest, e) > 0) {
-            if (rank >= 0) {
-                this.list.remove(rank);
-            }
-            this.list.add(e);
-            this.list = this.list.stream()
-                    .sorted(this.comparator)
-                    .limit(Leaderboard.MAX_LENGTH)
-                    .collect(Collectors.toList());
-            return true;
+        if (existing != -1) {
+            // Position change in the ranking.
+            this.list.remove(existing);
+            this.positions.remove(e.uuid());
         }
-        return false;
+
+        if (rank > MAX_LENGTH) {
+            // New position too far.
+            this.updatePositions(existing);
+            return false;
+        }
+
+        // (Re)addition
+        this.list.add(rank, e);
+        if (existing == -1) {
+            this.updatePositions(rank);
+        } else if (rank < existing) {
+            this.updatePositions(rank, existing + 1);
+        } else {
+            this.updatePositions(existing, rank + 1);
+        }
+
+        if (this.size() > MAX_LENGTH) {
+            // Limit the length of the leaderboard.
+            this.positions.remove(this.list.remove(MAX_LENGTH).uuid());
+        }
+        return true;
     }
 
     /**
@@ -125,18 +141,61 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
     }
 
     /**
-     * Tests if a score is contained.
+     * Tests if a score is present using a binary search.
      *
      * @param score The value to test.
-     * @return If so.
+     * @return {@code true} if present.
      */
     public boolean containsScore(int score) {
-        for (ThimblePlayerStats element : this) {
-            if (this.getter.applyAsInt(element) == score) {
+        int low = 0;
+        int high = this.list.size() - 1;
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            int cmp = Integer.compare(this.getter.applyAsInt(this.list.get(mid)), score);
+            if (cmp == 0) {
                 return true;
+            } else if (cmp > 0) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
             }
         }
         return false;
+    }
+
+    /**
+     * Finds the insertion position of the score using a binary search.
+     *
+     * <p>If an entry has the same score, the insertion position will always be
+     * after the existing entries.</p>
+     *
+     * @param score The score to insert.
+     * @return The position to insert.
+     */
+    private int insertionIndex(int score) {
+        int low = 0;
+        int high = this.list.size() - 1;
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            int cmp = Integer.compare(this.getter.applyAsInt(this.list.get(mid)), score);
+            if (cmp >= 0) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return low;
+    }
+
+    /**
+     * Returns the position of the given player identifier in this leaderboard.
+     *
+     * @param playerUniqueId The player unique id.
+     * @return The index or {@code -1} if absent.
+     */
+    public int indexOf(@NotNull UUID playerUniqueId) {
+        Integer index = this.positions.get(playerUniqueId);
+        return index == null ? -1 : index;
     }
 
     @Override
@@ -196,7 +255,7 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
 
     @Override
     public @NotNull Iterator<ThimblePlayerStats> iterator() {
-        return this.list.iterator();
+        return new LeaderboardIterator(this);
     }
 
     @Override
@@ -211,7 +270,13 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
 
     @Override
     public boolean remove(Object o) {
-        return this.list.remove(o);
+        boolean removed = this.list.remove(o);
+        if (removed) {
+            UUID uuid = ((ThimblePlayerStats) o).uuid();
+            this.updatePositions(this.indexOf(uuid));
+            this.positions.remove(uuid);
+        }
+        return removed;
     }
 
     @Override
@@ -232,17 +297,43 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
 
     @Override
     public boolean removeAll(@NotNull Collection<?> collection) {
-        return this.list.removeAll(collection);
+        boolean changed = this.list.removeAll(collection);
+        if (changed) {
+            this.updatePositions();
+        }
+        return changed;
     }
 
     @Override
     public boolean retainAll(@NotNull Collection<?> collection) {
-        return this.list.retainAll(collection);
+        boolean changed = this.list.retainAll(collection);
+        if (changed) {
+            this.updatePositions();
+        }
+        return changed;
+    }
+
+    private void updatePositions() {
+        this.positions.clear();
+        for (int i = 0; i < this.list.size(); i++) {
+            this.positions.put(this.list.get(i).uuid(), i);
+        }
+    }
+
+    private void updatePositions(int from, int to) {
+        for (int i = from; i < to; i++) {
+            this.positions.put(this.list.get(i).uuid(), i);
+        }
+    }
+
+    private void updatePositions(int from) {
+        this.updatePositions(from, this.list.size());
     }
 
     @Override
     public void clear() {
         this.list.clear();
+        this.positions.clear();
     }
 
     @Override
@@ -261,5 +352,36 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
     @Override
     public String toString() {
         return this.list.toString();
+    }
+
+    private static final class LeaderboardIterator implements Iterator<ThimblePlayerStats> {
+
+        private final Leaderboard leaderboard;
+        private final Iterator<ThimblePlayerStats> iterator;
+        private ThimblePlayerStats next;
+        private int index = -1;
+
+        private LeaderboardIterator(@NotNull Leaderboard leaderboard) {
+            this.leaderboard = leaderboard;
+            this.iterator = leaderboard.list.iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return this.iterator.hasNext();
+        }
+
+        @Override
+        public ThimblePlayerStats next() {
+            this.index++;
+            return this.next = this.iterator.next();
+        }
+
+        @Override
+        public void remove() {
+            this.iterator.remove();
+            this.leaderboard.positions.remove(this.next.uuid());
+            this.leaderboard.updatePositions(this.index--);
+        }
     }
 }
