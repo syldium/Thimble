@@ -21,14 +21,14 @@ public enum Dependency {
     H2_ENGINE(
             "com.h2database",
             "h2",
-            "1.4.200",
-            "OtmsS2qunNnTrBxEdGXh7QYBm4UbiT3WqNdt222FvKY="
+            "2.0.206",
+            "O5YHxWc/2Lh+SeOsRr2I/TVh6GPc5nOjUjTotXCPPes="
     ),
     MARIADB_DRIVER(
             "org.mariadb.jdbc",
             "mariadb-java-client",
-            "2.7.2",
-            "o/Z3bfCELPZefxWFFQEtUwfalJ9mBCKC4e5EdN0Z9Eg="
+            "2.7.4",
+            "8GV3sZ6JszAouWzU8DEkjnYd5+vHEvTvU14mjfdu2yo="
     ),
     MYSQL_DRIVER(
             "mysql",
@@ -39,14 +39,14 @@ public enum Dependency {
     POSTGRESQL_DRIVER(
             "org.postgresql",
             "postgresql",
-            "42.2.19",
-            "IydH+gkk2Iom36QrgSi2+hFAgC2AQSWJFZboyl8pEyI="
+            "42.3.1",
+            "g3BXCFfahutKdt09hQXTS6wMGBhnQfqDpoIKEPpEHLQ="
     ),
     SQLITE_DRIVER(
             "org.xerial",
             "sqlite-jdbc",
-            "3.34.0",
-            "YFl5yU5/4AQ38eENz6ZXoj8SXI600vDsF+P4RhOJTMM="
+            "3.36.0.3",
+            "rzozdjkeGGoP7WPs1BS3Kogr9FJme0kKC+Or+FtjfT8="
     );
 
     private final byte[] checksum;
