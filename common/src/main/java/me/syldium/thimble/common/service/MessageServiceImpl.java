@@ -77,7 +77,7 @@ public class MessageServiceImpl implements MessageService {
         } catch (final MissingResourceException ex) {
             this.customBundle = NULL_BUNDLE;
         }
-        this.prefix = miniMessage().parse(this.translate("prefix"));
+        this.prefix = miniMessage().deserialize(this.translate("prefix"));
     }
 
     @Override

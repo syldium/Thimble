@@ -52,7 +52,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     ) {
         this.uuidToString = uuidToString;
         this.placeholderService = placeholderService;
-        this.title = miniMessage().parse(title);
+        this.title = miniMessage().deserialize(title);
         this.lines = lines;
 
         if (lines.isEmpty()) {
@@ -79,10 +79,10 @@ public class ScoreboardServiceImpl implements ScoreboardService {
             this.indexes.add(set);
         }
 
-        Component defNullText = miniMessage().parse(emptyTexts == null ? "null" : emptyTexts.getString("default", "null"));
+        Component defNullText = miniMessage().deserialize(emptyTexts == null ? "null" : emptyTexts.getString("default", "null"));
         for (ThimblePlaceholder placeholder : placeholders) {
             String defText = emptyTexts == null ? null : emptyTexts.getString(placeholder.asString());
-            this.emptyTexts.put(placeholder, defText == null ? defNullText : miniMessage().parse(defText));
+            this.emptyTexts.put(placeholder, defText == null ? defNullText : miniMessage().deserialize(defText));
         }
     }
 

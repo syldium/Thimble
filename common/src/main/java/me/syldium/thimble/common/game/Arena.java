@@ -41,7 +41,7 @@ public class Arena implements ThimbleArena, ComponentLike {
     public Arena(@NotNull ThimblePlugin plugin, @NotNull String name) {
         this.plugin = plugin;
         this.rawName = name;
-        this.name = miniMessage().parse(name);
+        this.name = miniMessage().deserialize(name);
     }
 
     @Override
