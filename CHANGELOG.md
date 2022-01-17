@@ -6,7 +6,7 @@ Changelog
 - Support for Brigadier commands in the command blocks.
 - Rich text components for chat and scoreboard on 1.18.1 servers.
 
-## Other
+### Other
 - MiniMessage updated to 4.10.0-SNAPSHOT (2022-01-16).
 
 ## ## [1.2.1] - 2021-06-26
