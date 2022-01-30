@@ -33,10 +33,12 @@ public class LeaderboardTest {
         testIndexOf(this.leaderboard);
     }
 
+    @SuppressWarnings("OverwrittenKey")
     @Test
     public void newEntryInEmptyLeaderboard() {
         Leaderboard leaderboard = Leaderboard.of(Ranking.WINS);
         PlayerStats stats = this.newPlayerStats(4);
+        leaderboard.add(stats);
         leaderboard.add(stats);
         assertEquals(stats, leaderboard.get(0));
         assertEquals(1, leaderboard.size());

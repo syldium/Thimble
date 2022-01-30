@@ -91,7 +91,7 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
     public boolean add(@NotNull ThimblePlayerStats e) {
         requireNonNull(e, "player stats");
         int existing = this.indexOf(e.uuid());
-        int rank = this.insertionIndex(this.getter.applyAsInt(e));
+        int rank = this.insertionIndex(e, this.getter.applyAsInt(e));
         if (existing == rank) {
             // The ranking does not change, only the previous score must be updated.
             this.list.set(rank, e);
@@ -169,15 +169,19 @@ public class Leaderboard implements SortedSet<ThimblePlayerStats> {
      * <p>If an entry has the same score, the insertion position will always be
      * after the existing entries.</p>
      *
+     * @param stats The player to insert.
      * @param score The score to insert.
      * @return The position to insert.
      */
-    private int insertionIndex(int score) {
+    private int insertionIndex(@NotNull ThimblePlayerStats stats, int score) {
         int low = 0;
         int high = this.list.size() - 1;
         while (low <= high) {
             int mid = (low + high) >>> 1;
             int cmp = Integer.compare(this.getter.applyAsInt(this.list.get(mid)), score);
+            if (cmp == 0 && this.list.get(mid).equalsPlayer(stats)) {
+                return mid;
+            }
             if (cmp >= 0) {
                 low = mid + 1;
             } else {
