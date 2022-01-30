@@ -20,7 +20,7 @@ public interface DataService extends AutoCloseable {
 
     @NotNull Optional<@NotNull ThimblePlayerStats> getPlayerStatistics(@NotNull String name);
 
-    @NotNull Leaderboard getLeaderboard(@NotNull Ranking ranking);
+    @NotNull Leaderboard<ThimblePlayerStats> getLeaderboard(@NotNull Ranking ranking);
 
     void savePlayerStatistics(@NotNull ThimblePlayerStats statistics);
 

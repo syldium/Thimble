@@ -18,7 +18,9 @@ public enum ThimblePlaceholder {
     NEXT_JUMPER(PlaceholderUtil::nextJumper),
     POINTS(ThimblePlayer::points),
     STATE(player -> player.game().state()),
-    THIMBLE(ThimblePlayer::thimbleForGame);
+    THIMBLE(ThimblePlayer::thimbleForGame),
+    TOP_PLAYER(PlaceholderUtil::topPlayer),
+    TOP_POINTS(PlaceholderUtil::topPoints);
 
     public static final char TAG_START = '<';
     public static final char TAG_END = '>';

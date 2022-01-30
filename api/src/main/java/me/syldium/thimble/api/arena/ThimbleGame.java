@@ -3,6 +3,7 @@ package me.syldium.thimble.api.arena;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.api.util.BlockVector;
+import me.syldium.thimble.api.util.Leaderboard;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -163,6 +164,14 @@ public interface ThimbleGame {
      * @throws IllegalStateException If no players is currently jumping.
      */
     boolean verdict(@NotNull UUID playerUUID, @NotNull JumpVerdict verdict);
+
+    /**
+     * Gets the players with the most {@link ThimblePlayer#points()} in the game.
+     *
+     * @return The leaderboard.
+     * @since 1.3.0
+     */
+    @NotNull Leaderboard<ThimblePlayer> leaderboard();
 
     /**
      * Returns {@code true} if no visible player is in the game.

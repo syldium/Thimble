@@ -3,6 +3,7 @@ package me.syldium.thimble.common.util;
 import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.arena.ThimbleSingleGame;
 import me.syldium.thimble.api.player.ThimblePlayer;
+import me.syldium.thimble.api.util.Leaderboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,6 +39,22 @@ public final class PlaceholderUtil {
                 iterator.next();
             }
             return iterator.hasNext() ? iterator.next() : null;
+        }
+        return null;
+    }
+
+    public static @Nullable UUID topPlayer(@NotNull ThimblePlayer player, int index) {
+        Leaderboard<ThimblePlayer> leaderboard = player.game().leaderboard();
+        if (index < leaderboard.size()) {
+            return leaderboard.get(index).uuid();
+        }
+        return null;
+    }
+
+    public static @Nullable Integer topPoints(@NotNull ThimblePlayer player, int index) {
+        Leaderboard<ThimblePlayer> leaderboard = player.game().leaderboard();
+        if (index < leaderboard.size()) {
+            return leaderboard.get(index).points();
         }
         return null;
     }

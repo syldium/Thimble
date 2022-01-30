@@ -41,7 +41,7 @@ class CachedDataService implements DataService {
     }
 
     @Override
-    public @NotNull Leaderboard getLeaderboard(@NotNull Ranking ranking) {
+    public @NotNull Leaderboard<ThimblePlayerStats> getLeaderboard(@NotNull Ranking ranking) {
         return this.dataService.getLeaderboard(ranking);
     }
 

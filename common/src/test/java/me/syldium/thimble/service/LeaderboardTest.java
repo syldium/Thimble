@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LeaderboardTest {
 
-    private final Leaderboard leaderboard;
+    private final Leaderboard<ThimblePlayerStats> leaderboard;
     private long uuids = 0;
 
     public LeaderboardTest() {
@@ -36,7 +36,7 @@ public class LeaderboardTest {
     @SuppressWarnings("OverwrittenKey")
     @Test
     public void newEntryInEmptyLeaderboard() {
-        Leaderboard leaderboard = Leaderboard.of(Ranking.WINS);
+        Leaderboard<ThimblePlayerStats> leaderboard = Leaderboard.of(Ranking.WINS);
         PlayerStats stats = this.newPlayerStats(4);
         leaderboard.add(stats);
         leaderboard.add(stats);
@@ -46,7 +46,7 @@ public class LeaderboardTest {
 
     @Test
     public void limitLeaderboard() {
-        Leaderboard leaderboard = Leaderboard.of(Ranking.WINS);
+        Leaderboard<ThimblePlayerStats> leaderboard = Leaderboard.of(Ranking.WINS);
         for (int wins = 20; wins > 0; wins--) {
             leaderboard.add(this.newPlayerStats(wins));
         }
@@ -60,7 +60,7 @@ public class LeaderboardTest {
 
     @Test
     public void addInLeaderboard() {
-        Leaderboard leaderboard = new Leaderboard(this.leaderboard);
+        Leaderboard<ThimblePlayerStats> leaderboard = new Leaderboard<>(this.leaderboard);
         leaderboard.add(this.newPlayerStats(2));
         assertEquals(this.leaderboard, leaderboard);
 
@@ -76,7 +76,7 @@ public class LeaderboardTest {
     @Test
     public void sortLeaderboard() {
         // Should be inserted at index = 5
-        Leaderboard leaderboard = new Leaderboard(this.leaderboard);
+        Leaderboard<ThimblePlayerStats> leaderboard = new Leaderboard<>(this.leaderboard);
         PlayerStats stats = this.newPlayerStats(16);
         leaderboard.add(stats);
         assertNotEquals(this.leaderboard, leaderboard);
@@ -107,7 +107,7 @@ public class LeaderboardTest {
 
     @Test
     public void remove() {
-        Leaderboard leaderboard = new Leaderboard(this.leaderboard);
+        Leaderboard<ThimblePlayerStats> leaderboard = new Leaderboard<>(this.leaderboard);
         assertFalse(leaderboard.remove(this.newPlayerStats(1)));
         ThimblePlayerStats removed = leaderboard.get(5);
         assertTrue(leaderboard.remove(removed));
@@ -118,7 +118,7 @@ public class LeaderboardTest {
 
     @Test
     public void iterator() {
-        Leaderboard leaderboard = new Leaderboard(this.leaderboard);
+        Leaderboard<ThimblePlayerStats> leaderboard = new Leaderboard<>(this.leaderboard);
         ThimblePlayerStats initialThird = leaderboard.get(2);
         ThimblePlayerStats initialFourth = leaderboard.get(3);
         Iterator<ThimblePlayerStats> iterator = leaderboard.iterator();
@@ -138,7 +138,7 @@ public class LeaderboardTest {
         assertTrue(leaderboard.containsScore(25));
     }
 
-    private static void testIndexOf(@NotNull Leaderboard leaderboard) {
+    private static <T extends ThimblePlayerStats> void testIndexOf(@NotNull Leaderboard<T> leaderboard) {
         int i = 0;
         for (ThimblePlayerStats stats : leaderboard) {
             assertEquals(i++, leaderboard.indexOf(stats.uuid()));

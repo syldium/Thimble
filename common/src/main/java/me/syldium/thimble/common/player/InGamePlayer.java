@@ -102,6 +102,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
 
     public void incrementPoints() {
         this.points++;
+        this.game.onPointsUpdated(this);
     }
 
     public void incrementPoints(int points) {
@@ -112,6 +113,7 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
         if (--this.points < 1) {
             this.spectator = true;
         }
+        this.game.onPointsUpdated(this);
     }
 
     public @NotNull BlockData getChosenBlock() {

@@ -64,7 +64,7 @@ public interface StatsService {
      * @param criteria The criteria.
      * @return The leaderboard.
      */
-    @NotNull Leaderboard getLeaderboard(@NotNull Ranking criteria);
+    @NotNull Leaderboard<ThimblePlayerStats> getLeaderboard(@NotNull Ranking criteria);
 
     /**
      * Returns the player at this position in the leaderboard.
@@ -73,7 +73,7 @@ public interface StatsService {
      * @return The player statistics, if so
      */
     default @Nullable ThimblePlayerStats getLeaderboard(@NotNull RankingPosition position) {
-        Leaderboard leaderboard = this.getLeaderboard(position.ranking());
+        Leaderboard<ThimblePlayerStats> leaderboard = this.getLeaderboard(position.ranking());
         return leaderboard.size() > position.position() ? leaderboard.get(position.position()) : null;
     }
 }

@@ -7,9 +7,11 @@ import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.arena.ThimbleState;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.JumpVerdict;
+import me.syldium.thimble.api.util.Leaderboard;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.adapter.BlockBalancer;
 import me.syldium.thimble.common.config.MainConfig;
+import me.syldium.thimble.common.listener.LeaderboardListener;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.ThimblePlaceholder;
@@ -46,7 +48,7 @@ import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.compo
  * @see ConcurrentGame
  * @see SingleGame
  */
-public abstract class Game implements ThimbleGame, Runnable {
+public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener {
 
     private static final int TIMER_SOUND_THRESHOLD = Task.GAME_TICKS_PER_SECOND * 5;
 
@@ -57,6 +59,7 @@ public abstract class Game implements ThimbleGame, Runnable {
     protected ThimbleState state = ThimbleState.WAITING;
     protected final PlayerMap<InGamePlayer> players;
     protected final Set<UUID> playersWhoJumped = new HashSet<>();
+    protected final Leaderboard<ThimblePlayer> leaderboard = Leaderboard.byPoints();
     protected final TimedMedia jumperMedia;
 
     protected Set<BlockVector> remainingWaterBlocks = null;
@@ -209,6 +212,18 @@ public abstract class Game implements ThimbleGame, Runnable {
 
         this.onJump(this.plugin.getPlayer(playerUUID), player, verdict);
         return true;
+    }
+
+    @Override
+    public @NotNull Leaderboard<ThimblePlayer> leaderboard() {
+        return this.leaderboard;
+    }
+
+    @Override
+    public void onPointsUpdated(@NotNull ThimblePlayer player) {
+        if (this.leaderboard.add(player)) {
+            this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.TOP_PLAYER, ThimblePlaceholder.TOP_POINTS);
+        }
     }
 
     /**
@@ -471,6 +486,7 @@ public abstract class Game implements ThimbleGame, Runnable {
                 // Save the inventory and put the adventure mode
                 this.plugin.getSavedPlayersManager().save(player);
                 player.setMiniGameMode(this.clearInventory);
+                this.onPointsUpdated(inGamePlayer);
             }
             if (this.players.realSize() > 1) {
                 player.teleport(this.arena.spawnLocation());
