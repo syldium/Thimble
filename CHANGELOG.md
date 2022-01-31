@@ -1,7 +1,16 @@
 Changelog
 =========
 
-## ## [1.2.2] - 2022-01-16
+## [Unreleased]
+### Added
+- The `<top_player>` placeholder returns the name of the player with the most points/lifes in descending order.
+- The `<top_points>` placeholder returns the score with the most points/lifes in descending order.
+- API: A `Game` instance now has a leaderboard with the current top players.
+
+### Fixed
+- When a leaderboard is updated with the same score, an exception may be thrown.
+
+## [1.2.2] - 2022-01-16
 ### Fixed
 - Support for Brigadier commands in the command blocks.
 - Rich text components for chat and scoreboard on 1.18.1 servers.
@@ -9,11 +18,11 @@ Changelog
 ### Other
 - MiniMessage updated to 4.10.0-SNAPSHOT (2022-01-16).
 
-## ## [1.2.1] - 2021-06-26
+## [1.2.1] - 2021-06-26
 ### Added
 - Full compatibility with 1.17 servers.
 
-## ## [1.2.0] - 2021-04-30
+## [1.2.0] - 2021-04-30
 ### Added
 - Player scores can now be displayed with placeholders.
 - API: GameAbortedEvent and JumpVerdictEvent have been added.
