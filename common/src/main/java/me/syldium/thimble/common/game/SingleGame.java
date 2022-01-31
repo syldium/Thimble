@@ -74,7 +74,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
                 player.teleport(this.arena.jumpLocation());
             }
 
-            this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.JUMPER, ThimblePlaceholder.NEXT_JUMPER);
+            this.players.updateAllScoreboards(ThimblePlaceholder.JUMPER, ThimblePlaceholder.NEXT_JUMPER);
             return;
         }
 

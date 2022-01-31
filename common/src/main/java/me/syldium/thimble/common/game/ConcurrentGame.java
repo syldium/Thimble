@@ -84,7 +84,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
                 inGamePlayer.incrementPoints(this.thimblePoints);
                 inGamePlayer.incrementThimbles();
                 this.players.sendMessage(inGamePlayer, MessageKey.CHAT_THIMBLE, component("player", inGamePlayer.displayName()));
-                this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.THIMBLE);
+                this.plugin.getScoreboardService().updateScoreboard(inGamePlayer, ThimblePlaceholder.THIMBLE);
             }
         }
 

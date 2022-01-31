@@ -5,6 +5,7 @@ import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.PlayerAudience;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
+import me.syldium.thimble.common.player.ThimblePlaceholder;
 import me.syldium.thimble.common.player.media.TimedMedia;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.identity.Identity;
@@ -90,6 +91,10 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
 
     public boolean contains(E identity) {
         return this.containsValue(identity);
+    }
+
+    public void updateAllScoreboards(@NotNull ThimblePlaceholder... placeholders) {
+        this.plugin.getScoreboardService().updateScoreboard(this, placeholders);
     }
 
     public void sendMessage(@NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {

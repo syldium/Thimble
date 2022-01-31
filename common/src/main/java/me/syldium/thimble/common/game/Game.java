@@ -104,7 +104,7 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
                 if (this.canStart() && !this.plugin.getEventAdapter().callGameChangeState(this, ThimbleState.STARTING)) {
                     // The countdown starts
                     this.state = ThimbleState.STARTING;
-                    this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.STATE);
+                    this.players.updateAllScoreboards(ThimblePlaceholder.STATE);
                 } else if ((this.messageTimer++ & 0xF) == 0) {
                     // Send the message in the action bar
                     this.players.sendActionBar(MessageKey.ACTIONBAR_WAITING);
@@ -122,7 +122,7 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
                         this.onCountdownEnd();
                         new BlockBalancer(this.players).balance(this.plugin.getPlayerAdapter().getAvailableBlocks());
                         this.state = ThimbleState.PLAYING;
-                        this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.STATE);
+                        this.players.updateAllScoreboards(ThimblePlaceholder.STATE);
                         if (this.remainingWaterBlocks == null) {
                             this.searchRemainingBlocks();
                         }
@@ -222,7 +222,7 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
     @Override
     public void onPointsUpdated(@NotNull ThimblePlayer player) {
         if (this.leaderboard.add(player)) {
-            this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.TOP_PLAYER, ThimblePlaceholder.TOP_POINTS);
+            this.players.updateAllScoreboards(ThimblePlaceholder.TOP_PLAYER, ThimblePlaceholder.TOP_POINTS);
         }
     }
 
@@ -264,7 +264,7 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
         // Change the state
         this.state = ThimbleState.END;
         this.jumperMedia.hide(this.players);
-        this.plugin.getScoreboardService().updateScoreboard(this.players, ThimblePlaceholder.STATE);
+        this.players.updateAllScoreboards(ThimblePlaceholder.STATE);
 
         // Summon some fireworks
         Location fireworksLocation = this.getFireworkLocation(latest == null ? null : this.plugin.getPlayer(latest.uuid()));
