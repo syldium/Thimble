@@ -25,7 +25,7 @@ public class ScoreboardServiceTest {
         InGamePlayer player = new InGamePlayer(UUID.randomUUID(), "playerName", null, null);
         assertComponentsEquals(List.of("Points: " + player.points(), String.valueOf(player.points())), service.render(player));
 
-        player.incrementPoints(2);
+        player.stats(2, 4);
         assertComponentsEquals(List.of("Points: " + player.points(), String.valueOf(player.points())), service.render(player));
     }
 

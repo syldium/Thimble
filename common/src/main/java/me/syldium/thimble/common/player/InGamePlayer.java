@@ -7,8 +7,10 @@ import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.common.game.Game;
 import me.syldium.thimble.common.world.BlockData;
 
+import java.util.Objects;
 import java.util.UUID;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
@@ -46,6 +48,14 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
         this.game = game;
         this.lastLocation = new Location(new WorldKey(java.util.UUID.randomUUID().toString().substring(0, 16)), 0, 0, 0);
         this.vanished = false;
+    }
+
+    @TestOnly
+    public InGamePlayer(@NotNull UUID uuid, @NotNull String name, int points, int jumps) {
+        // noinspection ConstantConditions
+        this(uuid, name, null, null);
+        this.points = points;
+        this.jumps = jumps;
     }
 
     @Override
@@ -107,6 +117,15 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
 
     public void incrementPoints(int points) {
         this.points += points;
+        this.game.onPointsUpdated(this);
+    }
+
+    @TestOnly
+    @Contract("_, _ -> this")
+    public @NotNull InGamePlayer stats(int points, int jumps) {
+        this.points = points;
+        this.jumps = jumps;
+        return this;
     }
 
     public void decrementPoints() {
@@ -126,5 +145,33 @@ public class InGamePlayer extends PlayerStats implements ThimblePlayer {
 
     public @NotNull Location getLastLocation() {
         return this.lastLocation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        InGamePlayer player = (InGamePlayer) o;
+        return this.points == player.points
+                && this.jumps == player.jumps
+                && this.thimbles == player.thimbles
+                && this.game.equals(player.game);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.game, this.points, this.jumps, this.thimbles);
+    }
+
+    @Override
+    public String toString() {
+        return "InGamePlayer{" +
+                "game=" + this.game +
+                ", name=" + this.name() +
+                ", points=" + this.points +
+                ", jumps=" + this.jumps +
+                ", thimbles=" + this.thimbles +
+                '}';
     }
 }

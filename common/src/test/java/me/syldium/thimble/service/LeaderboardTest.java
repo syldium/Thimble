@@ -1,7 +1,9 @@
 package me.syldium.thimble.service;
 
 import me.syldium.thimble.api.Ranking;
+import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
+import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.PlayerStats;
 import me.syldium.thimble.api.util.Leaderboard;
 import org.jetbrains.annotations.NotNull;
@@ -138,6 +140,31 @@ public class LeaderboardTest {
         assertTrue(leaderboard.containsScore(25));
     }
 
+    @Test
+    public void points() {
+        Leaderboard<ThimblePlayer> leaderboard = Leaderboard.byPoints();
+        InGamePlayer first = this.newPlayer(3, 7);
+        InGamePlayer second = this.newPlayer(2, 5);
+        leaderboard.add(first);
+        leaderboard.add(second);
+        leaderboard.add(this.newPlayer(1, 5));
+
+        leaderboard.add(second.stats(3, 6));
+        assertEquals(Arrays.asList(3, 3, 1), leaderboard.scores());
+        assertEquals(first, leaderboard.get(0));
+        assertEquals(second, leaderboard.get(1));
+
+        leaderboard.add(second.stats(3, 8));
+        assertEquals(second, leaderboard.get(0));
+        assertEquals(first, leaderboard.get(1));
+        testIndexOf(leaderboard);
+
+        leaderboard.add(first.stats(0, 8));
+        assertEquals(second, leaderboard.get(0));
+        assertEquals(first, leaderboard.get(2));
+        testIndexOf(leaderboard);
+    }
+
     private static <T extends ThimblePlayerStats> void testIndexOf(@NotNull Leaderboard<T> leaderboard) {
         int i = 0;
         for (ThimblePlayerStats stats : leaderboard) {
@@ -147,6 +174,11 @@ public class LeaderboardTest {
 
     public @NotNull PlayerStats newPlayerStats(int wins) {
         return new PlayerStats(new UUID(this.uuids++, 0), "test" + this.uuids, wins, 0, 0, 0, 0);
+    }
+
+    public @NotNull InGamePlayer newPlayer(int points, int jumps) {
+        //noinspection ConstantConditions
+        return new InGamePlayer(new UUID(this.uuids++, 0), "test" + this.uuids, null, null).stats(points, jumps);
     }
 
     public @NotNull PlayerStats newPlayerStats(@NotNull ThimblePlayerStats stats) {

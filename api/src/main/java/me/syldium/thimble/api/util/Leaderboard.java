@@ -23,7 +23,12 @@ import java.util.stream.IntStream;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A leaderboard implementation relying on a {@link ArrayList}.
+ * A leaderboard implementation relying on an {@link ArrayList}.
+ *
+ * <p>It stores up to {@link #MAX_LENGTH} players with different {@link UUID}s
+ * sorted by descending score. This means that only the latest values for the
+ * same identifier are retained and that scores lower than the last player in
+ * the leaderboard are not used if the maximum capacity has been reached.
  */
 public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
 
@@ -97,23 +102,32 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
     /**
      * Adds a new element, if eligible.
      *
+     * <p>If the {@link UUID} of the player is already present in the leaderboard,
+     * then the corresponding element will be replaced according to the new
+     * values. Note that if the previously inserted elements are mutable, it is
+     * necessary to call this method with the current instance to update the
+     * position in the leaderboard.
+     *
      * @param e The element.
      * @return {@code true} if the item has been added.
      */
     @Override
     public boolean add(@NotNull T e) {
         requireNonNull(e, "player stats");
-        int value = this.getter.applyAsInt(e);
         int existing = this.indexOf(e.uuid());
-        if (existing != -1 && this.getter.applyAsInt(this.list.get(existing)) == value) {
+        int limit = -1;
+        if (existing != -1 && (limit = this.compareNeighbors(existing, e)) == existing) {
+            this.list.set(existing, e);
             return true;
         }
 
-        int rank = this.insertionIndex(value);
-        if (existing == rank) {
-            // The ranking does not change, only the previous score must be updated.
-            this.list.set(rank, e);
-            return true;
+        int rank;
+        if (limit == -1) {
+            rank = this.insertionIndex(e, 0, this.size() - 1);
+        } else if (limit > existing) {
+            rank = this.insertionIndex(e, limit, this.size() - 1) - 1;
+        } else {
+            rank = this.insertionIndex(e, 0, limit);
         }
 
         if (existing != -1) {
@@ -188,14 +202,14 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
      * after the existing entries.</p>
      *
      * @param score The score to insert.
+     * @param low The smallest index to consider.
+     * @param high The largest index to use.
      * @return The position to insert.
      */
-    private int insertionIndex(int score) {
-        int low = 0;
-        int high = this.list.size() - 1;
+    private int insertionIndex(@NotNull T score, int low, int high) {
         while (low <= high) {
             int mid = (low + high) >>> 1;
-            int cmp = Integer.compare(this.getter.applyAsInt(this.list.get(mid)), score);
+            int cmp = this.comparator.compare(score, this.list.get(mid));
             if (cmp >= 0) {
                 low = mid + 1;
             } else {
@@ -203,6 +217,33 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
             }
         }
         return low;
+    }
+
+    /**
+     * Compares an element with its direct neighbors.
+     *
+     * <p>Return values:</p>
+     * <dl>
+     *     <dt>index - 1</dt>
+     *     <dd>the element should be located before</dd>
+     *     <dt>index</dt>
+     *     <dd>the element is correctly located relative to its neighbors</dd>
+     *     <dt>index + 1</dt>
+     *     <dd>the element should be located after</dd>
+     * </dl>
+     *
+     * @param index The index to compare from.
+     * @param e The element to use for this index.
+     * @return The index where this element should be located locally.
+     */
+    private int compareNeighbors(int index, @NotNull T e) {
+        if (index > 0 && this.comparator.compare(this.list.get(index - 1), e) > 0) {
+            return index - 1;
+        }
+        if (index < (this.size() - 1) && this.comparator.compare(this.list.get(index + 1), e) < 0) {
+            return index + 1;
+        }
+        return index;
     }
 
     /**
