@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## [Unreleased]
+## [1.3.0] - 2022-02-03
 ### Added
 - The `<top_player>` placeholder returns the name of the player with the most points/lifes in descending order.
 - The `<top_points>` placeholder returns the score with the most points/lifes in descending order.

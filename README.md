@@ -97,7 +97,7 @@ default:
 <dependency>
     <groupId>com.github.syldium</groupId>
     <artifactId>Thimble</artifactId>
-    <version>1.2.1</version>
+    <version>1.3.0</version>
     <scope>provided</scope>
 </dependency>
 ```
