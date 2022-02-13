@@ -1,5 +1,8 @@
 # Thimble
-A kind of Minecraft plugin for the thimble (dé à coudre) mini game.
+
+[Version française](README.fr.md)
+
+A Minecraft plugin for the thimble (dé à coudre) mini game for Paper and Spigot servers from 1.8 to 1.18.1.
 
 ## Usage
 
@@ -28,7 +31,7 @@ Note: once the sign is created, its content is no longer used, you can replace i
 
 ### PlaceholderAPI
 
-This plugin automatically registers placeholders if PlaceholderAPI is installed.
+This plugin automatically registers placeholders if [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) is installed.
 The leaderboard is accessible with the syntax: `%thimble_lb_<table>[_<pos>][_name]%` where `table` is `wins`, `losses`, `jumps`, `fails` or `thimbles` and `pos` a number from 0 to 9.
 Examples:
 - `%thimble_lb_wins%`
@@ -53,7 +56,7 @@ Full list in the [plugin.yml](bukkit/src/main/resources/plugin.yml) file
 
 ### Language files
 
-By default, the system language is used. You can change it in the configuration file with the `locale` option.
+By default, the system language is used. You can change it in the configuration file with the `locale` option in the `config.yml` file.
 You can also customize the messages by creating your own locale file.
 To do this, create a new file `plugins/Thimble/messages_en.properties` (replace `en` with the same value as in `locale`) and add the messages you want to modify. [Here is the default language file](common/src/main/resources/messages.properties).
 The messages use the [MiniMessage formatting](https://docs.adventure.kyori.net/minimessage.html#format).
@@ -124,4 +127,4 @@ You can view the methods using your IDE or [the javadoc](https://javadoc.jitpack
 
 ## Building
 
-This project uses Gradle. Use `./gradlew shadowJar` to get a .jar file (under Windows use `./gradle.bat` instead of `./gradlew`).
+This project uses Gradle. Use `./gradlew build` to get a .jar file (under Windows use `./gradle.bat` instead of `./gradlew`).
