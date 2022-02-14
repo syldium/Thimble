@@ -5,5 +5,3 @@ include (
         'bukkit', 'bukkit:integration',
         'sponge'
 )
-
-enableFeaturePreview('VERSION_CATALOGS')
