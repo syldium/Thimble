@@ -1,16 +1,14 @@
 package me.syldium.thimble.common.player;
 
 import me.syldium.thimble.common.service.MessageService;
-import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.PropertyKey;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 import static me.syldium.thimble.common.service.MessageService.MESSAGES_BUNDLE;
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.miniMessage;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 
 public enum MessageKey {
 
@@ -125,11 +123,11 @@ public enum MessageKey {
             this.plural = plural;
         }
 
-        public @NotNull List<Placeholder<String>> tl(int nb, @NotNull MessageService messageService) {
-            return Arrays.asList(
-                    miniMessage(this.key, String.valueOf(nb)),
-                    miniMessage('u' + this.key, nb > 1 ? messageService.get(this.plural) : messageService.get(this.singular))
-            );
+        public @NotNull TagResolver[] tl(int nb, @NotNull MessageService messageService) {
+            return new TagResolver[]{
+                    unparsed(this.key, String.valueOf(nb)),
+                    unparsed('u' + this.key, nb > 1 ? messageService.get(this.plural) : messageService.get(this.singular))
+            };
         }
     }
 }

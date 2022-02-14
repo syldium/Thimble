@@ -10,15 +10,12 @@ import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.command.abstraction.spec.Arguments;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.service.MessageService;
-import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.miniMessage;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 
 public class StatsCommand extends ChildCommand.One<String> {
 
@@ -36,16 +33,16 @@ public class StatsCommand extends ChildCommand.One<String> {
         plugin.getStatsService().getPlayerStatistics(username).thenAccept(optional -> {
             if (optional.isPresent()) {
                 ThimblePlayerStats stats = optional.get();
-                List<Placeholder<?>> args = new ArrayList<>();
+                TagResolver.Builder args = TagResolver.builder();
                 MessageService service = plugin.getMessageService();
-                args.add(component("player", stats.displayName()));
-                args.addAll(MessageKey.Unit.WINS.tl(stats.wins(), service));
-                args.addAll(MessageKey.Unit.LOSSES.tl(stats.losses(), service));
-                args.addAll(MessageKey.Unit.JUMPS.tl(stats.jumps(), service));
-                args.addAll(MessageKey.Unit.THIMBLES.tl(stats.thimbles(), service));
-                sender.sendFeedback(CommandResult.success(MessageKey.FEEDBACK_GAME_STATS, args.toArray(new Placeholder[0])));
+                args.resolver(component("player", stats.displayName()));
+                args.resolvers(MessageKey.Unit.WINS.tl(stats.wins(), service));
+                args.resolvers(MessageKey.Unit.LOSSES.tl(stats.losses(), service));
+                args.resolvers(MessageKey.Unit.JUMPS.tl(stats.jumps(), service));
+                args.resolvers(MessageKey.Unit.THIMBLES.tl(stats.thimbles(), service));
+                sender.sendFeedback(CommandResult.success(MessageKey.FEEDBACK_GAME_STATS, args.build()));
             } else {
-                sender.sendFeedback(CommandResult.error(MessageKey.FEEDBACK_GAME_STATS_UNKNOWN, miniMessage("player", username)));
+                sender.sendFeedback(CommandResult.error(MessageKey.FEEDBACK_GAME_STATS_UNKNOWN, unparsed("player", username)));
             }
         });
         return CommandResult.success();

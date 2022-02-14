@@ -10,7 +10,7 @@ import me.syldium.thimble.common.player.media.TimedMedia;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -97,22 +97,34 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
         this.plugin.getScoreboardService().updateScoreboard(this, placeholders);
     }
 
-    public void sendMessage(@NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
+    public void sendMessage(@NotNull MessageKey messageKey) {
+        this.sendMessage(Identity.nil(), messageKey, TagResolver.empty());
+    }
+
+    public void sendMessage(@NotNull MessageKey messageKey, @NotNull TagResolver... placeholders) {
         this.sendMessage(Identity.nil(), messageKey, placeholders);
     }
 
-    public void sendMessage(@NotNull Identity source, @NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
+    public void sendMessage(@NotNull Identity source, @NotNull MessageKey messageKey, @NotNull TagResolver placeholders) {
         Component component = this.plugin.getMessageService().formatMessageWithPrefix(messageKey, placeholders);
         for (Player player : this.audiences()) player.sendMessage(source, component);
     }
 
-    public void sendMessage(@NotNull E source, @NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
+    public void sendMessage(@NotNull Identity source, @NotNull MessageKey messageKey, @NotNull TagResolver... placeholders) {
+        this.sendMessage(source, messageKey, TagResolver.resolver(placeholders));
+    }
+
+    public void sendMessage(@NotNull E source, @NotNull MessageKey messageKey, @NotNull TagResolver placeholders) {
         if (!source.isVanished()) {
             this.sendMessage((Identity) source, messageKey, placeholders);
         }
     }
 
-    public void sendMessageExclude(@NotNull E source, @NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
+    public void sendMessage(@NotNull E source, @NotNull MessageKey messageKey, @NotNull TagResolver... placeholders) {
+        this.sendMessage(source, messageKey, TagResolver.resolver(placeholders));
+    }
+
+    public void sendMessageExclude(@NotNull E source, @NotNull MessageKey messageKey, @NotNull TagResolver... placeholders) {
         Component component = this.plugin.getMessageService().formatMessageWithPrefix(messageKey, placeholders);
         for (E identity : this) {
             // The player who sent the message should not see the message, and a vanished player should not be visible in the message.
@@ -127,9 +139,17 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
         }
     }
 
-    public void sendActionBar(@NotNull MessageKey messageKey, @NotNull Placeholder<?>... placeholders) {
+    public void sendActionBar(@NotNull MessageKey messageKey) {
+        this.sendActionBar(messageKey, TagResolver.empty());
+    }
+
+    public void sendActionBar(@NotNull MessageKey messageKey, @NotNull TagResolver placeholders) {
         Component component = this.plugin.getMessageService().formatMessage(messageKey, placeholders);
         for (Player player : this.audiences()) player.sendActionBar(component);
+    }
+
+    public void sendActionBar(@NotNull MessageKey messageKey, @NotNull TagResolver... placeholders) {
+        this.sendActionBar(messageKey, TagResolver.resolver(placeholders));
     }
 
     @Override

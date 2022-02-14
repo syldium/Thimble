@@ -12,7 +12,7 @@ import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.miniMessage;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 
 class CreateCommand extends ChildCommand.One<String> {
 
@@ -27,8 +27,8 @@ class CreateCommand extends ChildCommand.One<String> {
             if (sender instanceof Player) {
                 arena.setSpawnLocation(((Player) sender).getLocation());
             }
-            return CommandResult.success(MessageKey.FEEDBACK_ARENA_CREATED, miniMessage("arena", name));
+            return CommandResult.success(MessageKey.FEEDBACK_ARENA_CREATED, unparsed("arena", name));
         }
-        return CommandResult.error(MessageKey.FEEDBACK_ARENA_ALREADY_EXISTS, miniMessage("arena", name));
+        return CommandResult.error(MessageKey.FEEDBACK_ARENA_ALREADY_EXISTS, unparsed("arena", name));
     }
 }

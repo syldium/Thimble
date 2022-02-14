@@ -6,7 +6,7 @@ import me.syldium.thimble.common.player.MessageKey;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -55,7 +55,26 @@ public interface Sender extends Audience {
      * @param key The message key.
      * @param placeholders Some placeholders.
      */
-    void sendMessage(@NotNull MessageKey key, Placeholder<?>... placeholders);
+    void sendMessage(@NotNull MessageKey key, @NotNull TagResolver placeholders);
+
+    /**
+     * Sends a chat message from its {@link MessageKey}.
+     *
+     * @param key The message key.
+     * @param placeholders Some placeholders.
+     */
+    default void sendMessage(@NotNull MessageKey key, TagResolver... placeholders) {
+        this.sendMessage(key, TagResolver.resolver(placeholders));
+    }
+
+    /**
+     * Sends a message to the player's action bar.
+     *
+     * @param key The message key.
+     */
+    default void sendActionBar(@NotNull MessageKey key) {
+        this.sendActionBar(key, TagResolver.empty());
+    }
 
     /**
      * Sends a message to the player's action bar from its {@link MessageKey}.
@@ -63,7 +82,7 @@ public interface Sender extends Audience {
      * @param key The message key.
      * @param placeholders Some placeholders.
      */
-    void sendActionBar(@NotNull MessageKey key, Placeholder<?>... placeholders);
+    void sendActionBar(@NotNull MessageKey key, @NotNull TagResolver placeholders);
 
     /**
      * Gets the plugin instance.

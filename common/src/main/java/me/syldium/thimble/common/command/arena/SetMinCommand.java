@@ -9,10 +9,10 @@ import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.command.abstraction.spec.Arguments;
 import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.common.player.MessageKey;
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
 
 class SetMinCommand extends ChildCommand.Two<Arena, Integer> {
 
@@ -27,6 +27,6 @@ class SetMinCommand extends ChildCommand.Two<Arena, Integer> {
         } catch (IllegalArgumentException ex) {
             throw new CommandException(MessageKey.FEEDBACK_ARENA_SET_MIN_GREATER_THAN_MAX);
         }
-        return CommandResult.success(MessageKey.FEEDBACK_ARENA_SET_MIN, component("min", Component.text(minimum)));
+        return CommandResult.success(MessageKey.FEEDBACK_ARENA_SET_MIN, component("min", text(minimum)));
     }
 }

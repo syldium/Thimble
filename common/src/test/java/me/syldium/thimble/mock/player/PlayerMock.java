@@ -10,7 +10,7 @@ import me.syldium.thimble.mock.util.BlockDataMock;
 import me.syldium.thimble.mock.util.BlockMock;
 import me.syldium.thimble.mock.util.MockUtil;
 import net.kyori.adventure.identity.Identity;
-import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,12 +53,12 @@ public class PlayerMock implements Player {
     }
 
     @Override
-    public void sendMessage(@NotNull MessageKey key, Placeholder... templates) {
+    public void sendMessage(@NotNull MessageKey key, @NotNull TagResolver templates) {
 
     }
 
     @Override
-    public void sendActionBar(@NotNull MessageKey key, Placeholder... templates) {
+    public void sendActionBar(@NotNull MessageKey key, @NotNull TagResolver templates) {
 
     }
 

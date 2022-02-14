@@ -10,21 +10,21 @@ import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.command.abstraction.spec.Argument;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.update.GitHubReleaseInfo;
-import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.miniMessage;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 
 public class VersionCommand extends ChildCommand.One<String> {
 
     private static final Permission PERMISSION = Permission.version("update");
-    private static final Placeholder<String> VERSION = miniMessage("version", Thimble.pluginVersion().toString());
-    private static final Placeholder<String> RELEASES_URL = miniMessage("releases", "https://github.com/syldium/Thimble/releases");
+    private static final TagResolver VERSION = unparsed("version", Thimble.pluginVersion().toString());
+    private static final TagResolver RELEASES_URL = unparsed("releases", "https://github.com/syldium/Thimble/releases");
 
     public VersionCommand() {
         super("version", new UpdateArgument().optional(), MessageKey.HELP_VERSION, Permission.version());

@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
 
 public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
 

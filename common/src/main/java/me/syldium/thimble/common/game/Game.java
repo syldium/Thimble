@@ -20,18 +20,15 @@ import me.syldium.thimble.common.player.media.TimedMedia;
 import me.syldium.thimble.common.util.PlayerMap;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.common.world.BlockData;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -40,7 +37,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
 
 /**
  * Common implementation for both game modes.
@@ -235,7 +232,7 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
      */
     protected void sendJumpMessage(@NotNull Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
-            Placeholder<Component> lifesPlaceholder = component("lifes", text(inGamePlayer.points()));
+            TagResolver lifesPlaceholder = component("lifes", text(inGamePlayer.points()));
             if (inGamePlayer.points() > 1) {
                 player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFES, lifesPlaceholder);
             } else {
@@ -274,10 +271,10 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
 
         // Send the winning message
         if (!isSolo && latest != null) {
-            List<Placeholder<?>> args = new ArrayList<>(4);
-            args.add(component("player", latest.displayName()));
-            args.addAll(MessageKey.Unit.JUMPS.tl(latest.jumpsForGame(), this.plugin.getMessageService()));
-            this.players.sendMessage(latest, MessageKey.CHAT_WIN, args.toArray(new Placeholder[0]));
+            TagResolver.Builder args = TagResolver.builder();
+            args.resolver(component("player", latest.displayName()));
+            args.resolvers(MessageKey.Unit.JUMPS.tl(latest.jumpsForGame(), this.plugin.getMessageService()));
+            this.players.sendMessage(latest, MessageKey.CHAT_WIN, args.build());
             this.latest = latest;
         }
 

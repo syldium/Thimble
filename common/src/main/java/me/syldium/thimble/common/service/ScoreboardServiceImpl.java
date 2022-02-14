@@ -7,7 +7,7 @@ import me.syldium.thimble.common.player.ThimblePlaceholder;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.player.media.Scoreboard;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -27,9 +27,8 @@ import java.util.function.Function;
 import static me.syldium.thimble.common.player.ThimblePlaceholder.TAG_END;
 import static me.syldium.thimble.common.player.ThimblePlaceholder.TAG_START;
 import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.component;
-import static net.kyori.adventure.text.minimessage.placeholder.Placeholder.miniMessage;
-import static net.kyori.adventure.text.minimessage.placeholder.PlaceholderResolver.placeholders;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
 
 @VisibleForTesting
 public class ScoreboardServiceImpl implements ScoreboardService {
@@ -107,7 +106,7 @@ public class ScoreboardServiceImpl implements ScoreboardService {
     }
 
     @Override
-    public void updateScoreboard(@NotNull Iterable<@NotNull ? extends ThimblePlayer> inGamePlayers, @NotNull ThimblePlaceholder... placeholders) {
+    public void updateScoreboard(@NotNull Iterable<? extends ThimblePlayer> inGamePlayers, @NotNull ThimblePlaceholder... placeholders) {
         Set<Integer> linesToUpdate = this.linesWithPlaceholders(placeholders);
         if (linesToUpdate.isEmpty()) {
             return;
@@ -149,15 +148,14 @@ public class ScoreboardServiceImpl implements ScoreboardService {
      */
     private @NotNull Component render(@NotNull ThimblePlayer player, int line) {
         Set<ThimblePlaceholder> placeholders = this.indexes.get(line);
-        Placeholder<?>[] placeholders1 = new Placeholder[placeholders.size()];
-        int p = 0;
+        TagResolver.Builder builder = TagResolver.builder();
         for (ThimblePlaceholder placeholder : placeholders) {
             Object result = placeholder.apply(this.uuidToString, player, this.placeholders.get(placeholder).indexOf(line));
-            placeholders1[p++] = result == null ?
+            builder.resolver(result == null ?
                     component(placeholder.asString(), this.emptyTexts.get(placeholder))
-                    : miniMessage(placeholder.asString(), String.valueOf(result));
+                    : unparsed(placeholder.asString(), String.valueOf(result)));
         }
-        return miniMessage().deserialize(this.placeholderService.setPlaceholders(player, this.lines.get(line)), placeholders(placeholders1));
+        return miniMessage().deserialize(this.placeholderService.setPlaceholders(player, this.lines.get(line)), builder.build());
     }
 
     /**
