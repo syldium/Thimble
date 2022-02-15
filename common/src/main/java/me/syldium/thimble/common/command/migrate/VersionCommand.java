@@ -18,13 +18,13 @@ import java.util.Collections;
 import java.util.List;
 
 import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
-import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.unparsed;
+import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.parsed;
 
 public class VersionCommand extends ChildCommand.One<String> {
 
     private static final Permission PERMISSION = Permission.version("update");
-    private static final TagResolver VERSION = unparsed("version", Thimble.pluginVersion().toString());
-    private static final TagResolver RELEASES_URL = unparsed("releases", "https://github.com/syldium/Thimble/releases");
+    private static final TagResolver VERSION = parsed("version", Thimble.pluginVersion().toString());
+    private static final TagResolver RELEASES_URL = parsed("releases", "https://github.com/syldium/Thimble/releases");
 
     public VersionCommand() {
         super("version", new UpdateArgument().optional(), MessageKey.HELP_VERSION, Permission.version());
