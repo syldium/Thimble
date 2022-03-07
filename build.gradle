@@ -25,6 +25,7 @@ subprojects {
             content {
                 includeGroup 'com.destroystokyo.paper'
                 includeGroup 'io.papermc.paper'
+                includeGroup 'net.md-5'
             }
         }
         maven {
