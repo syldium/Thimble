@@ -2,7 +2,7 @@
 
 [English version](README.md)
 
-Un plugin Minecraft pour le mini jeu dé à coudre pour les serveurs Paper et Spigot de la 1.8 à la 1.18.1.
+Un plugin Minecraft pour le mini jeu dé à coudre pour les serveurs Paper et Spigot de la 1.8 à la 1.18.2.
 
 ## Utilisation
 
