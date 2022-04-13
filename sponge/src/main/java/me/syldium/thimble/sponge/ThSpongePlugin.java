@@ -11,6 +11,7 @@ import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
 import me.syldium.thimble.api.sponge.SpongeAdapter;
 import me.syldium.thimble.api.util.PluginVersion;
+import me.syldium.thimble.common.logging.Slf4jLogger;
 import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.command.CommandManager;
@@ -27,7 +28,6 @@ import me.syldium.thimble.sponge.listener.ReloadListener;
 import me.syldium.thimble.sponge.listener.RestrictionListener;
 import me.syldium.thimble.sponge.listener.SpongeConnectionListener;
 import me.syldium.thimble.sponge.listener.SpongeMoveListener;
-import me.syldium.thimble.sponge.util.LoggerWrapper;
 import me.syldium.thimble.sponge.util.SpongeFireworks;
 import me.syldium.thimble.sponge.util.SpongeTask;
 import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
@@ -74,7 +74,7 @@ import static me.syldium.thimble.common.util.MinecraftVersion.setVersion;
 )
 public class ThSpongePlugin extends ThimblePlugin {
 
-    private LoggerWrapper logger;
+    private Slf4jLogger logger;
 
     @Inject
     private Game game;
@@ -106,7 +106,7 @@ public class ThSpongePlugin extends ThimblePlugin {
     public void onEnable(GameInitializationEvent event) throws IOException {
         this.saveDefaultConfig();
         setVersion(new PluginVersion(1, 12, 2));
-        this.logger = new LoggerWrapper(this.container.getLogger());
+        this.logger = new Slf4jLogger(this.container.getLogger());
         this.audiences = SpongeAudiences.create(this.container, this.game);
 
         this.commandManager = new SpongeCommandExecutor(this);
@@ -168,7 +168,7 @@ public class ThSpongePlugin extends ThimblePlugin {
     }
 
     @Override
-    public @NotNull LoggerWrapper getLogger() {
+    public @NotNull Slf4jLogger getLogger() {
         return this.logger;
     }
 

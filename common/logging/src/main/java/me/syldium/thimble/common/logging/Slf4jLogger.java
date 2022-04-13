@@ -1,4 +1,4 @@
-package me.syldium.thimble.sponge.util;
+package me.syldium.thimble.common.logging;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -7,11 +7,11 @@ import org.slf4j.Logger;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-public final class LoggerWrapper extends java.util.logging.Logger {
+public final class Slf4jLogger extends java.util.logging.Logger {
 
     private final Logger logger;
 
-    public LoggerWrapper(@NotNull Logger logger) {
+    public Slf4jLogger(@NotNull Logger logger) {
         super("logger", null);
         this.logger = logger;
     }
