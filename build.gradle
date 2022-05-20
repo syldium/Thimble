@@ -25,7 +25,7 @@ subprojects {
             }
         }
         maven {
-            url 'https://papermc.io/repo/repository/maven-public/'
+            url 'https://repo.papermc.io/repository/maven-public/'
             content {
                 includeGroup 'com.destroystokyo.paper'
                 includeGroup 'io.papermc.paper'
