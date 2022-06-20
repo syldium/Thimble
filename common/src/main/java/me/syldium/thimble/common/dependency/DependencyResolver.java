@@ -69,12 +69,13 @@ public class DependencyResolver {
      * @return Downloaded jar as byte array or null if nothing was downloaded.
      */
     private byte[] downloadDependency(@NotNull String url) {
+        this.logger.info("Download from " + url);
         try {
             URLConnection connection = new URL(url).openConnection();
 
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
-            connection.setRequestProperty("User-Agent", "DeCoudre plugin (driver resolver)");
+            connection.setRequestProperty("User-Agent", "Thimble plugin (driver resolver)");
 
             try (InputStream in = connection.getInputStream()) {
                 int len;
@@ -90,7 +91,7 @@ public class DependencyResolver {
                     return null;
                 }
 
-                this.logger.info("Downloaded dependency " + connection.getURL());
+                this.logger.info("Download complete");
                 return out.toByteArray();
             }
         } catch (MalformedURLException e) {
@@ -123,6 +124,7 @@ public class DependencyResolver {
             return file;
         }
 
+        this.logger.info("The " + dependency.name() + " dependency is not available. Downloading it...");
         MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA-256");

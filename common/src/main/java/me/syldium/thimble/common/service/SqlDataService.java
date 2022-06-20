@@ -60,6 +60,7 @@ public class SqlDataService implements DataService {
         this.logger = logger;
 
         if (!type.isDriverAvailable()) {
+            this.logger.info("Using own database driver for " + type.name() + " since it's not available in the classpath.");
             Path path = dependencyResolver.downloadDependency(type.getDriver());
             try {
                 URLClassLoader classLoader = new URLClassLoader(new URL[]{path.toUri().toURL()});

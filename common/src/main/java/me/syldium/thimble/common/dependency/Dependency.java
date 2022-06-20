@@ -15,32 +15,32 @@ public enum Dependency {
     GSON(
             "com.google.code.gson",
             "gson",
-            "2.8.6",
-            "yPtIOQVNKAswM/gA0fWpfeLwKOuLoutFitKH5Tbz8l8="
+            "2.8.9",
+            "05mSkYVd5JXJTHQ3YbirUXbP6r4oGlqw2OjUUyb9cD4="
     ),
     H2_ENGINE(
             "com.h2database",
             "h2",
-            "2.0.206",
-            "O5YHxWc/2Lh+SeOsRr2I/TVh6GPc5nOjUjTotXCPPes="
+            "2.1.214",
+            "1iPNwPYdIYz1SajQnxw5H/kQlhFrIuJHVHX85PvnK9A="
     ),
     MARIADB_DRIVER(
             "org.mariadb.jdbc",
             "mariadb-java-client",
-            "2.7.4",
-            "8GV3sZ6JszAouWzU8DEkjnYd5+vHEvTvU14mjfdu2yo="
+            "3.0.5",
+            "6VMtm8oHwSY8MrALSVvT7H8reTIFE8q9divznqCeaNk="
     ),
     MYSQL_DRIVER(
             "mysql",
             "mysql-connector-java",
-            "8.0.23",
-            "/31bQCr9OcEnh0cVBaM6MEEDsjjsG3pE6JNtMynadTU="
+            "8.0.29",
+            "1OMtKmAmtazAAwC3OobCj7kmga6WKbIQSO5nAUyRHbY="
     ),
     POSTGRESQL_DRIVER(
             "org.postgresql",
             "postgresql",
-            "42.3.1",
-            "g3BXCFfahutKdt09hQXTS6wMGBhnQfqDpoIKEPpEHLQ="
+            "42.4.0",
+            "/iW5wKLFlFhQTsiIYoU99SLuh/igJWSDXVN8Ka5MsSU="
     ),
     SQLITE_DRIVER(
             "org.xerial",
