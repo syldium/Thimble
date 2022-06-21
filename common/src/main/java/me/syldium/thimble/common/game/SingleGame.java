@@ -181,11 +181,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     @Override
     public String toString() {
         return "SingleGame{" +
-                "arena=" + this.arena +
-                ", state=" + this.state +
-                ", players=" + this.players.values() +
-                ", remainingWaterBlocks=" + this.remainingWaterBlocks.size() +
-                ", timer=" + this.timer +
+                super.toString() +
                 ", queue=" + this.queue +
                 ", jumper=" + this.jumper +
                 '}';

@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
@@ -664,5 +665,16 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
         this.plugin.getPlayerAdapter().clearPool(this.arena.jumpLocation().worldKey(), this.blocks);
         this.blocks.clear();
         this.task.cancel();
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + '{' +
+                "arena=" + this.arena +
+                ", state=" + this.state +
+                ", players=" + this.players.values().stream().map(InGamePlayer::name).collect(Collectors.toList()) +
+                ", remainingWaterBlocks=" + this.remainingWaterBlocks.size() +
+                ", timer=" + this.timer +
+                '}';
     }
 }
