@@ -10,6 +10,8 @@ import me.syldium.thimble.api.bukkit.BukkitGameEndEvent;
 import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.common.command.CommandResult;
+import me.syldium.thimble.common.config.ConfigManager;
+import me.syldium.thimble.common.listener.Reloadable;
 import me.syldium.thimble.common.player.MessageKey;
 import me.syldium.thimble.common.util.SignAction;
 import me.syldium.thimble.common.util.EnumUtil;
@@ -32,16 +34,16 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class SignChangeListener implements Listener {
+public class SignChangeListener implements Listener, Reloadable {
 
     private final ThBukkitPlugin plugin;
     private final Set<Material> clickable;
-    private final boolean updateSigns;
+    private boolean updateSigns;
 
     public SignChangeListener(@NotNull ThBukkitPlugin plugin, @NotNull Set<@NotNull Material> clickable) {
         this.plugin = plugin;
         this.clickable = clickable;
-        this.updateSigns = plugin.getConfig().getBoolean("update-signs", true);
+        this.reload(plugin.getConfigManager());
         plugin.registerEvents(this);
     }
 
@@ -122,5 +124,10 @@ public class SignChangeListener implements Listener {
         return toLowerCase.contains("[thimble]")
                 || toLowerCase.contains("[deacoudre]")
                 || toLowerCase.contains("[déàcoudre]");
+    }
+
+    @Override
+    public void reload(@NotNull ConfigManager<?> configManager) {
+        this.updateSigns = this.plugin.getConfig().getBoolean("update-signs", true);
     }
 }

@@ -12,6 +12,8 @@ import me.syldium.thimble.bukkit.util.CraftBukkitFacet;
 import me.syldium.thimble.bukkit.world.BukkitBlockData;
 import me.syldium.thimble.common.adapter.PlayerAdapter;
 import me.syldium.thimble.common.command.abstraction.Sender;
+import me.syldium.thimble.common.config.ConfigManager;
+import me.syldium.thimble.common.listener.Reloadable;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.media.Scoreboard;
 import me.syldium.thimble.common.world.BlockData;
@@ -41,14 +43,14 @@ import static java.util.Objects.requireNonNull;
 import static me.syldium.thimble.bukkit.util.BukkitUtil.isWater;
 import static me.syldium.thimble.bukkit.world.BukkitBlockData.IS_FLAT;
 
-public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Player, Location> {
+public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Player, Location>, Reloadable {
 
     public static final BlockFace[] DIRECTIONS = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 
     private final ThBootstrap bootstrap;
     private final BukkitAudiences audiences;
     private final Map<UUID, BukkitPlayer> players = new HashMap<>();
-    private final List<BukkitBlockData> blockDatas;
+    private final List<BukkitBlockData> blockDatas = new ArrayList<>();
     private final BlockSelectionInventory inventory;
     private final BukkitAdapter locationAdapter;
     private final CraftBukkitFacet facet = new CraftBukkitFacet();
@@ -57,15 +59,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
         this.bootstrap = bootstrap;
         this.audiences = audiences;
 
-        Set<Material> materials = BukkitUtil.getAllBlocksMatching(plugin.getLogger(), plugin.getConfig().getStringList("blocks"));
-        if (materials.isEmpty()) {
-            plugin.getLogger().severe("The list of blocks in the configuration file is empty/invalid!"
-                    + " This will cause an error every time a player tries to join an arena.");
-        }
-        this.blockDatas = new ArrayList<>();
-        for (Material material : materials) {
-            this.blockDatas.addAll(BukkitBlockData.buildAll(material));
-        }
+        this.reload(plugin.getConfigManager());
         this.inventory = new BlockSelectionInventory(plugin, this);
         this.locationAdapter = new BukkitAdapter(bootstrap);
     }
@@ -197,5 +191,18 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
             return this.asAbstractPlayer((org.bukkit.entity.Player) sender);
         }
         return new BukkitSender(this.bootstrap.getPlugin(), sender, this.audiences.sender(sender));
+    }
+
+    @Override
+    public void reload(@NotNull ConfigManager<?> configManager) {
+        Set<Material> materials = BukkitUtil.getAllBlocksMatching(this.bootstrap.getLogger(), this.bootstrap.getConfig().getStringList("blocks"));
+        if (materials.isEmpty()) {
+            this.bootstrap.getLogger().severe("The list of blocks in the configuration file is empty/invalid!"
+                    + " This will cause an error every time a player tries to join an arena.");
+        }
+        this.blockDatas.clear();
+        for (Material material : materials) {
+            this.blockDatas.addAll(BukkitBlockData.buildAll(material));
+        }
     }
 }
