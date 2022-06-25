@@ -1,6 +1,18 @@
 Changelog
 =========
 
+## [1.4.0] - 2022-06-25
+### Added
+- Components such as clickable text are now supported on 1.19 servers.
+- The block configuration is now reloadable.
+
+### Fixed
+- A player name change is now correctly reflected in the database.
+
+### Other
+- More information is logged when using database drivers.
+- The player name is now stored with a VARCHAR instead of a CHAR type.
+
 ## [1.3.0] - 2022-02-03
 ### Added
 - The `<top_player>` placeholder returns the name of the player with the most points/lifes in descending order.
@@ -12,7 +24,7 @@ Changelog
 
 ## [1.2.2] - 2022-01-16
 ### Fixed
-- Support for Brigadier commands in the command blocks.
+- Support for Brigadier commands in command blocks.
 - Rich text components for chat and scoreboard on 1.18.1 servers.
 
 ### Other
