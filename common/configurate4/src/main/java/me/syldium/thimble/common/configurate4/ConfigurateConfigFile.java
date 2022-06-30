@@ -1,4 +1,4 @@
-package me.syldium.thimble.mock.config;
+package me.syldium.thimble.common.configurate4;
 
 import me.syldium.thimble.common.config.ConfigFile;
 import org.jetbrains.annotations.NotNull;
@@ -9,13 +9,15 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class ConfigurateConfigFile extends ConfigurateConfigNode implements ConfigFile {
+public class ConfigurateConfigFile extends ConfigurateConfigNode implements ConfigFile {
 
     private final ConfigurationLoader<?> loader;
+    private final Logger logger;
 
-    ConfigurateConfigFile(@NotNull ConfigurationLoader<?> loader, @NotNull ConfigurationNode node) {
+    public ConfigurateConfigFile(@NotNull ConfigurationLoader<?> loader, @NotNull ConfigurationNode node, @NotNull Logger logger) {
         super(node);
         this.loader = loader;
+        this.logger = logger;
     }
 
     @Override
@@ -23,7 +25,7 @@ class ConfigurateConfigFile extends ConfigurateConfigNode implements ConfigFile 
         try {
             this.loader.save(this.parent);
         } catch (IOException ex) {
-            Logger.getLogger("Configurate").log(Level.SEVERE, "Could not save config to file.", ex);
+            this.logger.log(Level.SEVERE, "Could not save config to file.", ex);
         }
     }
 }

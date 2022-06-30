@@ -1,4 +1,4 @@
-package me.syldium.thimble.mock.config;
+package me.syldium.thimble.common.configurate4;
 
 import me.syldium.thimble.common.config.ConfigNode;
 import me.syldium.thimble.common.config.NodeEntry;

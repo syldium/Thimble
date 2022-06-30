@@ -3,12 +3,14 @@ package me.syldium.thimble.mock.config;
 import me.syldium.thimble.PluginMock;
 import me.syldium.thimble.common.config.ConfigFile;
 import me.syldium.thimble.common.config.ConfigManager;
+import me.syldium.thimble.common.configurate4.ConfigurateConfigFile;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.gson.GsonConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class ConfigurateManager extends ConfigManager<PluginMock> {
 
@@ -26,7 +28,7 @@ public class ConfigurateManager extends ConfigManager<PluginMock> {
             this.severe("Unable to load the config file!", ex);
             root = loader.createNode();
         }
-        return new ConfigurateConfigFile(loader, root);
+        return new ConfigurateConfigFile(loader, root, Logger.getLogger("Configurate"));
     }
 
     @Override
