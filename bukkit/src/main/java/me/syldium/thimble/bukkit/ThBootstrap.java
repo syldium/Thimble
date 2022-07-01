@@ -1,6 +1,8 @@
 package me.syldium.thimble.bukkit;
 
 import me.syldium.thimble.api.bukkit.BukkitAdapter;
+import me.syldium.thimble.bukkit.adventure.AdventureProvider;
+import me.syldium.thimble.bukkit.adventure.Adventures;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,10 +14,18 @@ public final class ThBootstrap extends JavaPlugin {
 
     private static final int PLUGIN_ID = 9881;
 
+    private AdventureProvider adventure;
     private ThBukkitPlugin plugin;
 
     @Override
     public void onEnable() {
+        this.adventure = Adventures.create(this);
+        if (this.adventure == null) {
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        this.getLogger().info("Using " + this.adventure);
+
         if (!me.syldium.thimble.bukkit.world.BukkitBlockData.IS_FLAT) {
             this.getLogger().warning("This plugin is not actively tested with older versions.");
         }
@@ -38,9 +48,17 @@ public final class ThBootstrap extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (this.adventure == null) {
+            return;
+        }
         this.plugin.disable();
         this.plugin = null;
         BukkitAdapter.unregister();
+        this.adventure.close();
+    }
+
+    public @NotNull AdventureProvider getAdventure() {
+        return this.adventure;
     }
 
     @Override

@@ -17,15 +17,10 @@ dependencies {
     implementation project(':common')
     implementation project(':bukkit:integration')
 
-    compileOnly(libs.paper) {
-        exclude(module: 'adventure-api')
-    }
+    compileOnly(libs.paper)
     compileOnly(libs.paperBrigadier)
     compileOnly 'it.unimi.dsi:fastutil:8.4.4'
-    implementation("net.kyori:adventure-platform-bukkit:${libs.versions.adventurePlatform.get()}") {
-        exclude(module: 'checker-qual')
-        exclude(module: 'guava')
-    }
+
     implementation 'org.bstats:bstats-bukkit:3.0.0'
 }
 
@@ -39,7 +34,7 @@ processResources {
 }
 
 shadowJar {
-    archiveBaseName = "${project.parent.name}-Bukkit"
+    archiveBaseName = "${project.parent.name}-Paper"
     archiveClassifier = ''
     archiveVersion = project.ext.fullVersion
 
@@ -47,8 +42,6 @@ shadowJar {
         exclude(dependency('org.jetbrains:annotations'))
     }
 
-    relocate 'net.kyori.adventure', 'me.syldium.thimble.lib.adventure'
-    relocate 'net.kyori.examination', 'me.syldium.thimble.lib.examination'
     relocate 'org.bstats', 'me.syldium.thimble.lib.metrics'
     minimize()
 }

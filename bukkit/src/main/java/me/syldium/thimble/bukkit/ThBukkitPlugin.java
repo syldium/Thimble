@@ -5,6 +5,7 @@ import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
+import me.syldium.thimble.bukkit.adventure.AdventureProvider;
 import me.syldium.thimble.bukkit.config.BlockConfig;
 import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.bukkit.adapter.BukkitEventAdapter;
@@ -26,7 +27,6 @@ import me.syldium.thimble.common.command.CommandResult;
 import me.syldium.thimble.common.util.Fireworks;
 import me.syldium.thimble.common.util.Task;
 import me.syldium.thimble.bukkit.util.BukkitTask;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -50,7 +50,6 @@ import static me.syldium.thimble.bukkit.util.BukkitUtil.setServerVersion;
 public class ThBukkitPlugin extends ThimblePlugin {
 
     private final ThBootstrap bootstrap;
-    private final BukkitAudiences audiences;
     private final BukkitCommandExecutor commandExecutor;
     private final BukkitEventAdapter eventAdapter;
     private final BukkitPlayerAdapter playerAdapter;
@@ -61,12 +60,11 @@ public class ThBukkitPlugin extends ThimblePlugin {
     public ThBukkitPlugin(@NotNull ThBootstrap bootstrap) {
         setServerVersion();
         this.bootstrap = bootstrap;
-        this.audiences = BukkitAudiences.create(bootstrap);
         this.configManager = new BukkitConfigManager(this);
         this.enable();
 
         this.eventAdapter = new BukkitEventAdapter(bootstrap.getServer().getPluginManager());
-        this.playerAdapter = new BukkitPlayerAdapter(this, bootstrap, this.audiences);
+        this.playerAdapter = new BukkitPlayerAdapter(this, bootstrap, bootstrap.getAdventure());
         this.savedPlayersManager = new BukkitSavedPlayersManager(this);
 
         ServicesManager servicesManager = bootstrap.getServer().getServicesManager();
@@ -94,12 +92,6 @@ public class ThBukkitPlugin extends ThimblePlugin {
         this.reloadables.add(this.playerAdapter);
         this.hooks = new PluginHook(this, bootstrap);
         this.getMessageService().setExternalPlaceholderService(this.hooks);
-    }
-
-    @Override
-    public void disable() {
-        super.disable();
-        this.audiences.close();
     }
 
     @Override
@@ -152,6 +144,10 @@ public class ThBukkitPlugin extends ThimblePlugin {
 
     public void sendFeedback(@NotNull org.bukkit.entity.Player bukkitPlayer, @NotNull CommandResult result) {
         this.playerAdapter.asAbstractPlayer(bukkitPlayer).sendFeedback(result);
+    }
+
+    public @NotNull AdventureProvider getAdventure() {
+        return this.bootstrap.getAdventure();
     }
 
     @Override

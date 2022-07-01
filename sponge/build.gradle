@@ -9,6 +9,7 @@ dependencies {
     implementation project(':common')
     implementation project(':common:logging')
 
+    compileOnly(libs.minimessage)
     compileOnly(libs.sponge) {
         exclude(module: 'caffeine')
     }

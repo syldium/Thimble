@@ -3,10 +3,7 @@ apply plugin: 'java-library'
 dependencies {
     api project(':api')
     api project(':common:cache')
-    api(libs.adventure)
-    api(libs.minimessage) {
-        transitive = false
-    }
+    compileOnly(libs.minimessage)
     compileOnly 'com.mojang:brigadier:1.0.17'
     compileOnly 'com.google.code.gson:gson:2.8.9'
 
@@ -15,6 +12,10 @@ dependencies {
     testImplementation 'org.spongepowered:configurate-gson:4.1.2'
     testImplementation(libs.adventurePlainSerializer)
     testRuntimeOnly 'org.xerial:sqlite-jdbc:3.36.0.3'
+}
+
+configurations {
+    testImplementation.extendsFrom compileOnly
 }
 
 test {
