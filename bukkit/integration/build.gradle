@@ -12,9 +12,7 @@ java {
 dependencies {
     implementation project(':common')
 
-    compileOnly(libs.paper) {
-        transitive = false
-    }
+    compileOnly(libs.paper)
     compileOnly 'me.clip:placeholderapi:2.11.6'
     compileOnly('com.alessiodp.parties:parties-api:3.2.15')
     compileOnly('com.sk89q.worldedit:worldedit-bukkit:7.2.9') {

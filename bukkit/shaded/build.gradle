@@ -1,0 +1,40 @@
+apply plugin: 'com.gradleup.shadow'
+
+repositories {
+    maven { url 'https://repo.codemc.org/repository/maven-public/' }
+}
+
+java {
+    disableAutoTargetJvm()
+}
+
+dependencies {
+    implementation project(':bukkit')
+
+    implementation(libs.minimessage)
+    implementation("net.kyori:adventure-platform-bukkit:${libs.versions.adventurePlatform.get()}") {
+        exclude(module: 'checker-qual')
+        exclude(module: 'guava')
+    }
+
+    compileOnly(libs.paper)
+}
+
+shadowJar {
+    archiveBaseName = "${project.parent.parent.name}-Bukkit"
+    archiveClassifier = ''
+    archiveVersion = project.ext.fullVersion
+
+    dependencies {
+        exclude(dependency('org.jetbrains:annotations'))
+    }
+
+    relocate 'net.kyori.adventure', 'me.syldium.thimble.lib.adventure'
+    relocate 'net.kyori.examination', 'me.syldium.thimble.lib.examination'
+    relocate 'net.kyori.option', 'me.syldium.thimble.lib.option'
+    relocate 'org.bstats', 'me.syldium.thimble.lib.metrics'
+}
+
+artifacts {
+    archives shadowJar
+}

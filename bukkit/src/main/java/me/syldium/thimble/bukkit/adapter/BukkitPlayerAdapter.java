@@ -5,6 +5,7 @@ import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
 import me.syldium.thimble.bukkit.ThBootstrap;
+import me.syldium.thimble.bukkit.adventure.AdventureProvider;
 import me.syldium.thimble.bukkit.command.BukkitSender;
 import me.syldium.thimble.bukkit.util.BlockSelectionInventory;
 import me.syldium.thimble.bukkit.util.BukkitUtil;
@@ -20,7 +21,6 @@ import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.PoolBlock;
 import me.syldium.thimble.bukkit.world.BukkitPoolBlock;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -48,7 +48,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     public static final BlockFace[] DIRECTIONS = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 
     private final ThBootstrap bootstrap;
-    private final BukkitAudiences audiences;
+    private final AdventureProvider audiences;
     private final Map<UUID, BukkitPlayer> players = new HashMap<>();
     private final List<BukkitBlockData> blockDatas = new ArrayList<>();
     private final BlockSelectionInventory inventory;
@@ -56,7 +56,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     private final CraftBukkitFacet facet = new CraftBukkitFacet();
     private @Nullable BukkitBlockData thimbleBlock;
 
-    public BukkitPlayerAdapter(@NotNull ThBukkitPlugin plugin, @NotNull ThBootstrap bootstrap, @NotNull BukkitAudiences audiences) {
+    public BukkitPlayerAdapter(@NotNull ThBukkitPlugin plugin, @NotNull ThBootstrap bootstrap, @NotNull AdventureProvider audiences) {
         this.bootstrap = bootstrap;
         this.audiences = audiences;
 

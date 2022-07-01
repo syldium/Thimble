@@ -7,9 +7,8 @@ import me.syldium.thimble.bukkit.adapter.BukkitPlayerAdapter;
 import me.syldium.thimble.bukkit.world.BukkitBlockData;
 import me.syldium.thimble.common.player.InGamePlayer;
 import me.syldium.thimble.common.player.MessageKey;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -39,19 +38,11 @@ public final class BlockSelectionInventory implements Listener {
     private static final int NEXT_SLOT = INVENTORY_SIZE - 1;
 
     private final ThBukkitPlugin plugin;
-    private final String inventoryTitle;
-    private final String gameStarted;
     private final Map<UUID, Integer> inventories;
     private final int pages;
 
     public BlockSelectionInventory(@NotNull ThBukkitPlugin plugin, @NotNull BukkitPlayerAdapter adapter) {
         this.plugin = plugin;
-        this.inventoryTitle = LegacyComponentSerializer.legacySection().serialize(
-                plugin.getMessageService().formatMessage(MessageKey.INVENTORY_BLOCK_SELECTION)
-        );
-        this.gameStarted = LegacyComponentSerializer.legacySection().serialize(
-                plugin.getMessageService().formatMessage(MessageKey.FEEDBACK_GAME_STARTED_GAME, NamedTextColor.RED)
-        );
         this.inventories = BukkitUtil.newObject2IntMap();
         this.pages = (int) Math.ceil((float) adapter.getAvailableBlocks().size() / PER_PAGE);
         plugin.registerEvents(this);
@@ -86,7 +77,7 @@ public final class BlockSelectionInventory implements Listener {
 
         // Changes the player's block
         if (!player.game().state().isNotStarted()) {
-            event.getWhoClicked().sendMessage(this.gameStarted);
+            event.getWhoClicked().sendMessage(this.plugin.getMessageService().formatMessage(MessageKey.FEEDBACK_GAME_STARTED_GAME, NamedTextColor.RED));
             return;
         }
         BukkitBlockData previous = (BukkitBlockData) player.getChosenBlock();
@@ -122,7 +113,8 @@ public final class BlockSelectionInventory implements Listener {
     public void open(@NotNull HumanEntity human, @NotNull InGamePlayer inGamePlayer, int page) {
         Preconditions.checkArgument(page > 0 && page <= this.pages, "The page number is out of bounds.");
 
-        Inventory inventory = Bukkit.createInventory(null, INVENTORY_SIZE, this.inventoryTitle);
+        Component inventoryTitle = this.plugin.getMessageService().formatMessage(MessageKey.INVENTORY_BLOCK_SELECTION);
+        Inventory inventory = this.plugin.getAdventure().creatingInventory(null, INVENTORY_SIZE, inventoryTitle);
         List<BukkitBlockData> wools = this.plugin.getPlayerAdapter().getAvailableBlocks();
         int start = (page - 1) * PER_PAGE;
         int end = Math.min(page * PER_PAGE, wools.size());

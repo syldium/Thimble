@@ -1,8 +1,8 @@
 package me.syldium.thimble.bukkit.util;
 
+import me.syldium.thimble.bukkit.adventure.VanillaComponentSerializer;
 import me.syldium.thimble.common.player.media.Scoreboard;
 import me.syldium.thimble.common.util.MinecraftVersion;
-import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -26,11 +26,11 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 
+import static me.syldium.thimble.bukkit.adventure.AdventureProvider.legacy;
 import static me.syldium.thimble.bukkit.util.MinecraftReflection.findClass;
 import static me.syldium.thimble.bukkit.util.MinecraftReflection.findEnum;
 import static me.syldium.thimble.bukkit.util.MinecraftReflection.findMcClassName;
 import static me.syldium.thimble.bukkit.util.MinecraftReflection.findNmsClassName;
-import static net.kyori.adventure.platform.bukkit.BukkitComponentSerializer.legacy;
 import static org.bukkit.Bukkit.getScoreboardManager;
 
 // Adapted for adventure from https://github.com/MrMicky-FR/FastBoard
@@ -140,7 +140,6 @@ public class CraftBukkitFacet {
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     private abstract static class ScoreboardPacket implements ScoreboardFacet {
 
         protected static final Map<Class<?>, Field[]> PACKETS = new HashMap<>(6);
@@ -155,7 +154,7 @@ public class CraftBukkitFacet {
                 findMcClassName("ChatFormatting")
         );
         protected static final Object RESET_FORMATTING = findEnum(ENUM_CHAT_FORMAT, "RESET", 21);
-        protected static final Object EMPTY_COMPONENT = MinecraftComponentSerializer.isSupported() ? MinecraftComponentSerializer.get().serialize(Component.empty()) : null;
+        protected static final Object EMPTY_COMPONENT = VanillaComponentSerializer.isSupported() ? VanillaComponentSerializer.serialize(Component.empty()) : null;
 
         protected static final Class<?> CLASS_OBJECTIVE_PACKET = findClass(
                 findNmsClassName("PacketPlayOutScoreboardObjective"),
@@ -372,7 +371,7 @@ public class CraftBukkitFacet {
         protected abstract void setComponentField(@NotNull Object object, @NotNull Component component, int count) throws ReflectiveOperationException;
 
         public static boolean isSupported() {
-            if (!(PacketUtil.isSupported() && MinecraftComponentSerializer.isSupported() && NEW_OBJECTIVE_PACKET != null && NEW_DISPLAY_OBJECTIVE_PACKET != null && NEW_SCORE_PACKET != null && NEW_TEAM_PACKET != null && ENUM_SB_ACTION != null)) {
+            if (!(PacketUtil.isSupported() && VanillaComponentSerializer.isSupported() && NEW_OBJECTIVE_PACKET != null && NEW_DISPLAY_OBJECTIVE_PACKET != null && NEW_SCORE_PACKET != null && NEW_TEAM_PACKET != null && ENUM_SB_ACTION != null)) {
                 return false;
             }
             return SINGLE_PACKAGE || (RESET_FORMATTING != null && NEW_SERIALIZABLE_TEAM != null);
@@ -483,7 +482,7 @@ public class CraftBukkitFacet {
             int i = 0;
             for (Field f : PACKETS.get(object.getClass())) {
                 if ((f.getType() == String.class || f.getType() == CLASS_CHAT_COMPONENT) && i++ == count) {
-                    f.set(object, component == Component.empty() ? EMPTY_COMPONENT : MinecraftComponentSerializer.get().serialize(component));
+                    f.set(object, component == Component.empty() ? EMPTY_COMPONENT : VanillaComponentSerializer.serialize(component));
                 }
             }
         }
