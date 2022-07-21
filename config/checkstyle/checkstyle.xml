@@ -102,7 +102,6 @@
         <module name="SuppressionCommentFilter"/>
         <module name="SuppressWarningsHolder"/>
         <module name="TypecastParenPad"/>
-        <module name="UnnecessaryParentheses"/>
         <module name="UnusedImports"/>
     </module>
 </module>
