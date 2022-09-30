@@ -58,7 +58,7 @@ artifacts {
 }
 
 runServer {
-    minecraftVersion('1.19')
+    minecraftVersion('1.19.2')
 }
 
 tasks.withType(xyz.jpenilla.runpaper.RunPaper).configureEach {

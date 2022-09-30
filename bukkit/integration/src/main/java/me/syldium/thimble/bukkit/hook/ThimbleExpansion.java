@@ -31,8 +31,8 @@ class ThimbleExpansion extends PlaceholderExpansion implements PlaceholderServic
         this.register();
         this.placeholders = new ArrayList<>(Ranking.values().length * 2);
         for (Ranking ranking : Ranking.values()) {
-            this.placeholders.add(this.getIdentifier() + '_' + ranking.asString());
-            String placeholder = this.getIdentifier() + "_lb_" + ranking.name().toLowerCase(Locale.ROOT);
+            this.placeholders.add('%' + this.getIdentifier() + '_' + ranking.asString() + '%');
+            String placeholder = '%' + this.getIdentifier() + "_lb_" + ranking.name().toLowerCase(Locale.ROOT) + '%';
             this.placeholders.add(placeholder);
         }
         consumer.accept(this);
