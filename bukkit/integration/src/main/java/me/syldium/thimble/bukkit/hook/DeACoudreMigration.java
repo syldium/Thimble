@@ -147,7 +147,6 @@ class DeACoudreMigration extends ChildCommand {
         return new BlockVector(section.getInt("x"), section.getInt("y"), section.getInt("z"));
     }
 
-    @SuppressWarnings("deprecation")
     private @NotNull Function<String, UUID> resolveGetPlayerUniqueId() {
         try {
             Bukkit.class.getMethod("getPlayerUniqueId", String.class);
