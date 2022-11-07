@@ -10,10 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
 import java.util.UUID;
 import java.util.function.ToIntFunction;
@@ -41,7 +39,6 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
 
     private final Comparator<T> comparator;
     private final ToIntFunction<T> getter;
-    private final Map<UUID, Integer> positions;
     private final List<T> list;
 
     /**
@@ -72,7 +69,6 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
     private Leaderboard(@NotNull Comparator<T> comparator, @NotNull ToIntFunction<T> getter) {
         this.comparator = comparator;
         this.getter = getter;
-        this.positions = new HashMap<>(Leaderboard.MAX_LENGTH);
         this.list = new ArrayList<>(Leaderboard.MAX_LENGTH);
     }
 
@@ -84,7 +80,6 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
     public Leaderboard(@NotNull Leaderboard<T> leaderboard) {
         this.comparator = leaderboard.comparator;
         this.getter = leaderboard.getter;
-        this.positions = new HashMap<>(leaderboard.positions);
         this.list = new ArrayList<>(leaderboard.list);
     }
 
@@ -133,28 +128,18 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
         if (existing != -1) {
             // Position change in the ranking.
             this.list.remove(existing);
-            this.positions.remove(e.uuid());
         }
 
         if (rank > MAX_LENGTH) {
             // New position too far.
-            this.updatePositions(existing);
             return false;
         }
 
         // (Re)addition
         this.list.add(rank, e);
-        if (existing == -1) {
-            this.updatePositions(rank);
-        } else if (rank < existing) {
-            this.updatePositions(rank, existing + 1);
-        } else {
-            this.updatePositions(existing, rank + 1);
-        }
-
         if (this.size() > MAX_LENGTH) {
             // Limit the length of the leaderboard.
-            this.positions.remove(this.list.remove(MAX_LENGTH).uuid());
+            this.list.remove(MAX_LENGTH);
         }
         return true;
     }
@@ -253,8 +238,12 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
      * @return The index or {@code -1} if absent.
      */
     public int indexOf(@NotNull UUID playerUniqueId) {
-        Integer index = this.positions.get(playerUniqueId);
-        return index == null ? -1 : index;
+        for (int i = 0; i < this.list.size(); i++) {
+            if (this.list.get(i).uuid().equals(playerUniqueId)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -314,7 +303,7 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
 
     @Override
     public @NotNull Iterator<T> iterator() {
-        return new LeaderboardIterator<>(this);
+        return this.list.iterator();
     }
 
     @Override
@@ -329,13 +318,7 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
 
     @Override
     public boolean remove(Object o) {
-        boolean removed = this.list.remove(o);
-        if (removed) {
-            UUID uuid = ((ThimblePlayerStats) o).uuid();
-            this.updatePositions(this.indexOf(uuid));
-            this.positions.remove(uuid);
-        }
-        return removed;
+        return this.list.remove(o);
     }
 
     @Override
@@ -356,43 +339,17 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
 
     @Override
     public boolean removeAll(@NotNull Collection<?> collection) {
-        boolean changed = this.list.removeAll(collection);
-        if (changed) {
-            this.updatePositions();
-        }
-        return changed;
+        return this.list.removeAll(collection);
     }
 
     @Override
     public boolean retainAll(@NotNull Collection<?> collection) {
-        boolean changed = this.list.retainAll(collection);
-        if (changed) {
-            this.updatePositions();
-        }
-        return changed;
-    }
-
-    private void updatePositions() {
-        this.positions.clear();
-        for (int i = 0; i < this.list.size(); i++) {
-            this.positions.put(this.list.get(i).uuid(), i);
-        }
-    }
-
-    private void updatePositions(int from, int to) {
-        for (int i = from; i < to; i++) {
-            this.positions.put(this.list.get(i).uuid(), i);
-        }
-    }
-
-    private void updatePositions(int from) {
-        this.updatePositions(from, this.list.size());
+        return this.list.retainAll(collection);
     }
 
     @Override
     public void clear() {
         this.list.clear();
-        this.positions.clear();
     }
 
     @Override
@@ -411,37 +368,6 @@ public class Leaderboard<T extends ThimblePlayerStats> implements SortedSet<T> {
     @Override
     public String toString() {
         return this.list.toString();
-    }
-
-    private static final class LeaderboardIterator<T extends ThimblePlayerStats> implements Iterator<T> {
-
-        private final Leaderboard<T> leaderboard;
-        private final Iterator<T> iterator;
-        private T next;
-        private int index = -1;
-
-        private LeaderboardIterator(@NotNull Leaderboard<T> leaderboard) {
-            this.leaderboard = leaderboard;
-            this.iterator = leaderboard.list.iterator();
-        }
-
-        @Override
-        public boolean hasNext() {
-            return this.iterator.hasNext();
-        }
-
-        @Override
-        public T next() {
-            this.index++;
-            return this.next = this.iterator.next();
-        }
-
-        @Override
-        public void remove() {
-            this.iterator.remove();
-            this.leaderboard.positions.remove(this.next.uuid());
-            this.leaderboard.updatePositions(this.index--);
-        }
     }
 
     private static final class ByPointsComparator implements Comparator<ThimblePlayer> {
