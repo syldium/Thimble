@@ -45,6 +45,11 @@ Vous pouvez afficher les statistiques du joueur :
 - `%thimble_fails%`
 - `%thimble_thimbles%`
 
+Deux placeholders sont aussi enregistrés pour chaque arène. Ils exposent l'état actuel de la partie (`state`) et le nombre de joueurs actuellement dedans (`players`).
+Pour l'arène `demo` par exemple, les placeholders seront :
+- `%thimble_ar_demo_state%`
+- `%thimble_ar_demo_players%`
+
 ### Permissions
 
 - `thimble.commands.arena.*` : `/th arena create`, `/th arena setSpawn`...

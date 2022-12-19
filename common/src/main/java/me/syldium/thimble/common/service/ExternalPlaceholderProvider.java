@@ -1,7 +1,9 @@
 package me.syldium.thimble.common.service;
 
 import me.syldium.thimble.api.Ranking;
+import me.syldium.thimble.api.arena.ThimbleArena;
 import me.syldium.thimble.api.player.ThimblePlayerStats;
+import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
 import me.syldium.thimble.api.util.RankingPosition;
 import me.syldium.thimble.common.util.StringUtil;
@@ -16,9 +18,11 @@ import java.util.function.Supplier;
 public class ExternalPlaceholderProvider {
 
     private final Supplier<StatsService> statsService;
+    private final Supplier<GameService> gameService;
 
-    public ExternalPlaceholderProvider(@NotNull Supplier<StatsService> statsService) {
+    public ExternalPlaceholderProvider(@NotNull Supplier<StatsService> statsService, @NotNull Supplier<GameService> gameService) {
         this.statsService = statsService;
+        this.gameService = gameService;
     }
 
     public @Nullable String provide(@NotNull UUID playerUniqueId, @NotNull String tokens) {
@@ -42,6 +46,20 @@ public class ExternalPlaceholderProvider {
 
             boolean requestUsername = tokens.size() > 3 && "name".equals(tokens.get(3));
             return this.formatPlayerStats(this.statsService.get().getLeaderboard(rankingPosition), rankingPosition.ranking(), requestUsername);
+        } else if ("ar".equals(tokens.get(0))) {
+            if (tokens.size() < 3) {
+                return null;
+            }
+
+            final Optional<ThimbleArena> arenaOpt = this.gameService.get().arena(tokens.get(1));
+            if (!arenaOpt.isPresent()) {
+                return null;
+            }
+            if ("players".equals(tokens.get(2))) {
+                return arenaOpt.get().game().map(game -> String.valueOf(game.size())).orElse("0");
+            } else if ("state".equals(tokens.get(2))) {
+                return arenaOpt.get().gameState().name();
+            }
         } else {
             try {
                 Ranking ranking = Ranking.from(tokens.get(0));
@@ -68,5 +86,9 @@ public class ExternalPlaceholderProvider {
             return username ? "player" : "0";
         }
         return username ? stats.name() : String.valueOf(ranking.get(stats));
+    }
+
+    public @NotNull GameService getGameService() {
+        return this.gameService.get();
     }
 }

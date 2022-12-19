@@ -165,7 +165,7 @@ public abstract class ThimblePlugin {
     }
 
     public @NotNull ExternalPlaceholderProvider placeholderProvider() {
-        return new ExternalPlaceholderProvider(this::getStatsService);
+        return new ExternalPlaceholderProvider(this::getStatsService, this::getGameService);
     }
 
     public @Nullable Player getPlayer(@NotNull UUID uuid) {

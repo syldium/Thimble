@@ -3,6 +3,7 @@ package me.syldium.thimble.bukkit.hook;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.syldium.thimble.api.Ranking;
+import me.syldium.thimble.api.arena.ThimbleArena;
 import me.syldium.thimble.common.player.AbstractPlayer;
 import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.service.ExternalPlaceholderProvider;
@@ -34,6 +35,11 @@ class ThimbleExpansion extends PlaceholderExpansion implements PlaceholderServic
             this.placeholders.add('%' + this.getIdentifier() + '_' + ranking.asString() + '%');
             String placeholder = '%' + this.getIdentifier() + "_lb_" + ranking.name().toLowerCase(Locale.ROOT) + '%';
             this.placeholders.add(placeholder);
+        }
+        for (ThimbleArena arena : provider.getGameService().arenas()) {
+            String placeholderStart = '%' + this.getIdentifier() + "_ar_" + arena.name() + '_';
+            this.placeholders.add(placeholderStart + "players%");
+            this.placeholders.add(placeholderStart + "state%");
         }
         consumer.accept(this);
     }
