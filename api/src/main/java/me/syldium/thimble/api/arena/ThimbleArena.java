@@ -121,12 +121,37 @@ public interface ThimbleArena {
     ThimbleArena setMaxPlayers(int maximum) throws IllegalArgumentException;
 
     /**
+     * Gets the number of players currently in this arena.
+     *
+     * <p>This is equivalent to {@code game().map(ThimbleGame::size).orElse(0)}.</p>
+     *
+     * @return The number of players.
+     * @since 1.5.0
+     */
+    default int currentPlayerCount() {
+        return this.game().map(ThimbleGame::size).orElse(0);
+    }
+
+    /**
      * Gets the current game.
      *
      * @return The game if exists.
      */
     @Contract(pure = true)
     @NotNull Optional<@NotNull ThimbleGame> game();
+
+    /**
+     * Gets the current game state.
+     *
+     * <p>This is equivalent to {@code game().map(ThimbleGame::state).orElse(ThimbleState.WAITING}.</p>
+     *
+     * @return The game state.
+     * @since 1.5.0
+     */
+    @Contract(pure = true)
+    default @NotNull ThimbleState gameState() {
+        return this.game().map(ThimbleGame::state).orElse(ThimbleState.WAITING);
+    }
 
     /**
      * Returns the game mode that will be used for new games.

@@ -48,6 +48,7 @@ public enum MessageKey {
     FEEDBACK_GAME_ALREADY_IN_GAME("feedback.game.already-in-game"),
     FEEDBACK_GAME_COMMAND("feedback.command-in-game"),
     FEEDBACK_GAME_FULL("feedback.game.full"),
+    FEEDBACK_GAME_FULL_AUTO("feedback.game.full.auto"),
     FEEDBACK_GAME_JOINED("feedback.game.joined"),
     FEEDBACK_GAME_LEFT("feedback.game.left"),
     FEEDBACK_GAME_NOT_IN_GAME("feedback.game.not-in-game"),

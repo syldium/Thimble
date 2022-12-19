@@ -117,4 +117,45 @@ public interface GameService {
      */
     @Contract(pure = true)
     @NotNull @UnmodifiableView Set<@NotNull BlockPos> actionSigns();
+
+    /**
+     * Tries to find the best available arena for a certain amount of players.
+     *
+     * <p>This method only checks if the players could join the arena and don't
+     * try to effectively add them to the game.</p>
+     *
+     * @param selection The selection criteria to determine the best arena.
+     * @param playersCount The number of players who want to join.
+     * @return A available arena, if it exists.
+     * @since 1.5.0
+     */
+    @Contract(pure = true)
+    @NotNull Optional<@NotNull ThimbleArena> findAvailableArena(@NotNull ArenaScoreCalculator selection, int playersCount);
+
+    /**
+     * Standard arena selection strategies.
+     *
+     * @since 1.5.0
+     */
+    enum ArenaSelection implements ArenaScoreCalculator {
+        /**
+         * Looks for a game with a lot of players.
+         */
+        MOST_FILLED {
+            @Override
+            public int calculateScore(@NotNull ThimbleArena arena, int playersCount) {
+                return arena.maxPlayers() - arena.currentPlayerCount();
+            }
+        },
+
+        /**
+         * Ideally looks for an empty game.
+         */
+        LEAST_FILLED {
+            @Override
+            public int calculateScore(@NotNull ThimbleArena arena, int playersCount) {
+                return arena.currentPlayerCount() - arena.maxPlayers();
+            }
+        }
+    }
 }

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## [Unreleased]
+### Added
+- The `/th join` command without any argument allows the player to join a free game with the most players.
+
 ## [1.4.0] - 2022-06-25
 ### Added
 - Components such as clickable text are now supported on 1.19 servers.

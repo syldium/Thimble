@@ -1,5 +1,6 @@
 package me.syldium.thimble.common.service;
 
+import me.syldium.thimble.api.service.ArenaScoreCalculator;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.arena.ThimbleArena;
 import me.syldium.thimble.api.arena.ThimbleGame;
@@ -138,6 +139,36 @@ public class GameServiceImpl implements GameService {
     @Override
     public @NotNull Set<@NotNull BlockPos> actionSigns() {
         return Collections.unmodifiableSet(this.signsToAction.keySet());
+    }
+
+    @Override
+    public @NotNull Optional<@NotNull ThimbleArena> findAvailableArena(@NotNull ArenaScoreCalculator selection, int playersCount) {
+        // Start with an undefined best arena
+        ThimbleArena best = null;
+        int bestScore = Integer.MAX_VALUE;
+
+        for (ThimbleArena arena : this.arenas) {
+            // Skip arena if it's not setup
+            if (!arena.isSetup()) {
+                continue;
+            }
+
+            // Skip arena if it cannot afford that number of new players
+            Optional<ThimbleGame> game = arena.game();
+            if (game.isPresent() && !game.get().acceptPlayers(playersCount)) {
+                continue;
+            }
+
+            // Determine the appropriation score of this arena
+            int score = selection.calculateScore(arena, playersCount);
+
+            // Update the best arena if the current arena has a better score
+            if (score < bestScore) {
+                best = arena;
+                bestScore = score;
+            }
+        }
+        return Optional.ofNullable(best);
     }
 
     public void setPlayerGame(@NotNull UUID player, @Nullable Game game) {
