@@ -44,6 +44,11 @@ public class PlayerAdapterMock implements PlayerAdapter<PlayerMock, Location> {
     }
 
     @Override
+    public @Nullable BlockData getThimbleBlock() {
+        return null;
+    }
+
+    @Override
     public void clearPool(@NotNull WorldKey worldKey, @NotNull Map<BlockVector, BlockData> blocks) {
         this.plugin.getWorld().clear();
     }

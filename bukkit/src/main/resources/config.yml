@@ -104,6 +104,9 @@ blocks:
   - ".*WOOL"
   - ".*_TERRACOTTA"
 
+# Change the block placed by the player if a thimble was made.
+thimble-block: "DIAMOND_BLOCK"
+
 # List of clickable elements. As the text of a clickable sign is no longer used once created,
 # it can be replaced by any other clickable block with `/setblock` and keep its behavior.
 clickable:

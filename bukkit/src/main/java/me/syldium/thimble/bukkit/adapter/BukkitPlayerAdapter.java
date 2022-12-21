@@ -54,6 +54,7 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     private final BlockSelectionInventory inventory;
     private final BukkitAdapter locationAdapter;
     private final CraftBukkitFacet facet = new CraftBukkitFacet();
+    private @Nullable BukkitBlockData thimbleBlock;
 
     public BukkitPlayerAdapter(@NotNull ThBukkitPlugin plugin, @NotNull ThBootstrap bootstrap, @NotNull BukkitAudiences audiences) {
         this.bootstrap = bootstrap;
@@ -78,6 +79,11 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     @Override
     public @NotNull List<BukkitBlockData> getAvailableBlocks() {
         return this.blockDatas;
+    }
+
+    @Override
+    public @Nullable BukkitBlockData getThimbleBlock() {
+        return this.thimbleBlock;
     }
 
     @Override
@@ -203,6 +209,10 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
         this.blockDatas.clear();
         for (Material material : materials) {
             this.blockDatas.addAll(BukkitBlockData.buildAll(material));
+        }
+        Material thimbleBlock = BukkitUtil.getBlock(this.bootstrap.getConfig().getString("thimble-block"), this.bootstrap.getLogger());
+        if (thimbleBlock != null) {
+            this.thimbleBlock = BukkitBlockData.build(thimbleBlock);
         }
     }
 }

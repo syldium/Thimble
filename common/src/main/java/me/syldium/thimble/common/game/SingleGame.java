@@ -88,8 +88,12 @@ public class SingleGame extends Game implements ThimbleSingleGame {
         if (jumper.isInWater()) {
             PoolBlock block = jumper.getFirstLiquidBlock();
             this.blocks.put(block.getPosition(), block.getBlockData());
-            block.setBlockData(this.players.get(jumper).getChosenBlock());
             JumpVerdict verdict = this.plugin.getPlayerAdapter().isDeCoudre(block) ? JumpVerdict.THIMBLE : JumpVerdict.LANDED;
+            if (verdict == JumpVerdict.THIMBLE && this.plugin.getPlayerAdapter().getThimbleBlock() != null) {
+                block.setBlockData(this.plugin.getPlayerAdapter().getThimbleBlock());
+            } else {
+                block.setBlockData(this.players.get(jumper).getChosenBlock());
+            }
             this.onJump(jumper, this.players.get(jumper), verdict);
 
             if (this.remainingWaterBlocks.remove(block.getPosition()) && this.remainingWaterBlocks.isEmpty()) {

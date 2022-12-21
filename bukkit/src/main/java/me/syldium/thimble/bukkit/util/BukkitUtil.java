@@ -69,6 +69,31 @@ public final class BukkitUtil {
     }
 
     /**
+     * Returns a block from a name.
+     *
+     * @param name A block name.
+     * @param logger Writes incorrect names.
+     * @return The block type found, or null.
+     */
+    public static @Nullable Material getBlock(@Nullable String name, @Nullable Logger logger) {
+        if (name == null) {
+            return null;
+        }
+        Material material = Material.getMaterial(name);
+        if (material == null) {
+            if (logger != null) {
+                logger.warning(name + " does not match any material!");
+            }
+        } else if (!material.isBlock() || isAir(material)) {
+            if (logger != null) {
+                logger.warning(name + " is not a block!");
+            }
+            material = null;
+        }
+        return material;
+    }
+
+    /**
      * Returns a set containing all {@link Material}s that match a predicate.
      *
      * <p>Since Spigot uses ASM to remove the legacy values, {@link EnumUtil#getAllMatching(Class, Predicate)}

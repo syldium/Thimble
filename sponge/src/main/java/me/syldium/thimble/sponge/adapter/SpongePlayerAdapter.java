@@ -79,6 +79,11 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     }
 
     @Override
+    public @Nullable BlockData getThimbleBlock() {
+        return null;
+    }
+
+    @Override
     public void clearPool(@NotNull WorldKey worldKey, @NotNull Map<BlockVector, BlockData> blocks) {
         World world = this.plugin.getServer().getWorld(worldKey.value()).orElseThrow(() -> new RuntimeException("A world was expected here."));
         for (Map.Entry<BlockVector, BlockData> entry : blocks.entrySet()) {

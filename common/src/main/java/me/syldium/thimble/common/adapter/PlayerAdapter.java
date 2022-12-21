@@ -28,7 +28,9 @@ public interface PlayerAdapter<P, L> {
 
     boolean isDeCoudre(@NotNull PoolBlock abstracted);
 
-    @NotNull List<@NotNull ? extends BlockData> getAvailableBlocks();
+    @NotNull List<? extends BlockData> getAvailableBlocks();
+
+    @Nullable BlockData getThimbleBlock();
 
     void clearPool(@NotNull WorldKey worldKey, @NotNull Map<BlockVector, BlockData> blocks);
 
