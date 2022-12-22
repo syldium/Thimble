@@ -72,6 +72,9 @@ game:
   # When a player loses, his game mode is set to spectator.
   spectator-mode: true
 
+  # When a player is waiting for his turn, his game mode is set to spectator.
+  wait-as-spectator: false
+
   # Set the maximum distance (x and z coordinates) that spectators can have from the waiting location.
   max-spectator-distance: 40
 

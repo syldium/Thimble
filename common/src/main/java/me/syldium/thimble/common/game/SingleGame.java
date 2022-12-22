@@ -29,10 +29,12 @@ public class SingleGame extends Game implements ThimbleSingleGame {
     private UUID jumper;
 
     protected final int jumpTicks;
+    private final boolean waitAsSpectator;
 
     public SingleGame(@NotNull ThimblePlugin plugin, @NotNull Arena arena) {
         super(plugin, arena);
         this.jumpTicks = plugin.getMainConfig().getGameInt("jump-time-single", 15) * Task.GAME_TICKS_PER_SECOND;
+        this.waitAsSpectator = plugin.getMainConfig().getGameNode().getBool("wait-as-spectator", false);
     }
 
     @Override
@@ -47,6 +49,9 @@ public class SingleGame extends Game implements ThimbleSingleGame {
                 Player p = this.plugin.getPlayer(player.uuid());
                 if (p != null) {
                     p.teleport(this.arena.waitLocation());
+                    if (this.waitAsSpectator) {
+                        p.spectate();
+                    }
                 }
             }
         }
@@ -72,6 +77,9 @@ public class SingleGame extends Game implements ThimbleSingleGame {
                 this.onJump(null, this.players.get(this.jumper), JumpVerdict.MISSED);
             } else {
                 player.teleport(this.arena.jumpLocation());
+                if (this.waitAsSpectator) {
+                    player.setMiniGameMode(false);
+                }
             }
 
             this.players.updateAllScoreboards(ThimblePlaceholder.JUMPER, ThimblePlaceholder.NEXT_JUMPER);
@@ -127,7 +135,8 @@ public class SingleGame extends Game implements ThimbleSingleGame {
         if (player != null) {
             this.jumperMedia.hide(player);
             this.sendJumpMessage(player, inGamePlayer, verdict);
-            if (this.spectatorMode && inGamePlayer.isSpectator()) {
+            // Put the player in spectator mode if he's indeed a spectator or a waiting player in a game with two or more players
+            if ((this.spectatorMode && inGamePlayer.isSpectator()) || (this.waitAsSpectator && !this.queue.isEmpty())) {
                 player.spectate();
             } else {
                 player.teleport(this.arena.waitLocation());
