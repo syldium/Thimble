@@ -49,6 +49,9 @@ public class SingleGame extends Game implements ThimbleSingleGame {
                 Player p = this.plugin.getPlayer(player.uuid());
                 if (p != null) {
                     p.teleport(this.arena.waitLocation());
+                    if (this.waitAsSpectator) {
+                        p.spectate();
+                    }
                 }
             }
         }
