@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,22 +28,23 @@ public class GameServiceTest {
     @Test
     public void findBestArena() {
         final GameService gameService = new GameServiceImpl(this.plugin);
-        assertEquals(Optional.empty(), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1));
+        final Random random = new Random();
+        assertEquals(Optional.empty(), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1, random));
         final ThimbleArena arena1 = gameService.createArena("arena1");
-        assertEquals(Optional.empty(), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1));
+        assertEquals(Optional.empty(), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1, random));
         fakeArenaSetup(arena1);
-        assertEquals(Optional.of(arena1), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1));
+        assertEquals(Optional.of(arena1), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1, random));
         arena1.addPlayer(this.plugin.addPlayer().uuid());
-        assertEquals(Optional.of(arena1), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1));
+        assertEquals(Optional.of(arena1), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1, random));
 
         final ThimbleArena arena2 = gameService.createArena("arena2");
         fakeArenaSetup(arena2);
-        assertEquals(Optional.of(arena1), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1));
-        assertEquals(Optional.of(arena2), gameService.findAvailableArena(GameService.ArenaSelection.LEAST_FILLED, 1));
+        assertEquals(Optional.of(arena1), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1, random));
+        assertEquals(Optional.of(arena2), gameService.findAvailableArena(GameService.ArenaSelection.LEAST_FILLED, 1, random));
 
         ((Game) arena1.game().get()).setState(ThimbleState.PLAYING);
-        assertEquals(Optional.of(arena2), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1));
-        assertEquals(Optional.of(arena2), gameService.findAvailableArena(GameService.ArenaSelection.LEAST_FILLED, 1));
+        assertEquals(Optional.of(arena2), gameService.findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1, random));
+        assertEquals(Optional.of(arena2), gameService.findAvailableArena(GameService.ArenaSelection.LEAST_FILLED, 1, random));
     }
 
     private static void fakeArenaSetup(@NotNull ThimbleArena arena) {

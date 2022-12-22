@@ -14,11 +14,14 @@ import me.syldium.thimble.common.util.SignAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -142,9 +145,9 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public @NotNull Optional<@NotNull ThimbleArena> findAvailableArena(@NotNull ArenaScoreCalculator selection, int playersCount) {
-        // Start with an undefined best arena
-        ThimbleArena best = null;
+    public @NotNull Optional<@NotNull ThimbleArena> findAvailableArena(@NotNull ArenaScoreCalculator selection, int playersCount, @NotNull Random random) {
+        // Start with an empty best arenas list
+        List<ThimbleArena> selectedArenas = new ArrayList<>();
         int bestScore = Integer.MAX_VALUE;
 
         for (ThimbleArena arena : this.arenas) {
@@ -164,11 +167,20 @@ public class GameServiceImpl implements GameService {
 
             // Update the best arena if the current arena has a better score
             if (score < bestScore) {
-                best = arena;
                 bestScore = score;
+                selectedArenas.clear();
+                selectedArenas.add(arena);
+            } else if (score == bestScore) {
+                selectedArenas.add(arena);
             }
         }
-        return Optional.ofNullable(best);
+
+        if (selectedArenas.isEmpty()) {
+            return Optional.empty();
+        }
+        // Select a random arena
+        int index = random.nextInt(selectedArenas.size());
+        return Optional.of(selectedArenas.get(index));
     }
 
     public void setPlayerGame(@NotNull UUID player, @Nullable Game game) {

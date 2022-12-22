@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.Random;
 
 public class JoinCommand extends ChildCommand.One<Arena> {
 
@@ -29,7 +30,7 @@ public class JoinCommand extends ChildCommand.One<Arena> {
     @Override
     public @NotNull CommandResult execute(@NotNull ThimblePlugin plugin, @NotNull Sender sender, @Nullable Arena arena) throws CommandException {
         if (arena == null) {
-            Optional<ThimbleArena> arenaOpt = plugin.getGameService().findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1);
+            Optional<ThimbleArena> arenaOpt = plugin.getGameService().findAvailableArena(GameService.ArenaSelection.MOST_FILLED, 1, new Random());
             if (arenaOpt.isPresent()) {
                 arena = (Arena) arenaOpt.get();
             } else {

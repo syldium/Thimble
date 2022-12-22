@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -126,11 +127,12 @@ public interface GameService {
      *
      * @param selection The selection criteria to determine the best arena.
      * @param playersCount The number of players who want to join.
+     * @param random A randomizer.
      * @return A available arena, if it exists.
      * @since 1.5.0
      */
     @Contract(pure = true)
-    @NotNull Optional<@NotNull ThimbleArena> findAvailableArena(@NotNull ArenaScoreCalculator selection, int playersCount);
+    @NotNull Optional<@NotNull ThimbleArena> findAvailableArena(@NotNull ArenaScoreCalculator selection, int playersCount, @NotNull Random random);
 
     /**
      * Standard arena selection strategies.
