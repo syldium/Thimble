@@ -27,11 +27,8 @@ class PartiesArenaListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onJoin(BukkitPlayerJoinArenaEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        String partyName = Parties.getApi().getPartyPlayer(uuid).getPartyName();
-        if (partyName == null || partyName.isEmpty()) return;
-
-        Party party = Parties.getApi().getParty(partyName);
-        if (!uuid.equals(party.getLeader())) return;
+        Party party = Parties.getApi().getPartyOfPlayer(uuid);
+        if (party == null || !uuid.equals(party.getLeader())) return;
 
         int size = event.game().size();
         if (!event.game().acceptPlayers(size)) return;
