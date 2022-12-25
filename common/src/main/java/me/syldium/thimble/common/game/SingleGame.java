@@ -92,6 +92,7 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             return;
         }
 
+        this.players.updateAllScoreboards(ThimblePlaceholder.COUNTDOWN);
         this.jumperMedia.progress(jumper, this.timer, this.jumpTicks);
         if (jumper.isInWater()) {
             PoolBlock block = jumper.getFirstLiquidBlock();

@@ -30,7 +30,7 @@ public interface TimedMedia {
      * @param total The total number of ticks.
      */
     default void progress(@NotNull PlayerAudience audience, int ticks, int total) {
-        this.progress(audience, (float) ticks / total, (int) Math.ceil((float) ticks / Task.GAME_TICKS_PER_SECOND));
+        this.progress(audience, (float) ticks / total, ticksToSeconds(ticks));
     }
 
     /**
@@ -45,6 +45,10 @@ public interface TimedMedia {
             return new BossBarTimedMedia(BossBar.bossBar(Component.empty(), 1.0f, config.getBossBarColor(audienceName), config.getBossBarOverlay(audienceName)));
         }
         return new ExperienceTimedMedia();
+    }
+
+    static int ticksToSeconds(int ticks) {
+        return (int) Math.ceil((float) ticks / Task.GAME_TICKS_PER_SECOND);
     }
 
     enum Type {

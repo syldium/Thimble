@@ -162,6 +162,7 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
             this.players.sendActionBar(MessageKey.ACTIONBAR_NOT_ENOUGH_PLAYERS);
             return;
         }
+        this.players.updateAllScoreboards(ThimblePlaceholder.COUNTDOWN);
         this.players.progress(this.timer, this.countdownTicks);
         this.timer--;
         if (this.timer <= TIMER_SOUND_THRESHOLD && this.timer % Task.GAME_TICKS_PER_SECOND == 0) {
@@ -616,6 +617,10 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
     @Override
     public boolean hasSpectatorMode() {
         return this.spectatorMode;
+    }
+
+    public int getCountdown() {
+        return this.timer;
     }
 
     /**

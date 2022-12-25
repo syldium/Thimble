@@ -68,7 +68,7 @@ The messages use the [MiniMessage formatting](https://docs.adventure.kyori.net/m
 
 ### Scoreboards
 
-As of version 1.1.0, the plugin allows you to create a custom scoreboard for each arena. Here's an example:
+As of version 1.1.0, the plugin allows you to create a custom scoreboard for each arena. Here's two examples:
 ```yml
 # plugins/Thimble/scoreboard.yml
 default:
@@ -89,6 +89,26 @@ default:
     # use the following replacements:
     jumper: "<gray>none</gray>"
     next_jumper: "<gray>none</gray>"
+```
+
+```yml
+# plugins/Thimble/scoreboard.yml
+default:
+  # The default scoreboard for all arenas
+  title: "<blue>Thimble</blue>"
+  lines:
+    - "Arena: <yellow><arena></yellow>"
+    - ""
+    - "Current: <dark_green><jumper></dark_green>"
+    - "Best: <#d003d0><top_player></#d003d0> (<top_points>)"
+    - "Time: <yellow><countdown></yellow> sec"
+    - ""
+    - "<points> <red>❤</red>"
+  empty:
+    # When these placeholders return null values,
+    # use the following replacements:
+    top_player: "<gray>none</gray>"
+    top_points: "<gray>0</gray>"
 ```
 
 ## API

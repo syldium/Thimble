@@ -68,7 +68,7 @@ Les messages utilisent le [format de MiniMessage](https://docs.adventure.kyori.n
 
 ### Scoreboards
 
-Depuis la version 1.1.0, le plugin permet de créer un scoreboard personnalisé pour chaque arène. Voici un exemple :
+Depuis la version 1.1.0, le plugin permet de créer un scoreboard personnalisé pour chaque arène. Voici deux exemples :
 ```yml
 # plugins/Thimble/scoreboard.yml
 default:
@@ -89,6 +89,26 @@ default:
     # utiliser les remplacements suivants :
     jumper: "<gray>aucun</gray>"
     next_jumper: "<gray>aucun</gray>"
+```
+
+```yml
+# plugins/Thimble/scoreboard.yml
+default:
+  # Le scoreboard par défaut pour toutes les arènes
+  title: "<blue>Thimble</blue>"
+  lines:
+    - "Arena: <yellow><arena></yellow>"
+    - ""
+    - "Current: <dark_green><jumper></dark_green>"
+    - "Best: <#d003d0><top_player></#d003d0> (<top_points>)"
+    - "Time: <yellow><countdown></yellow> sec"
+    - ""
+    - "<points> <red>❤</red>"
+  empty:
+    # Lorsque ces placeholders retournent des valeurs nulles,
+    # utiliser les remplacements suivants :
+    top_player: "<gray>none</gray>"
+    top_points: "<gray>0</gray>"
 ```
 
 ## API

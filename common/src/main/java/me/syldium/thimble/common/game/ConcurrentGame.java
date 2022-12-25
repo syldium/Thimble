@@ -47,6 +47,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
 
     @Override
     public void tickGame() {
+        this.players.updateAllScoreboards(ThimblePlaceholder.COUNTDOWN);
         this.jumperMedia.progress(this.players, this.timer, this.jumpTicks);
         for (InGamePlayer inGamePlayer : this.players) {
             if (inGamePlayer.isSpectator()) continue;

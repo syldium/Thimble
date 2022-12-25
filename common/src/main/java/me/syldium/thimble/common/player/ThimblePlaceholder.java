@@ -2,6 +2,8 @@ package me.syldium.thimble.common.player;
 
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.common.config.NodePath;
+import me.syldium.thimble.common.game.Game;
+import me.syldium.thimble.common.player.media.TimedMedia;
 import me.syldium.thimble.common.util.PlaceholderUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +19,7 @@ public enum ThimblePlaceholder {
     JUMPS(ThimblePlayer::jumpsForGame),
     NEXT_JUMPER(PlaceholderUtil::nextJumper),
     POINTS(ThimblePlayer::points),
+    COUNTDOWN(player -> TimedMedia.ticksToSeconds(((Game) player.game()).getCountdown())),
     STATE(player -> player.game().state()),
     THIMBLE(ThimblePlayer::thimbleForGame),
     TOP_PLAYER(PlaceholderUtil::topPlayer),
