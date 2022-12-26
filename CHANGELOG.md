@@ -6,6 +6,10 @@ Changelog
 - The `/th join` command without any argument allows the player to join a free game with the most players.
 - The `%thimble_ar_<arena>_state%` placeholder exposes the current game state in an arena for PlaceholderAPI.
 - The `%thimble_ar_<arena>_players%` placeholder exposes the numbers of players in an arena for PlaceholderAPI.
+- The `<countdown>` scoreboard placeholder exposes the current countdown in seconds.
+- The `<playing>` scoreboard placeholder displays the current number of alive players.
+- A special block can be placed when a thimble is made using the `thimble-block` config option.
+- Players can now wait in spectator mode using the `game.waitAsSpectator` config option.
 
 ## [1.4.0] - 2022-06-25
 ### Added

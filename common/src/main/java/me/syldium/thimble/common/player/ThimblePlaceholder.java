@@ -15,11 +15,13 @@ import java.util.function.Function;
 public enum ThimblePlaceholder {
 
     ARENA(player -> player.game().arena().name()),
+    CAPACITY(player -> player.game().arena().maxPlayers()),
+    COUNTDOWN(player -> TimedMedia.ticksToSeconds(((Game) player.game()).getCountdown())),
     JUMPER(PlaceholderUtil::currentJumper),
     JUMPS(ThimblePlayer::jumpsForGame),
     NEXT_JUMPER(PlaceholderUtil::nextJumper),
     POINTS(ThimblePlayer::points),
-    COUNTDOWN(player -> TimedMedia.ticksToSeconds(((Game) player.game()).getCountdown())),
+    PLAYING(PlaceholderUtil::playing),
     STATE(player -> player.game().state()),
     THIMBLE(ThimblePlayer::thimbleForGame),
     TOP_PLAYER(PlaceholderUtil::topPlayer),

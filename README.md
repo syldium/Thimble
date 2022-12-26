@@ -104,6 +104,7 @@ default:
     - "Time: <yellow><countdown></yellow> sec"
     - ""
     - "<points> <red>❤</red>"
+    - "Players: <yellow><playing></yellow>/<capacity>"
   empty:
     # When these placeholders return null values,
     # use the following replacements:

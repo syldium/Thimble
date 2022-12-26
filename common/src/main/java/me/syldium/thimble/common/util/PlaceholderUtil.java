@@ -58,4 +58,14 @@ public final class PlaceholderUtil {
         }
         return null;
     }
+
+    public static @NotNull Integer playing(@NotNull ThimblePlayer player) {
+        int count = 0;
+        for (ThimblePlayer p : player.game().players()) {
+            if (!p.isSpectator() && !p.isVanished()) {
+                count++;
+            }
+        }
+        return count;
+    }
 }

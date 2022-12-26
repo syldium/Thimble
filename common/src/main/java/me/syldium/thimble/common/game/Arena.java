@@ -9,6 +9,7 @@ import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.arena.ThimbleGameMode;
 import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.player.Player;
+import me.syldium.thimble.common.player.ThimblePlaceholder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
@@ -116,6 +117,9 @@ public class Arena implements ThimbleArena, ComponentLike {
             throw new IllegalArgumentException();
         }
         this.maxPlayers = maximum;
+        if (this.game != null) {
+            this.game.players.updateAllScoreboards(ThimblePlaceholder.CAPACITY);
+        }
         return this;
     }
 

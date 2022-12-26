@@ -97,13 +97,14 @@ default:
   # Le scoreboard par défaut pour toutes les arènes
   title: "<blue>Thimble</blue>"
   lines:
-    - "Arena: <yellow><arena></yellow>"
+    - "Arène: <yellow><arena></yellow>"
     - ""
-    - "Current: <dark_green><jumper></dark_green>"
-    - "Best: <#d003d0><top_player></#d003d0> (<top_points>)"
-    - "Time: <yellow><countdown></yellow> sec"
+    - "Actuel: <dark_green><jumper></dark_green>"
+    - "Meilleur: <#d003d0><top_player></#d003d0> (<top_points>)"
+    - "Temps: <yellow><countdown></yellow> sec"
     - ""
     - "<points> <red>❤</red>"
+    - "Joueurs: <yellow><playing></yellow>/<capacity>"
   empty:
     # Lorsque ces placeholders retournent des valeurs nulles,
     # utiliser les remplacements suivants :

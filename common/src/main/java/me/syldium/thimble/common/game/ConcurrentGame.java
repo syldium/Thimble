@@ -94,6 +94,8 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
         }
 
         if (inGamePlayer.isSpectator()) {
+            this.players.updateAllScoreboards(ThimblePlaceholder.PLAYING);
+
             // Check for remaining players
             boolean latest = true;
             for (InGamePlayer p : this.players) {
