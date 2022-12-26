@@ -139,7 +139,8 @@ public class SingleGame extends Game implements ThimbleSingleGame {
             // Put the player in spectator mode if he's indeed a spectator or a waiting player in a game with two or more players
             if ((this.spectatorMode && inGamePlayer.isSpectator()) || (this.waitAsSpectator && !this.queue.isEmpty())) {
                 player.spectate();
-            } else {
+            }
+            if (!this.queue.isEmpty()) {
                 player.teleport(this.arena.waitLocation());
             }
             this.plugin.getScoreboardService().updateScoreboard(inGamePlayer, ThimblePlaceholder.JUMPS, ThimblePlaceholder.POINTS);
