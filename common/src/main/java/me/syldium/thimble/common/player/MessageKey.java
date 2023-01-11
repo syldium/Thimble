@@ -93,6 +93,8 @@ public enum MessageKey {
     UNIT_JUMPS("unit.jumps"),
     UNIT_LOSS("unit.loss"),
     UNIT_LOSSES("unit.losses"),
+    UNIT_POINT("unit.point"),
+    UNIT_POINTS("unit.points"),
     UNIT_THIMBLE("unit.thimble"),
     UNIT_THIMBLES("unit.thimbles"),
     UNIT_WIN("unit.win"),
@@ -111,6 +113,7 @@ public enum MessageKey {
     public enum Unit {
         THIMBLES(UNIT_THIMBLE, UNIT_THIMBLES),
         JUMPS(UNIT_JUMP, UNIT_JUMPS),
+        POINTS(UNIT_POINT, UNIT_POINTS),
         LOSSES(UNIT_LOSS, UNIT_LOSSES),
         WINS(UNIT_WIN, UNIT_WINS);
 

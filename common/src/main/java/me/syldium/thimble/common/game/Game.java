@@ -276,6 +276,8 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
             TagResolver.Builder args = TagResolver.builder();
             args.resolver(component("player", latest.displayName()));
             args.resolvers(MessageKey.Unit.JUMPS.tl(latest.jumpsForGame(), this.plugin.getMessageService()));
+            args.resolvers(MessageKey.Unit.POINTS.tl(latest.points(), this.plugin.getMessageService()));
+            args.resolvers(MessageKey.Unit.THIMBLES.tl(latest.thimbleForGame(), this.plugin.getMessageService()));
             this.players.sendMessage(latest, MessageKey.CHAT_WIN, args.build());
             this.latest = latest;
         }
