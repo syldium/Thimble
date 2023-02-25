@@ -113,6 +113,15 @@ public class BukkitPlayerAdapter implements PlayerAdapter<org.bukkit.entity.Play
     }
 
     @Override
+    public @Nullable BukkitPlayer getPlayer(@NotNull String name) {
+        final Player player = this.bootstrap.getServer().getPlayerExact(name);
+        if (player == null) {
+            return null;
+        }
+        return this.getPlayer(player.getUniqueId());
+    }
+
+    @Override
     public @NotNull BukkitPlayer asAbstractPlayer(org.bukkit.entity.@NotNull Player player) {
         BukkitPlayer p = this.players.get(player.getUniqueId());
         if (p != null) {

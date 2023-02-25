@@ -5,6 +5,7 @@ import me.syldium.thimble.common.command.abstraction.AbstractCommand;
 import me.syldium.thimble.common.command.abstraction.CommandException;
 import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.common.command.arena.ArenaCommand;
+import me.syldium.thimble.common.command.game.AddPointCommand;
 import me.syldium.thimble.common.command.game.BlockCommand;
 import me.syldium.thimble.common.command.game.JoinCommand;
 import me.syldium.thimble.common.command.game.LeaveCommand;
@@ -33,6 +34,7 @@ public class CommandManager {
                 new JoinCommand(),
                 new LeaveCommand(),
                 new BlockCommand(),
+                new AddPointCommand(),
                 new ArenaCommand(),
                 new StatsCommand(),
                 new MigrateCommand(),

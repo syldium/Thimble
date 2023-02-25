@@ -121,7 +121,7 @@ public class ConcurrentGame extends Game implements ThimbleConcurrentGame {
             } else {
                 player.teleport(this.arena.jumpLocation());
             }
-            this.plugin.getScoreboardService().updateScoreboard(inGamePlayer, ThimblePlaceholder.JUMPS, ThimblePlaceholder.POINTS);
+            this.plugin.getScoreboardService().updateScoreboard(inGamePlayer, ThimblePlaceholder.JUMPS);
         }
     }
 

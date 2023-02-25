@@ -110,6 +110,12 @@ public class SpongePlayerAdapter implements PlayerAdapter<Player, Location<World
     }
 
     @Override
+    public @Nullable SpongePlayer getPlayer(@NotNull String name) {
+        Optional<Player> playerOpt = this.plugin.getServer().getPlayer(name);
+        return playerOpt.map(player -> this.getPlayer(player.getUniqueId())).orElse(null);
+    }
+
+    @Override
     public @NotNull SpongePlayer asAbstractPlayer(@NotNull Player player) {
         SpongePlayer p = this.players.get(player.getUniqueId());
         if (p != null) {

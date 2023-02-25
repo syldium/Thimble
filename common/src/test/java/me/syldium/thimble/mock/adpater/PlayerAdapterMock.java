@@ -63,6 +63,11 @@ public class PlayerAdapterMock implements PlayerAdapter<PlayerMock, Location> {
         return this.players.get(uuid);
     }
 
+    @Override
+    public @Nullable PlayerMock getPlayer(@NotNull String name) {
+        return this.players.values().stream().filter(player -> player.name().equals(name)).findFirst().orElse(null);
+    }
+
     public @NotNull PlayerMock addPlayer() {
         UUID uuid = UUID.randomUUID();
         PlayerMock player = new PlayerMock(this.plugin, uuid.toString().substring(0, 16), uuid);

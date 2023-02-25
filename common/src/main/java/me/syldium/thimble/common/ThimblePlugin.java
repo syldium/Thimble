@@ -172,6 +172,10 @@ public abstract class ThimblePlugin {
         return this.getPlayerAdapter().getPlayer(uuid);
     }
 
+    public @Nullable Player getPlayer(@NotNull String name) {
+        return this.getPlayerAdapter().getPlayer(name);
+    }
+
     public abstract @NotNull String getPlayerName(@NotNull UUID uuid);
 
     public abstract void executeGameEndCommands(@NotNull ThimblePlayer winner);

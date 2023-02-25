@@ -47,6 +47,8 @@ public interface PlayerAdapter<P, L> {
 
     @Nullable Player getPlayer(@NotNull UUID uuid);
 
+    @Nullable Player getPlayer(@NotNull String name);
+
     @NotNull Player asAbstractPlayer(@NotNull P player);
 
     @NotNull L asPlatform(@NotNull Location location);

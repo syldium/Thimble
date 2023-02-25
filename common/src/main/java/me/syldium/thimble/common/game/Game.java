@@ -223,6 +223,7 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
         if (this.leaderboard.add(player)) {
             this.players.updateAllScoreboards(ThimblePlaceholder.TOP_PLAYER, ThimblePlaceholder.TOP_POINTS);
         }
+        this.plugin.getScoreboardService().updateScoreboard(player, ThimblePlaceholder.POINTS);
     }
 
     /**

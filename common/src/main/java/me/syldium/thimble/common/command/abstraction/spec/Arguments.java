@@ -43,4 +43,8 @@ public interface Arguments {
     static @NotNull Argument<String> string(@NotNull String name) {
         return new StringArgument(name);
     }
+
+    static @NotNull PlayerArgument player() {
+        return new PlayerArgument("player");
+    }
 }

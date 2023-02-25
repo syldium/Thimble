@@ -5,6 +5,7 @@ import me.syldium.thimble.common.command.abstraction.CommandException;
 import me.syldium.thimble.common.command.abstraction.Sender;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -19,15 +20,18 @@ public abstract class Argument<T> implements ComponentLike {
         this.name = name;
     }
 
-    public String getName() {
+    @Contract(pure = true)
+    public @NotNull String getName() {
         return this.name;
     }
 
+    @Contract(pure = true)
     public boolean isRequired() {
         return this.required;
     }
 
     @Override
+    @Contract(pure = true)
     public @NotNull Component asComponent() {
         if (this.required) {
             return Component.text("<" + this.name + ">");
@@ -35,6 +39,7 @@ public abstract class Argument<T> implements ComponentLike {
         return Component.text("[" + this.name + "]");
     }
 
+    @Contract("-> this")
     public @NotNull Argument<T> optional() {
         this.required = false;
         return this;

@@ -52,6 +52,7 @@ public enum MessageKey {
     FEEDBACK_GAME_JOINED("feedback.game.joined"),
     FEEDBACK_GAME_LEFT("feedback.game.left"),
     FEEDBACK_GAME_NOT_IN_GAME("feedback.game.not-in-game"),
+    FEEDBACK_GAME_PLAYER_UNKNOWN("feedback.game.player.unknown"),
     FEEDBACK_GAME_STARTED_GAME("feedback.game.started-game"),
     FEEDBACK_GAME_STATS("feedback.game.stats"),
     FEEDBACK_GAME_STATS_UNKNOWN("feedback.game.stats.unknown"),
