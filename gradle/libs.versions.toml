@@ -1,9 +1,9 @@
 [versions]
-adventure = "4.13.0"
+adventure = "4.14.0"
 adventurePlatform = "4.3.0"
 annotations = "24.0.1"
-jupiter = "5.9.2"
-paper = "1.19.4-R0.1-SNAPSHOT"
+jupiter = "5.9.3"
+paper = "1.20-R0.1-SNAPSHOT"
 sponge = "7.4.0"
 
 [libraries]
