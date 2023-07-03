@@ -58,7 +58,7 @@ public class BukkitSavedPlayer implements SavedPlayer<Player> {
         if (withLocation) player.teleport(this.location);
         if (restoreInventory) player.getInventory().setContents(this.inventory);
         player.addPotionEffects(this.effects);
-        player.setHealth(this.health);
+        player.setHealth(Math.min(this.health, player.getMaxHealth()));
         player.setFoodLevel(this.food);
         player.setSaturation(this.saturation);
         player.setExp(this.experience);
