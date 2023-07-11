@@ -7,14 +7,15 @@ dependencies {
     api(libs.minimessage) {
         transitive = false
     }
-    compileOnly 'com.mojang:brigadier:1.0.17'
+    compileOnly 'com.mojang:brigadier:1.1.8'
     compileOnly 'com.google.code.gson:gson:2.8.9'
 
-    testImplementation(libs.bundles.testDependencies)
+    testImplementation(libs.junitJupiter)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation project(':common:configurate4')
     testImplementation 'org.spongepowered:configurate-gson:4.1.2'
     testImplementation(libs.adventurePlainSerializer)
-    testRuntimeOnly 'org.xerial:sqlite-jdbc:3.36.0.3'
+    testRuntimeOnly 'org.xerial:sqlite-jdbc:3.42.0.0'
 }
 
 test {

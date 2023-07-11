@@ -33,7 +33,7 @@ public interface DataService extends AutoCloseable {
     enum Type {
         H2(Dependency.H2_ENGINE, "org.h2.Driver"),
         MARIADB(Dependency.MARIADB_DRIVER, "org.mariadb.jdbc.Driver"),
-        MYSQL(Dependency.MYSQL_DRIVER, "com.mysql.jdbc.Driver"),
+        MYSQL(Dependency.MYSQL_DRIVER, "com.mysql.cj.jdbc.Driver"),
         POSTGRESQL(Dependency.POSTGRESQL_DRIVER, "org.postgresql.Driver"),
         SQLITE(Dependency.SQLITE_DRIVER, "org.sqlite.JDBC");
 
