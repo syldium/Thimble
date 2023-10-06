@@ -56,6 +56,10 @@ public final class PacketUtil {
                         }
                     }
                 }
+                final Class<?> serverCommonPacketListenerImpl = findClass(findMcClassName("server.network.ServerCommonPacketListenerImpl"));
+                if (serverCommonPacketListenerImpl != null) {
+                    playerConnectionClass = serverCommonPacketListenerImpl;
+                }
                 playerConnectionSendPacket = findMethod(playerConnectionClass, new String[]{"sendPacket", "send"}, void.class, packetClass);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();

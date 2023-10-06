@@ -197,6 +197,8 @@ public class CraftBukkitFacet {
         private static final Object ENUM_SB_HEALTH_DISPLAY_INTEGER = findEnum(ENUM_SB_HEALTH_DISPLAY, "INTEGER", 0);
         private static final Object ENUM_SB_ACTION_CHANGE = findEnum(ENUM_SB_ACTION, "CHANGE", 0);
         private static final Object ENUM_SB_ACTION_REMOVE = findEnum(ENUM_SB_ACTION, "REMOVE", 1);
+        private static final Class<?> DISPLAY_SLOT_TYPE;
+        private static final Object SIDEBAR_DISPLAY_SLOT;
 
         static {
             Class<?> serializableTeamClass = null;
@@ -211,6 +213,9 @@ public class CraftBukkitFacet {
             }
             CLASS_SERIALIZABLE_TEAM = serializableTeamClass;
             NEW_SERIALIZABLE_TEAM = newSerializableTeam;
+            Class<?> displaySlotEnum = findClass(findMcClassName("world.scores.DisplaySlot"));
+            DISPLAY_SLOT_TYPE = displaySlotEnum != null ? displaySlotEnum : int.class;
+            SIDEBAR_DISPLAY_SLOT = displaySlotEnum != null ? findEnum(DISPLAY_SLOT_TYPE, "SIDEBAR", 1) : 1;
 
             for (Class<?> clazz : Arrays.asList(CLASS_OBJECTIVE_PACKET, CLASS_DISPLAY_OBJECTIVE_PACKET, CLASS_SCORE_PACKET, CLASS_TEAM_PACKET, CLASS_SERIALIZABLE_TEAM)) {
                 if (clazz == null) continue;
@@ -289,7 +294,7 @@ public class CraftBukkitFacet {
         protected void sendDisplaySlotPacket() {
             try {
                 Object packet = NEW_DISPLAY_OBJECTIVE_PACKET.invoke();
-                this.setField(packet, int.class, 1);
+                this.setField(packet, DISPLAY_SLOT_TYPE, SIDEBAR_DISPLAY_SLOT);
                 this.setField(packet, String.class, this.id);
                 this.sendPacket(packet);
             } catch (Throwable throwable) {
