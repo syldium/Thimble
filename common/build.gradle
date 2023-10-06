@@ -15,7 +15,7 @@ dependencies {
     testImplementation project(':common:configurate4')
     testImplementation 'org.spongepowered:configurate-gson:4.1.2'
     testImplementation(libs.adventurePlainSerializer)
-    testRuntimeOnly 'org.xerial:sqlite-jdbc:3.42.0.0'
+    testRuntimeOnly 'org.xerial:sqlite-jdbc:3.43.0.0'
 }
 
 test {

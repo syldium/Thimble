@@ -15,8 +15,8 @@ dependencies {
     compileOnly(libs.paper) {
         transitive = false
     }
-    compileOnly 'me.clip:placeholderapi:2.11.2'
-    compileOnly('com.alessiodp.parties:parties-api:3.2.6')
+    compileOnly 'me.clip:placeholderapi:2.11.4'
+    compileOnly('com.alessiodp.parties:parties-api:3.2.13')
     compileOnly('com.sk89q.worldedit:worldedit-bukkit:7.2.9') {
         exclude(module: 'antlr4')
         exclude(module: 'core')
