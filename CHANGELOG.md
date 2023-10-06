@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## [1.5.1] - 2023-10-06
+### Added
+- Updated adventure-platform to fully support Minecraft 1.20.2.
+
+## Fixed
+- Ensure that the restored health is not greater than the maximum health.
+
 ## [1.5.0] - 2022-12-26
 ### Added
 - Updated adventure-platform to fully support Minecraft 1.19.3.
