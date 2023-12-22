@@ -11,6 +11,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -173,7 +174,8 @@ public class CraftBukkitFacet {
                 findMcClassName("network.protocol.game.PacketPlayOutScoreboardScore"),
                 findMcClassName("network.protocol.game.ClientboundSetScorePacket")
         );
-        protected static final PacketInvoker NEW_SCORE_PACKET = PacketInvoker.find(CLASS_SCORE_PACKET);
+        protected static final MethodHandle NEW_SCORE_PACKET;
+        protected static final MethodHandle RESET_SCORE_PACKET;
         protected static final Class<?> CLASS_TEAM_PACKET = findClass(
                 findNmsClassName("PacketPlayOutScoreboardTeam"),
                 findMcClassName("network.protocol.game.PacketPlayOutScoreboardTeam"),
@@ -195,8 +197,8 @@ public class CraftBukkitFacet {
                 findMcClassName("server.ServerScoreboard$Method")
         );
         private static final Object ENUM_SB_HEALTH_DISPLAY_INTEGER = findEnum(ENUM_SB_HEALTH_DISPLAY, "INTEGER", 0);
-        private static final Object ENUM_SB_ACTION_CHANGE = findEnum(ENUM_SB_ACTION, "CHANGE", 0);
-        private static final Object ENUM_SB_ACTION_REMOVE = findEnum(ENUM_SB_ACTION, "REMOVE", 1);
+        protected static final Object ENUM_SB_ACTION_CHANGE = findEnum(ENUM_SB_ACTION, "CHANGE", 0);
+        protected static final Object ENUM_SB_ACTION_REMOVE = findEnum(ENUM_SB_ACTION, "REMOVE", 1);
         private static final Class<?> DISPLAY_SLOT_TYPE;
         private static final Object SIDEBAR_DISPLAY_SLOT;
 
@@ -216,6 +218,25 @@ public class CraftBukkitFacet {
             Class<?> displaySlotEnum = findClass(findMcClassName("world.scores.DisplaySlot"));
             DISPLAY_SLOT_TYPE = displaySlotEnum != null ? displaySlotEnum : int.class;
             SIDEBAR_DISPLAY_SLOT = displaySlotEnum != null ? findEnum(DISPLAY_SLOT_TYPE, "SIDEBAR", 1) : 1;
+
+            Class<?> numberFormatClass = findClass(
+                    findMcClassName("network.chat.numbers.NumberFormat")
+            );
+            if (numberFormatClass != null) { // 1.20.3
+                Class<?> resetScoreClass = findClass(
+                        findMcClassName("network.protocol.game.ClientboundResetScorePacket")
+                );
+                NEW_SCORE_PACKET = MinecraftReflection.findConstructor(CLASS_SCORE_PACKET, String.class, String.class, int.class, CLASS_CHAT_COMPONENT, numberFormatClass);
+                RESET_SCORE_PACKET = MinecraftReflection.findConstructor(resetScoreClass, String.class, String.class);
+            } else {
+                MethodHandle newScorePacket = MinecraftReflection.findConstructor(CLASS_SCORE_PACKET, ENUM_SB_ACTION, String.class, String.class, int.class);
+                if (newScorePacket != null) { // 1.13+
+                    NEW_SCORE_PACKET = newScorePacket;
+                } else {
+                    NEW_SCORE_PACKET = MinecraftReflection.findConstructor(CLASS_SCORE_PACKET);
+                }
+                RESET_SCORE_PACKET = null;
+            }
 
             for (Class<?> clazz : Arrays.asList(CLASS_OBJECTIVE_PACKET, CLASS_DISPLAY_OBJECTIVE_PACKET, CLASS_SCORE_PACKET, CLASS_TEAM_PACKET, CLASS_SERIALIZABLE_TEAM)) {
                 if (clazz == null) continue;
@@ -394,6 +415,28 @@ public class CraftBukkitFacet {
 
         ScoreboardPacket1_13(@NotNull Player player, @NotNull Scoreboard scoreboard) {
             super(player, scoreboard);
+        }
+
+        @Override
+        public void sendScorePacket(int score, ScoreboardAction action) {
+            try {
+                String objName = getColorCode(score);
+                Object enumAction = action == ScoreboardAction.REMOVE ? ENUM_SB_ACTION_REMOVE : ENUM_SB_ACTION_CHANGE;
+
+                if (RESET_SCORE_PACKET == null) { // Pre 1.20.3
+                    sendPacket(NEW_SCORE_PACKET.invoke(enumAction, this.id, objName, score));
+                    return;
+                }
+
+                if (action == ScoreboardAction.REMOVE) {
+                    sendPacket(RESET_SCORE_PACKET.invoke(objName, this.id));
+                    return;
+                }
+
+                sendPacket(NEW_SCORE_PACKET.invoke(objName, this.id, score, null, null));
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
 
         @Override

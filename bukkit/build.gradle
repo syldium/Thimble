@@ -1,5 +1,5 @@
 plugins {
-    id 'xyz.jpenilla.run-paper' version '2.2.0'
+    id 'xyz.jpenilla.run-paper' version '2.2.2'
 }
 
 apply plugin: 'com.github.johnrengelman.shadow'
@@ -49,6 +49,7 @@ shadowJar {
 
     relocate 'net.kyori.adventure', 'me.syldium.thimble.lib.adventure'
     relocate 'net.kyori.examination', 'me.syldium.thimble.lib.examination'
+    relocate 'net.kyori.option', 'me.syldium.thimble.lib.option'
     relocate 'org.bstats', 'me.syldium.thimble.lib.metrics'
     minimize()
 }
@@ -58,5 +59,5 @@ artifacts {
 }
 
 runServer {
-    minecraftVersion('1.20.2')
+    minecraftVersion('1.20.4')
 }
