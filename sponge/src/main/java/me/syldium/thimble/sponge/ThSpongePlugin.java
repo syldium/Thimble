@@ -67,9 +67,9 @@ import static me.syldium.thimble.common.util.MinecraftVersion.setVersion;
 @Plugin(
         id = "thimble",
         name = "Thimble",
-        version = "@version@",
-        description = "@description@",
-        url = "@url@",
+        version = BuildParameters.VERSION,
+        description = BuildParameters.DESCRIPTION,
+        url = BuildParameters.URL,
         authors = {"syldium"}
 )
 public class ThSpongePlugin extends ThimblePlugin {

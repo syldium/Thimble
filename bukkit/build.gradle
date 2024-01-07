@@ -21,7 +21,6 @@ dependencies {
         exclude(module: 'adventure-api')
     }
     compileOnly(libs.paperBrigadier)
-    compileOnly 'it.unimi.dsi:fastutil:8.4.4'
     implementation("net.kyori:adventure-platform-bukkit:${libs.versions.adventurePlatform.get()}") {
         exclude(module: 'checker-qual')
         exclude(module: 'guava')

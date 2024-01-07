@@ -1,0 +1,10 @@
+package me.syldium.thimble.sponge;
+
+final class BuildParameters {
+    public static final String DESCRIPTION = "{{ description }}";
+    public static final String VERSION = "{{ version }}";
+    public static final String URL = "{{ url }}";
+
+    private BuildParameters() {
+    }
+}

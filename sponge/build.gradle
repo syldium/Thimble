@@ -1,5 +1,5 @@
 plugins {
-    id 'net.kyori.blossom' version '1.3.1'
+    id 'net.kyori.blossom' version '2.1.0'
 }
 
 apply plugin: 'com.github.johnrengelman.shadow'
@@ -18,11 +18,16 @@ dependencies {
     }
 }
 
-blossom {
-    replaceTokenIn('src/main/java/me/syldium/thimble/sponge/ThSpongePlugin.java')
-    replaceToken '@description@', project.description
-    replaceToken '@version@', project.ext.fullVersion
-    replaceToken '@url@', "https://github.com/syldium/Thimble"
+sourceSets {
+    main {
+        blossom {
+            javaSources {
+                property("description", project.description.toString())
+                property("version", project.ext.fullVersion)
+                property("url", "https://github.com/syldium/Thimble")
+            }
+        }
+    }
 }
 
 shadowJar {
