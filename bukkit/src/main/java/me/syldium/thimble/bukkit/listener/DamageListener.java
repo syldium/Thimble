@@ -4,7 +4,6 @@ import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.bukkit.ThBukkitPlugin;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,7 +44,8 @@ public class DamageListener implements Listener {
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (!this.plugin.getGameService().playerGame(event.getEntity().getUniqueId()).isPresent()) return;
 
-        HumanEntity player = event.getEntity();
+        // Use the method on Player on 1.8 servers
+        Player player = (Player) event.getEntity();
         if (player.getFoodLevel() > event.getFoodLevel()) {
             event.setCancelled(true);
         }
