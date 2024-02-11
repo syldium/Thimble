@@ -6,14 +6,17 @@ import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.common.game.Arena;
 import me.syldium.thimble.mock.util.MockUtil;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ArenaTest {
+
+    private @TempDir File dataFolder;
 
     @Test
     public void playerCount() {
@@ -29,8 +32,8 @@ public class ArenaTest {
     }
 
     @Test
-    public void locations() throws IOException {
-        PluginMock plugin = new PluginMock();
+    public void locations() {
+        PluginMock plugin = new PluginMock(this.dataFolder);
         Arena arena = new Arena(plugin, "arena");
         assertThrows(IllegalStateException.class, () -> arena.addPlayer(UUID.randomUUID()));
         WorldKey world = MockUtil.randomKey();

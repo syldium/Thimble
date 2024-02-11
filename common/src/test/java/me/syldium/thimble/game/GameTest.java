@@ -19,9 +19,11 @@ import me.syldium.thimble.mock.util.MockUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,10 +40,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class GameTest {
 
-    private final PluginMock plugin;
+    private @TempDir File dataFolder;
+    private PluginMock plugin;
 
-    public GameTest() throws IOException {
-        this.plugin = new PluginMock();
+    @BeforeEach
+    public void setUp() {
+        this.plugin = new PluginMock(this.dataFolder);
     }
 
     @AfterEach

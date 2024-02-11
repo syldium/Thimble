@@ -2,7 +2,7 @@
 adventure = "4.15.0"
 adventurePlatform = "4.3.2"
 annotations = "24.0.1"
-jupiter = "5.10.1"
+jupiter = "5.10.2"
 paper = "1.20.4-R0.1-SNAPSHOT"
 sponge = "7.4.0"
 
@@ -10,7 +10,7 @@ sponge = "7.4.0"
 adventure = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 adventurePlainSerializer = { module = "net.kyori:adventure-text-serializer-plain", version.ref = "adventure" }
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
-junitJupiter = { module="org.junit.jupiter:junit-jupiter", version.ref="jupiter" }
+junitJupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jupiter" }
 minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
 paper = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
 paperBrigadier = { module = "io.papermc.paper:paper-mojangapi", version.ref = "paper" }

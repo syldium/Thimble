@@ -9,9 +9,11 @@ import me.syldium.thimble.api.util.WorldKey;
 import me.syldium.thimble.common.game.Game;
 import me.syldium.thimble.common.service.GameServiceImpl;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.Optional;
 import java.util.Random;
 
@@ -19,10 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GameServiceTest {
 
-    private final PluginMock plugin;
+    private @TempDir File dataFolder;
+    private PluginMock plugin;
 
-    public GameServiceTest() throws IOException {
-        this.plugin = new PluginMock();
+    @BeforeEach
+    public void setUp() {
+        this.plugin = new PluginMock(this.dataFolder);
     }
 
     @Test

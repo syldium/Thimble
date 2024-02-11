@@ -22,8 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -45,9 +43,8 @@ public class PluginMock extends ThimblePlugin {
     private final PlayerAdapterMock playerAdapter;
     private final SavedPlayersManagerMock savedPlayersManager;
 
-    public PluginMock() throws IOException {
-        this.dataFolder = Files.createTempDirectory("ThimbleTest-").toFile();
-        this.dataFolder.deleteOnExit();
+    public PluginMock(@NotNull File dataFolder) {
+        this.dataFolder = dataFolder;
         this.configManager = new ConfigurateManager(this);
         this.commandManager = new CommandManager();
         this.scheduler = new TickScheduler();

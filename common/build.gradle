@@ -11,11 +11,12 @@ dependencies {
     compileOnly 'com.google.code.gson:gson:2.8.9'
 
     testImplementation(libs.junitJupiter)
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation project(':common:configurate4')
     testImplementation 'org.spongepowered:configurate-gson:4.1.2'
     testImplementation(libs.adventurePlainSerializer)
     testRuntimeOnly 'org.xerial:sqlite-jdbc:3.44.1.0'
+    testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.12'
 }
 
 test {
