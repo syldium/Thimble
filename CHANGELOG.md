@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## [1.5.2] - 2024-02-11
+### Added
+- Updated adventure-platform to fully support Minecraft 1.20.3 and 1.20.4.
+
+## Fixed
+- Fixed exception on 1.8 servers when detecting player food level changes.
+
 ## [1.5.1] - 2023-10-06
 ### Added
 - Updated adventure-platform to fully support Minecraft 1.20.2.
