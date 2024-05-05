@@ -100,9 +100,9 @@ public final class BlockSelectionInventory implements Listener {
                 ItemMeta meta = itemStack.getItemMeta();
                 if (previous.isSimilar(itemStack)) {
                     meta.setDisplayName(null);
-                    meta.removeEnchant(Enchantment.LUCK);
+                    meta.removeEnchant(Enchantment.LURE);
                 } else {
-                    meta.addEnchant(Enchantment.LUCK, 1, true);
+                    meta.addEnchant(Enchantment.LURE, 1, true);
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 }
                 itemStack.setItemMeta(meta);
@@ -141,7 +141,7 @@ public final class BlockSelectionInventory implements Listener {
                 // Adds an enchantment glint
                 ItemMeta meta = itemStack.getItemMeta();
                 meta.setDisplayName(displayName);
-                meta.addEnchant(Enchantment.LUCK, 1, true);
+                meta.addEnchant(Enchantment.LURE, 1, true);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 itemStack.setItemMeta(meta);
             } else if (!players.isEmpty()) {

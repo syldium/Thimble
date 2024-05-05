@@ -4,7 +4,6 @@ import me.syldium.thimble.common.util.Fireworks;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +19,7 @@ public class BukkitFireworks extends Fireworks {
     @Override
     public void spawn(int count) {
         for (int i = 0; i < count; i++){
-            Firework firework = (Firework) this.from.getWorld().spawnEntity(this.from, EntityType.FIREWORK);
+            Firework firework = this.from.getWorld().spawn(this.from, Firework.class);
             FireworkMeta meta = firework.getFireworkMeta();
             FireworkEffect effect = FireworkEffect.builder()
                     .flicker(this.random.nextBoolean())
