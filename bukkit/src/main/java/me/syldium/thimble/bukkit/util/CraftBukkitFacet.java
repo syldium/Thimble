@@ -176,6 +176,7 @@ public class CraftBukkitFacet {
         );
         protected static final MethodHandle NEW_SCORE_PACKET;
         protected static final MethodHandle RESET_SCORE_PACKET;
+        protected static final boolean SCORE_OPTIONAL_COMPONENTS;
         protected static final Class<?> CLASS_TEAM_PACKET = findClass(
                 findNmsClassName("PacketPlayOutScoreboardTeam"),
                 findMcClassName("network.protocol.game.PacketPlayOutScoreboardTeam"),
@@ -222,11 +223,17 @@ public class CraftBukkitFacet {
             Class<?> numberFormatClass = findClass(
                     findMcClassName("network.chat.numbers.NumberFormat")
             );
+            boolean scoreOptionalComponents = false;
             if (numberFormatClass != null) { // 1.20.3
                 Class<?> resetScoreClass = findClass(
                         findMcClassName("network.protocol.game.ClientboundResetScorePacket")
                 );
-                NEW_SCORE_PACKET = MinecraftReflection.findConstructor(CLASS_SCORE_PACKET, String.class, String.class, int.class, CLASS_CHAT_COMPONENT, numberFormatClass);
+                MethodHandle newScorePacket = MinecraftReflection.findConstructor(CLASS_SCORE_PACKET, String.class, String.class, int.class, CLASS_CHAT_COMPONENT, numberFormatClass);
+                if (newScorePacket == null) {
+                    newScorePacket = MinecraftReflection.findConstructor(CLASS_SCORE_PACKET, String.class, String.class, int.class, Optional.class, Optional.class);
+                    scoreOptionalComponents = true;
+                }
+                NEW_SCORE_PACKET = newScorePacket;
                 RESET_SCORE_PACKET = MinecraftReflection.findConstructor(resetScoreClass, String.class, String.class);
             } else {
                 MethodHandle newScorePacket = MinecraftReflection.findConstructor(CLASS_SCORE_PACKET, ENUM_SB_ACTION, String.class, String.class, int.class);
@@ -237,6 +244,7 @@ public class CraftBukkitFacet {
                 }
                 RESET_SCORE_PACKET = null;
             }
+            SCORE_OPTIONAL_COMPONENTS = scoreOptionalComponents;
 
             for (Class<?> clazz : Arrays.asList(CLASS_OBJECTIVE_PACKET, CLASS_DISPLAY_OBJECTIVE_PACKET, CLASS_SCORE_PACKET, CLASS_TEAM_PACKET, CLASS_SERIALIZABLE_TEAM)) {
                 if (clazz == null) continue;
@@ -303,6 +311,7 @@ public class CraftBukkitFacet {
 
                 if (mode != ObjectiveMode.REMOVE) {
                     this.setComponentField(packet, title, 1);
+                    this.setField(packet, Optional.class, Optional.empty()); // Number format for 1.20.5+, previously nullable
                     this.setField(packet, ENUM_SB_HEALTH_DISPLAY, ENUM_SB_HEALTH_DISPLAY_INTEGER);
                 }
 
@@ -433,7 +442,11 @@ public class CraftBukkitFacet {
                     return;
                 }
 
-                sendPacket(NEW_SCORE_PACKET.invoke(objName, this.id, score, null, null));
+                if (SCORE_OPTIONAL_COMPONENTS) {
+                    sendPacket(NEW_SCORE_PACKET.invoke(objName, this.id, score, Optional.empty(), Optional.empty()));
+                } else {
+                    sendPacket(NEW_SCORE_PACKET.invoke(objName, this.id, score, null, null));
+                }
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
