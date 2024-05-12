@@ -83,7 +83,7 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
         this.task = plugin.startGameTask(this);
 
         // Create a media that will be seen by the jumping player
-        this.jumperMedia = TimedMedia.from(plugin.getMainConfig(), "jump");
+        this.jumperMedia = TimedMedia.from(plugin.getMainConfig(), plugin.getMessageService(), "jump");
 
         // Read some values from the config
         this.countdownTicks = this.timer;

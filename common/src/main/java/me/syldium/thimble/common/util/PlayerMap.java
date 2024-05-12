@@ -30,7 +30,7 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
 
     public PlayerMap(@NotNull ThimblePlugin plugin) {
         this.plugin = plugin;
-        this.media = TimedMedia.from(plugin.getMainConfig(), "global");
+        this.media = TimedMedia.from(plugin.getMainConfig(), plugin.getMessageService(), "global");
     }
 
     public boolean add(@NotNull E player) {

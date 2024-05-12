@@ -4,6 +4,7 @@ import me.syldium.thimble.api.Location;
 import me.syldium.thimble.api.util.BlockPos;
 import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.api.util.WorldKey;
+import me.syldium.thimble.common.player.MessageKey;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.util.Index;
@@ -136,5 +137,13 @@ public interface ConfigNode {
         if (raw == null) return def;
         E e = index.value(raw);
         return e == null ? def : e;
+    }
+
+    @Contract("_, !null -> !null")
+    default MessageKey getMessageKey(@NotNull @NodePath String path, @Nullable MessageKey def) {
+        String raw = this.getString(path);
+        if (raw == null) return def;
+        MessageKey key = MessageKey.fromAccessor(raw);
+        return key == null ? def : key;
     }
 }

@@ -1,5 +1,7 @@
 package me.syldium.thimble.common.config;
 
+import me.syldium.thimble.common.player.MessageKey;
+import me.syldium.thimble.common.player.MessageRange;
 import me.syldium.thimble.common.player.media.TimedMedia;
 import me.syldium.thimble.common.service.DataService;
 import me.syldium.thimble.common.util.EnumUtil;
@@ -122,6 +124,15 @@ public class MainConfig {
 
     public @NotNull BossBar.Color getBossBarColor(@NotNull String audienceName) {
         return this.display.getOrCreateNode(audienceName).getIndexable("bossbar-color", BossBar.Color.NAMES, "global".equals(audienceName) ? BossBar.Color.YELLOW : BossBar.Color.RED);
+    }
+
+    public @NotNull MessageRange getTimedMessage(@NotNull String audienceName) {
+        final ConfigNode node = this.display.getOrCreateNode(audienceName);
+        final ConfigNode rangeNode = node.getNode("message", "range");
+        if (rangeNode != null) {
+            return MessageRange.of(rangeNode, new MessageRange(MessageKey.BOSS_BAR_REMAINING_TIME));
+        }
+        return new MessageRange(node.getMessageKey("message", MessageKey.BOSS_BAR_REMAINING_TIME));
     }
 
     public @NotNull Locale getLocale() {

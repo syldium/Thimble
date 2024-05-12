@@ -3,6 +3,7 @@ package me.syldium.thimble.common.player;
 import me.syldium.thimble.common.service.MessageService;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.util.Locale;
@@ -88,6 +89,9 @@ public enum MessageKey {
     HELP_STATS("help.stats"),
     HELP_VERSION("help.version"),
 
+    BOSS_BAR_REMAINING_TIME("bossbar.remaining-time"),
+    BOSS_BAR_REMAINING_TIME_MINUTES("bossbar.remaining-time.minutes"),
+    BOSS_BAR_STARTING("bossbar.starting"),
     INVENTORY_BLOCK_SELECTION("inventory.block-selection"),
 
     UNIT_JUMP("unit.jump"),
@@ -109,6 +113,15 @@ public enum MessageKey {
 
     public @NotNull String getAccessor() {
         return this.accessor;
+    }
+
+    public static @Nullable MessageKey fromAccessor(@NotNull String accessor) {
+        for (MessageKey key : values()) {
+            if (key.accessor.equals(accessor)) {
+                return key;
+            }
+        }
+        return null;
     }
 
     public enum Unit {

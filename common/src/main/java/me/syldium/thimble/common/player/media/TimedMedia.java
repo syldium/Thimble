@@ -2,6 +2,7 @@ package me.syldium.thimble.common.player.media;
 
 import me.syldium.thimble.common.config.MainConfig;
 import me.syldium.thimble.common.player.PlayerAudience;
+import me.syldium.thimble.common.service.MessageService;
 import me.syldium.thimble.common.util.Task;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -40,9 +41,13 @@ public interface TimedMedia {
      */
     void hide(@NotNull PlayerAudience audience);
 
-    static @NotNull TimedMedia from(@NotNull MainConfig config, @NotNull String audienceName) {
+    static @NotNull TimedMedia from(@NotNull MainConfig config, @NotNull MessageService service, @NotNull String audienceName) {
         if (config.getDisplayType(audienceName) == Type.BOSSBAR) {
-            return new BossBarTimedMedia(BossBar.bossBar(Component.empty(), 1.0f, config.getBossBarColor(audienceName), config.getBossBarOverlay(audienceName)));
+            return new BossBarTimedMedia(
+                    BossBar.bossBar(Component.empty(), 1.0f, config.getBossBarColor(audienceName), config.getBossBarOverlay(audienceName)),
+                    service,
+                    config.getTimedMessage(audienceName)
+            );
         }
         return new ExperienceTimedMedia();
     }

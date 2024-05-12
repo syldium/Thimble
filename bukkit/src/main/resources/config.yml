@@ -89,10 +89,17 @@ display:
     type: bossbar
     bossbar-color: yellow
     bossbar-overlay: progress
+    message:
+      range:
+        60:
+          key: bossbar.remaining-time.minutes
+        0:
+          key: bossbar.remaining-time
   jump:
     type: bossbar
     bossbar-color: red
     bossbar-overlay: progress
+    message: bossbar.remaining-time
 
 # Sounds used. https://minecraft.gamepedia.com/Sounds.json#Sound_events
 #sound:
