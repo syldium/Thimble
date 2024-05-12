@@ -13,5 +13,4 @@ annotations = { module = "org.jetbrains:annotations", version.ref = "annotations
 junitJupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jupiter" }
 minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
 paper = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
-paperBrigadier = { module = "io.papermc.paper:paper-mojangapi", version.ref = "paper" }
 sponge = { module = "org.spongepowered:spongeapi", version.ref = "sponge" }

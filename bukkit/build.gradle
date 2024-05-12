@@ -24,7 +24,6 @@ dependencies {
     compileOnly(libs.paper) {
         exclude(module: 'adventure-api')
     }
-    compileOnly(libs.paperBrigadier)
     implementation("net.kyori:adventure-platform-bukkit:${libs.versions.adventurePlatform.get()}") {
         exclude(module: 'checker-qual')
         exclude(module: 'guava')
