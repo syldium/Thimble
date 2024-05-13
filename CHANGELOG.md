@@ -1,18 +1,26 @@
 Changelog
 =========
 
+## [1.5.3] - 2024-05-13
+### Added
+- Updated injection points to fully support Minecraft 1.20.5 and 1.20.6.
+- Allowed customizing the title of the waiting progress bar via `bossbar.remaining-time` messages.
+
+### Other
+- The plugin is now marked as compatible with Mojang mapped servers.
+
 ## [1.5.2] - 2024-02-11
 ### Added
 - Updated adventure-platform to fully support Minecraft 1.20.3 and 1.20.4.
 
-## Fixed
+### Fixed
 - Fixed exception on 1.8 servers when detecting player food level changes.
 
 ## [1.5.1] - 2023-10-06
 ### Added
 - Updated adventure-platform to fully support Minecraft 1.20.2.
 
-## Fixed
+### Fixed
 - Ensure that the restored health is not greater than the maximum health.
 
 ## [1.5.0] - 2022-12-26
