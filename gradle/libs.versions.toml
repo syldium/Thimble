@@ -1,5 +1,5 @@
 [versions]
-adventure = "4.16.0"
+adventure = "4.17.0"
 adventurePlatform = "4.3.3-SNAPSHOT"
 annotations = "24.1.0"
 jupiter = "5.10.2"
