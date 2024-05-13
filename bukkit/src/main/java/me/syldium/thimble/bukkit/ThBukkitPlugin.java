@@ -5,12 +5,13 @@ import me.syldium.thimble.api.bukkit.BukkitAdapter;
 import me.syldium.thimble.api.player.ThimblePlayer;
 import me.syldium.thimble.api.service.GameService;
 import me.syldium.thimble.api.service.StatsService;
+import me.syldium.thimble.bukkit.command.PaperCommand;
 import me.syldium.thimble.bukkit.config.BlockConfig;
 import me.syldium.thimble.common.util.ServerType;
 import me.syldium.thimble.bukkit.adapter.BukkitEventAdapter;
 import me.syldium.thimble.bukkit.adapter.BukkitPlayerAdapter;
 import me.syldium.thimble.bukkit.command.BukkitCommandExecutor;
-import me.syldium.thimble.bukkit.command.PaperCommandExecutor;
+import me.syldium.thimble.bukkit.command.PaperAsyncRegisteredCommand;
 import me.syldium.thimble.bukkit.config.BukkitConfigManager;
 import me.syldium.thimble.bukkit.config.BukkitSavedPlayersManager;
 import me.syldium.thimble.bukkit.hook.PluginHook;
@@ -77,8 +78,10 @@ public class ThBukkitPlugin extends ThimblePlugin {
         List<String> aliases = bootstrap.getConfig().isList("aliases") ?
                 bootstrap.getConfig().getStringList("aliases")
                 : Collections.singletonList("th");
-        if (classExists("com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent")) {
-            this.commandExecutor = new PaperCommandExecutor<>(this, command, aliases);
+        if (classExists("io.papermc.paper.command.brigadier.Commands")) {
+            this.commandExecutor = new PaperCommand(this, command, aliases);
+        } else if (classExists("com.destroystokyo.paper.event.brigadier.CommandRegisteredEvent")) {
+            this.commandExecutor = new PaperAsyncRegisteredCommand<>(this, command, aliases);
         } else {
             this.commandExecutor = new BukkitCommandExecutor(this, command, aliases);
         }
