@@ -40,6 +40,12 @@ processResources {
     }
 }
 
+jar {
+    manifest {
+        attributes 'paperweight-mappings-namespace': 'mojang'
+    }
+}
+
 shadowJar {
     archiveBaseName = "${project.parent.name}-Bukkit"
     archiveClassifier = ''
