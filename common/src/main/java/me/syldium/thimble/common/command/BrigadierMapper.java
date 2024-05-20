@@ -28,12 +28,13 @@ public class BrigadierMapper<S> {
     }
 
     public @NotNull LiteralCommandNode<S> build(@NotNull LiteralCommandNode<S> node, @NotNull SuggestionProvider<S> suggestionProvider) {
-        LiteralArgumentBuilder<S> builder = LiteralArgumentBuilder.literal(node.getLiteral());
-        builder.then(LiteralArgumentBuilder.literal("help"));
+        final Command<S> executor = node.getCommand();
+        LiteralArgumentBuilder<S> builder = LiteralArgumentBuilder.<S>literal(node.getLiteral()).executes(executor);
+        builder.then(LiteralArgumentBuilder.<S>literal("help").executes(executor));
 
         for (AbstractCommand command : this.commandManager.getMainCommands()) {
             if (command.shouldDisplay()) {
-                builder.then(this.buildCommandNode(command, node.getCommand(), suggestionProvider));
+                builder.then(this.buildCommandNode(command, executor, suggestionProvider));
             }
         }
         return builder.build();
@@ -49,7 +50,7 @@ public class BrigadierMapper<S> {
                     builder.then(this.buildCommandNode(subCommand, executor, suggestionProvider));
                 }
             }
-            return builder.build();
+            return builder.executes(executor).build();
         }
 
         ChildCommand cmd = (ChildCommand) command;
