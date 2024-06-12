@@ -2,7 +2,7 @@ plugins {
     id 'net.kyori.blossom' version '2.1.0'
 }
 
-apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'io.github.goooler.shadow'
 
 dependencies {
     implementation project(':api')
