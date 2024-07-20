@@ -6,6 +6,7 @@ import me.syldium.thimble.common.util.EnumUtil;
 import me.syldium.thimble.common.util.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +27,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static me.syldium.thimble.bukkit.world.BukkitBlockData.IS_FLAT;
+import static me.syldium.thimble.common.ThimblePlugin.classExists;
 
 public final class BukkitUtil {
 
+    private static final boolean HAS_REGISTRY = classExists("org.bukkit.Registry");
     private static final Set<Material> AIR_TYPES = getAllMatching(material -> material.name().endsWith("AIR"));
     private static final Set<Material> WATER_TYPES = getAllMatching(material -> material.name().endsWith("WATER"));
 
@@ -104,7 +108,7 @@ public final class BukkitUtil {
      */
     public static @NotNull Set<Material> getAllMatching(@NotNull Predicate<Material> predicate) {
         Set<Material> set = EnumSet.noneOf(Material.class);
-        for (Material material : Material.values()) {
+        for (Material material : enumerateMaterials()) {
             if (predicate.test(material)) {
                 set.add(material);
             }
@@ -123,7 +127,7 @@ public final class BukkitUtil {
         int[] matched = new int[patterns.length];
 
         Set<Material> set = EnumSet.noneOf(Material.class);
-        for (Material material : Material.values()) {
+        for (Material material : enumerateMaterials()) {
             for (int i = 0; i < patterns.length; i++) {
                 if (patterns[i].matcher(material.name()).matches()) {
                     if (!material.isBlock() || isAir(material)) {
@@ -146,6 +150,15 @@ public final class BukkitUtil {
             }
         }
         return set;
+    }
+
+    /**
+     * Returns all valid block types and item types as an iterable.
+     *
+     * @return All Materials.
+     */
+    private static @NotNull Iterable<Material> enumerateMaterials() {
+        return HAS_REGISTRY ? Registry.MATERIAL : Arrays.asList(Material.values());
     }
 
     /**
