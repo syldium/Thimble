@@ -1,4 +1,4 @@
-package me.syldium.thimble.mock.adpater;
+package me.syldium.thimble.mock.adapter;
 
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.mock.player.PlayerMock;

@@ -235,11 +235,11 @@ public abstract class Game implements ThimbleGame, Runnable, LeaderboardListener
      */
     protected void sendJumpMessage(@NotNull Player player, @NotNull InGamePlayer inGamePlayer, @NotNull JumpVerdict verdict) {
         if (verdict == JumpVerdict.MISSED) {
-            TagResolver lifesPlaceholder = component("lifes", text(inGamePlayer.points()));
+            TagResolver livesPlaceholder = component("lifes", text(inGamePlayer.points()));
             if (inGamePlayer.points() > 1) {
-                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFES, lifesPlaceholder);
+                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIVES, livesPlaceholder);
             } else {
-                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFE, lifesPlaceholder);
+                player.sendActionBar(MessageKey.ACTIONBAR_MISSED_LIFE, livesPlaceholder);
             }
             player.playSound(this.plugin.getMainConfig().getJumpFailedSound());
         } else if (verdict == JumpVerdict.THIMBLE) {

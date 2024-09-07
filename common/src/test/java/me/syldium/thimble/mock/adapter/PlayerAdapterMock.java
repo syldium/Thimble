@@ -1,4 +1,4 @@
-package me.syldium.thimble.mock.adpater;
+package me.syldium.thimble.mock.adapter;
 
 import me.syldium.thimble.PluginMock;
 import me.syldium.thimble.api.util.WorldKey;

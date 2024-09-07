@@ -2,7 +2,7 @@
 
 [Version française](README.fr.md)
 
-A Minecraft plugin for the thimble (dé à coudre) mini game for Paper and Spigot servers from 1.8 to 1.20.4.
+A Minecraft plugin for the thimble (dé à coudre) mini-game for Paper and Spigot servers from 1.8 to 1.21.1.
 
 ## Usage
 

@@ -86,7 +86,7 @@ public interface ThimblePlayerStats extends Identity {
     /**
      * Returns {@code true} whether it's the same player. {@link java.util.UUID#equals(Object)}
      *
-     * @param o An other player.
+     * @param o Another player.
      * @return If so.
      */
     @Contract(pure = true)

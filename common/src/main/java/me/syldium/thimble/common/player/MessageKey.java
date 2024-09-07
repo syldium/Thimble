@@ -16,7 +16,7 @@ public enum MessageKey {
     ACTIONBAR_ENDED("actionbar.ended"),
     ACTIONBAR_MISSED("actionbar.missed"),
     ACTIONBAR_MISSED_LIFE("actionbar.missed.life"),
-    ACTIONBAR_MISSED_LIFES("actionbar.missed.lifes"),
+    ACTIONBAR_MISSED_LIVES("actionbar.missed.lifes"),
     ACTIONBAR_NOT_ENOUGH_PLAYERS("actionbar.not-enough-players"),
     ACTIONBAR_SUCCESSFUL_JUMP("actionbar.successful-jump"),
     ACTIONBAR_THIMBLE("actionbar.thimble"),

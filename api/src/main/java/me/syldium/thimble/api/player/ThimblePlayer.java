@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Range;
 public interface ThimblePlayer extends ThimblePlayerStats {
 
     /**
-     * Gets the number of points - lifes in single mode.
+     * Gets the number of points - lives in single mode.
      *
      * @return A number.
      */
