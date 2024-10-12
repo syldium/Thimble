@@ -13,7 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -48,7 +49,7 @@ public class UpdateChecker implements Runnable {
         this.checkingVersion = true;
         Reader reader = null;
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(RELEASES_URL).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URI(RELEASES_URL).toURL().openConnection();
             connection.setRequestProperty("User-Agent", USER_AGENT);
 
             reader = new InputStreamReader(connection.getInputStream());
@@ -71,6 +72,8 @@ public class UpdateChecker implements Runnable {
                     this.upToDate = true;
                 }
             }
+        } catch (URISyntaxException ex) {
+            this.logger.log(Level.SEVERE, "Invalid updater URI syntax.", ex);
         } catch (FileNotFoundException ex) {
             this.logger.log(Level.WARNING, "404 error: " + ex.getMessage());
         } catch (Exception ex) {

@@ -35,7 +35,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -207,7 +208,7 @@ public abstract class ThimblePlugin {
     }
 
     public boolean updatePlugin(@NotNull GitHubAssetInfo assetInfo) {
-        try (BufferedInputStream in = new BufferedInputStream(new URL(assetInfo.browserDownloadUrl()).openStream());
+        try (BufferedInputStream in = new BufferedInputStream(new URI(assetInfo.browserDownloadUrl()).toURL().openStream());
              FileOutputStream fileOutputStream = new FileOutputStream(this.getPluginFolder() + assetInfo.name())) {
             byte[] dataBuffer = new byte[1024];
             int bytesRead;
@@ -219,7 +220,9 @@ public abstract class ThimblePlugin {
             return true;
         } catch (IOException ex) {
             this.getLogger().log(Level.SEVERE, "Unable to download the update.", ex);
-            return false;
+        } catch (URISyntaxException ex) {
+            this.getLogger().log(Level.SEVERE, "Invalid URL to download from.", ex);
         }
+        return false;
     }
 }

@@ -8,9 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
@@ -71,7 +71,7 @@ public class DependencyResolver {
     private byte[] downloadDependency(@NotNull String url) {
         this.logger.info("Download from " + url);
         try {
-            URLConnection connection = new URL(url).openConnection();
+            URLConnection connection = new URI(url).toURL().openConnection();
 
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
@@ -94,8 +94,8 @@ public class DependencyResolver {
                 this.logger.info("Download complete");
                 return out.toByteArray();
             }
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException(e);
+        } catch (URISyntaxException ex) {
+            this.logger.log(Level.SEVERE, "Invalid dependency URI syntax.", ex);
         } catch (IOException ex) {
             if (ex instanceof FileNotFoundException) {
                 this.logger.warning("File not found: " + url);
@@ -106,9 +106,8 @@ public class DependencyResolver {
             } else {
                 this.logger.log(Level.SEVERE, "Unexpected IOException", ex);
             }
-
-            return null;
         }
+        return null;
     }
 
     /**
