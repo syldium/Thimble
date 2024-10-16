@@ -31,12 +31,13 @@ import me.syldium.thimble.common.util.Task;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -208,14 +209,9 @@ public abstract class ThimblePlugin {
     }
 
     public boolean updatePlugin(@NotNull GitHubAssetInfo assetInfo) {
-        try (BufferedInputStream in = new BufferedInputStream(new URI(assetInfo.browserDownloadUrl()).toURL().openStream());
+        try (ReadableByteChannel readableByteChannel = Channels.newChannel(new URI(assetInfo.browserDownloadUrl()).toURL().openStream());
              FileOutputStream fileOutputStream = new FileOutputStream(this.getPluginFolder() + assetInfo.name())) {
-            byte[] dataBuffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-                fileOutputStream.write(dataBuffer, 0, bytesRead);
-            }
-
+            fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
             Files.delete(this.getPluginPath());
             return true;
         } catch (IOException ex) {
