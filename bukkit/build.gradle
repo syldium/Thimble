@@ -5,7 +5,7 @@ plugins {
 apply plugin: 'com.gradleup.shadow'
 
 repositories {
-    maven { url 'https://repo.codemc.org/repository/maven-public/' }
+    maven { url = 'https://repo.codemc.org/repository/maven-public/' }
     maven {
         name = "sonatype-oss-snapshots1"
         url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
@@ -26,10 +26,12 @@ dependencies {
 }
 
 processResources {
+    def version = project.ext.fullVersion
+    def description = project.properties.description
     filesMatching("plugin.yml") {
         expand(
-                'pluginVersion': project.ext.fullVersion,
-                'description': project.properties.description
+                'pluginVersion': version,
+                'description': description
         )
     }
 }
@@ -58,5 +60,5 @@ artifacts {
 }
 
 runServer {
-    minecraftVersion('1.21.1')
+    minecraftVersion('1.21.4')
 }

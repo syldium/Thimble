@@ -1,8 +1,8 @@
 repositories {
-    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-    maven { url 'https://repo.alessiodp.com/releases/' }
-    maven { url 'https://maven.enginehub.org/repo/' }
-    maven { url 'https://jitpack.io' }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url = 'https://repo.alessiodp.com/releases/' }
+    maven { url = 'https://maven.enginehub.org/repo/' }
+    maven { url = 'https://jitpack.io' }
 }
 
 java {

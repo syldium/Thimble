@@ -27,14 +27,14 @@ public enum Dependency {
     MARIADB_DRIVER(
             "org.mariadb.jdbc",
             "mariadb-java-client",
-            "3.4.1",
-            "9g5LKC8fS9t08KJkNrpweKXkgLb2cC9qe0XZul5gSiQ="
+            "3.5.1",
+            "UKUMSjwTww371AWH962aSWGX0oXt4JSGQdnu5o/fIQY="
     ),
     MYSQL_DRIVER(
             "com.mysql",
             "mysql-connector-j",
-            "9.0.0",
-            "oiHEEGt/5opFkSzb+DUfG0OtPFOkPDvJZhgcwU+G+jA="
+            "9.1.0",
+            "h3bi68RgcsmkfqWdmCmMQnO9nxansmtd+kdEU1qibGI="
     ),
     POSTGRESQL_DRIVER(
             "org.postgresql",
@@ -45,8 +45,8 @@ public enum Dependency {
     SQLITE_DRIVER(
             "org.xerial",
             "sqlite-jdbc",
-            "3.46.1.3",
-            "Skgycgpl6vf01v1+3lIIe5lNxWM8B2+emU3AyLSwtPo="
+            "3.47.2.0",
+            "0B35LWLFBb6qPK0z5B+iiHbswRHdH428RL9yNM3Lp+M="
     );
 
     private final byte[] checksum;
