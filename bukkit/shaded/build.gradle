@@ -9,7 +9,7 @@ java {
 }
 
 dependencies {
-    implementation project(':bukkit')
+    implementation projects.bukkit
 
     implementation(libs.minimessage)
     implementation("net.kyori:adventure-platform-bukkit:${libs.versions.adventurePlatform.get()}") {

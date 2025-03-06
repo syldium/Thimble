@@ -5,9 +5,9 @@ plugins {
 apply plugin: 'com.gradleup.shadow'
 
 dependencies {
-    implementation project(':api')
-    implementation project(':common')
-    implementation project(':common:logging')
+    implementation projects.api
+    implementation projects.common
+    implementation projects.common.logging
 
     compileOnly(libs.minimessage)
     compileOnly(libs.sponge) {

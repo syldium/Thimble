@@ -17,9 +17,9 @@ java {
 }
 
 dependencies {
-    implementation project(':api')
-    implementation project(':common')
-    implementation project(':bukkit:integration')
+    implementation projects.api
+    implementation projects.common
+    implementation projects.bukkit.integration
 
     compileOnly(libs.paper)
     implementation 'org.bstats:bstats-bukkit:3.1.0'

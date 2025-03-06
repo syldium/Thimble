@@ -1,8 +1,8 @@
 apply plugin: 'java-library'
 
 dependencies {
-    api project(':api')
-    api project(':common:cache')
+    api projects.api
+    api projects.common.cache
     compileOnly(libs.minimessage)
     compileOnly 'com.mojang:brigadier:1.1.8'
     compileOnly 'com.google.code.gson:gson:2.8.9'

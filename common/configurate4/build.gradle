@@ -1,6 +1,6 @@
 dependencies {
     compileOnly(libs.annotations)
     compileOnly(libs.adventure)
-    compileOnly project(':common')
+    compileOnly projects.common
     compileOnly 'org.spongepowered:configurate-core:4.1.2'
 }
