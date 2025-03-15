@@ -89,4 +89,8 @@ public final class CommandResult {
     public boolean isSuccess() {
         return this.type == 1;
     }
+
+    public boolean isError() {
+        return this.type == 0;
+    }
 }

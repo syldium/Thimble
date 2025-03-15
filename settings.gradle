@@ -3,7 +3,7 @@ include (
         'api',
         'common', 'common:cache', 'common:configurate4', 'common:logging',
         'bukkit', 'bukkit:integration', 'bukkit:shaded',
-        'sponge'
+        'sponge-7', 'sponge'
 )
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

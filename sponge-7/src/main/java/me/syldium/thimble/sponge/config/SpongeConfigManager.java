@@ -1,14 +1,13 @@
 package me.syldium.thimble.sponge.config;
 
-import me.syldium.thimble.common.config.ConfigFile;
 import me.syldium.thimble.common.config.ConfigManager;
-import me.syldium.thimble.common.configurate4.ConfigurateConfigFile;
+import me.syldium.thimble.common.config.ConfigFile;
 import me.syldium.thimble.sponge.ThSpongePlugin;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.configurate.CommentedConfigurationNode;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
-import org.spongepowered.configurate.loader.ConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,19 +22,24 @@ public class SpongeConfigManager extends ConfigManager<ThSpongePlugin> {
 
     @Override
     protected @NotNull ConfigFile getConfig(@NotNull File file) {
-        ConfigurationLoader<CommentedConfigurationNode> loader = HoconConfigurationLoader.builder().file(file).build();
+        ConfigurationLoader<CommentedConfigurationNode> loader;
+        if ("config.conf".equals(file.getName())) {
+            loader = this.plugin.getConfigLoader();
+        } else {
+            loader = HoconConfigurationLoader.builder().setFile(file).build();
+        }
 
         ConfigurationNode root;
         try {
             root = loader.load();
         } catch (IOException ex) {
             this.severe("Unable to load the config file!", ex);
-            root = loader.createNode();
+            root = loader.createEmptyNode();
         }
         if ("config.conf".equals(file.getName())) {
             this.config = root;
         }
-        return new ConfigurateConfigFile(loader, root, this.plugin.getLogger());
+        return new SpongeConfigFile(loader, root);
     }
 
     public @NotNull ConfigurationNode getConfig() {
@@ -43,7 +47,7 @@ public class SpongeConfigManager extends ConfigManager<ThSpongePlugin> {
     }
 
     @Override
-    protected @NotNull String getFileExtension() {
+    protected final @NotNull String getFileExtension() {
         return "conf";
     }
 }

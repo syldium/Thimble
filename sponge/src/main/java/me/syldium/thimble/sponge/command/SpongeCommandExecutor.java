@@ -4,66 +4,64 @@ import me.syldium.thimble.common.command.CommandManager;
 import me.syldium.thimble.common.command.abstraction.Sender;
 import me.syldium.thimble.sponge.ThSpongePlugin;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.spongeapi.SpongeComponentSerializer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.api.command.CommandCallable;
-import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.Command;
+import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import org.spongepowered.api.command.parameter.ArgumentReader;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class SpongeCommandExecutor extends CommandManager implements CommandCallable {
+import static net.kyori.adventure.text.Component.text;
 
-    private final ThSpongePlugin plugin;
+public class SpongeCommandExecutor extends CommandManager implements Command.Raw {
+
+    protected final ThSpongePlugin plugin;
 
     public SpongeCommandExecutor(@NotNull ThSpongePlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public @NotNull CommandResult process(@NotNull CommandSource source, @NotNull String arguments) throws CommandException {
-        Sender sender = this.plugin.getPlayerAdapter().asAbstractSender(source);
-        me.syldium.thimble.common.command.CommandResult result = this.executeCommand(this.plugin, sender, "th", arguments);
-        if (result.isSuccess()) {
-            sender.sendFeedback(result);
-            return CommandResult.success();
+    public CommandResult process(CommandCause cause, ArgumentReader.Mutable arguments) {
+        Sender sender = this.plugin.getPlayerAdapter().asAbstractSender(cause);
+        me.syldium.thimble.common.command.CommandResult feedback = executeCommand(this.plugin, sender, "th", arguments.input());
+        if (feedback.isError()) {
+            return CommandResult.error(this.plugin.getMessageService().formatMessage(feedback));
         }
-
-        if (result.getMessageKey() != null) {
-            Component component = this.plugin.getMessageService().prefix().append(this.plugin.getMessageService().formatMessage(result));
-            throw new CommandException(SpongeComponentSerializer.get().serialize(component));
-        }
-        return CommandResult.empty();
+        sender.sendFeedback(feedback);
+        return CommandResult.success();
     }
 
     @Override
-    public @NotNull List<String> getSuggestions(@NotNull CommandSource source, @NotNull String arguments, @Nullable Location<World> targetPosition) {
-        return this.tabCompleteCommand(this.plugin, this.plugin.getPlayerAdapter().asAbstractSender(source), arguments);
+    public List<CommandCompletion> complete(CommandCause cause, ArgumentReader.Mutable arguments) {
+        Sender sender = this.plugin.getPlayerAdapter().asAbstractSender(cause);
+        return tabCompleteCommand(this.plugin, sender, arguments.input())
+                .stream()
+                .map(CommandCompletion::of)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean testPermission(@NotNull CommandSource source) {
+    public boolean canExecute(CommandCause cause) {
         return true;
     }
 
     @Override
-    public @NotNull Optional<Text> getShortDescription(@NotNull CommandSource source) {
+    public Optional<Component> shortDescription(CommandCause cause) {
         return Optional.empty();
     }
 
     @Override
-    public @NotNull Optional<Text> getHelp(@NotNull CommandSource source) {
+    public Optional<Component> extendedDescription(CommandCause cause) {
         return Optional.empty();
     }
 
     @Override
-    public @NotNull Text getUsage(@NotNull CommandSource source) {
-        return null;
+    public Component usage(CommandCause cause) {
+        return text("/th");
     }
 }

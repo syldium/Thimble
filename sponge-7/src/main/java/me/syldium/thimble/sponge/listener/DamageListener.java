@@ -4,8 +4,8 @@ import me.syldium.thimble.api.arena.ThimbleGame;
 import me.syldium.thimble.api.player.JumpVerdict;
 import me.syldium.thimble.sponge.ThSpongePlugin;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.api.data.Keys;
-import org.spongepowered.api.data.value.Value;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
@@ -27,22 +27,22 @@ public class DamageListener {
 
     @Listener
     public void onPlayerDamage(DamageEntityEvent event, @First Player player, @First DamageSource source) {
-        Optional<ThimbleGame> optional = this.plugin.getGameService().playerGame(player.uniqueId());
+        Optional<ThimbleGame> optional = this.plugin.getGameService().playerGame(player.getUniqueId());
         if (!optional.isPresent()) return;
         event.setCancelled(true);
         ThimbleGame game = optional.get();
 
-        if (game.isJumping(player.uniqueId()) && DamageTypes.FALL.get().equals(source.type())) {
-            game.verdict(player.uniqueId(), JumpVerdict.MISSED);
+        if (game.isJumping(player.getUniqueId()) && DamageTypes.FALL.equals(source.getType())) {
+            game.verdict(player.getUniqueId(), JumpVerdict.MISSED);
         }
         event.setCancelled(true);
     }
 
     @Listener
     public void onFoodLevelChange(ChangeDataHolderEvent.ValueChange event, @First Player player) {
-        for (Value.Immutable<?> immutableValue : event.originalChanges().successfulData()) {
-            if (immutableValue.key().equals(Keys.FOOD_LEVEL)) {
-                if (!this.plugin.getGameService().playerGame(player.uniqueId()).isPresent()) {
+        for (ImmutableValue<?> immutableValue : event.getOriginalChanges().getSuccessfulData()) {
+            if (immutableValue.getKey().equals(Keys.FOOD_LEVEL)) {
+                if (!this.plugin.getGameService().playerGame(player.getUniqueId()).isPresent()) {
                     return;
                 }
                 event.setCancelled(true);

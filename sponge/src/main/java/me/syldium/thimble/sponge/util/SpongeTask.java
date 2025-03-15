@@ -1,13 +1,14 @@
 package me.syldium.thimble.sponge.util;
 
+import me.syldium.thimble.common.util.Task;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.scheduler.ScheduledTask;
 
-public class SpongeTask implements me.syldium.thimble.common.util.Task {
+public class SpongeTask implements Task {
 
-    private final Task task;
+    private final ScheduledTask task;
 
-    public SpongeTask(@NotNull Task task) {
+    public SpongeTask(@NotNull ScheduledTask task) {
         this.task = task;
     }
 

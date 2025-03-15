@@ -1,32 +1,51 @@
+import org.spongepowered.gradle.plugin.config.PluginLoaders
+import org.spongepowered.plugin.metadata.model.PluginDependency
+
 plugins {
-    id 'net.kyori.blossom' version '2.1.0'
+    id 'org.spongepowered.gradle.plugin' version '2.3.0'
 }
 
 apply plugin: 'com.gradleup.shadow'
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
 dependencies {
     implementation projects.api
     implementation projects.common
+    implementation projects.common.configurate4
     implementation projects.common.logging
-
-    compileOnly(libs.minimessage)
-    compileOnly(libs.sponge) {
-        exclude(module: 'caffeine')
-    }
-    annotationProcessor (libs.sponge)
-    implementation("net.kyori:adventure-platform-spongeapi:${libs.versions.adventurePlatform.get()}") {
-        exclude(module: 'guava')
-    }
 }
 
-sourceSets {
-    main {
-        blossom {
-            javaSources {
-                property("description", project.description.toString())
-                property("version", project.ext.fullVersion)
-                property("url", "https://github.com/syldium/Thimble")
-            }
+sponge {
+    apiVersion("14.0.0-SNAPSHOT")
+    license = "GPL3"
+    loader {
+        name = PluginLoaders.JAVA_PLAIN
+        version = "1.0"
+    }
+    plugin("thimble") {
+        displayName = project.parent.name
+        version = project.ext.fullVersion
+        entrypoint = "me.syldium.thimble.sponge8.ThSpongePlugin"
+        description = project.description
+        links {
+            source("https://github.com/syldium/Thimble")
+            issues("https://github.com/syldium/Thimble/issues")
+        }
+        contributor("syldium") {
+            description = "Lead Developer"
+        }
+        dependency("spongeapi") {
+            loadOrder = PluginDependency.LoadOrder.AFTER
+            optional = false
         }
     }
 }
@@ -37,11 +56,12 @@ shadowJar {
     archiveVersion = project.ext.fullVersion
 
     dependencies {
+        exclude(dependency('net.kyori.adventure:adventure'))
+        exclude(dependency('net.kyori.adventure:examination'))
         exclude(dependency('org.jetbrains:annotations'))
     }
 
-    relocate 'net.kyori.adventure', 'me.syldium.thimble.lib.adventure'
-    relocate 'net.kyori.examination', 'me.syldium.thimble.lib.examination'
+    relocate 'org.bstats', 'me.syldium.thimble.lib.metrics'
     minimize()
 }
 

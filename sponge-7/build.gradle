@@ -1,0 +1,50 @@
+plugins {
+    id 'net.kyori.blossom' version '2.1.0'
+}
+
+apply plugin: 'com.gradleup.shadow'
+
+dependencies {
+    implementation projects.api
+    implementation projects.common
+    implementation projects.common.logging
+
+    compileOnly(libs.minimessage)
+    compileOnly(libs.sponge) {
+        exclude(module: 'caffeine')
+    }
+    annotationProcessor (libs.sponge)
+    implementation("net.kyori:adventure-platform-spongeapi:${libs.versions.adventurePlatform.get()}") {
+        exclude(module: 'guava')
+    }
+}
+
+sourceSets {
+    main {
+        blossom {
+            javaSources {
+                property("description", project.description.toString())
+                property("version", project.ext.fullVersion)
+                property("url", "https://github.com/syldium/Thimble")
+            }
+        }
+    }
+}
+
+shadowJar {
+    archiveBaseName = "${project.parent.name}-Sponge"
+    archiveClassifier = ''
+    archiveVersion = project.ext.fullVersion
+
+    dependencies {
+        exclude(dependency('org.jetbrains:annotations'))
+    }
+
+    relocate 'net.kyori.adventure', 'me.syldium.thimble.lib.adventure'
+    relocate 'net.kyori.examination', 'me.syldium.thimble.lib.examination'
+    minimize()
+}
+
+artifacts {
+    archives shadowJar
+}

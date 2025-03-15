@@ -4,13 +4,17 @@ import me.syldium.thimble.api.util.BlockVector;
 import me.syldium.thimble.common.world.BlockData;
 import me.syldium.thimble.common.world.PoolBlock;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.api.world.server.ServerLocation;
+import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class SpongePoolBlock implements PoolBlock {
 
-    private final ServerLocation location;
+    private final BlockState handle;
+    private final Location<World> location;
 
-    public SpongePoolBlock(@NotNull ServerLocation location) {
+    public SpongePoolBlock(@NotNull BlockState handle, @NotNull Location<@NotNull World> location) {
+        this.handle = handle;
         this.location = location;
     }
 
@@ -21,11 +25,15 @@ public class SpongePoolBlock implements PoolBlock {
 
     @Override
     public @NotNull BlockData getBlockData() {
-        return new SpongeBlockData(this.location.block());
+        return new SpongeBlockData(this.handle);
     }
 
     @Override
     public @NotNull BlockVector getPosition() {
-        return new BlockVector(this.location.blockX(), this.location.blockY(), this.location.blockZ());
+        return new BlockVector(this.location.getBlockX(), this.location.getBlockY(), this.location.getBlockZ());
+    }
+
+    public @NotNull Location<@NotNull World> getLocation() {
+        return this.location;
     }
 }

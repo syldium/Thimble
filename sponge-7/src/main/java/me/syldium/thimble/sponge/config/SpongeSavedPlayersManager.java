@@ -1,10 +1,10 @@
 package me.syldium.thimble.sponge.config;
 
-import me.syldium.thimble.common.ThimblePlugin;
 import me.syldium.thimble.common.config.SavedPlayersManager;
+import me.syldium.thimble.sponge.ThSpongePlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.entity.living.player.Player;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,10 +12,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 
-public class SpongeSavedPlayersManager extends SavedPlayersManager<ServerPlayer> {
+public class SpongeSavedPlayersManager extends SavedPlayersManager<Player> {
 
-    public SpongeSavedPlayersManager(@NotNull ThimblePlugin plugin) {
+    private final ThSpongePlugin plugin;
+
+    public SpongeSavedPlayersManager(@NotNull ThSpongePlugin plugin) {
         super(plugin);
+        this.plugin = plugin;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class SpongeSavedPlayersManager extends SavedPlayersManager<ServerPlayer>
     }
 
     @Override
-    protected @NotNull SpongeSavedPlayer create(@NotNull ServerPlayer player) {
-        return new SpongeSavedPlayer(player);
+    protected @NotNull SpongeSavedPlayer create(@NotNull Player player) {
+        return new SpongeSavedPlayer(this.plugin.getPlayerAdapter(), player);
     }
 }

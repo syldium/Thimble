@@ -12,6 +12,10 @@ public class SpongeBlockData implements BlockData {
         this.handle = blockState;
     }
 
+    public @NotNull BlockState getHandle() {
+        return this.handle;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

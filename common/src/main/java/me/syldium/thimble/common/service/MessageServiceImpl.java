@@ -51,7 +51,7 @@ public class MessageServiceImpl implements MessageService {
     private Component prefix;
 
     public MessageServiceImpl(@NotNull ThimblePlugin plugin) {
-        this.defaultBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, Locale.ENGLISH, new UTF8PropertiesControl());
+        this.defaultBundle = getResourceBundle(Locale.ENGLISH);
         this.plugin = plugin;
         this.placeholders = PlaceholderService.EMPTY;
         this.updateLocale(plugin.getMainConfig().getLocale());
@@ -66,17 +66,33 @@ public class MessageServiceImpl implements MessageService {
         ResourceBundle.clearCache();
 
         try {
-            this.localeBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, userLocale, new UTF8PropertiesControl());
+            this.localeBundle = getResourceBundle(userLocale);
         } catch (MissingResourceException ex) {
             this.localeBundle = NULL_BUNDLE;
         }
 
         try {
-            this.customBundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, userLocale, new FileResClassLoader(this.plugin.getClass().getClassLoader(), this.plugin), new UTF8PropertiesControl());
+            this.customBundle = getResourceBundle(userLocale, new FileResClassLoader(this.plugin.getClass().getClassLoader(), this.plugin));
         } catch (final MissingResourceException ex) {
             this.customBundle = NULL_BUNDLE;
         }
         this.prefix = miniMessage().deserialize(this.translate("prefix"));
+    }
+
+    private static ResourceBundle getResourceBundle(Locale locale, ClassLoader loader) {
+        try {
+            return ResourceBundle.getBundle(MESSAGES_BUNDLE, locale, loader, new UTF8PropertiesControl());
+        } catch (UnsupportedOperationException ex) { // named module
+            return ResourceBundle.getBundle(MESSAGES_BUNDLE, locale, loader);
+        }
+    }
+
+    private static ResourceBundle getResourceBundle(Locale locale) {
+        try {
+            return ResourceBundle.getBundle(MESSAGES_BUNDLE, locale, new UTF8PropertiesControl());
+        } catch (UnsupportedOperationException ex) { // named module
+            return ResourceBundle.getBundle(MESSAGES_BUNDLE, locale);
+        }
     }
 
     @Override
