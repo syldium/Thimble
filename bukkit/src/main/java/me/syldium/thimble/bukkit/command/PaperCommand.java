@@ -17,6 +17,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,7 +61,10 @@ public class PaperCommand extends PaperAsyncCompleter {
         public int run(CommandContext<CommandSourceStack> context) {
             final CommandSender sender = context.getSource().getSender();
             final String content = context.getRange().get(context.getInput());
-            final String[] args = org.apache.commons.lang3.StringUtils.split(content, ' ');
+            String[] args = org.apache.commons.lang3.StringUtils.split(content, ' ');
+            if (context.getRange().getLength() == context.getInput().length()) { // Since Paper 1.21.4 #163
+                args = Arrays.copyOfRange(args, 1, args.length);
+            }
             return this.inner.execute(sender, this.inner.getName(), args) ? 1 : 0;
         }
     }
