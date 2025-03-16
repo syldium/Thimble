@@ -24,7 +24,7 @@ public final class ThBootstrap extends JavaPlugin {
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        this.getLogger().info("Using " + this.adventure);
+        this.getLogger().info("Using " + this.adventure + " Adventure as the text implementation.");
 
         if (!me.syldium.thimble.bukkit.world.BukkitBlockData.IS_FLAT) {
             this.getLogger().warning("This plugin is not actively tested with older versions.");

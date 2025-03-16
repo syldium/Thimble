@@ -41,6 +41,6 @@ public final class AdventureProvider {
 
     @Override
     public String toString() {
-        return "PaperAdventureProvider";
+        return "native";
     }
 }

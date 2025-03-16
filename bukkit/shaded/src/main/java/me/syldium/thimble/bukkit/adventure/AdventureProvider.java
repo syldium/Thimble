@@ -47,4 +47,9 @@ public final class AdventureProvider {
     public void close() {
         this.audiences.close();
     }
+
+    @Override
+    public String toString() {
+        return "shaded";
+    }
 }
