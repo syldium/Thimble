@@ -35,7 +35,11 @@ public interface PlayerAdapter<P, L> {
     void clearPool(@NotNull WorldKey worldKey, @NotNull Map<BlockVector, BlockData> blocks);
 
     default @NotNull BlockData getRandomBlock() {
-        return this.getAvailableBlocks().get(new Random().nextInt(this.getAvailableBlocks().size()));
+        final List<? extends BlockData> availableBlocks = this.getAvailableBlocks();
+        if (availableBlocks.isEmpty()) {
+            throw new IllegalStateException("No available blocks to choose from");
+        }
+        return availableBlocks.get(new Random().nextInt(availableBlocks.size()));
     }
 
     @SuppressWarnings("unchecked")
