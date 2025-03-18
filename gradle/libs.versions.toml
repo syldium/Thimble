@@ -1,8 +1,8 @@
 [versions]
-adventure = "4.18.0"
+adventure = "4.19.0"
 adventurePlatform = "4.3.4"
-annotations = "26.0.1"
-jupiter = "5.11.4"
+annotations = "26.0.2"
+jupiter = "5.12.0"
 paper = "1.21.4-R0.1-SNAPSHOT"
 sponge = "7.4.0"
 

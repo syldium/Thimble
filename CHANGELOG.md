@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## [1.5.4] - 2025-03-18
+### Fixed
+- Fixed commands reported as unknown since Paper 1.21.4 #163.
+
+### Other
+- A reduced JAR for Paper 1.18.2+ is now available for download.
+
 ## [1.5.3] - 2024-05-13
 ### Added
 - Updated injection points to fully support Minecraft 1.20.5 and 1.20.6.

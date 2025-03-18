@@ -2,7 +2,7 @@
 
 [Version française](README.fr.md)
 
-A Minecraft plugin for the thimble (dé à coudre) mini-game for Paper and Spigot servers from 1.8 to 1.21.1.
+A Minecraft plugin for the thimble (dé à coudre) mini-game for Paper and Spigot servers from 1.8 to 1.21.4.
 
 ## Usage
 
@@ -126,7 +126,7 @@ default:
 <dependency>
     <groupId>com.github.syldium</groupId>
     <artifactId>Thimble</artifactId>
-    <version>1.5.3</version>
+    <version>1.5.4</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -149,7 +149,7 @@ public final class ThimblePluginHook extends JavaPlugin {
     }
 }
 ```
-You can view the methods using your IDE or [the javadoc](https://javadoc.jitpack.io/com/github/syldium/Thimble/1.5.3/javadoc/).
+You can view the methods using your IDE or [the javadoc](https://javadoc.jitpack.io/com/github/syldium/Thimble/1.5.4/javadoc/).
 
 ## Building
 
