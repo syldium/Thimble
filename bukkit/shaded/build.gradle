@@ -20,6 +20,12 @@ dependencies {
     compileOnly(libs.paper)
 }
 
+jar {
+    manifest {
+        attributes 'paperweight-mappings-namespace': 'mojang'
+    }
+}
+
 shadowJar {
     archiveBaseName = "${project.parent.parent.name}-Bukkit"
     archiveClassifier = ''
