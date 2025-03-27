@@ -49,6 +49,8 @@ public class CraftBukkitFacet {
             } else {
                 if (SINGLE_PACKAGE) {
                     FACET = ScoreboardPacket1_13::new;
+                } else if (ScoreboardPacket1_21.isSupported()) {
+                    FACET = ScoreboardPacket1_21::new;
                 } else {
                     FACET = ScoreboardPacket1_17::new;
                 }
@@ -201,6 +203,19 @@ public class CraftBukkitFacet {
         protected static final Object ENUM_SB_ACTION_REMOVE = findEnum(ENUM_SB_ACTION, "REMOVE", 1);
         private static final Class<?> DISPLAY_SLOT_TYPE;
         private static final Object SIDEBAR_DISPLAY_SLOT;
+
+        protected static final Class<?> ENUM_COLLISION_RULE = findClass(
+                findNmsClassName("ScoreboardTeamBase$EnumTeamPush"),
+                findMcClassName("world.scores.ScoreboardTeamBase$EnumTeamPush"),
+                findMcClassName("world.scores.Team$CollisionRule")
+        );
+        protected static final Class<?> ENUM_NAME_TAG_VISIBILITY_RULE = findClass(
+                findNmsClassName("ScoreboardTeamBase$EnumNameTagVisibility"),
+                findMcClassName("world.scores.ScoreboardTeamBase$EnumNameTagVisibility"),
+                findMcClassName("world.scores.Team$Visibility")
+        );
+        protected static final Object ENUM_COLLISION_RULE_ALWAYS = findEnum(ENUM_COLLISION_RULE, "ALWAYS", 0);
+        protected static final Object ENUM_NAME_TAG_VISIBILITY_ALWAYS = findEnum(ENUM_NAME_TAG_VISIBILITY_RULE, "ALWAYS", 0);
 
         static {
             Class<?> serializableTeamClass = null;
@@ -378,6 +393,27 @@ public class CraftBukkitFacet {
         }
     }
 
+    private static class ScoreboardPacket1_21 extends ScoreboardPacket1_17 {
+
+        ScoreboardPacket1_21(@NotNull Player player, @NotNull Scoreboard scoreboard) {
+            super(player, scoreboard);
+        }
+
+        @Override
+        public void hydrateSerializableTeam(@NotNull Object team, @NotNull Component line) throws ReflectiveOperationException {
+            this.setComponentField(team, Component.empty(), 0); // Display name
+            this.setField(team, ENUM_CHAT_FORMAT, RESET_FORMATTING); // Formatting
+            this.setComponentField(team, line, 1); // Prefix
+            this.setComponentField(team, Component.empty(), 2); // Suffix
+            this.setField(team, ENUM_NAME_TAG_VISIBILITY_RULE, ENUM_NAME_TAG_VISIBILITY_ALWAYS, 0);
+            this.setField(team, ENUM_COLLISION_RULE, ENUM_COLLISION_RULE_ALWAYS, 0);
+        }
+
+        public static boolean isSupported() {
+            return CLASS_SERIALIZABLE_TEAM != null && Arrays.stream(CLASS_SERIALIZABLE_TEAM.getDeclaredFields()).anyMatch(field -> field.getType().equals(ENUM_NAME_TAG_VISIBILITY_RULE));
+        }
+    }
+
     private static class ScoreboardPacket1_17 extends ScoreboardPacket1_13 {
 
         ScoreboardPacket1_17(@NotNull Player player, @NotNull Scoreboard scoreboard) {
@@ -398,13 +434,7 @@ public class CraftBukkitFacet {
 
                 if (mode == TeamMode.CREATE || mode == TeamMode.UPDATE) {
                     Object team = NEW_SERIALIZABLE_TEAM.invoke();
-
-                    this.setComponentField(team, Component.empty(), 0); // Display name
-                    this.setField(team, ENUM_CHAT_FORMAT, RESET_FORMATTING); // Formatting
-                    this.setComponentField(team, line, 1); // Prefix
-                    this.setComponentField(team, Component.empty(), 2); // Suffix
-                    setField(team, String.class, "always", 0); // Visibility
-                    setField(team, String.class, "always", 1); // Collisions
+                    this.hydrateSerializableTeam(team, line);
                     this.setField(packet, Optional.class, Optional.of(team));
                 }
 
@@ -416,6 +446,15 @@ public class CraftBukkitFacet {
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
+        }
+
+        public void hydrateSerializableTeam(@NotNull Object team, @NotNull Component line) throws ReflectiveOperationException {
+            this.setComponentField(team, Component.empty(), 0); // Display name
+            this.setField(team, ENUM_CHAT_FORMAT, RESET_FORMATTING); // Formatting
+            this.setComponentField(team, line, 1); // Prefix
+            this.setComponentField(team, Component.empty(), 2); // Suffix
+            this.setField(team, String.class, "always", 0); // Visibility
+            this.setField(team, String.class, "always", 1); // Collisions
         }
     }
 
