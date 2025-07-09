@@ -25,7 +25,7 @@ dependencies {
 }
 
 sponge {
-    apiVersion("14.0.0-SNAPSHOT")
+    apiVersion("14.0.0")
     license = "GPL3"
     loader {
         name = PluginLoaders.JAVA_PLAIN
@@ -34,7 +34,7 @@ sponge {
     plugin("thimble") {
         displayName = project.parent.name
         version = project.ext.fullVersion
-        entrypoint = "me.syldium.thimble.sponge8.ThSpongePlugin"
+        entrypoint = "me.syldium.thimble.sponge.ThSpongePlugin"
         description = project.description
         links {
             source("https://github.com/syldium/Thimble")

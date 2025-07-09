@@ -15,7 +15,6 @@ import me.syldium.thimble.sponge.ThSpongePlugin;
 import me.syldium.thimble.sponge.world.SpongeBlockData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -43,9 +42,9 @@ public class SpongePlayerAdapter implements PlayerAdapter<ServerPlayer, ServerLo
     public SpongePlayerAdapter(@NotNull ThSpongePlugin plugin) {
         this.plugin = plugin;
         this.locationAdapter = new SpongeAdapter(plugin);
-        final Set<BlockType> tagged = plugin.game().registry(RegistryTypes.BLOCK_TYPE).taggedValues(BlockTypeTags.WOOL);
+        final Iterable<BlockType> tagged = plugin.game().registry(RegistryTypes.BLOCK_TYPE).taggedValues(BlockTypeTags.WOOL)::iterator;
         for (BlockType blockType : tagged) {
-            this.blocks.add(new SpongeBlockData(BlockState.builder().blockType(blockType).build()));
+            this.blocks.add(new SpongeBlockData(blockType.defaultState()));
         }
     }
 
