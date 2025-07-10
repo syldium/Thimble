@@ -386,7 +386,7 @@ public class CraftBukkitFacet {
         protected abstract void setComponentField(@NotNull Object object, @NotNull Component component, int count) throws ReflectiveOperationException;
 
         public static boolean isSupported() {
-            if (!(PacketUtil.isSupported() && VanillaComponentSerializer.isSupported() && NEW_OBJECTIVE_PACKET != null && NEW_DISPLAY_OBJECTIVE_PACKET != null && NEW_SCORE_PACKET != null && NEW_TEAM_PACKET != null && ENUM_SB_ACTION != null)) {
+            if (!(PacketUtil.isSupported() && VanillaComponentSerializer.isSupported() && NEW_OBJECTIVE_PACKET != null && NEW_DISPLAY_OBJECTIVE_PACKET != null && NEW_SCORE_PACKET != null && NEW_TEAM_PACKET != null)) {
                 return false;
             }
             return SINGLE_PACKAGE || (RESET_FORMATTING != null && NEW_SERIALIZABLE_TEAM != null);
