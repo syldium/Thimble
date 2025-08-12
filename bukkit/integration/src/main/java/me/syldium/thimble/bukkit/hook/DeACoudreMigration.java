@@ -34,7 +34,7 @@ import java.util.function.Function;
 import static java.util.Objects.requireNonNull;
 
 /**
- * <p><a href="https://www.spigotmc.org/resources/d%C3%A9-%C3%A0-coudre.59231/">Dé à Coudre</a></p>
+ * <a href="https://www.spigotmc.org/resources/d%C3%A9-%C3%A0-coudre.59231/">Dé à Coudre</a>.
  *
  * <p>Recreates arenas and statistics from the configuration files.</p>
  */

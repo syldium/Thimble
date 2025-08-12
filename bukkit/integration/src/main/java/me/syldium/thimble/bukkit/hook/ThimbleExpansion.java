@@ -18,7 +18,7 @@ import java.util.Locale;
 import java.util.function.Consumer;
 
 /**
- * <p><a href="https://github.com/PlaceholderAPI/PlaceholderAPI">PlaceholderAPI</a></p>
+ * <a href="https://github.com/PlaceholderAPI/PlaceholderAPI">PlaceholderAPI</a>.
  *
  * <p>Registers placeholders for the leaderboard, see the README.</p>
  */

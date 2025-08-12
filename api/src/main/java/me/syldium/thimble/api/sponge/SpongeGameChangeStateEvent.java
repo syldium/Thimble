@@ -12,6 +12,7 @@ import org.spongepowered.api.event.impl.AbstractEvent;
  * When the state of a game changes.
  *
  * <p>This event is not fired for the end of a game, see {@link SpongeGameEndEvent}.</p>
+ *
  * <p>This event is specific to a Sponge environment.</p>
  */
 public class SpongeGameChangeStateEvent extends AbstractEvent implements Cancellable, GameEvent {

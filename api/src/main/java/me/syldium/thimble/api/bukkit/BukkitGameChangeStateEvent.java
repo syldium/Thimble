@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
  * When the state of a game changes.
  *
  * <p>This event is not fired for the end of a game, see {@link BukkitGameEndEvent}.</p>
+ *
  * <p>This event is specific to a Bukkit environment.</p>
  */
 public class BukkitGameChangeStateEvent extends Event implements Cancellable, GameEvent {

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 /**
- * <p><a href="https://github.com/AlessioDP/Parties">Parties</a></p>
+ * <a href="https://github.com/AlessioDP/Parties">Parties</a>.
  *
  * <p>If the player is the leader of a party, have the other members join.</p>
  */

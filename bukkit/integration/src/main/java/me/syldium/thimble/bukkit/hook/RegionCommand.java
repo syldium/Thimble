@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Modifier;
 
 /**
- * <p><a href="https://github.com/EngineHub/WorldEdit">WorldEdit</a></p>
+ * <a href="https://github.com/EngineHub/WorldEdit">WorldEdit</a>.
  *
  * <p>Adds `/th arena region` to define a pool area of an {@link Arena}.</p>
  */

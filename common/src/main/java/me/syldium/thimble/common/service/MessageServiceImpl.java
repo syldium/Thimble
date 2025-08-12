@@ -185,7 +185,7 @@ public class MessageServiceImpl implements MessageService {
      * Reads .properties files as UTF-8 instead of ISO-8859-1, which is the default on Java 8/below.
      * Java 9 fixes this by defaulting to UTF-8 for .properties files.
      */
-    private static class UTF8PropertiesControl extends ResourceBundle.Control {
+    private static final class UTF8PropertiesControl extends ResourceBundle.Control {
 
         @Override
         public ResourceBundle newBundle(final String baseName, final Locale locale, final String format, final ClassLoader loader, final boolean reload) throws IOException {

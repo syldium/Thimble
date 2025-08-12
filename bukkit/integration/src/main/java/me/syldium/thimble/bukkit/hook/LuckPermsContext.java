@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
- * <p><a href="https://github.com/lucko/LuckPerms">LuckPerms</a></p>
+ * <a href="https://github.com/lucko/LuckPerms">LuckPerms</a>.
  *
  * <p>Adds context "thimble:arena".</p>
  */
