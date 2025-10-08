@@ -10,7 +10,7 @@ dependencies {
     testImplementation(libs.junitJupiter)
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation project(':common:configurate4')
-    testImplementation 'org.spongepowered:configurate-gson:4.1.2'
+    testImplementation 'org.spongepowered:configurate-gson:4.2.0'
     testImplementation(libs.adventurePlainSerializer)
     testRuntimeOnly 'org.xerial:sqlite-jdbc:3.47.2.0'
     testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.16'

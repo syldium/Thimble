@@ -44,7 +44,3 @@ shadowJar {
     relocate 'net.kyori.examination', 'me.syldium.thimble.lib.examination'
     minimize()
 }
-
-artifacts {
-    archives shadowJar
-}

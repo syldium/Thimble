@@ -64,7 +64,3 @@ shadowJar {
     relocate 'org.bstats', 'me.syldium.thimble.lib.metrics'
     minimize()
 }
-
-artifacts {
-    archives shadowJar
-}

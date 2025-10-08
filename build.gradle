@@ -1,5 +1,5 @@
 plugins {
-    id 'com.gradleup.shadow' version '9.0.1' apply false
+    id 'com.gradleup.shadow' version '9.2.2' apply false
 }
 
 defaultTasks 'build'
@@ -34,9 +34,6 @@ subprojects {
         }
         maven {
             url = 'https://repo.spongepowered.org/repository/maven-public/'
-            content {
-                includeGroup 'org.spongepowered'
-            }
         }
     }
 
@@ -46,8 +43,8 @@ subprojects {
     }
 
     compileTestJava {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     project.description = 'Plugin for the thimble mini game (dé à coudre)'

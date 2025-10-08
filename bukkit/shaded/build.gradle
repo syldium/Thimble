@@ -40,7 +40,3 @@ shadowJar {
     relocate 'net.kyori.option', 'me.syldium.thimble.lib.option'
     relocate 'org.bstats', 'me.syldium.thimble.lib.metrics'
 }
-
-artifacts {
-    archives shadowJar
-}
