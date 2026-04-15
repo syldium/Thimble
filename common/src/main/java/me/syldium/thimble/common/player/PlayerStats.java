@@ -1,14 +1,13 @@
 package me.syldium.thimble.common.player;
 
 import me.syldium.thimble.api.player.ThimblePlayerStats;
-import net.kyori.adventure.identity.Identity;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public class PlayerStats implements ThimblePlayerStats, Identity {
+public class PlayerStats implements ThimblePlayerStats {
 
     private final UUID uuid;
     private final String name;

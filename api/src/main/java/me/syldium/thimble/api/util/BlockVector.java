@@ -2,19 +2,16 @@ package me.syldium.thimble.api.util;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.examination.Examinable;
-import net.kyori.examination.ExaminableProperty;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.stream.Stream;
 
 import static net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component;
 
 /**
  * Defines an immutable block position relative to the current world.
  */
-public class BlockVector implements Examinable, Serializable, Cloneable {
+public class BlockVector implements Serializable, Cloneable {
 
     /** x-coordinate. */
     protected final int x;
@@ -198,15 +195,6 @@ public class BlockVector implements Examinable, Serializable, Cloneable {
     @Override
     public @NotNull BlockVector clone() {
         return new BlockVector(this.x, this.y, this.z);
-    }
-
-    @Override
-    public @NotNull Stream<? extends ExaminableProperty> examinableProperties() {
-        return Stream.of(
-                ExaminableProperty.of("x", this.x),
-                ExaminableProperty.of("y", this.y),
-                ExaminableProperty.of("z", this.z)
-        );
     }
 
     private static int square(int n) {

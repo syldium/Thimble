@@ -27,7 +27,7 @@ public enum SignAction {
     LEAVE {
         @Override
         public void run(@NotNull ThimblePlugin plugin, @NotNull Player player) {
-            Optional<ThimbleGame> thimbleGame = plugin.getGameService().playerGame(player);
+            Optional<ThimbleGame> thimbleGame = plugin.getGameService().playerGame(player.identity());
             if (thimbleGame.isPresent()) {
                 thimbleGame.get().removePlayer(player.uuid());
             } else {

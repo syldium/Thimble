@@ -1,15 +1,24 @@
 package me.syldium.thimble.api.player;
 
-import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import java.util.UUID;
+
 /**
  * The cumulative statistics of a thimble player.
  */
-public interface ThimblePlayerStats extends Identity {
+public interface ThimblePlayerStats {
+
+    /**
+     * Gets the player UUID.
+     *
+     * @return The player UUID.
+     */
+    @Contract(pure = true)
+    @NotNull UUID uuid();
 
     /**
      * Gets the player name.

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@SuppressWarnings({"removal", "deprecation", "UnstableApiUsage"}) // Keep compat for some time
+@SuppressWarnings({"removal", "deprecation"}) // Keep compat for some time
 public class PaperAsyncRegisteredCommand<S extends BukkitBrigadierCommandSource> extends PaperAsyncCompleter {
 
     private final BrigadierMapper<S> brigadierMapper;

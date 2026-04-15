@@ -1,5 +1,5 @@
 plugins {
-    id 'xyz.jpenilla.run-paper' version '3.0.1'
+    id 'xyz.jpenilla.run-paper' version '3.0.2'
 }
 
 apply plugin: 'com.gradleup.shadow'
@@ -22,7 +22,7 @@ dependencies {
     implementation projects.bukkit.integration
 
     compileOnly(libs.paper)
-    implementation 'org.bstats:bstats-bukkit:3.1.0'
+    implementation 'org.bstats:bstats-bukkit:3.2.1'
 }
 
 processResources {
@@ -56,5 +56,5 @@ shadowJar {
 }
 
 runServer {
-    minecraftVersion('1.21.10')
+    minecraftVersion('26.1.2')
 }

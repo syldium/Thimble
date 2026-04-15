@@ -13,7 +13,7 @@ dependencies {
     implementation projects.common
 
     compileOnly(libs.paper)
-    compileOnly 'me.clip:placeholderapi:2.11.6'
+    compileOnly 'me.clip:placeholderapi:2.12.2'
     compileOnly('com.alessiodp.parties:parties-api:3.2.15')
     compileOnly('com.sk89q.worldedit:worldedit-bukkit:7.2.9') {
         exclude(module: 'antlr4')
@@ -22,5 +22,5 @@ dependencies {
         exclude(module: 'guava')
     }
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
-    compileOnly 'net.luckperms:api:5.4'
+    compileOnly 'net.luckperms:api:5.5'
 }

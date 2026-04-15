@@ -98,25 +98,21 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
     }
 
     public void sendMessage(@NotNull MessageKey messageKey) {
-        this.sendMessage(Identity.nil(), messageKey, TagResolver.empty());
+        this.sendMessage(messageKey, TagResolver.empty());
     }
 
     public void sendMessage(@NotNull MessageKey messageKey, @NotNull TagResolver... placeholders) {
-        this.sendMessage(Identity.nil(), messageKey, placeholders);
+        this.sendMessage(messageKey, TagResolver.resolver(placeholders));
     }
 
-    public void sendMessage(@NotNull Identity source, @NotNull MessageKey messageKey, @NotNull TagResolver placeholders) {
+    public void sendMessage(@NotNull MessageKey messageKey, @NotNull TagResolver placeholders) {
         Component component = this.plugin.getMessageService().formatMessageWithPrefix(messageKey, placeholders);
-        for (Player player : this.audiences()) player.sendMessage(source, component);
-    }
-
-    public void sendMessage(@NotNull Identity source, @NotNull MessageKey messageKey, @NotNull TagResolver... placeholders) {
-        this.sendMessage(source, messageKey, TagResolver.resolver(placeholders));
+        for (Player player : this.audiences()) player.sendMessage(component);
     }
 
     public void sendMessage(@NotNull E source, @NotNull MessageKey messageKey, @NotNull TagResolver placeholders) {
         if (!source.isVanished()) {
-            this.sendMessage((Identity) source, messageKey, placeholders);
+            this.sendMessage(messageKey, placeholders);
         }
     }
 
@@ -134,7 +130,7 @@ public class PlayerMap<E extends ThimblePlayer> extends HashMap<UUID, E> impleme
 
             Player player = this.plugin.getPlayer(identity.uuid());
             if (player != null) {
-                player.sendMessage(source, component);
+                player.sendMessage(component);
             }
         }
     }
