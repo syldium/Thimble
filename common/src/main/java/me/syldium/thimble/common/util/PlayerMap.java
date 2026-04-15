@@ -8,7 +8,6 @@ import me.syldium.thimble.common.player.Player;
 import me.syldium.thimble.common.player.ThimblePlaceholder;
 import me.syldium.thimble.common.player.media.TimedMedia;
 import net.kyori.adventure.audience.ForwardingAudience;
-import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;

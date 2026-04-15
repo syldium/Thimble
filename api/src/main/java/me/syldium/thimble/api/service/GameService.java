@@ -36,11 +36,21 @@ public interface GameService {
     /**
      * Gets a player's game from an {@link Identity}.
      *
-     * @param identity The identified player.
+     * @param identity The identity.
      * @return The game, if any.
      */
     default @NotNull Optional<@NotNull ThimbleGame> playerGame(@NotNull Identity identity) {
         return this.playerGame(identity.uuid());
+    }
+
+    /**
+     * Gets a player's game from an {@link Identity}.
+     *
+     * @param identified The identified player.
+     * @return The game, if any.
+     */
+    default @NotNull Optional<@NotNull ThimbleGame> playerGame(@NotNull Identified identified) {
+        return this.playerGame(identified.identity().uuid());
     }
 
     /**
