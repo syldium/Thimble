@@ -2,8 +2,8 @@
 adventure = "4.26.1"
 adventurePlatform = "4.4.1"
 annotations = "26.1.0"
-jupiter = "6.0.3"
-paper = "1.21.11-R0.1-SNAPSHOT"
+jupiter = "6.1.0"
+paper = "26.3.build.+"
 sponge = "7.4.0"
 
 [libraries]

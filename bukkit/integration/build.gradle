@@ -13,8 +13,8 @@ dependencies {
     implementation projects.common
 
     compileOnly(libs.paper)
-    compileOnly 'me.clip:placeholderapi:2.12.2'
-    compileOnly('com.alessiodp.parties:parties-api:3.2.15')
+    compileOnly 'me.clip:placeholderapi:2.12.3'
+    compileOnly('com.alessiodp.parties:parties-api:3.2.18')
     compileOnly('com.sk89q.worldedit:worldedit-bukkit:7.2.9') {
         exclude(module: 'antlr4')
         exclude(module: 'core')

@@ -1,5 +1,5 @@
 plugins {
-    id 'xyz.jpenilla.run-paper' version '3.0.2'
+    id 'xyz.jpenilla.run-paper' version '3.1.0'
 }
 
 apply plugin: 'com.gradleup.shadow'
@@ -27,7 +27,7 @@ dependencies {
 
 processResources {
     def version = project.ext.fullVersion
-    def description = project.properties.description
+    def description = project.description
     filesMatching("plugin.yml") {
         expand(
                 'pluginVersion': version,
@@ -56,5 +56,5 @@ shadowJar {
 }
 
 runServer {
-    minecraftVersion('26.1.2')
+    minecraftVersion('26.3')
 }

@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@SuppressWarnings("UnstableApiUsage")
 public class PaperCommand extends PaperAsyncCompleter {
 
     private final BrigadierMapper<CommandSourceStack> brigadierMapper;
